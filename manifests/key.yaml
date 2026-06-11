@@ -1,229 +1,283 @@
 address_bar_and_search:
   test_adaptive_history_autofill:
+    codename: ABS/adptv_hist_af
     result: pass
     splits:
     - functional1
   test_adaptive_history_removal:
+    codename: ABS/adptv_hst_rmvl
     result: pass
     splits:
     - functional1
   test_add_engine_address_bar:
+    codename: ABS/+engn_addr_br
     result: pass
     splits:
     - smoke
   test_added_open_search_engine_default:
+    codename: ABS/+_opn_src_ngn
     result: pass
     splits:
     - functional1
   test_addon_suggestion:
+    codename: ABS/addon_sugg
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
     splits:
     - functional1
   test_addressbar_bookmarks_when_history_disabled:
+    codename: ABS/ab_bks_hist_ds
     result: pass
     splits:
     - functional1
   test_addressbar_search_engine_keywords:
+    codename: ABS/ab_srch_ngn_kw
     result: pass
     splits:
     - functional1
   test_bing_search_codes:
+    codename: ABS/bing_srch_code
     result: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
+    codename: ABS/clpbrd_prf_flp
     result: pass
     splits:
     - functional1
   test_copied_url_contains_https:
+    codename: ABS/cp_url_https
     result: pass
     splits:
     - functional1
   test_ctrl_enter_completes_link_and_can_refresh:
+    codename: ABS/c+etr_lk_comp
     result: pass
     splits:
     - functional1
   test_ctrl_enter_fixes_url:
+    codename: ABS/c+etr_fix_url
     result: pass
     splits:
     - functional1
   test_ddg_search_codes:
+    codename: ABS/ddg_srch_code
     result: pass
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
+    codename: ABS/chg_def_srch_p_ab
     result: pass
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
+    codename: ABS/chg_def_srch_p_lb
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
     result: unstable
     splits:
     - functional1
   test_delete_history_entry_via_firefox_suggest_completion_list:
+    codename: ABS/dl_hst_fx_sugg
     result: pass
     splits:
     - functional1
   test_disable_websearch_from_awesome_bar:
+    codename: ABS/dsbl_srch_ab
     result: pass
     splits:
     - functional1
   test_dont_show_search_suggestions_in_private_window:
+    codename: ABS/!shw_srch_sg_pv
     result: pass
     splits:
     - functional1
   test_google_search_counts_us:
+    codename: ABS/G_srch_cnts_us
     result: pass
     splits:
     - functional1
   test_google_withads_url_bar_us:
+    codename: ABS/G_ads_ab_us
     result: pass
     splits:
     - functional1
   test_insertion_point_no_search_terms_display:
+    codename: ABS/ist_!sch_trm
     result: pass
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
+    codename: ABS/!sgs_fr_0_qry
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
     result: unstable
     splits:
     - functional1
   test_non_sponsored_topsite_context_menu_option:
+    codename: ABS/!$_tpst_cxm_op
     result: pass
     splits:
     - functional1
   test_open_link_in_new_container_tab:
+    codename: ABS/opn_lnk_n_cntr
     result: pass
     splits:
     - functional1
   test_paste_and_go_opens_correct_url:
+    codename: ABS/pst_go_opn_url
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043954
     result: unstable
     splits:
     - functional1
   test_refresh_firefox_dialog:
+    codename: ABS/rfresh_fx_dlg
     result: pass
     splits:
     - functional1
   test_sap_google_adclick:
+    codename: ABS/sap_G_adclick
     result: pass
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
+    codename: ABS/srch_br_dsp_alp
     result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
+    codename: ABS/ab_rslt_nutab
     result: pass
     splits:
     - functional1
   test_search_code_google_non_us:
+    codename: ABS/srch_cd_G_!us
     result: pass
     splits:
     - smoke
   test_search_code_google_us:
+    codename: ABS/srch_cd_G_us
     result: pass
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload:
+    codename: ABS/srch_ngn_rst_rld
     result: pass
     splits:
     - functional1
   test_search_engine_selector:
+    codename: ABS/srch_ngn_selctr
     result: pass
     splits:
     - smoke
   test_search_mode_appears_after_input:
+    codename: ABS/srch_md_pop_af_inp
     result: pass
     splits:
     - functional1
   test_search_mode_change_tab:
+    codename: ABS/srch_md_chng_tb
     result: pass
     splits:
     - functional1
   test_search_mode_cleared_on_engine_removal:
+    codename: ABS/srch_md_clr_ngn
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043388
     result: unstable
     splits:
     - functional1
   test_search_mode_exits_correctly:
+    codename: ABS/srch_md_exit
     result: pass
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
+    codename: ABS/srch_md_mix_bng
     result: pass
     splits:
     - functional1
   test_search_mode_update_on_alias_prefix:
+    codename: ABS/srch_md_upd_al_pfx
     result: pass
     splits:
     - functional1
   test_search_modes_for_sites:
+    codename: ABS/srch_md_fr_st
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2002277
     result: deprecated
     splits:
     - functional1
   test_search_string_displayed_when_addressbar_unfocused:
+    codename: ABS/str_dsp_unfcs
     result: pass
     splits:
     - functional1
   test_search_suggestions:
+    codename: ABS/srch_suggs
     result: pass
     splits:
     - smoke
   test_search_suggestions_can_be_disabled:
+    codename: ABS/srch_sggs_dsbl
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
     splits:
     - functional1
   test_search_term_persists:
+    codename: ABS/srch_trm_prsts
     result: pass
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
+    codename: ABS/srch_wrks_w_ddg_tm
     result: pass
     splits:
     - functional1
   test_server_not_found_error:
+    codename: ABS/srvr_!fnd_err
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
     result: unstable
     splits:
     - functional1
   test_server_not_found_error_pb:
+    codename: ABS/srvr_!fnd_err_pb
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
     result: unstable
     splits:
     - functional1
   test_suggestion_engine_selection:
+    codename: ABS/sugg_ngn_sel
     result: pass
     splits:
     - functional1
   test_switch_to_existing_tab_when_having_the_same_URL:
+    codename: ABS/swch_xst_tb_sm_url
     result: pass
     splits:
     - functional1
   test_tile_menu_options:
+    codename: ABS/tile_mn_ops
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021941
     result: unstable
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
+    codename: ABS/us_dfnt_srch
     result: pass
     splits:
     - functional1
   test_verify_url_after_tab_switch_with_search_mode:
+    codename: ABS/vrf_url_t_sw_sm
     result: pass
     splits:
     - functional1
 ai_controls:
   test_c3308998_unblock_restores_state:
+    codename: AI/unbl_rst_state
     result: pass
     splits:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
+    codename: AV/allow_func
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
     result:
       linux: pass
@@ -232,98 +286,121 @@ audio_video:
     splits:
     - functional1
   test_autoplay_permission_settings_displayed:
+    codename: AV/atpl_prm_stg_dsp
     result: pass
     splits:
     - functional1
   test_autoplay_sound_blocking_background_tab:
+    codename: AV/atpl_snd_blk
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2010227
     result: unstable
     splits:
     - functional1
   test_block_audio_video_functionality:
+    codename: AV/blk_func
     result: pass
     splits:
     - smoke
   test_html5_video_playback_controls:
+    codename: AV/H5_vd_playback
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026662
     result: unstable
     splits:
     - functional1
   test_users_actions_saved_on_reload:
+    codename: AV/act_sav_rld
     result: pass
     splits:
     - functional1
 bookmarks_and_history:
   test_add_bookmark_folder_via_toolbar_not_saving_realtime:
+    codename: BH/+bk_fld_tb_!sv_rt
     result: pass
     splits:
     - functional1
   test_add_bookmark_via_star_only_saved_explicitly:
+    codename: BH/+bk_*_onl_sav
     result: pass
     splits:
     - functional1
   test_add_bookmark_via_toolbar_not_saving_realtime:
+    codename: BH/+bk_tb_!sv_rt
     result: pass
     splits:
     - functional1
   test_add_new_other_bookmark:
+    codename: BH/+nu_other_bk
     result: pass
     splits:
     - functional1
   test_bookmark_via_bookmark_menu:
+    codename: BH/bk_bk_menu
     result: pass
     splits:
     - functional1
   test_bookmark_website_via_star_button:
+    codename: BH/bk_site_*_btn
     result: pass
     splits:
     - smoke
     - ci
   test_clear_all_history:
+    codename: BH/clear_hist
     result: pass
     splits:
     - smoke
   test_clear_recent_history_displayed:
+    codename: BH/clr_rcnt_hst_dsp
     result: pass
     splits:
     - functional1
   test_delete_bookmarks_from_toolbar:
+    codename: BH/del_bks_tb
     result: pass
     splits:
     - functional1
   test_delete_other_bookmarks:
+    codename: BH/del_other_bks
     result: pass
     splits:
     - functional1
   test_deleted_page_not_remembered:
+    codename: BH/del_pg_!rmmbr
     result: pass
     splits:
     - functional1
   test_edit_bookmark_folder_via_toolbar_not_saving_realtime:
+    codename: BH/edt_bk_fr_tb_!sv_rt
     result: pass
     splits:
     - functional1
   test_edit_bookmark_from_bookmark_menu:
+    codename: BH/edt_bk_menu
     result: pass
     splits:
     - functional1
   test_edit_bookmark_via_star_button:
+    codename: BH/edit_bk_*_btn
     result: pass
     splits:
     - functional1
   test_edit_bookmark_via_star_button_not_saving_realtime:
+    codename: BH/edt_bk_*_btn_!sv
     result: pass
     splits:
     - functional1
   test_edit_bookmark_via_toolbar_not_saving_realtime:
+    codename: BH/edt_bk_tb_!sv
     result: pass
     splits:
     - functional1
   test_history_menu_from_different_places:
+    codename: BH/hst_mn_misc
     result: pass
     splits:
     - functional1
   test_import_bookmarks_chrome:
+    codename: BH/imprt_bks_chrm
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033604
     result:
       linux: pass
@@ -332,6 +409,7 @@ bookmarks_and_history:
     splits:
     - smoke
   test_import_bookmarks_edge:
+    codename: BH/imprt_bks_edge
     result:
       linux: out of scope
       mac: out of scope
@@ -339,22 +417,27 @@ bookmarks_and_history:
     splits:
     - smoke
   test_open_all_bookmarks_from_bookmarks_toolbar:
+    codename: BH/opn_bks_bks_tb
     result: pass
     splits:
     - functional1
   test_open_bookmark_in_new_window_via_toolbar_context_menu:
+    codename: BH/opn_bk_nw_tb_cxm
     result: pass
     splits:
     - functional1
   test_open_bookmark_in_private_window_via_toolbar_context_menu:
+    codename: BH/opn_bk_pvt_tb_cxm
     result: pass
     splits:
     - functional1
   test_open_bookmarks_from_toolbar:
+    codename: BH/open_bks_tb
     result: pass
     splits:
     - smoke
   test_open_websites_from_history:
+    codename: BH/open_fm_hist
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043402
     result:
       linux: pass
@@ -363,31 +446,38 @@ bookmarks_and_history:
     splits:
     - smoke
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
+    codename: BH/opn_st_nutab_hbgr
     result: pass
     splits:
     - functional1
   test_opened_website_in_new_window_present_in_hamburger_history_menu:
+    codename: BH/opn_st_nuwn_hbgr
     result: pass
     splits:
     - functional1
   test_opened_website_present_in_hamburger_history_menu:
+    codename: BH/opn_st_hbgr
     result: pass
     splits:
     - functional1
   test_private_window_website_not_in_history:
+    codename: BH/pvt_wn_st_!n_hst
     result: pass
     splits:
     - functional1
   test_toggle_bookmarks_toolbar:
+    codename: BH/tg_bks_tb
     result: pass
     splits:
     - functional1
   test_user_can_forget_history:
+    codename: BH/usr_cn_frgt_hst
     result: pass
     splits:
     - functional1
 downloads:
   test_add_mime_type_doc:
+    codename: DL/g+mime_tp_doc
     comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result:
       linux: unstable
@@ -396,62 +486,76 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
+    codename: DL/gadd_zip_type
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result: unstable
     splits:
     - functional1
   test_change_download_folder:
+    codename: DL/gchange_dl_dir
     result: pass
     splits:
     - functional1
   test_close_browser_with_download_in_progress_shows_prompt:
+    codename: DL/gcls_bws_dl_prss
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
     result: unstable
     splits:
     - functional1
   test_delete_download_while_in_progress:
+    codename: DL/gdel_dl_live
     result: pass
     splits:
     - functional1
   test_download_apk_and_check_extension:
+    codename: DL/gdl_apk_chk_ext
     result: pass
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
+    codename: DL/gdl_epub_ext
     result: pass
     splits:
     - functional1
   test_download_exe_and_check_extesion:
+    codename: DL/gdl_exe_ext
     result: pass
     splits:
     - functional1
   test_download_malicious_warning:
+    codename: DL/gdl_malw_warn
     result: pass
     splits:
     - functional1
   test_download_mp3_and_check_extension:
+    codename: DL/gdl_mp3_chk_ext
     result: pass
     splits:
     - functional1
   test_download_pdf:
+    codename: DL/gdownload_pdf
     result: pass
     splits:
     - smoke
     - ci
   test_download_pdf_from_context_menu:
+    codename: DL/gdl_pdf_cxm
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042660
     result: unstable
     splits:
     - smoke
   test_download_telemetry_recorded:
+    codename: DL/gdl_tm_record
     result: pass
     splits:
     - functional1
   test_install_unsigned_addons:
+    codename: DL/ginst_!sgn_adds
     result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
+    codename: DL/gmix_ct_dl_Hs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004945
     result:
       linux: pass
@@ -460,141 +564,174 @@ downloads:
     splits:
     - functional1
   test_no_download_telemetry_without_panel:
+    codename: DL/g!dl_tm_wo_pl
     result: pass
     splits:
     - functional1
   test_set_always_ask_file_type:
+    codename: DL/gset_alw_ask_typ
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result: unstable
     splits:
     - functional1
   test_telemetry_download_and_open:
+    codename: DL/gtm_dl_open
     result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
+    codename: DL/gtm_pdf_dl_opn
     result: pass
     splits:
     - functional1
   test_verify_telemetry_downloads_panel_open:
+    codename: DL/gvrf_tm_dl_pnl
     result: pass
     splits:
     - functional1
 drag_and_drop:
   test_copy_entire_row_column:
+    codename: DD/cp_row_col
     result: pass
     splits:
     - smoke
   test_copy_from_an_editor_paste_in_another:
+    codename: DD/cp_edtr_ps_oth
     result: pass
     splits:
     - functional1
   test_copy_hyperlink_table:
+    codename: DD/cp_lnk_tble
     result: pass
     splits:
     - functional1
   test_copy_table_header:
+    codename: DD/cp_tbl_header
     result: pass
     splits:
     - functional1
   test_paste_image_text:
+    codename: DD/pst_img_text
     result: pass
     splits:
     - functional1
 find_toolbar:
   test_find_in_pdf:
+    codename: FT/find_in_pdf
     result: pass
     splits:
     - functional1
   test_find_toolbar_nav:
+    codename: FT/find_tb_nav
     result: pass
     splits:
     - smoke
   test_find_toolbar_search:
+    codename: FT/find_tb_srch
     result: pass
     splits:
     - functional1
 form_autofill:
   test_address_autofill_attribute:
+    codename: FA/addr_af_attr
     result: pass
     splits:
     - smoke
   test_autofill_cc_cvv:
+    codename: FA/af_cc_cvv
     result: pass
     splits:
     - functional1
   test_autofill_credit_card:
+    codename: FA/af_cc
     result: pass
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
+    codename: FA/af_cc_drhgr
     result: pass
     splits:
     - functional1
   test_autofill_credit_card_enable:
+    codename: FA/af_cc_enable
     result: pass
     splits:
     - functional1
   test_autofill_credit_card_four_fields:
+    codename: FA/af_cc_4_fld
     result: pass
     splits:
     - functional1
   test_cc_clear_form:
+    codename: FA/cc_clear_form
     result: pass
     splits:
     - functional1
   test_clear_form:
+    codename: FA/clear_form
     result: pass
     splits:
     - functional1
   test_create_new_cc_profile:
+    codename: FA/crt_nu_cc_pf
     result: pass
     splits:
     - functional1
   test_create_profile_autofill:
+    codename: FA/create_pf_af
     result: pass
     splits:
     - smoke
   test_delete_cc_profile:
+    codename: FA/del_cc_pf
     result: pass
     splits:
     - functional1
   test_edit_credit_card:
+    codename: FA/edit_cc
     result: pass
     splits:
     - functional1
   test_enable_disable_autofill:
+    codename: FA/enbl_dsable_af
     result: pass
     splits:
     - functional1
   test_form_autofill_suggestions:
+    codename: FA/form_af_suggs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026652
     result: unstable
     splits:
     - functional1
   test_name_autofill_attribute:
+    codename: FA/name_af_attr
     result: pass
     splits:
     - smoke
   test_private_mode_info_not_saved:
+    codename: FA/pvt_md_inf_!sv
     result: pass
     splits:
     - functional1
   test_telephone_autofill_attribute:
+    codename: FA/tel_af_attr
     result: pass
     splits:
     - smoke
     - ci
   test_updating_address:
+    codename: FA/update_addr
     result: pass
     splits:
     - functional1
   test_updating_credit_card:
+    codename: FA/update_cc
     result: pass
     splits:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
+    codename: GEO/gloc_shar_H5
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
     result:
       linux: pass
@@ -603,6 +740,7 @@ geolocation:
     splits:
     - functional1
   test_geolocation_shared_via_w3c_api:
+    codename: GEO/glc_shr_w3c_api
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
     result:
       linux: pass
@@ -617,20 +755,24 @@ glean:
     - glean
 language_packs:
   test_language_pack_install_addons:
+    codename: LP/lg_pck_inst_add
     result: pass
     splits:
     - functional1
   test_language_pack_install_preferences:
+    codename: LP/lg_pck_inst_pref
     result: pass
     splits:
     - smoke
 menus:
   test_copy_paste_actions:
+    codename: MENU/copy_paste_ac
     result: pass
     splits:
     - smoke
     - ci
   test_frequently_used_context_menu:
+    codename: MENU/frq_usd_cxm
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
@@ -639,10 +781,12 @@ menus:
     splits:
     - functional1
   test_hyperlink_context_menu:
+    codename: MENU/link_cxm
     result: pass
     splits:
     - smoke
   test_image_context_menu_actions:
+    codename: MENU/image_cxm_act
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
@@ -651,235 +795,287 @@ menus:
     splits:
     - functional1
   test_new_tab_label:
+    codename: MENU/new_tab_label
     result: pass
     splits:
     - functional1
   test_tab_context_menu_actions:
+    codename: MENU/tab_cxm_act
     result: pass
     splits:
     - functional1
   test_tab_context_menu_close:
+    codename: MENU/tab_cxm_close
     result: pass
     splits:
     - functional1
 meta:
   test_selectors:
+    codename: META/selectors
     comment: Not part of feature functional test suites
     result: unstable
     splits: []
   test_version:
+    codename: META/version
     result: pass
     splits: []
 networking:
   test_cloudflare_as_default_doh_provider:
+    codename: NET/cldflr_dflt_doh
     result: pass
     splits:
     - functional1
   test_default_dns_protection:
+    codename: NET/dflt_dns_prtc
     result: pass
     splits:
     - smoke
   test_http_site:
+    codename: NET/http_site
     result: pass
     splits:
     - functional1
   test_nextdns_as_doh_provider:
+    codename: NET/nxtdns_dh_prvd
     result: pass
     splits:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    codename: NOTI/av_prms_noti
+    result: pass
     splits:
     - functional1
   test_camera_permissions_notification:
+    codename: NOTI/cam_prms_noti
     result: pass
     splits:
     - functional1
   test_cancel_webextension:
+    codename: NOTI/cancl_wbx
     result: pass
     splits:
     - functional1
   test_deny_geolocation:
+    codename: NOTI/deny_geoloc
     result: pass
     splits:
     - functional1
   test_deny_screen_capture:
+    codename: NOTI/deny_scr_cap
     result: pass
     splits:
     - functional1
   test_downloads_button_is_displayed:
+    codename: NOTI/dls_btn_disp
     result: pass
     splits:
     - functional1
   test_downloads_finished_button_is_displayed:
+    codename: NOTI/dls_fnsh_btn_dsp
     result: pass
     splits:
     - functional1
   test_geolocation_allow_browserleaks:
+    codename: NOTI/geoloc_allow
     result: pass
     splits:
     - functional1
   test_geolocation_prompt_presence:
+    codename: NOTI/geoloc_prompt
     result: pass
     splits:
     - functional1
   test_microphone_permissions_notification:
+    codename: NOTI/mic_prms_noti
     result: pass
     splits:
     - functional1
   test_notifications_displayed:
+    codename: NOTI/notis_disp
     result: pass
     splits:
     - smoke
     - ci
   test_screen_share_permission_prompt:
+    codename: NOTI/scr_shr_prm
     result: pass
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
+    codename: NOTI/wbx_cmlt_nst
     result: pass
     splits:
     - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
+    codename: PM/a:logs_cp_pmpt_pp
     result: pass
     splits:
     - functional1
   test_about_logins_direct_navigation:
+    codename: PM/a:logs_drct_nv
     result: pass
     splits:
     - functional1
   test_about_logins_edit_prompts_primary_password:
+    codename: PM/a:logs_dt_pmpt_pp
     result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_preferences:
+    codename: PM/a:logs_nav_a:pref
     result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_protections:
+    codename: PM/a:logs_nav_a:prot
     result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_context_menu:
+    codename: PM/a:logs_nav_cxm
     result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_hamburger_menu:
+    codename: PM/a:logs_nav_hbgr
     result: pass
     splits:
     - functional1
   test_about_logins_password_copy_button:
+    codename: PM/a:logs_pw_cp_btn
     result: pass
     splits:
     - functional1
   test_about_logins_password_show_hide_button:
+    codename: PM/a:logs_pw_shw_btn
     result: pass
     splits:
     - functional1
   test_about_logins_search_passwords:
+    codename: PM/a:logs_srch_pw
     result: pass
     splits:
     - functional1
   test_about_logins_search_username:
+    codename: PM/a:logs_srch_usr
     result: pass
     splits:
     - functional1
   test_about_logins_search_website:
+    codename: PM/a:logs_srch_site
     result: pass
     splits:
     - functional1
   test_about_logins_username_copy_button:
+    codename: PM/a:logs_usr_cp_btn
     result: pass
     splits:
     - functional1
   test_add_password_non_ascii_chars:
+    codename: PM/+pw_!ascii
     result: pass
     splits:
     - functional1
   test_add_password_save_valid_data:
+    codename: PM/+pw_sv_data
     result: pass
     splits:
     - smoke
   test_add_primary_password:
+    codename: PM/+primary_pw
     result: pass
     splits:
     - functional1
   test_add_username_via_doorhanger:
+    codename: PM/+usrname_drhgr
     result: pass
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
+    codename: PM/auto_sv_gen_pw_cxm
     result: pass
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
+    codename: PM/acomp_drp_tg_fc_lgn
     result: pass
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
+    codename: PM/view_pw_pp_on
     result: pass
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
+    codename: PM/edit_md_sv
     result: pass
     splits:
     - functional2
   test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
+    codename: PM/edit_pw_shw_prev_opt
     result: pass
     splits:
     - functional2
   test_delete_login:
+    codename: PM/delete_login
     result: pass
     splits:
     - smoke
   test_delete_primary_password:
+    codename: PM/del_prmry_pw
     result: pass
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
+    codename: PM/edt_af_pp_disms
     result: pass
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
+    codename: PM/edt_gen_pw_autosv
     result: pass
     splits:
     - functional2
   test_edit_primary_password:
+    codename: PM/edt_prmry_pw
     result: pass
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
+    codename: PM/fb_log_af_drop
     result: pass
     splits:
     - functional1
   test_insecure_password:
+    codename: PM/insecure_pw
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043392
     result: unstable
     splits:
     - functional1
   test_multiple_saved_logins:
+    codename: PM/mltpl_sav_lgns
     result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
+    codename: PM/a:logs_nav_autocpl
     result: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
+    codename: PM/!sv_lgn_drhgr
     result: pass
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
+    codename: PM/!gen_pw_opt_pp_!cr
     result: pass
     splits:
     - functional2
   test_password_csv_correctness:
+    codename: PM/pw_csv_crct
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
@@ -888,6 +1084,7 @@ password_manager:
     splits:
     - functional2
   test_password_csv_export:
+    codename: PM/pw_csv_export
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
@@ -896,14 +1093,17 @@ password_manager:
     splits:
     - functional2
   test_password_field_only_triggers_dismissed_doorhanger:
+    codename: PM/pw_fld_tg_dhgr
     result: pass
     splits:
     - functional2
   test_password_manager_key_icon_after_doorhanger_dismiss:
+    codename: PM/pw_mgr_key_icon
     result: pass
     splits:
     - functional2
   test_password_manager_on_google_US:
+    codename: PM/pw_mgr_G_US
     result:
       linux: pass
       mac: unstable
@@ -911,91 +1111,112 @@ password_manager:
     splits:
     - functional1
   test_password_manager_on_reddit:
+    codename: PM/pw_mgr_reddit
     result: pass
     splits:
     - functional1
   test_primary_password_allows_csv_export:
+    codename: PM/pp_allws_csv_exp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2041399
     result: unstable
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
+    codename: PM/pp_tg_a:logs_ld
     result: pass
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
+    codename: PM/pvt_dsms_dhgr_crd
     result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
+    codename: PM/sv_lgn_dhgr
     result: pass
     splits:
     - functional2
   test_saved_hyperlink_redirects_to_corresponding_page:
+    codename: PM/sv_lnk_rdrcts
     result: pass
     splits:
     - functional2
   test_taobao_password_management:
+    codename: PM/taobao_pw_mgmt
     result: pass
     splits:
     - functional2
   test_update_login_via_doorhanger:
+    codename: PM/updt_lgn_drhgr
     result: pass
     splits:
     - functional2
   test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:
+    codename: PM/sv_pw_!in_pw_!svd
     result: pass
     splits:
     - functional2
   test_use_saved_password_option_not_in_username_field_context_menu_without_saved_logins:
+    codename: PM/sv_pw_!in_usr_!svd
     result: pass
     splits:
     - functional2
   test_username_edit_captured_in_dismissed_doorhanger:
+    codename: PM/usr_edt_dsm_dhgr
     result: pass
     splits:
     - functional2
 pdf_viewer:
   test_add_image_pdf:
+    codename: PDF/add_image_pdf
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
     result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
+    codename: PDF/dl_pdf_frm_flds
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: unstable
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
+    codename: PDF/dl_trg_ct_disp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
     result: unstable
     splits:
     - functional2
   test_open_pdf_in_FF:
+    codename: PDF/open_pdf_FF
     result: pass
     splits:
     - smoke
   test_pdf_checkbox_functionality:
+    codename: PDF/pdf_ckbx_func
     result: pass
     splits:
     - functional2
   test_pdf_contextual_menu_actions:
+    codename: PDF/pdf_cxm_acts
     result: pass
     splits:
     - functional2
   test_pdf_copy_paste_functionality:
+    codename: PDF/pdf_cp_pst_func
     result: pass
     splits:
     - functional2
   test_pdf_copy_paste_functionality_numerical:
+    codename: PDF/pdf_cp_pst_func_#
     result: pass
     splits:
     - functional2
   test_pdf_data_can_be_cleared:
+    codename: PDF/pdf_data_clr
     result: pass
     splits:
     - functional2
   test_pdf_download:
+    codename: PDF/pdf_download
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
@@ -1004,52 +1225,64 @@ pdf_viewer:
     splits:
     - functional2
   test_pdf_dropdown_functionality:
+    codename: PDF/pdf_drop_func
     result: pass
     splits:
     - functional2
   test_pdf_input_numbers:
+    codename: PDF/pdf_input_nums
     result: pass
     splits:
     - smoke
   test_pdf_navigation:
+    codename: PDF/pdf_navigate
     result: pass
     splits:
     - smoke
   test_pdf_zoom_checkboxes:
+    codename: PDF/pdf_zoom_chkbx
     result: pass
     splits:
     - functional1
   test_pdf_zoom_in_text_fields:
+    codename: PDF/pdf_zm_txt_fld
     result: pass
     splits:
     - functional2
   test_pdf_zoom_radio_buttons:
+    codename: PDF/pdf_zm_rdo_btns
     result: pass
     splits:
     - functional1
   test_zoom_pdf_viewer:
+    codename: PDF/zoom_pdfjs
     result: pass
     splits:
     - functional2
   test_zoom_works_on_dropdown_menus:
+    codename: PDF/zm_wrks_drop
     result: pass
     splits:
     - functional2
 pocket:
   test_basic_de:
     test_localized_pocket_layout_DE:
+      codename: PCKT/basic_de
       result: deprecated
       splits: []
   test_basic_fr:
     test_localized_pocket_layout_FR:
+      codename: PCKT/basic_fr
       result: deprecated
       splits: []
   test_basic_gb:
     test_localized_pocket_layout_GB:
+      codename: PCKT/basic_gb
       result: deprecated
       splits: []
   test_basic_us:
     test_localized_pocket_layout_US:
+      codename: PCKT/basic_us
       result: deprecated
       splits: []
     test_new_tab_about_blank:
@@ -1057,11 +1290,13 @@ pocket:
       splits: []
 preferences:
   test_check_for_updates:
+    codename: PREF/gchck_fr_updat
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041395
     result: unstable
     splits:
     - functional2
   test_clear_cookie_data:
+    codename: PREF/gclr_cook_dt
     result:
       linux: pass
       mac: pass
@@ -1069,48 +1304,58 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
+    codename: PREF/gfx_hm_nutabs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043953
     result: unstable
     splits:
     - functional2
   test_firefox_home_on_launch:
+    codename: PREF/gfx_hm_launch
     result: pass
     splits:
     - functional2
   test_lang_pack_changed_from_about_prefs:
+    codename: PREF/glgpk_a:pref
     result: pass
     splits:
     - functional2
   test_manage_cookie_data:
+    codename: PREF/gmanage_ck_dt
     result: pass
     splits:
     - smoke
   test_never_remember_history:
+    codename: PREF/g!rmbr_hist
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042647
     result: unstable
     splits:
     - smoke
   test_notifications_change_set:
+    codename: PREF/gnotis_chg_set
     result: pass
     splits:
     - functional2
 printing_ui:
   test_page_number_indicator_print_preview:
+    codename: PRNT/pg_nm_indc_prt_pr
     result: pass
     splits:
     - functional2
   test_print_preview:
+    codename: PRNT/print_preview
     result: pass
     splits:
     - smoke
     - ci
   test_print_to_pdf:
+    codename: PRNT/print_to_pdf
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
     result: unstable
     splits:
     - functional2
 profile:
   test_set_default_profile:
+    codename: PRFL/set_default_pf
     result:
       linux: pass
       mac: pass
@@ -1119,23 +1364,28 @@ profile:
     - smoke
 reader_view:
   test_improved_type_control_panel:
+    codename: RV/impv_typ_cpanel
     result: pass
     splits:
     - functional2
   test_reader_view_close_sidebar:
+    codename: RV/rdr_vw_cls_sdbr
     result: pass
     splits:
     - functional2
   test_reader_view_location_bar:
+    codename: RV/rdr_vw_loc_bar
     result: pass
     splits:
     - smoke
 scrolling_panning_zooming:
   test_default_zoom_persists:
+    codename: SPZ/dflt_zm_perst
     result: pass
     splits:
     - smoke
   test_mouse_wheel_zoom:
+    codename: SPZ/mous_wheel_zm
     comment: No support for testing this on MAc
     result:
       linux: pass
@@ -1144,14 +1394,17 @@ scrolling_panning_zooming:
     splits:
     - functional2
   test_zoom_from_menu_bar:
+    codename: SPZ/zoom_menu_bar
     result: pass
     splits:
     - functional2
   test_zoom_menu_correlation:
+    codename: SPZ/zm_mn_correlate
     result: pass
     splits:
     - functional2
   test_zoom_text_only:
+    codename: SPZ/zm_text_only
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022011
     result: unstable
     splits:
@@ -1159,60 +1412,74 @@ scrolling_panning_zooming:
     - ci
 security_and_privacy:
   test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
+    codename: SEC/+bk_pvt_bws_vz
     result: pass
     splits:
     - functional2
   test_blocking_cryptominers:
+    codename: SEC/blk_crypto
     result: deprecated
     splits:
     - smoke
   test_blocking_fingerprinters:
+    codename: SEC/blk_fgprtrs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_blocking_social_media_trackers:
+    codename: SEC/blk_soc_med_trk
     result: pass
     splits:
     - functional2
   test_bookmarks_removed_via_private_browsing:
+    codename: SEC/bks_-_pvt_bws
     result: pass
     splits:
     - functional2
   test_bookmarks_toolbar_present_in_private_browsing:
+    codename: SEC/bks_tb_pres_pvt
     result: pass
     splits:
     - functional2
   test_cache_is_cleared_via_end_private_session_button:
+    codename: SEC/cch_clr_end_pvt_btn
     result: pass
     splits:
     - functional2
   test_certificate_expired_displayed_panel:
+    codename: SEC/cert_expr_disp
     result: pass
     splits:
     - functional2
   test_clear_cookies_site_data_via_panel:
+    codename: SEC/clr_cook_site_pnl
     result: pass
     splits:
     - functional2
   test_connection_not_secured_panel_for_http_sites:
+    codename: SEC/cnnc_!secur_pl_http
     result: pass
     splits:
     - functional2
   test_cookies_not_saved_private_browsing:
+    codename: SEC/ck_!sv_pvt_bws
     result: pass
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:
+    codename: SEC/xsite_trk_cook_bk
     result: deprecated
     splits:
     - functional2
   test_cross_site_tracking_cookies_displayed_subpanel:
+    codename: SEC/xsite_trk_cook_disp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
+    codename: SEC/crypt_blk_disp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
     result:
       linux: pass
@@ -1221,291 +1488,359 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
+    codename: SEC/crypt_disp_spnl
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_cryptominers_subpanel_display_when_not_blocked:
+    codename: SEC/crypt_spnl_disp_!bk
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
+    codename: SEC/cst_blk_sus_fprnt_al
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_only_in_private_windows:
+    codename: SEC/cst_blk_sus_fprnt_pv
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_data_clearance_from_private_window_can_be_canceled:
+    codename: SEC/data_clr_pvw_cncl
     result: pass
     splits:
     - functional2
   test_detected_blocked_trackers_found:
+    codename: SEC/dtct_bk_trk_fnd
     result: deprecated
     splits:
     - functional2
   test_download_list_cleared_by_end_private_session:
+    codename: SEC/dl_lst_clr_end_pvs
     result: pass
     splits:
     - functional2
   test_downloads_from_private_not_leaked:
+    codename: SEC/dls_pvt_!leak
     result: pass
     splits:
     - functional2
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
+    codename: SEC/end_pvs_btn_+-_tb
     result: pass
     splits:
     - functional2
   test_end_private_session_clears_cookies:
+    codename: SEC/end_pvs_clr_cook
     result: pass
     splits:
     - functional2
   test_etp_panel_displayed_when_all_protections_disabled_custom:
+    codename: SEC/etp_pl_disp_ptc_dsb
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_etp_panel_displayed_when_no_trackers_detected:
+    codename: SEC/etp_pl_disp_!tk
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_etp_panel_displayed_when_protection_off:
+    codename: SEC/etp_pl_disp_!ptc
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_etp_toggle_on_off_behavior:
+    codename: SEC/etp_toggle
     result: pass
     splits:
     - functional2
   test_extended_certificate_messaging_displayed_in_panel:
+    codename: SEC/extn_cert_msg_pnl
     result: pass
     splits:
     - functional2
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
+    codename: SEC/fprts_blk_pl_prf
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_fingerprinters_displayed_subpanel:
+    codename: SEC/fprts_dsp_sbpl
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_fingerprinters_subpanel_display_when_not_blocked:
+    codename: SEC/fprts_sbpl_dsp_!bk
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_http_lock_icon_connection_state:
+    codename: SEC/http_lock_icon
     result: pass
     splits:
     - functional2
   test_https_enabled_private_browsing:
+    codename: SEC/Hs_pvt_brws
     result: pass
     splits:
     - smoke
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
+    codename: SEC/Hs_frst_md_on_pvb_!pc
     result: pass
     splits:
     - functional2
   test_mixed_content_warning_displayed_in_panel:
+    codename: SEC/mix_ct_wrn_dsp_pl
     result: pass
     splits:
     - functional2
   test_never_remember_browsing_history:
+    codename: SEC/!rmbr_bws_hst
     result: pass
     splits:
     - functional2
   test_no_cached_file_in_private_browsing:
+    codename: SEC/!cache_file_pvb
     result: pass
     splits:
     - functional2
   test_no_trackers_detected:
+    codename: SEC/!tkrs_detect
     result: pass
     splits:
     - functional2
   test_open_link_in_private_window:
+    codename: SEC/opn_lnk_pvw
     result: pass
     splits:
     - smoke
   test_open_private_browsing_via_keyboard:
+    codename: SEC/opn_pvb_kb
     result: pass
     splits:
     - functional2
   test_passwords_appear_in_firefox_lockwise:
+    codename: SEC/pws_appr_fx_lck
     result: pass
     splits:
     - functional2
   test_phishing_and_malware_warnings:
+    codename: SEC/phish_mlwar_wrn
     result: pass
     splits:
     - functional2
   test_privacy_settings_footer_link_opens_correct_page:
+    codename: SEC/prvcy_sgs_ftr
     result: pass
     splits:
     - functional2
   test_private_browser_password_doorhanger:
+    codename: SEC/pvb_pw_dhgr
     result: pass
     splits:
     - functional2
   test_private_session_awesome_bar_exclusion:
+    codename: SEC/pvs_ab_exclsn
     result: pass
     splits:
     - functional2
   test_private_session_history_exclusion:
+    codename: SEC/pvs_hst_exclsn
     result: pass
     splits:
     - functional2
   test_private_window_from_panelui:
+    codename: SEC/pvw_panelui
     result: pass
     splits:
     - functional2
   test_protection_level_redirect_about_preferences:
+    codename: SEC/prtc_lvl_a:pref
     result: pass
     splits:
     - functional2
   test_secure_domain_certificate_messaging_panel:
+    codename: SEC/sec_dom_crt_msg
     result: pass
     splits:
     - functional2
   test_see_all_link_redirects_to_blocked_trackers:
+    codename: SEC/lnk_rdir_bk_trk
     result: pass
     splits:
     - functional2
   test_sidebar_removed_on_end_private_session:
+    codename: SEC/sdbr_-_end_pvs
     result: pass
     splits:
     - functional2
   test_social_media_trackers_displayed_subpanel:
+    codename: SEC/soc_med_trk_disp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_third_party_content_blocked_private_browsing:
+    codename: SEC/3pty_ct_blk_pvb
     result: pass
     splits:
     - functional2
   test_tls_v1_2_protocol:
+    codename: SEC/tls_v1_2_pcol
     result: pass
     splits:
     - functional2
   test_trackers_cryptominers_fingerprinters_blocked:
+    codename: SEC/trk_crypto_fprts_bk
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - smoke
   test_tracking_content_custom_mode:
+    codename: SEC/trck_ct_cstm_md
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_tracking_content_subpanel_display_when_not_blocked:
+    codename: SEC/trck_ct_sbpl_dsp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_tracking_elements_not_blocked_with_etp_disabled:
+    codename: SEC/trck_el_!blk_!etp
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
     result: unstable
     splits:
     - functional2
   test_undo_close_tab_private_browsing:
+    codename: SEC/undo_cls_tb_pvb
     result: pass
     splits:
     - smoke
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
+    codename: SR/cls_tbs_multiwin_f
     result: pass
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
+    codename: SR/cls_tbs_multiwin_h
     result: pass
     splits:
     - functional2
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
+    codename: SR/cls_tbs_multiwin_l
     result: pass
     splits:
     - functional2
   test_restore_last_closed_tabs_shortcut:
+    codename: SR/rstr_lst_cls_tbs
     result: pass
     splits:
     - functional2
   test_restore_multiple_closed_tabs_at_once:
+    codename: SR/rstr_mlpl_cls_tbs
     result: pass
     splits:
     - functional2
   test_restored_closed_tabs_removed_from_all_history_entries:
+    codename: SR/rstr_cls_tbs_-hst
     result: pass
     splits:
     - functional2
 sidebar:
   test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu:
+    codename: SB/a_chbt_-_!swn_cxm
     result: pass
     splits:
     - functional1
   test_choose_ai_chatbot_via_page_context_menu:
+    codename: SB/chs_ai_bot_cxm
     result: pass
     splits:
     - functional2
   test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
+    codename: SB/cls_btn_hvr_vtab
     result: pass
     splits:
     - functional2
   test_hide_sidebar_behaviour:
+    codename: SB/hide_behavior
     result: pass
     splits:
     - functional2
   test_open_ai_chat_via_context_menu:
+    codename: SB/opn_ai_chat_cxm
     result: pass
     splits:
     - functional2
   test_sidebar_button_always_displayed_on_fresh_profile:
+    codename: SB/sdbr_btn_dsp_nupf
     result: pass
     splits:
     - functional2
   test_sidebar_duplicate_vertical_tab:
+    codename: SB/dup_vtab
     result: pass
     splits:
     - functional2
   test_sidebar_enabled_in_private_window:
+    codename: SB/sdbr_on_pvw
     result: pass
     splits:
     - functional2
   test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
+    codename: SB/xpnd_!affctd_rsd_ps
     result: pass
     splits:
     - functional2
   test_sidebar_multiple_vertical_tabs_selection:
+    codename: SB/multivtab_sel
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tab_can_be_reloaded:
+    codename: SB/vtab_reload
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_bookmarked:
+    codename: SB/vtab_bkmkd
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_closing_options:
+    codename: SB/vtab_cls_opts
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_move_options:
+    codename: SB/vtab_mv_opts
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_multiselect_close_options:
+    codename: SB/vtab_mtsel_opts
     result: pass
     splits:
     - functional2
   test_sidebar_vertical_tabs_mute_unmute:
+    codename: SB/vtab_mute
     comment: CI limitation - audio playback not supported on Windows CI runners
     result:
       linux: pass
@@ -1514,101 +1849,124 @@ sidebar:
     splits:
     - functional2
   test_summarize_page_via_ai_chat_panel:
+    codename: SB/summ_pg_ai_pnl
     result: pass
     splits:
     - functional2
   test_summarize_page_via_sidebar_ai_chat_context_menu:
+    codename: SB/summ_pg_ai_cxm
     result: pass
     splits:
     - functional2
   test_summarize_page_via_tab_context_menu:
+    codename: SB/summ_pg_tb_cxm
     result: pass
     splits:
     - functional2
   test_switch_between_horizontal_vertical_tabs:
+    codename: SB/hrz_vrt_tabs
     result: pass
     splits:
     - functional2
   test_switching_to_horizontal_tabs_disables_expand_on_hover:
+    codename: SB/hrz_dsbl_xpnd_hvr
     result: pass
     splits:
     - functional2
   test_toggle_sidebar_via_toolbar_button:
+    codename: SB/tg_sb_tb_btn
     result: pass
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    codename: SB/mg_pnd_xtensn_sb
     result: pass
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
+    codename: SB/vtab_pin_xpnd_hvr
     result: pass
     splits:
     - functional2
   test_vertical_tabs_reopen_closed_tab:
+    codename: SB/vtab_reopen
     result: pass
     splits:
     - functional2
 sync_and_fxa:
   test_existing_fxa:
+    codename: SYNC/existing_fxa
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
     result: unstable
     splits:
     - functional2
   test_new_fxa:
+    codename: SYNC/new_fxa
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938363
     result: unstable
     splits:
     - functional2
 tabs:
   test_active_tab:
+    codename: TAB/active_tab
     result: pass
     splits:
     - smoke
     - ci
   test_change_position_of_pinned_tabs:
+    codename: TAB/chg_pos_pin_tb
     result: pass
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
+    codename: TAB/cls_pin_tb_mse
     result: pass
     splits:
     - smoke
     - ci
   test_close_tab_through_middle_mouse_click:
+    codename: TAB/cls_tb_mid_click
     result: pass
     splits:
     - functional2
     - ci
   test_display_customize_button:
+    codename: TAB/dsp_custmz_btn
     result: pass
     splits:
     - functional2
   test_edit_tab_groups:
+    codename: TAB/edt_tb_groups
     result: pass
     splits:
     - functional2
   test_group_tabs:
+    codename: TAB/group_tabs
     result: pass
     splits:
     - functional2
   test_hover_tab_preview:
+    codename: TAB/hvr_tb_prevw
     result: pass
     splits:
     - functional2
   test_list_all_tabs:
+    codename: TAB/list_all
     result: pass
     splits:
     - functional2
   test_move_multi_selected_tabs:
+    codename: TAB/mv_multi_sel
     result: pass
     splits:
     - functional2
   test_move_single_tab_via_context_menu:
+    codename: TAB/mv_sgl_tb_cxm
     result: pass
     splits:
     - functional2
   test_mute_tabs:
+    codename: TAB/mute_tabs
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: pass
@@ -1617,38 +1975,47 @@ tabs:
     splits:
     - functional2
   test_navigation_multiple_tabs:
+    codename: TAB/nav_multitab
     result: pass
     splits:
     - functional2
   test_open_bookmark_in_new_tab:
+    codename: TAB/open_bk_nutab
     result: pass
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
+    codename: TAB/opn_nu_bg_tb_ms_kb
     result: pass
     splits:
     - functional2
   test_open_new_tab:
+    codename: TAB/open_new_tab
     result: pass
     splits:
     - smoke
   test_open_new_tab_keys:
+    codename: TAB/opn_nutab_keys
     result: pass
     splits:
     - functional2
   test_open_new_tab_via_hyperlink:
+    codename: TAB/opn_nutab_lnk
     result: pass
     splits:
     - functional2
   test_pin_tab:
+    codename: TAB/pin_tab
     result: pass
     splits:
     - smoke
   test_pin_unpin_selected_tabs:
+    codename: TAB/pin_unpin_sel_tbs
     result: pass
     splits:
     - functional2
   test_play_mute_unmute_tabs_via_toggle:
+    codename: TAB/pl_mute_tab_tg
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
       linux: unstable
@@ -1657,53 +2024,65 @@ tabs:
     splits:
     - functional2
   test_reload_overiding_cache_keys:
+    codename: TAB/reld_over_cache_k
     result: pass
     splits:
     - functional2
   test_reload_tab_via_keyboard:
+    codename: TAB/reload_tab_kb
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041392
     result: unstable
     splits:
     - functional2
   test_remove_tab_from_a_group:
+    codename: TAB/-tab_fm_group
     result: pass
     splits:
     - functional2
   test_reopen_tab_through_context_menu:
+    codename: TAB/reopn_tb_cxm
     result: pass
     splits:
     - functional2
   test_reopen_tab_through_history_menu:
+    codename: TAB/rpn_tb_hst_mn
     result: pass
     splits:
     - functional2
   test_reopen_tabs_through_keys:
+    codename: TAB/reopen_keys
     result: pass
     splits:
     - functional2
   test_restore_closed_tabs_previous_groups:
+    codename: TAB/rstr_cls_prev_gp
     result: pass
     splits:
     - functional2
   test_save_and_close_a_tab_group:
+    codename: TAB/sv_cls_tb_grp
     result: pass
     splits:
     - functional2
   test_tab_hover_different_content_type:
+    codename: TAB/tb_hvr_dfnt_ct
     result: pass
     splits:
     - functional2
   test_ungroup_tabs:
+    codename: TAB/ungroup
     result: pass
     splits:
     - functional2
 theme_and_toolbar:
   test_customize_themes_and_redirect:
+    codename: TT/csmz_thm_rdct
     result: pass
     splits:
     - smoke
     - ci
   test_installed_theme_enabled:
+    codename: TT/inst_thme_enbl
     result: pass
     splits:
     - functional2
