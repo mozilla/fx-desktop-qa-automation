@@ -6,6 +6,7 @@ from copy import deepcopy
 
 import yaml
 
+DEFAULT_KEY_PATH = os.path.join("manifests", "key.yaml")
 NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
@@ -183,7 +184,7 @@ class TestKey:
                             )
         self.write()
 
-    def get_entry_from_filename(self, filename) -> dict:
+    def get_entry_from_filename(self, filename: str) -> dict:
         """
         Given a filename, get a partial dict that represents
         the test's location in the manifest
@@ -212,6 +213,19 @@ class TestKey:
             manifest_ptr = manifest_ptr[segment]
         entry_ptr[segments[-1]] = manifest_ptr[segments[-1]]
         return entry
+
+    def get_entry_field_from_filename(self, filename: str, fieldname: str) -> str:
+        """
+        Given a path, get the entry and return the value of a given field.
+        """
+        entry = self.get_entry_from_filename(filename)
+        while fieldname not in entry:
+            if len(entry.keys()) != 1:
+                raise ValueError(
+                    f"Field {fieldname} does not exist for test {filename}"
+                )
+            entry = entry[next(k for k in entry.keys())]
+        return entry[fieldname]
 
     def rebalance_functionals(self):
         """

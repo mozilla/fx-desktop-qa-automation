@@ -23,7 +23,7 @@ from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from modules.util import env_true
-from scripts import collect_executables
+from scripts import collect_executables, get_codename
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
 FX_VERSION_RE = re.compile(r"Mozilla Firefox (\d+)\.(\d\d?)b(\d\d?)")
@@ -336,6 +336,13 @@ def test_case():
     return None
 
 
+@pytest.fixture
+def test_codename():
+    testname = os.getenv("PYTEST_CURRENT_TEST").split(" ")[0]
+    testfile = testname.split("::")[0]
+    return get_codename.main(testfile)
+
+
 def pytest_configure(config):
     logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
         logging.CRITICAL
@@ -456,6 +463,7 @@ def driver(
     request,
     suite_id: str,
     test_case: str,
+    test_codename: str,
     tmp_path: str,
     use_profile: str | bool,
 ):
@@ -543,6 +551,7 @@ def driver(
         json_metadata["machine_config"] = machine_config
         json_metadata["suite_id"] = list(suite_id)
         json_metadata["test_case"] = test_case
+        json_metadata["test_codename"] = test_codename
 
         yield driver
         if hard_quit:
