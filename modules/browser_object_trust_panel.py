@@ -1,6 +1,7 @@
 import json
 from time import sleep
 
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -259,3 +260,30 @@ class TrustPanel(BasePage):
         self.js_click_on("trustpanel-subview-back-button")
         self.element_attribute_is("trustpanel", "mainviewshowing", "true")
         return self
+
+    @BasePage.context_chrome
+    def get_tracker_count(self) -> int:
+        """Returns the total tracker count displayed in the main panel"""
+        return self.get_element_args("trustpanel-blocker-section").get("count")
+
+    @BasePage.context_chrome
+    def get_cross_site_cookies_count(self) -> int:
+        """Returns the cross-site tracking cookies count, 0 if not present"""
+        try:
+            return int(
+                self.get_element_args("trustpanel-cross-site-cookies-count").get(
+                    "count"
+                )
+            )
+        except (TypeError, NoSuchElementException):
+            return 0
+
+    @BasePage.context_chrome
+    def get_fingerprinter_count(self) -> int:
+        """Returns the fingerprinter count, 0 if not present"""
+        try:
+            return int(
+                self.get_element_args("trustpanel-fingerprinter-count").get("count")
+            )
+        except (TypeError, NoSuchElementException):
+            return 0
