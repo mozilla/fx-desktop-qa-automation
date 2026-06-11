@@ -7,22 +7,27 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi
 from modules.page_object import GenericPdf
 
+
 @pytest.fixture()
 def test_case():
     return "1020327"
+
 
 PDF_FILE_NAME = "i-9.pdf"
 DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
 DOWNLOAD_TIMEOUT_SEC = 5.0
 POLL_INTERVAL_SEC = 1.0
 
+
 @pytest.fixture()
 def file_name():
     return PDF_FILE_NAME
 
+
 @pytest.fixture()
 def delete_files_regex_string():
     return DOWNLOADED_PDF_REGEX
+
 
 def _wait_for_file_download(
     saved_pdf_path, timeout=DOWNLOAD_TIMEOUT_SEC, interval=POLL_INTERVAL_SEC
@@ -43,6 +48,7 @@ def _wait_for_file_download(
 
     pytest.fail(f"The file was not downloaded within {timeout:.1f} seconds.")
     return None
+
 
 @pytest.mark.headed
 def test_download_pdf_data(
