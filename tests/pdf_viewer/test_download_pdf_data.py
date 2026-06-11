@@ -1,9 +1,7 @@
 import os
-import logging
 import time
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import GenericPdf
 from modules.browser_object import PanelUi
@@ -57,6 +55,3 @@ def test_download_pdf_data(driver: Firefox, fillable_pdf_url: str, downloads_fol
     assert os.path.exists(saved_pdf_location), (
         f"The file was not downloaded to {saved_pdf_location}."
     )
-
-
-

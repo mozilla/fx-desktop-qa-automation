@@ -966,7 +966,7 @@ pdf_viewer:
     result: unstable
     splits:
     - functional2
-  test_download_pdf_data
+  test_download_pdf_data:
     result: pass
     splits:
     - functional2
