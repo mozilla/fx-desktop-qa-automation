@@ -967,7 +967,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
