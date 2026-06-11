@@ -29,6 +29,19 @@ def delete_files_regex_string():
     return DOWNLOADED_PDF_REGEX
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    # Suppress the Firefox 150+ private-browsing download notification dialog.
+    return [("browser.download.enableDeletePrivate", False)]
+
+
+@pytest.fixture()
+def hard_quit():
+    # Skip the graceful driver.quit(); gracefully closing the private window
+    # with the edited PDF still open re-raises a native save/cancel prompt.
+    return True
+
+
 def _wait_for_file_download(
     saved_pdf_path, timeout=DOWNLOAD_TIMEOUT_SEC, interval=POLL_INTERVAL_SEC
 ) -> None:
@@ -53,7 +66,7 @@ def _wait_for_file_download(
 @pytest.mark.headed
 def test_download_pdf_data(
     driver: Firefox,
-    fillable_pdf_url: str,
+    pdf_file_path,
     downloads_folder: str,
     file_name,
     delete_files,
@@ -67,8 +80,7 @@ def test_download_pdf_data(
     panel = PanelUi(driver)
     panel.open_and_switch_to_new_window("private")
 
-    pdf_viewer = GenericPdf(driver, pdf_url=fillable_pdf_url)
-    pdf_viewer.open()
+    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}")
     pdf_viewer.fill_element("first-name-field", "John")
 
     # Finally download the edited pdf
@@ -79,7 +91,6 @@ def test_download_pdf_data(
     # Set the expected download path and the expected PDF name
     saved_pdf_location = os.path.join(downloads_folder, file_name)
     _wait_for_file_download(saved_pdf_location)
-
     # Verify if the file exists
     assert os.path.exists(saved_pdf_location), (
         f"The file was not downloaded to {saved_pdf_location}."
