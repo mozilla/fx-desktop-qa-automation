@@ -158,11 +158,9 @@ class GenericPage(BasePage):
             reference: element name, selector tuple, or WebElement to click.
             labels: optional dynamic-selector label values.
         """
-        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
-        self.scroll_to_element(reference, labels)
         element = self.fetch(reference, labels)
-        self.actions.key_down(mod_key).click(element).key_up(mod_key).perform()
-        return self
+        self.scroll_to_element(element)
+        return self.control_click(element)
 
 
 class GenericPdf(BasePage):

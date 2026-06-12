@@ -72,15 +72,16 @@ def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
-    if (params or {}).get("is_private"):
+    if params.get("is_private"):
         # Run the search in a new private browsing window so Firefox tags the impression
         # is_private='true'. Open it from the hamburger menu (not the keyboard shortcut),
         # which is robust to whatever surface currently holds focus.
         panel = PanelUi(driver)
+        tabs = TabBar(driver)
         window_count = len(driver.window_handles)
         panel.open_private_window()
-        page.wait_for_num_windows(window_count + 1)
-        page.switch_to_new_window()
+        tabs.wait_for_num_tabs(window_count + 1)
+        tabs.switch_to_new_tab()
     else:
         page.open()
 
