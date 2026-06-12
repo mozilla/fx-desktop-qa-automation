@@ -1,6 +1,6 @@
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
+from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
 from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
@@ -63,13 +63,27 @@ def _action(name):
 
 @_entry("urlbar")
 def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
-    """Open a new tab and perform a search via the URL bar."""
+    """Open a new tab and perform a search via the URL bar.
+
+    When params['is_private'] is set, the search runs in a new private browsing
+    window so Firefox tags the impression with is_private='true'.
+    """
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
-    # Open the page and perform the search
-    page.open()
+    if (params or {}).get("is_private"):
+        # Run the search in a new private browsing window so Firefox tags the impression
+        # is_private='true'. Open it from the hamburger menu (not the keyboard shortcut),
+        # which is robust to whatever surface currently holds focus.
+        panel = PanelUi(driver)
+        window_count = len(driver.window_handles)
+        panel.open_private_window()
+        page.wait_for_num_windows(window_count + 1)
+        page.switch_to_new_window()
+    else:
+        page.open()
+
     nav.search(search_term)
 
 

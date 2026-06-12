@@ -60,6 +60,8 @@
 
     {"id": "3255452", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Bing"},   "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI",  "source": "opened_in_new_tab", "tagged": "true"}},
     {"id": "3255467", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "opened_in_new_tab", "tagged": "true"}},
-    {"id": "3255482", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "", "source": "opened_in_new_tab", "tagged": "false"}}
+    {"id": "3255482", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "", "source": "opened_in_new_tab", "tagged": "false"}},
+
+    {"id": "3255501", "entry": "urlbar", "action": null, "params": {"engine": "Google", "is_private": true}, "prefs": [], "expected": {"provider": "google", "partner_code": "firefox-b-d", "source": "urlbar", "tagged": "true", "is_private": "true"}}
   ]
 }
