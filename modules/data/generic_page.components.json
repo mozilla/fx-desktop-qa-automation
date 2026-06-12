@@ -25,9 +25,9 @@
         "groups": []
     },
     "wiki-search-bar": {
-        "selectorData": "cdx-text-input__input",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "searchInput",
+        "strategy": "id",
+        "groups": ["doNotCache"]
     },
     "wiki-search-button": {
         "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
