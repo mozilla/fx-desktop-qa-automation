@@ -2438,7 +2438,7 @@ Path to .json: modules/data/context_menu.components.json
 Selector Name: context-menu-copy-clean-link
 Selector Data: strip-on-share
 Description: "Copy Clean Link" context menu option
-Location: Tab context menu
+Location: Address bar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill
