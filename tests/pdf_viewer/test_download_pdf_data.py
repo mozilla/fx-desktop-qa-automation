@@ -4,8 +4,7 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.browser_object import TabBar
+from modules.browser_object import PanelUi, TabBar
 from modules.page_object import GenericPdf
 
 
