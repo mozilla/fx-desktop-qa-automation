@@ -221,9 +221,7 @@ class TestKey:
         entry = self.get_entry_from_filename(filename)
         while fieldname not in entry:
             if len(entry.keys()) != 1:
-                raise ValueError(
-                    f"Field {fieldname} does not exist for test {filename}"
-                )
+                return None
             entry = entry[next(k for k in entry.keys())]
         return entry[fieldname]
 

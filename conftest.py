@@ -340,7 +340,7 @@ def test_case():
 def test_codename():
     testname = os.getenv("PYTEST_CURRENT_TEST").split(" ")[0]
     testfile = testname.split("::")[0]
-    return get_codename.main(testfile)
+    return get_codename.main(testfile) or ""
 
 
 def pytest_configure(config):
