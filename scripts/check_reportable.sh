@@ -5,9 +5,6 @@
 #  mac: "True" | "False" | "Preview",
 #  preview_json: "" | "{...json...}"
 
-pip3 install 'pipenv==2023.11.15'
-pipenv install
-
 if [ "${DRY_RUN}" = "true" ]; then
   echo "Dry run enabled: generating preview plan - using preview_reportable() (no TestRail calls)"
 
@@ -60,3 +57,4 @@ else
   # leave preview_json empty
   echo "preview_json=" >> "$GITHUB_OUTPUT"
 fi
+

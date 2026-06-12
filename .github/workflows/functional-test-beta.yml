@@ -56,6 +56,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup dependencies
+        run: bash ./scripts/setup_python.sh
+
       - name: Build reportable matrix
         id: matrix
         env:
