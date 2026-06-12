@@ -73,7 +73,7 @@ jobs:
           for split in $(echo "$FUNCTIONAL_SPLITS" | jq -r '.[]'); do
             echo "Checking reportability for $split"
 
-            output=$(STARFOX_SPLIT="$split" bash ./scripts/check_reportable.sh)
+            output=$(GITHUB_OUTPUT="" STARFOX_SPLIT="$split" bash ./scripts/check_reportable.sh)
 
             win=$(echo "$output" | grep -E '^win=' | tail -1 | cut -d '=' -f2)
             mac=$(echo "$output" | grep -E '^mac=' | tail -1 | cut -d '=' -f2)

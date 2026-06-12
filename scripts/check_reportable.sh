@@ -1,9 +1,4 @@
 #!/bin/bash
-# This script is intended to be run from the Check-Beta-Version job.
-# Check-Beta-Version.outputs =>
-#  win: "True" | "False" | "Preview",
-#  mac: "True" | "False" | "Preview",
-#  preview_json: "" | "{...json...}"
 
 if [ "${DRY_RUN}" = "true" ]; then
   echo "Dry run enabled: generating preview plan - using preview_reportable() (no TestRail calls)"
