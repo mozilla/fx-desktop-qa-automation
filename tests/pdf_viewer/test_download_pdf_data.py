@@ -6,6 +6,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi
 from modules.page_object import GenericPdf
+from modules.browser_object import TabBar
 
 
 @pytest.fixture()
@@ -15,8 +16,6 @@ def test_case():
 
 PDF_FILE_NAME = "i-9.pdf"
 DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
-DOWNLOAD_TIMEOUT_SEC = 5.0
-POLL_INTERVAL_SEC = 1.0
 
 
 @pytest.fixture()
@@ -42,55 +41,59 @@ def hard_quit():
     return True
 
 
-def _wait_for_file_download(
-    saved_pdf_path, timeout=DOWNLOAD_TIMEOUT_SEC, interval=POLL_INTERVAL_SEC
-) -> None:
-    """Wait until file exists on disk or raise a pytest failure."""
-
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        if os.path.exists(saved_pdf_path):
-            initial_size = os.path.getsize(saved_pdf_path)
-            time.sleep(interval)
-            final_size = os.path.getsize(saved_pdf_path)
-
-            if initial_size == final_size and final_size > 0:
-                return True
-
-        time.sleep(interval)
-
-    pytest.fail(f"The file was not downloaded within {timeout:.1f} seconds.")
-    return None
-
-
 @pytest.mark.headed
 def test_download_pdf_data(
     driver: Firefox,
     pdf_file_path,
     downloads_folder: str,
+    sys_platform,
     file_name,
     delete_files,
     delete_files_regex_string,
+    wait_for_file_download,
 ):
     """
-    C1020327: Sangie/Verify that a PDF with filled data is successfully downloaded in Private window
+    C1020327: Verify that a PDF with filled data is successfully downloaded in Private window
     """
 
     # Open Private Window
     panel = PanelUi(driver)
+    saved_pdf_location = os.path.join(downloads_folder, file_name)
+    tabs = TabBar(driver)
+
     panel.open_and_switch_to_new_window("private")
 
     pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_file_path}")
-    pdf_viewer.fill_element("first-name-field", "John")
+    pdf_viewer.fill_element("first-name-field", "Mark")
 
-    # Finally download the edited pdf
-    pdf_viewer.click_download_button()
-    time.sleep(2)
-    pdf_viewer.handle_os_download_confirmation()
+    use_mock_picker = sys_platform == "Linux"
+    if use_mock_picker:
+        pdf_viewer.install_mock_file_picker(saved_pdf_location)
 
-    # Set the expected download path and the expected PDF name
-    saved_pdf_location = os.path.join(downloads_folder, file_name)
-    _wait_for_file_download(saved_pdf_location)
+    # Click the download button
+    try:
+        pdf_viewer.click_download_button()
+
+        if use_mock_picker:
+            pdf_viewer.wait_for_mock_file_picker()
+        else:
+            # Allow time for the download dialog to appear and pressing enter to download
+            time.sleep(2)
+
+            # Handle OS download prompt
+            pdf_viewer.handle_os_download_confirmation()
+    finally:
+        if use_mock_picker:
+            pdf_viewer.cleanup_mock_file_picker()
+
+    # # Set the expected download path and the expected PDF name
+    wait_for_file_download(saved_pdf_location)
+
+    # Open the saved pdf and check if the edited field is displayed
+    tabs.open_and_switch_to_new_tab()
+    driver.get("file://" + os.path.realpath(saved_pdf_location))
+    pdf_viewer.element_visible("edited-name-field")
+
     # Verify if the file exists
     assert os.path.exists(saved_pdf_location), (
         f"The file was not downloaded to {saved_pdf_location}."
