@@ -28,6 +28,9 @@ PY
   printf "preview_json<<EOF\n%s\nEOF\n" "$PREVIEW_JSON" >> "$GITHUB_OUTPUT"
 
   # mark the boolean outputs as Preview (so downstream gating won't treat them as "True")
+  echo "win=Preview"
+  echo "mac=Preview"
+
   echo "win=Preview" >> "$GITHUB_OUTPUT"
   echo "mac=Preview" >> "$GITHUB_OUTPUT"
 else
@@ -35,10 +38,14 @@ else
 
   WIN_STDOUT=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))' 2>/tmp/win_stderr)
   WIN_EXIT=$?
+
+  echo "win=${WIN_STDOUT}"
   echo "win=${WIN_STDOUT}" >> "$GITHUB_OUTPUT"
 
   MAC_STDOUT=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))' 2>/tmp/mac_stderr)
   MAC_EXIT=$?
+
+  echo "mac=${MAC_STDOUT}"
   echo "mac=${MAC_STDOUT}" >> "$GITHUB_OUTPUT"
 
   {
