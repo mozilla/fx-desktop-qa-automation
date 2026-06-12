@@ -24,7 +24,6 @@ PY
   # Create an output named preview_json with the value coming from preview_reportable()
   printf "preview_json<<EOF\n%s\nEOF\n" "$PREVIEW_JSON" >> "$GITHUB_OUTPUT"
 
-  # mark the boolean outputs as Preview (so downstream gating won't treat them as "True")
   echo "win=Preview"
   echo "mac=Preview"
 

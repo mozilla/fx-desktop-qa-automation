@@ -41,7 +41,6 @@ jobs:
             splits="${splits}\"functional${i}\","
           done
           splits="${splits%,}]"
-    
           echo "functional_splits=$splits" >> "$GITHUB_OUTPUT"
 
   Build-Reportable-Matrix:
@@ -111,7 +110,7 @@ jobs:
 
   Run-Functional:
     needs: Build-Reportable-Matrix
-    if: ${{ needs.Build-Reportable-Matrix.outputs.matrix != '[]' && (github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true') }}
+    if: needs.Build-Reportable-Matrix.outputs.matrix != '[]' && (github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true')
     strategy:
       fail-fast: false
       matrix:
