@@ -3,7 +3,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
-from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_action, run_entry
+from tests.glean.flows import (
+    ENTRY_PREFS,
+    RELATED_SEARCH_TERM,
+    SEARCH_TERM,
+    run_action,
+    run_entry,
+)
 from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
@@ -55,7 +61,12 @@ def test_serp_impression(driver: Firefox, case: dict, sys_platform: str):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    run_entry(driver, case["entry"], SEARCH_TERM, params)
+    # open_in_new_tab clicks an on-page related-search link, which only renders for a
+    # commercial query; every other flow uses the default term.
+    search_term = (
+        RELATED_SEARCH_TERM if case.get("action") == "open_in_new_tab" else SEARCH_TERM
+    )
+    run_entry(driver, case["entry"], search_term, params)
     run_action(driver, case.get("action"), params)
 
     glean.poll_glean_metric(METRIC, case["expected"])

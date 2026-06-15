@@ -1,9 +1,13 @@
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import ContextMenu, Glean, Navigation, TabBar
+from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
 from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
+# Commercial query so engines render the related-searches component that open_in_new_tab clicks.
+# Spaces get URL-encoded, so match only the first token when checking the SERP URL.
+RELATED_SEARCH_TERM = "women shoes"
+RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
 
@@ -59,13 +63,28 @@ def _action(name):
 
 @_entry("urlbar")
 def _entry_urlbar(driver: Firefox, search_term, params: dict = None):
-    """Open a new tab and perform a search via the URL bar."""
+    """Open a new tab and perform a search via the URL bar.
+
+    When params['is_private'] is set, the search runs in a new private browsing
+    window so Firefox tags the impression with is_private='true'.
+    """
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
 
-    # Open the page and perform the search
-    page.open()
+    if params.get("is_private"):
+        # Run the search in a new private browsing window so Firefox tags the impression
+        # is_private='true'. Open it from the hamburger menu (not the keyboard shortcut),
+        # which is robust to whatever surface currently holds focus.
+        panel = PanelUi(driver)
+        tabs = TabBar(driver)
+        window_count = len(driver.window_handles)
+        panel.open_private_window()
+        tabs.wait_for_num_tabs(window_count + 1)
+        tabs.switch_to_new_tab()
+    else:
+        page.open()
+
     nav.search(search_term)
 
 
@@ -226,6 +245,34 @@ def _action_reload(driver: Firefox, params: dict = None):
     # Reload the page and wait for it to settle
     nav.refresh_page()
     page.url_contains(SEARCH_TERM)
+
+
+@_action("open_in_new_tab")
+def _action_open_in_new_tab(driver: Firefox, params: dict = None):
+    """Ctrl/Cmd+click a related-search shortcut on the SERP so the refined SERP opens in a new
+    background tab, then switch to it so its impression records with source='opened_in_new_tab'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
+
+    # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP telemetry
+    # context before we open the refinement; otherwise the new tab is attributed as source='unknown'
+    page.url_contains(RELATED_SEARCH_TERM_IN_URL)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Ctrl/Cmd+click the related-search shortcut to open the refined SERP in a new background tab
+    page.element_visible(shortcut)
+    page.control_click(shortcut)
+
+    # Switch to the new tab and wait for it to land on a results page. The related search differs
+    # from the seed term and engines encode the query unpredictably (case, punctuation), so we
+    # confirm a search URL (q=) loaded rather than matching the refined term text; the final Glean
+    # poll verifies the impression itself.
+    tabs.wait_for_num_tabs(2)
+    tabs.switch_to_new_tab()
+    page.url_contains("q=")
 
 
 @_action("tabhistory")
