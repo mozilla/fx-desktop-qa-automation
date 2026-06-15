@@ -32,6 +32,7 @@ brotli = "*"
 opencv-python = "*"
 python-dev-tools = "*"
 python3-xlib = "*"
+treeherder-client = "*"
 
 [dev-packages]
 werkzeug = "==3.1.6"
