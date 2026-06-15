@@ -684,6 +684,10 @@ networking:
     result: pass
     splits:
     - smoke
+  test_heuristics_disabled_when_trr_mode_2:
+    result: pass
+    splits:
+    - functional1
   test_http_site:
     result: pass
     splits:
@@ -1296,6 +1300,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_etp_toggle_on_off_behavior_private_window:
+    result: pass
+    splits:
+    - functional2
   test_extended_certificate_messaging_displayed_in_panel:
     result: pass
     splits:
@@ -1372,10 +1380,6 @@ security_and_privacy:
     splits:
     - functional2
   test_private_session_history_exclusion:
-    result: pass
-    splits:
-    - functional2
-  test_etp_toggle_on_off_behavior_private_window:
     result: pass
     splits:
     - functional2
