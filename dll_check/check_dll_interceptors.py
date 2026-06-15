@@ -14,7 +14,7 @@ ARTIFACT_LINK = "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/{}
 
 def main():
     # get buildhub json
-    download_dir, _ = os.getenv("FX_DOWNLOAD_LINK").rsplit("/", 1)
+    download_dir, _ = os.getenv("FX_DOWNLOAD_URL").rsplit("/", 1)
     response = requests.get(f"{download_dir}/{BUILDHUB}")
     response.raise_for_status()
 
