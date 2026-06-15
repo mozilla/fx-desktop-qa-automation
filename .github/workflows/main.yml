@@ -103,9 +103,6 @@ jobs:
           mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
 
-      - name: Spike test - DLL Interceptors
-        run: pipenv run python dll_check/check_dll_interceptors.py
-
       - name: Install Fx
         id: install-fx
         env:
@@ -123,6 +120,9 @@ jobs:
           "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           $fx_version = (pipenv run python -m scripts.collect_executables -n) -join ""
           "FX_VERSION=$fx_version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Spike test - DLL Interceptors
+        run: pipenv run python dll_check/check_dll_interceptors.py
 
       - name: Download Geckodriver
         if: ${{ inputs.dry_run != true }}
