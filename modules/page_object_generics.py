@@ -148,20 +148,6 @@ class GenericPage(BasePage):
         # Click PDF Document (.pdf)
         self.click_on("gdoc-file-download-pdf")
 
-    @BasePage.context_content
-    def open_link_in_new_tab_via_modifier_click(
-        self, reference: str | tuple | WebElement, labels: list[str] | None = None
-    ) -> BasePage:
-        """Ctrl/Cmd+click a link so it opens in a new background tab.
-
-        Arguments:
-            reference: element name, selector tuple, or WebElement to click.
-            labels: optional dynamic-selector label values.
-        """
-        element = self.fetch(reference, labels)
-        self.scroll_to_element(element)
-        return self.control_click(element)
-
 
 class GenericPdf(BasePage):
     """

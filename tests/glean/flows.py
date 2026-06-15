@@ -264,7 +264,7 @@ def _action_open_in_new_tab(driver: Firefox, params: dict = None):
 
     # Ctrl/Cmd+click the related-search shortcut to open the refined SERP in a new background tab
     page.element_visible(shortcut)
-    page.open_link_in_new_tab_via_modifier_click(shortcut)
+    page.control_click(shortcut)
 
     # Switch to the new tab and wait for it to land on a results page. The related search differs
     # from the seed term and engines encode the query unpredictably (case, punctuation), so we
