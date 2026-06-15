@@ -103,6 +103,9 @@ jobs:
           mv ./config/ci_pyproject.toml ./pyproject.toml;
           pipenv install;
 
+      - name: Spike test - DLL Interceptors
+        run: pipenv run dll_check/check_dll_interceptors.py
+
       - name: Install Fx
         id: install-fx
         env:
