@@ -880,5 +880,25 @@
     "selectorData": "turnOffPrimaryPassword",
     "strategy": "id",
     "groups": []
+  },
+  "etp-advanced-settings-button": {
+    "selectorData": "etpStatusAdvancedButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-standard-radio": {
+    "selectorData": "etpLevelStandard",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-strict-radio": {
+      "selectorData": "etpLevelStrict",
+      "strategy": "id",
+      "groups": []
+  },
+  "etp-custom-radio": {
+      "selectorData": "etpLevelCustom",
+      "strategy": "id",
+      "groups": []
   }
 }
