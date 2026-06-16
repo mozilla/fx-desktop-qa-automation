@@ -112,8 +112,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047892
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -1764,8 +1763,7 @@ tabs:
     - functional2
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047882
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci
