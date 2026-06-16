@@ -892,13 +892,13 @@
     "groups": []
   },
   "etp-strict-radio": {
-      "selectorData": "etpLevelStrict",
-      "strategy": "id",
-      "groups": []
+    "selectorData": "etpLevelStrict",
+    "strategy": "id",
+    "groups": []
   },
   "etp-custom-radio": {
-      "selectorData": "etpLevelCustom",
-      "strategy": "id",
-      "groups": []
+    "selectorData": "etpLevelCustom",
+    "strategy": "id",
+    "groups": []
   }
 }

@@ -6,9 +6,9 @@ from modules.browser_object_tabbar import TabBar
 from modules.page_object import GenericPage
 from modules.page_object_prefs import AboutPrefs
 
-TEST_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining_and_cookies.html"
+FINGERPRINTERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining_and_cookies.html"
 
-TRACKING_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html/"
+TRACKING_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
 DETECTED_FINGERPRINTER = "https://base-fingerprinting-track-digest256.dummytracker.org"
 
@@ -29,7 +29,7 @@ def test_etp_panel_displayed_when_trackers_detected(
     """
 
     # Instantiate objects
-    test_page = GenericPage(driver, url=TEST_URL)
+    test_page = GenericPage(driver, url=FINGERPRINTERS_URL)
     tracking_page = GenericPage(driver, url=TRACKING_URL)
 
     # Use Standard ETP mode
