@@ -3034,6 +3034,27 @@ Description: The in-content search bar on the Qwant SERP, used to refine a searc
 Location: qwant.com SERP
 Path to .json: modules/data/generic_page.components.json
 ```
+```
+Selector Name: bing-related-search-shortcut
+Selector Data: "#brsv3 a"
+Description: A related-search link in the Bing SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')
+Location: bing.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: duckduckgo-related-search-shortcut
+Selector Data: "a.js-related-searches-link"
+Description: A related-search link in the DuckDuckGo SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')
+Location: duckduckgo.com SERP
+Path to .json: modules/data/generic_page.components.json
+```
+```
+Selector Name: ecosia-related-search-shortcut
+Selector Data: "a.related-queries__link-bottom"
+Description: A related-search link in the Ecosia SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')
+Location: ecosia.org SERP
+Path to .json: modules/data/generic_page.components.json
+```
 #### generic_pdf
 ```
 Selector Name: highlighted-text
@@ -5485,5 +5506,19 @@ Selector Name: trustpanel-subview-back-button
 Selector Data: ".subviewbutton.subviewbutton-iconic.subviewbutton-back"
 Description: Trustpanel subview back button
 Location: Trustpanel - Connection protections tab
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-cross-site-cookies-count
+Selector Data: "[data-l10n-id='trustpanel-list-label-tracking-cookies']"
+Description: The cross-site tracking cookies button in the detailed tracker list showing the count of blocked cross-site tracking cookies
+Location: Trustpanel - blocker details view
+Path to .json: modules/data/trust_panel.components.json
+```
+```
+Selector Name: trustpanel-fingerprinter-count
+Selector Data: "[data-l10n-id='trustpanel-list-label-fingerprinter']"
+Description: The fingerprinters button in the detailed tracker list showing the count of blocked fingerprinters
+Location: Trustpanel - blocker details view
 Path to .json: modules/data/trust_panel.components.json
 ```

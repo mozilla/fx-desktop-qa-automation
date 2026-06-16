@@ -766,6 +766,7 @@ class BasePage(Page):
     def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform control-click on given element"""
         element = self.fetch(reference, labels)
+        self.scroll_to_element(element)
         if self.sys_platform() == "Darwin":
             mod_key = Keys.COMMAND
         else:

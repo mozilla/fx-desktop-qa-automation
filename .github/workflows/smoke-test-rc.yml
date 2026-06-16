@@ -32,6 +32,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup dependencies
+        run: bash ./scripts/setup_python.sh
+
       - name: Check if the run is reportable
         id: reportable
         env:

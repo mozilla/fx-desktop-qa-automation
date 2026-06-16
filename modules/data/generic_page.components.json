@@ -25,9 +25,9 @@
         "groups": []
     },
     "wiki-search-bar": {
-        "selectorData": "cdx-text-input__input",
-        "strategy": "class",
-        "groups": []
+        "selectorData": "searchInput",
+        "strategy": "id",
+        "groups": ["doNotCache"]
     },
     "wiki-search-button": {
         "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
@@ -172,6 +172,21 @@
     },
     "qwant-incontent-search-bar": {
         "selectorData": "input[name='q']",
+        "strategy": "css",
+        "groups": []
+    },
+    "bing-related-search-shortcut": {
+        "selectorData": "#brsv3 a",
+        "strategy": "css",
+        "groups": []
+    },
+    "duckduckgo-related-search-shortcut": {
+        "selectorData": "a.js-related-searches-link",
+        "strategy": "css",
+        "groups": []
+    },
+    "ecosia-related-search-shortcut": {
+        "selectorData": "a.related-queries__link-bottom",
         "strategy": "css",
         "groups": []
     }
