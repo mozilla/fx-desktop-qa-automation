@@ -46,11 +46,8 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar.zst"])
 
     # run tests
-    for _ in range(20):
-        if os.path.isdir("cpptests"):
-            break
-        sleep(1)
-    print(os.listdir("cpptests"))
+    print(os.listdir("."))
+    print(os.listdir("cppunittest"))
     itcptr_testout = check_output([".\\cppunittest\\TestDllInterceptor.exe"]).decode()
     icptxp_testout = check_output(
         [".\\cppunittest\\TestDllInterceptorCrossProcess.exe"]
