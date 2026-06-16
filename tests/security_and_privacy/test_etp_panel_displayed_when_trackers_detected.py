@@ -19,7 +19,10 @@ def test_case():
 
 
 def test_etp_panel_displayed_when_trackers_detected(
-        driver: Firefox, trust_panel: TrustPanel, about_prefs_privacy: AboutPrefs, tabs: TabBar
+    driver: Firefox,
+    trust_panel: TrustPanel,
+    about_prefs_privacy: AboutPrefs,
+    tabs: TabBar,
 ):
     """
     C3054905 - The ETP panel is correctly displayed when the blocked trackers are detected

@@ -1573,6 +1573,34 @@ Description: "Turn off Primary Password" / remove button in the Remove Primary P
 Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: etp-advanced-settings-button
+Selector Data: "etpStatusAdvancedButton"
+Description: The "Advanced Settings" button in the Privacy & Security preferences that opens the ETP level selection
+Location: Privacy & Security preferences - Enhanced Tracking Protection section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-standard-radio
+Selector Data: "etpLevelStandard"
+Description: The "Standard (default)" radio button in the ETP advanced settings that enables standard tracking protection
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-strict-radio
+Selector Data: "etpLevelStrict"
+Description: The "Strict" radio button in the ETP advanced settings that enables stricter tracking protection, blocks more trackers but may cause some sites to break
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-radio
+Selector Data: "etpLevelCustom"
+Description: The "Custom" radio button in the ETP advanced settings that allows users to choose which tracking protections to turn on or off
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
