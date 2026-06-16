@@ -47,12 +47,8 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
-    print(os.listdir("."))
-    print(os.listdir("cppunittest"))
-    itcptr_testout = check_output([".\\cppunittest\\TestDllInterceptor.exe"]).decode()
-    icptxp_testout = check_output(
-        [".\\cppunittest\\TestDllInterceptorCrossProcess.exe"]
-    ).decode()
+    itcptr_testout = check_output([".\\TestDllInterceptor.exe"]).decode()
+    icptxp_testout = check_output([".\\TestDllInterceptorCrossProcess.exe"]).decode()
     assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
     assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
     assert "TEST-UNEXPECTED-FAIL" in icptxp_testout
