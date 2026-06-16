@@ -26,6 +26,7 @@ ENTRY_PREFS: dict[str, list[tuple]] = {
 
 _ENTRIES = {}
 _ACTIONS = {}
+_ABANDONMENTS = {}
 
 
 def _entry(name):
@@ -54,6 +55,25 @@ def _action(name):
         return fn
 
     return decorator
+
+
+def _abandonment(name):
+    """Decorator that registers a serp.abandonment flow by reason name.
+
+    Abandonment flows open a SERP and then leave it without engaging. The name must match the
+    'action' value used in the serp_abandonment cases.json.
+    """
+
+    def decorator(fn):
+        _ABANDONMENTS[name] = fn
+        return fn
+
+    return decorator
+
+
+# ===========================================================================
+# serp.impression
+# ===========================================================================
 
 
 # ---------------------------------------------------------------------------
@@ -301,6 +321,38 @@ def _action_tabhistory(driver: Firefox, params: dict = None):
     page.url_contains(SEARCH_TERM)
 
 
+# ===========================================================================
+# serp.abandonment
+# ===========================================================================
+
+
+@_abandonment("tab_close")
+def _abandonment_tab_close(driver: Firefox, search_term: str, params: dict = None):
+    """Open a SERP in a new tab and close it without engaging, so Firefox records a
+    serp.abandonment with reason='tab_close'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so closing it leaves the original tab (and session) alive
+    original_tab_count = len(driver.window_handles)
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; closing
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Close the SERP tab without engaging -> serp.abandonment reason='tab_close', then return
+    # focus to the remaining tab so the metric can be read
+    tabs.close_tab_shortcut(page.sys_platform())
+    tabs.wait_for_num_tabs(original_tab_count)
+    page.switch_to_new_tab()
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -322,3 +374,13 @@ def run_action(driver: Firefox, action: str, params: dict = None):
     if action not in _ACTIONS:
         raise NotImplementedError(f"Action '{action}' is not implemented")
     _ACTIONS[action](driver, params)
+
+
+def run_abandonment(
+    driver: Firefox, reason: str, search_term: str, params: dict = None
+):
+    """Look up and execute the registered serp.abandonment flow by reason name."""
+    params = params or {}
+    if reason not in _ABANDONMENTS:
+        raise NotImplementedError(f"Abandonment '{reason}' is not implemented")
+    _ABANDONMENTS[reason](driver, search_term, params)
