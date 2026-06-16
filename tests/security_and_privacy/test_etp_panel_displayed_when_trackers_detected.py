@@ -27,3 +27,10 @@ def test_etp_panel_displayed_when_trackers_detected(driver: Firefox, trust_panel
 
     # Click on the "See All" button
     trust_panel.click_see_all()
+
+    # The trackers blocked on the page are listed under the section "Firefox blocked these things for you:"
+    # which includes: "x Cross-site tracking cookies", "x Fingerprinters" and "x Cryptominer"
+    trust_panel.detected_category_visible("cryptominer")
+    trust_panel.detected_category_visible("fingerprinter")
+    trust_panel.detected_category_visible("tracking cookies")
+
