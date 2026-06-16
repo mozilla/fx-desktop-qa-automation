@@ -1252,6 +1252,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional2
+  test_copy_clean_link:
+    result: pass
+    splits:
+    - functional2
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
