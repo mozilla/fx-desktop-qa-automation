@@ -1,5 +1,5 @@
 import os
-from subprocess import STDOUT, check_call, check_output
+from subprocess import STDOUT, check_call, check_output, run
 from time import sleep
 
 import requests
@@ -47,6 +47,9 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
+    cproc = run([".\\TestDllInterceptor.exe"], shell=True, capture_output=True)
+    print(f"Out: {cproc.stdout.decode()}")
+    print(f"Err: {cproc.stderr.decode()}")
     itcptr_testout = check_output(
         [".\\TestDllInterceptor.exe"], stderr=STDOUT, shell=True
     ).decode()
@@ -55,7 +58,7 @@ def main(bits: int):
     ).decode()
     assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
     assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
-    assert "TEST-UNEXPECTED-FAIL" in icptxp_testout
+    assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout
 
 
 if __name__ == "__main__":
