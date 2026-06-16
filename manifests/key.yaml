@@ -112,7 +112,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047892
+    result: unstable
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -179,7 +180,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_term_persists:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047893
+    result: unstable
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
@@ -517,11 +519,13 @@ find_toolbar:
     - functional1
 form_autofill:
   test_address_autofill_attribute:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
+    result: unstable
     splits:
     - smoke
   test_autofill_cc_cvv:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_autofill_credit_card:
@@ -529,23 +533,28 @@ form_autofill:
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_autofill_credit_card_enable:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_autofill_credit_card_four_fields:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_cc_clear_form:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_clear_form:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_create_new_cc_profile:
@@ -553,19 +562,23 @@ form_autofill:
     splits:
     - functional1
   test_create_profile_autofill:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
+    result: unstable
     splits:
     - smoke
   test_delete_cc_profile:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_edit_credit_card:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_enable_disable_autofill:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_form_autofill_suggestions:
@@ -574,7 +587,8 @@ form_autofill:
     splits:
     - functional1
   test_name_autofill_attribute:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
+    result: unstable
     splits:
     - smoke
   test_private_mode_info_not_saved:
@@ -582,33 +596,30 @@ form_autofill:
     splits:
     - functional1
   test_telephone_autofill_attribute:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
+    result: unstable
     splits:
     - smoke
     - ci
   test_updating_address:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
   test_updating_credit_card:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
+    result: unstable
     splits:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784 (win only different target)
+    result: unstable
     splits:
     - functional1
   test_geolocation_shared_via_w3c_api:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784 (win only different target)
+    result: unstable
     splits:
     - functional1
 glean:
@@ -618,7 +629,8 @@ glean:
     - glean
 language_packs:
   test_language_pack_install_addons:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047894
+    result: unstable
     splits:
     - functional1
   test_language_pack_install_preferences:
@@ -652,7 +664,8 @@ menus:
     splits:
     - functional1
   test_new_tab_label:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047899
+    result: unstable
     splits:
     - functional1
   test_tab_context_menu_actions:
@@ -698,27 +711,28 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
-    result:
-      linux: pass
-      mac: pass
-      win: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with Mac GHA? trying pass to see what happens.
+    result: unstable
     splits:
     - functional1
   test_camera_permissions_notification:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_cancel_webextension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_deny_geolocation:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_deny_screen_capture:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_downloads_button_is_displayed:
@@ -730,7 +744,8 @@ notifications:
     splits:
     - functional1
   test_geolocation_allow_browserleaks:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_geolocation_prompt_presence:
@@ -738,7 +753,8 @@ notifications:
     splits:
     - functional1
   test_microphone_permissions_notification:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
   test_notifications_displayed:
@@ -751,12 +767,14 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
+    result: unstable
     splits:
     - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
+    result: unstable
     splits:
     - functional1
   test_about_logins_direct_navigation:
@@ -764,7 +782,8 @@ password_manager:
     splits:
     - functional1
   test_about_logins_edit_prompts_primary_password:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
+    result: unstable
     splits:
     - functional1
   test_about_logins_navigation_from_about_preferences:
@@ -816,11 +835,13 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
+    result: unstable
     splits:
     - functional1
   test_add_username_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
@@ -832,7 +853,8 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -848,11 +870,13 @@ password_manager:
     splits:
     - smoke
   test_delete_primary_password:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
@@ -860,7 +884,8 @@ password_manager:
     splits:
     - functional2
   test_edit_primary_password:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
@@ -873,7 +898,8 @@ password_manager:
     splits:
     - functional1
   test_multiple_saved_logins:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -881,11 +907,13 @@ password_manager:
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047886
+    result: unstable
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_password_csv_correctness:
@@ -905,11 +933,13 @@ password_manager:
     splits:
     - functional2
   test_password_field_only_triggers_dismissed_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_password_manager_key_icon_after_doorhanger_dismiss:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_password_manager_on_google_US:
@@ -929,15 +959,18 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_save_login_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_saved_hyperlink_redirects_to_corresponding_page:
@@ -949,7 +982,8 @@ password_manager:
     splits:
     - functional2
   test_update_login_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
   test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:
@@ -961,7 +995,8 @@ password_manager:
     splits:
     - functional2
   test_username_edit_captured_in_dismissed_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
+    result: unstable
     splits:
     - functional2
 pdf_viewer:
@@ -1100,7 +1135,8 @@ preferences:
     splits:
     - smoke
   test_notifications_change_set:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
+    result: unstable
     splits:
     - functional2
 printing_ui:
@@ -1487,7 +1523,8 @@ sidebar:
     splits:
     - functional2
   test_hide_sidebar_behaviour:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
+    result: unstable
     splits:
     - functional2
   test_open_ai_chat_via_context_menu:
@@ -1507,7 +1544,8 @@ sidebar:
     splits:
     - functional2
   test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
+    result: unstable
     splits:
     - functional2
   test_sidebar_multiple_vertical_tabs_selection:
@@ -1567,7 +1605,8 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
+    result: unstable
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
@@ -1605,7 +1644,8 @@ tabs:
     - smoke
     - ci
   test_close_tab_through_middle_mouse_click:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
+    result: unstable
     splits:
     - functional2
     - ci
@@ -1654,7 +1694,8 @@ tabs:
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
+    result: unstable
     splits:
     - functional2
   test_open_new_tab:
@@ -1727,11 +1768,13 @@ tabs:
     - functional2
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047882
+    result: unstable
     splits:
     - smoke
     - ci
   test_installed_theme_enabled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047901
+    result: unstable
     splits:
     - functional2
