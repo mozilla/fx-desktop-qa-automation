@@ -44,6 +44,7 @@ def main(bits: int):
             if chunk:
                 fh.write(chunk)
     check_call(["7z", "e", "cpptests.tar.zst"])
+    check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
     print(os.listdir("."))
