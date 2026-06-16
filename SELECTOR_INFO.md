@@ -11,7 +11,7 @@ Path to .json: (ie, modules/data/google_search.components.json
 #### about_addons
 ```
 Selector Name: sidebar-options
-Selector Data: "button.category[name='{name}']"
+Selector Data: "moz-page-nav-button[view='{name}']"
 Description: Selects an option in about:addons(sidebar)
 Location: Left side of about:addons page
 Path to .json: modules/data/about_addons.components.json
