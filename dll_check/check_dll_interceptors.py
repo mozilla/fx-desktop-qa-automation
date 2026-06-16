@@ -1,5 +1,6 @@
 import os
 from subprocess import check_call, check_output
+from time import sleep
 
 import requests
 import thclient
@@ -45,9 +46,14 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar.zst"])
 
     # run tests
-    itcptr_testout = check_output(["cppunittest\\TestDllInterceptor.exe"]).decode()
+    for _ in range(20):
+        if os.path.isdir("cpptests"):
+            break
+        sleep(1)
+    print(os.listdir("cpptests"))
+    itcptr_testout = check_output([".\\cppunittest\\TestDllInterceptor.exe"]).decode()
     icptxp_testout = check_output(
-        ["cppunittest\\TestDllInterceptorCrossProcess.exe"]
+        [".\\cppunittest\\TestDllInterceptorCrossProcess.exe"]
     ).decode()
     assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
     assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
