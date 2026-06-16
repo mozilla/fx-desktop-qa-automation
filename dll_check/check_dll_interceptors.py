@@ -42,7 +42,7 @@ def main(bits: int):
         for chunk in response.iter_content(chunk_size=2048):
             if chunk:
                 fh.write(chunk)
-    check_call(["7za", "e", "cpptests.tar.zst"])
+    check_call(["7z", "e", "cpptests.tar.zst"])
 
     # run tests
     itcptr_testout = check_output(["cppunittest\\TestDllInterceptor.exe"]).decode()
