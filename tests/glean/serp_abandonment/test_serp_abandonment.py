@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
-from tests.glean.flows import SEARCH_TERM, run_abandonment
+from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_abandonment
 from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
@@ -28,7 +28,9 @@ def test_case(case):
 @pytest.fixture()
 def add_to_prefs_list(case):
     """Per-case Firefox prefs to set before driver launch."""
-    return [tuple(p) for p in case.get("prefs", [])]
+    prefs = [tuple(p) for p in case.get("prefs", [])]
+    prefs += ENTRY_PREFS.get(case["entry"], [])
+    return prefs
 
 
 def test_serp_abandonment(driver: Firefox, case: dict):
