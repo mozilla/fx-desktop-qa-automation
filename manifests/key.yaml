@@ -773,8 +773,7 @@ notifications:
     - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_direct_navigation:
@@ -782,8 +781,7 @@ password_manager:
     splits:
     - functional1
   test_about_logins_edit_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_preferences:
@@ -835,8 +833,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_add_username_via_doorhanger:

@@ -552,12 +552,18 @@
     "strategy": "id",
     "groups": []
   },
-  "enter-new-password": {
+  "primary-password-new-input": {
     "selectorData": "pw1",
     "strategy": "id",
     "groups": [
       "doNotCache"
     ]
+  },
+  "primary-password-new-input-field": {
+    "selectorData": "input#input",
+    "strategy": "css",
+    "shadowParent": "primary-password-new-input",
+    "groups": []
   },
   "form-container": {
     "selectorData": "form",
@@ -571,12 +577,16 @@
     "strategy": "id",
     "groups": []
   },
-  "reenter-new-password": {
+  "primary-password-reenter-input": {
     "selectorData": "pw2",
     "strategy": "id",
-    "groups": [
-      "doNotCache"
-    ]
+    "groups": []
+  },
+  "primary-password-reenter-input-field": {
+      "selectorData": "input#input",
+      "strategy": "css",
+      "shadowParent": "primary-password-reenter-input",
+      "groups": []
   },
   "submit-password": {
     "selectorData": "button[label^='OK']",

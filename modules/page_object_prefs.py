@@ -1100,8 +1100,8 @@ class AboutPrefs(BasePage):
         """
         Sets a new primary password.
         """
-        self.get_element("enter-new-password").send_keys(password)
-        self.get_element("reenter-new-password").send_keys(password)
+        self.get_element("primary-password-new-input-field").send_keys(password)
+        self.get_element("primary-password-reenter-input-field").send_keys(password)
         self.click_on("submit-password")
         return self
 
