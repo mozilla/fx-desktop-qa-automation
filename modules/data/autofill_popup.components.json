@@ -6,10 +6,35 @@
     "strategy": "id",
     "groups": []
   },
-  "doorhanger-save-button": {
-    "selectorData": "button[label^='Save'].popup-notification-primary-button",
+  "doorhanger-save-button-parent": {
+    "selectorData": "moz-button.popup-notification-primary-button[label='Save']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+      ]
+  },
+  "doorhanger-save-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "doorhanger-save-button-parent",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "doorhanger-not-now-button-parent": {
+    "selectorData": "moz-button.popup-notification-secondary-button[label='Not now']",
+    "strategy": "css",
+    "groups": [
+        "doNotCache"
+    ]
+  },
+  "doorhanger-not-now-button": {
+      "selectorData": "main-button",
+      "strategy": "id",
+      "shadowParent": "doorhanger-not-now-button-parent",
+      "groups": [
+          "doNotCache"
+      ]
   },
   "doorhanger-dropdown-button": {
     "selectorData": "button[aria-label='More actions']",
@@ -31,10 +56,20 @@
     "strategy": "css",
     "groups": []
   },
-  "doorhanger-update-button": {
-    "selectorData": "button[label^='Update']",
+  "doorhanger-update-button-parent": {
+    "selectorData": "moz-button.popup-notification-primary-button[label='Update']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "doorhanger-update-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "doorhanger-update-button-parent",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "pop-up-component": {
     "selectorData": "PopupAutoComplete",

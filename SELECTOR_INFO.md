@@ -1861,10 +1861,31 @@ Location: Inside chrome context, holds the data that would be showed as a previe
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-save-button-parent
+Selector Data: "moz-button.popup-notification-primary-button[label='Save']"
+Description: The outer moz-button element for the "Save" button in the save password doorhanger notification popup, identified by the primary button class and "Save" label
+Location: Save password doorhanger popup - chrome UI
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-save-button
-Selector Data: button[label^='Save'].popup-notification-primary-button
-Description: The "Save" button 
-Location: Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar
+Selector Data: "main-button"
+Description: The inner button element inside the shadow DOM of the "Save" moz-button in the save password doorhanger notification popup, used to actually trigger the save action
+Location: Save password doorhanger popup - chrome UI
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-not-now-button-parent
+Selector Data: "moz-button.popup-notification-secondary-button[label='Not now']"
+Description: The outer moz-button element for the "Not now" button in the save password doorhanger notification popup, identified by the secondary button class and "Not now" label
+Location: Save password doorhanger popup - chrome UI
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-not-now-button
+Selector Data: "main-button"
+Description: The inner button element inside the shadow DOM of the "Not now" moz-button in the save password doorhanger notification popup, used to dismiss the save password prompt
+Location: Save password doorhanger popup - chrome UI
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
@@ -1896,10 +1917,17 @@ Location: Inside the autofill save login doorhanger, accessible by clicking the 
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-update-button-parent
+Selector Data: "moz-button.popup-notification-primary-button[label='Update']"
+Description: The outer moz-button element for the "Update" button in the update password doorhanger notification popup, identified by the primary button class and "Update" label
+Location: Update password doorhanger popup - chrome UI
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-update-button
-Selector Data: "button[label^='Update']"
-Description: The "Update" button 
-Location: Inside the autofill save addreses doorhanger that is triggered in navigation bar
+Selector Data: "main-button"
+Description: The inner button element inside the shadow DOM of the "Update" moz-button in the update password doorhanger notification popup, used to confirm updating the saved password
+Location: Update password doorhanger popup - chrome UI
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
