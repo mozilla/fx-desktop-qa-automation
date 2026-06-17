@@ -30,5 +30,20 @@
         "selectorData": "AddonTitle",
         "strategy": "class",
         "groups": []
+    },
+    "addon-install-add-button": {
+        "selectorData": "popup-notification-primary-button",
+        "strategy": "class",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "addon-install-add-button-field": {
+        "selectorData": "button#main-button",
+        "strategy": "css",
+        "shadowParent": "addon-install-add-button",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }

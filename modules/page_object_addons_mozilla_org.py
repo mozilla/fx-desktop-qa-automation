@@ -63,5 +63,5 @@ class AmoLanguages(BasePage):
         # click one for "Add"
         # click second time for "Okay", the button is not cached which allows for two different buttons to be different
         for _ in range(2):
-            self.get_element("language-install-popup-add").click()
+            self.js_click_on("addon-install-add-button-field")
         return self
