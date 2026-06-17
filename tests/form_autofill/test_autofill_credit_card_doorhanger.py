@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -41,7 +39,7 @@ def test_autofill_credit_card_door_hanger(
     credit_card_autofill.fill_and_save(door_hanger=False)
 
     # press the arrow
-    autofill_popup.js_click_on("doorhanger-chevron")
+    autofill_popup.click_doorhanger_button("dropdown")
     autofill_popup.js_click_on("doorhanger-dropdown-never-save-cards-button")
 
     # ensure that the checked attribute is off
