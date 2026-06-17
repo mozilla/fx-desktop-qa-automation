@@ -19,13 +19,6 @@
         "strategy": "css",
         "groups": []
     },
-    "language-install-popup-add": {
-        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
     "language-addons-subpage-header": {
         "selectorData": "AddonTitle",
         "strategy": "class",
