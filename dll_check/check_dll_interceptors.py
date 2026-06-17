@@ -47,7 +47,8 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
-    cproc = run([".\\TestDllInterceptor.exe"], shell=True, capture_output=True)
+    cproc = run([".\\TestDllInterceptor.exe"], capture_output=True)
+    print(cproc)
     print(f"Out: {cproc.stdout.decode()}")
     print(f"Err: {cproc.stderr.decode()}")
     # itcptr_testout = check_output(
