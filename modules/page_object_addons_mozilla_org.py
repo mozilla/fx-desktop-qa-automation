@@ -64,4 +64,7 @@ class AmoLanguages(BasePage):
         # click second time for "Okay", the button is not cached which allows for two different buttons to be different
         for _ in range(2):
             self.js_click_on("addon-install-add-button-field")
+            self.custom_wait(timeout=5).until(
+                lambda _: self.get_element("addon-install-add-button-field") is not None
+            )
         return self
