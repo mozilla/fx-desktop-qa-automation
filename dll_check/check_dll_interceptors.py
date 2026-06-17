@@ -62,5 +62,5 @@ def main(bits: int):
 
 
 if __name__ == "__main__":
-    for b in [32, 64]:
+    for b in [64]:
         main(b)
