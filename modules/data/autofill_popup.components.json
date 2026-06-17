@@ -25,16 +25,16 @@
     "selectorData": "moz-button.popup-notification-secondary-button[label='Not now']",
     "strategy": "css",
     "groups": [
-        "doNotCache"
+      "doNotCache"
     ]
   },
   "doorhanger-not-now-button": {
-      "selectorData": "main-button",
-      "strategy": "id",
-      "shadowParent": "doorhanger-not-now-button-parent",
-      "groups": [
-          "doNotCache"
-      ]
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "doorhanger-not-now-button-parent",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "doorhanger-dropdown-button": {
     "selectorData": "button[aria-label='More actions']",
