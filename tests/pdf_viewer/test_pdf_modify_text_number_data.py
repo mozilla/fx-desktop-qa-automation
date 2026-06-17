@@ -45,8 +45,6 @@ def _modify_field_and_verify(
     pdf_viewer.fill_element(field, modified_value + Keys.TAB)
     pdf_viewer.element_attribute_is(field, "value", modified_value)
 
-    return modified_value
-
 
 def test_pdf_modify_text_number_data(pdf_viewer: GenericPdf):
     """
@@ -56,18 +54,18 @@ def test_pdf_modify_text_number_data(pdf_viewer: GenericPdf):
     pdf_viewer.element_visible(TEXT_FIELD)
     pdf_viewer.element_visible(NUMERIC_FIELD)
 
-    # Steps 2-7: Enter, modify, copy/paste, and verify text and numeric field values.
-    saved_text = _modify_field_and_verify(
-        pdf_viewer, TEXT_FIELD, INITIAL_TEXT, MODIFIED_TEXT
+    # Steps 2-5: Enter, modify, and verify text and numeric field values.
+    _modify_field_and_verify(pdf_viewer, TEXT_FIELD, INITIAL_TEXT, MODIFIED_TEXT)
+    _modify_field_and_verify(
+        pdf_viewer, NUMERIC_FIELD, INITIAL_NUMBER, MODIFIED_NUMBER
     )
-    _modify_field_and_verify(pdf_viewer, NUMERIC_FIELD, INITIAL_NUMBER, MODIFIED_NUMBER)
 
-    # Copy and paste text inside the previously edited field, then verify it remains.
+    # Steps 6-7: Copy/paste text inside the previously edited field and verify it remains.
     pdf_viewer.fill(TEXT_FIELD, PASTED_TEXT, press_enter=False)
     pdf_viewer.triple_click(TEXT_FIELD)
     pdf_viewer.copy()
-    pdf_viewer.fill(TEXT_FIELD, saved_text, press_enter=False)
+    pdf_viewer.fill(TEXT_FIELD, MODIFIED_TEXT, press_enter=False)
     pdf_viewer.fill_element(TEXT_FIELD, Keys.END)
     pdf_viewer.paste()
     pdf_viewer.fill_element(TEXT_FIELD, Keys.TAB)
-    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", saved_text + PASTED_TEXT)
+    pdf_viewer.element_attribute_is(TEXT_FIELD, "value", MODIFIED_TEXT + PASTED_TEXT)
