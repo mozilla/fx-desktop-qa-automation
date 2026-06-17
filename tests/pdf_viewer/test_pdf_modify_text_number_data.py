@@ -56,9 +56,7 @@ def test_pdf_modify_text_number_data(pdf_viewer: GenericPdf):
 
     # Steps 2-5: Enter, modify, and verify text and numeric field values.
     _modify_field_and_verify(pdf_viewer, TEXT_FIELD, INITIAL_TEXT, MODIFIED_TEXT)
-    _modify_field_and_verify(
-        pdf_viewer, NUMERIC_FIELD, INITIAL_NUMBER, MODIFIED_NUMBER
-    )
+    _modify_field_and_verify(pdf_viewer, NUMERIC_FIELD, INITIAL_NUMBER, MODIFIED_NUMBER)
 
     # Steps 6-7: Copy/paste text inside the previously edited field and verify it remains.
     pdf_viewer.fill(TEXT_FIELD, PASTED_TEXT, press_enter=False)
