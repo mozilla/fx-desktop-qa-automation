@@ -622,6 +622,10 @@ geolocation:
     splits:
     - functional1
 glean:
+  test_serp_abandonment:
+    result: pass
+    splits:
+    - glean
   test_serp_impression:
     result: pass
     splits:
@@ -710,7 +714,8 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with Mac GHA? trying pass to see what happens.
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with
+      Mac GHA? trying pass to see what happens.
     result: unstable
     splits:
     - functional1
