@@ -11,7 +11,7 @@ Path to .json: (ie, modules/data/google_search.components.json
 #### about_addons
 ```
 Selector Name: sidebar-options
-Selector Data: "button.category[name='{name}']"
+Selector Data: "moz-page-nav-button[view='{name}']"
 Description: Selects an option in about:addons(sidebar)
 Location: Left side of about:addons page
 Path to .json: modules/data/about_addons.components.json
@@ -2460,6 +2460,13 @@ Selector Name: context-ask-chat
 Selector Data: context_askChat
 Description: "Ask ChatGPT" context menu option
 Location: Tab context menu
+Path to .json: modules/data/context_menu.components.json
+```
+```
+Selector Name: context-menu-copy-clean-link
+Selector Data: strip-on-share
+Description: "Copy Clean Link" context menu option
+Location: Address bar context menu
 Path to .json: modules/data/context_menu.components.json
 ```
 #### credit_card_fill

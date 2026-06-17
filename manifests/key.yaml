@@ -112,8 +112,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_display_alpenglow_theme:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047892
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -613,16 +612,22 @@ form_autofill:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784 (win only different target)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
+      (win only different target)
     result: unstable
     splits:
     - functional1
   test_geolocation_shared_via_w3c_api:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784 (win only different target)
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
+      (win only different target)
     result: unstable
     splits:
     - functional1
 glean:
+  test_serp_abandonment:
+    result: pass
+    splits:
+    - glean
   test_serp_impression:
     result: pass
     splits:
@@ -711,7 +716,8 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with Mac GHA? trying pass to see what happens.
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with
+      Mac GHA? trying pass to see what happens.
     result: unstable
     splits:
     - functional1
@@ -1059,6 +1065,10 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_prefilled_input_data:
+    result: pass
+    splits:
+    - functional1
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
@@ -1249,6 +1259,10 @@ security_and_privacy:
     splits:
     - functional2
   test_cookies_not_saved_private_browsing:
+    result: pass
+    splits:
+    - functional2
+  test_copy_clean_link:
     result: pass
     splits:
     - functional2
@@ -1768,8 +1782,7 @@ tabs:
     - functional2
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047882
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci

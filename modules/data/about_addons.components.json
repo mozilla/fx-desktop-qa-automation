@@ -1,6 +1,6 @@
 {
     "sidebar-options": {
-        "selectorData": "button.category[name='{name}']",
+        "selectorData": "moz-page-nav-button[view='{name}']",
         "strategy": "css",
         "groups": []
     },

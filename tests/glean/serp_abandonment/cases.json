@@ -1,0 +1,10 @@
+{
+  "metric": "serp.abandonment",
+  "cases": [
+    {"id": "3255502", "entry": "urlbar", "action": "tab_close", "params": {"engine": "Google"}, "prefs": [], "expected": {"reason": "tab_close"}},
+    {"id": "3255507", "entry": "urlbar", "action": "tab_close", "params": {"engine": "Bing"}, "prefs": [], "expected": {"reason": "tab_close"}},
+    {"id": "3255512", "entry": "urlbar", "action": "tab_close", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"reason": "tab_close"}},
+    {"id": "3255517", "entry": "urlbar", "action": "tab_close", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"reason": "tab_close"}},
+    {"id": "3255521", "entry": "urlbar", "action": "tab_close", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"reason": "tab_close"}}
+  ]
+}
