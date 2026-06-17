@@ -1069,6 +1069,10 @@ pdf_viewer:
     result: pass
     splits:
     - functional1
+  test_pdf_text_and_draw_toolbar_buttons:
+    result: pass
+    splits:
+    - functional1
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
