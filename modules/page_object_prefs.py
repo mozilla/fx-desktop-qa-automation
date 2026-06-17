@@ -605,7 +605,7 @@ class AboutPrefs(BasePage):
         self.double_click(select_el.options[idx])
         return self
 
-    def _get_tile_type(self, tile_type: str, idx=0) -> dict:
+    def _get_tile_type(self, tile_type: str, idx=0) -> WebElement:
         """Get data-l10n-args from a saved tile"""
         self.element_visible(f"saved-{tile_type}-entry")
         return self.get_elements(f"saved-{tile_type}-entry")[idx]
@@ -621,10 +621,9 @@ class AboutPrefs(BasePage):
         """Get data-l10n-args from the saved payment card"""
         tile = self._get_tile_type("payment", idx)
         json_out = {"cardNumber": tile.get_attribute("label")}
-        json_out["expDate"] = tile.get_attribute("description")
-        json_out["expMonth"], json_out["expYear"] = tile.get_attribute(
-            "description"
-        ).split("/")
+        exp_date = tile.get_attribute("description")
+        json_out["expDate"] = exp_date
+        json_out["expMonth"], json_out["expYear"] = exp_date.split("/")
         return json_out
 
     def _edit_tile(self, tile_type: str, idx=0):
