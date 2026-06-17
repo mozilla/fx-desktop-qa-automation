@@ -560,6 +560,9 @@ class Autofill(BasePage):
         )
         self.fill_and_submit(autofill_data)
         if door_hanger:
+            # with open("dh.html", "w") as fh:
+            #     with self.driver.context(self.driver.CONTEXT_CHROME):
+            #         fh.write(self.driver.page_source)
             self.autofill_popup.click_doorhanger_button("save")
         return autofill_data
 

@@ -58,7 +58,7 @@ class AutofillPopup(BasePage):
     def click_doorhanger_button(self, button_type: str) -> BasePage:
         """Presses a button in the doorhanger popup (e.g., save, update, dropdown)"""
         self.element_visible(f"doorhanger-{button_type}-button")
-        self.click_on(f"doorhanger-{button_type}-button")
+        self.js_click_on(f"doorhanger-{button_type}-button")
         return self
 
     # Interaction with form options

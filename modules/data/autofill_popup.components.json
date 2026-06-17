@@ -7,7 +7,7 @@
     "groups": []
   },
   "doorhanger-save-button": {
-    "selectorData": "button[label^='Save'].popup-notification-primary-button",
+    "selectorData": ".popup-notification-primary-button[label^='Save']",
     "strategy": "css",
     "groups": []
   },
