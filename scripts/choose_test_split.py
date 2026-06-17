@@ -12,6 +12,7 @@ MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
+ROOT_DIR = SLASH.join(SCRIPT_DIR.split(SLASH)[:-1])
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 
 
@@ -43,7 +44,7 @@ def pascalify(snake: str) -> str:
 
 def localify(path: str) -> str:
     """Remove the script dir from an item"""
-    return path.replace(SCRIPT_DIR, ".")
+    return path.replace(ROOT_DIR, ".")
 
 
 def get_tests_by_model(
@@ -207,7 +208,7 @@ if __name__ == "__main__":
 
     all_tests = []
     test_paths_and_contents = {}
-    for root, _, files in os.walk(os.path.join(SCRIPT_DIR, "tests")):
+    for root, _, files in os.walk(os.path.join(ROOT_DIR, "tests")):
         for f in files:
             this_file = os.path.join(root, f)
             if re_obj.get("test_re").search(this_file) and "__pycache" not in this_file:
