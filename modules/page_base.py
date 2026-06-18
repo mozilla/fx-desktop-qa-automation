@@ -1352,11 +1352,12 @@ class BasePage(Page):
         # Default return if neither zoom nor transform is set
         return 1.0
 
-    @context_chrome
+    @context_of_model
     def js_click_on(self, reference, labels=None):
         """
         Perform a 'hard click' using a JS command. Use this when regular click_on()
-        doesn't work well
+        doesn't work well. Runs in the model's declared context, so it works for both
+        chrome BOMs and content POMs.
         """
         self.driver.execute_script(
             "arguments[0].click();", self.fetch(reference, labels=labels)
