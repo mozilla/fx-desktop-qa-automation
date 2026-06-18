@@ -54,8 +54,8 @@ def test_geolocation_prompt_is_triggered_on_request_location_on_a_website(
 
     _dismiss_cookie_banner_if_present(driver, page)
     # The cookie-consent CMP (<iframe id="fast-cmp-iframe">) can overlay the button and intercept a
-    # native click; ActionChains would hit the overlay too. Dispatch the click directly so
-    # getLocation() still fires and triggers the geolocation prompt regardless of the overlay.
-    driver.execute_script("arguments[0].click();", page.find_element(*TRY_IT_BUTTON))
+    # native click; js_click_on dispatches the click directly so getLocation() still fires and
+    # triggers the geolocation prompt regardless of the overlay.
+    page.js_click_on(TRY_IT_BUTTON)
 
     nav.wait.until(lambda _: nav.element_visible("geolocation-notification-container"))
