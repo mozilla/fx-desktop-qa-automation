@@ -518,8 +518,7 @@ find_toolbar:
     - functional1
 form_autofill:
   test_address_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_autofill_cc_cvv:
@@ -555,8 +554,7 @@ form_autofill:
     splits:
     - functional1
   test_create_profile_autofill:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_delete_cc_profile:
@@ -577,8 +575,7 @@ form_autofill:
     splits:
     - functional1
   test_name_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_private_mode_info_not_saved:
@@ -586,8 +583,7 @@ form_autofill:
     splits:
     - functional1
   test_telephone_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci
