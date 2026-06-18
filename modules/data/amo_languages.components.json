@@ -25,8 +25,8 @@
         "groups": []
     },
     "addon-install-add-button": {
-        "selectorData": "popup-notification-primary-button",
-        "strategy": "class",
+        "selectorData": "moz-button.popup-notification-primary-button[label='Add']",
+        "strategy": "css",
         "groups": [
             "doNotCache"
         ]
@@ -35,6 +35,21 @@
         "selectorData": "button#main-button",
         "strategy": "css",
         "shadowParent": "addon-install-add-button",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "addon-install-ok-button-parent": {
+        "selectorData": "moz-button.popup-notification-primary-button[label='OK']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "addon-install-ok-button-field": {
+        "selectorData": "button#main-button",
+        "strategy": "css",
+        "shadowParent": "addon-install-ok-button-parent",
         "groups": [
             "doNotCache"
         ]

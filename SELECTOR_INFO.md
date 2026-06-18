@@ -1818,7 +1818,7 @@ Path to .json: modules/data/amo_languages.components.json
 ```
 ```
 Selector Name: addon-install-add-button
-Selector Data: "popup-notification-primary-button"
+Selector Data: "moz-button.popup-notification-primary-button[label='Add']"
 Description: The outer moz-button element for the "Add" button in the addon installation notification popup
 Location: Addon installation notification popup - chrome UI
 Path to .json: modules/data/amo_languages.components.json
@@ -1828,6 +1828,20 @@ Selector Name: addon-install-add-button-field
 Selector Data: "button#main-button"
 Description: The inner button element inside the shadow DOM of the "Add" moz-button in the addon installation notification popup, used to actually click the button
 Location: Addon installation notification popup - chrome UI
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: addon-install-ok-button-parent
+Selector Data: "moz-button.popup-notification-primary-button[label='OK']"
+Description: The outer moz-button element for the "OK" button in the addon installation confirmation popup that appears after clicking "Add", identified by the primary button class and "OK" label
+Location: Addon installation confirmation popup - chrome UI
+Path to .json: modules/data/amo_languages.components.json
+```
+```
+Selector Name: addon-install-ok-button-field
+Selector Data: "button#main-button"
+Description: The inner button element inside the shadow DOM of the "OK" moz-button in the addon installation confirmation popup, used to confirm the addon installation
+Location: Addon installation confirmation popup - chrome UI
 Path to .json: modules/data/amo_languages.components.json
 ```
 #### amo_themes
