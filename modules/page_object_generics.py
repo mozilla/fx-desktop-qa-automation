@@ -349,6 +349,63 @@ class GenericPdf(BasePage):
 
         return drawing_area
 
+    def get_drawing_resize_handle(self) -> WebElement:
+        """Return the bottom-right resize handle for the selected drawing area."""
+        drawing_area = self.get_drawing_area()
+
+        resize_handle = self.driver.execute_script(
+            """
+            const drawingArea = arguments[0];
+            const drawingRect = drawingArea.getBoundingClientRect();
+
+            const selectors = [
+                ".resizer.bottomRight",
+                ".resizer[data-resizer-name='bottomRight']",
+                "[data-resizer-name='bottomRight']",
+                "[class*='bottomRight']",
+                "[class*='resize']",
+                "[class*='resizer']",
+                "[class*='handle']"
+            ];
+
+            const candidates = selectors
+                .flatMap(selector => [...document.querySelectorAll(selector)])
+                .filter(element => {
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && rect.height > 0;
+                });
+
+            if (!candidates.length) {
+                return null;
+            }
+
+            const drawingBottomRight = {
+                x: drawingRect.right,
+                y: drawingRect.bottom,
+            };
+
+            return candidates.sort((first, second) => {
+                const firstRect = first.getBoundingClientRect();
+                const secondRect = second.getBoundingClientRect();
+
+                const firstDistance = Math.hypot(
+                    firstRect.left - drawingBottomRight.x,
+                    firstRect.top - drawingBottomRight.y
+                );
+                const secondDistance = Math.hypot(
+                    secondRect.left - drawingBottomRight.x,
+                    secondRect.top - drawingBottomRight.y
+                );
+
+                return firstDistance - secondDistance;
+            })[0];
+            """,
+            drawing_area,
+        )
+
+        assert resize_handle is not None, "Expected drawing resize handle to exist."
+        return resize_handle
+
     def move_drawing_area(self) -> BasePage:
         """Move the selected drawing area and verify its position changed."""
         drawing_area = self.select_drawing_area()
@@ -356,28 +413,28 @@ class GenericPdf(BasePage):
 
         self.actions.drag_and_drop_by_offset(drawing_area, 80, 50).perform()
 
-        self.expect(
-            lambda _: self.get_element_rect(self.get_drawing_area())["x"]
-            != initial_rect["x"]
-            or self.get_element_rect(self.get_drawing_area())["y"] != initial_rect["y"]
-        )
+        def drawing_moved(_):
+            rect = self.get_element_rect(self.get_drawing_area())
+            return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
+
+        self.expect(drawing_moved)
         return self
 
     def resize_drawing_area(self) -> BasePage:
         """Resize the selected drawing area and verify its size changed."""
-        drawing_area = self.select_drawing_area()
+        self.select_drawing_area()
+        drawing_area = self.get_drawing_area()
         initial_rect = self.get_element_rect(drawing_area)
+        resize_handle = self.get_drawing_resize_handle()
 
-        self.actions.move_to_element_with_offset(
-            drawing_area,
-            initial_rect["width"] / 2,
-            initial_rect["height"] / 2,
-        ).click_and_hold().move_by_offset(40, 30).release().perform()
+        self.actions.drag_and_drop_by_offset(resize_handle, 40, 30).perform()
 
-        self.expect(
-            lambda _: self.get_element_rect(self.get_drawing_area())["width"]
-            != initial_rect["width"]
-            or self.get_element_rect(self.get_drawing_area())["height"]
-            != initial_rect["height"]
-        )
+        def drawing_resized(_):
+            rect = self.get_element_rect(self.get_drawing_area())
+            return (
+                rect["width"] != initial_rect["width"]
+                or rect["height"] != initial_rect["height"]
+            )
+
+        self.expect(drawing_resized)
         return self
