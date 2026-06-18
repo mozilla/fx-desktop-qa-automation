@@ -1,17 +1,19 @@
 import os
+from shutil import copyfile
 from subprocess import STDOUT, check_call, check_output, run
 from time import sleep
 
 import requests
 import thclient
 
-# Assume beta link is in env as FX_DOWNLOAD_LINK
+# Assume beta link is in env as FX_DOWNLOAD_LINK, fx executable as FX_EXECUTABLE
 PROJECT = "mozilla-beta"
 BUILDHUB = "buildhub.json"
 SEARCH_STRING = "Windows,x86,Shippable,opt,build-win32-shippable/opt,B"
 JOB_TYPE_NAME = "build-win{}-shippable/opt"
 TREEHERDER_LINK = "https://treeherder.mozilla.org/jobs?repo=mozilla-beta&searchStr=Windows%2Cshippable%2Fopt&revision={}"
 ARTIFACT_LINK = "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/{}/runs/0/artifacts/public%2Fbuild%2Ftarget.cppunittest.tests.tar.zst"
+MISSING_DLLS = ["mozglue.dll", "msvcp140.dll", "vcruntime140.dll"]
 
 
 def main(bits: int):
@@ -48,18 +50,18 @@ def main(bits: int):
 
     # run tests
     cproc = run([".\\TestDllInterceptor.exe"], capture_output=True)
-    print(cproc)
-    print(f"Out: {cproc.stdout.decode()}")
-    print(f"Err: {cproc.stderr.decode()}")
-    # itcptr_testout = check_output(
-    #     [".\\TestDllInterceptor.exe"], stderr=STDOUT, shell=True
-    # ).decode()
-    # icptxp_testout = check_output(
-    #     [".\\TestDllInterceptorCrossProcess.exe"], shell=True
-    # ).decode()
-    # assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
-    # assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
-    # assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout
+    if not len(cproc.stdout):
+        for dll in MISSING_DLLS:
+            copyfile(os.path.join(os.environ.get("FX_EXECUTABLE"), dll), ".")
+    itcptr_testout = check_output(
+        [".\\TestDllInterceptor.exe"], stderr=STDOUT, shell=True
+    ).decode()
+    icptxp_testout = check_output(
+        [".\\TestDllInterceptorCrossProcess.exe"], shell=True
+    ).decode()
+    assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
+    assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
+    assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout
 
 
 if __name__ == "__main__":

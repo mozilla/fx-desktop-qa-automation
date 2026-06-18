@@ -121,9 +121,6 @@ jobs:
           $fx_version = (pipenv run python -m scripts.collect_executables -n) -join ""
           "FX_VERSION=$fx_version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Spike test - DLL Interceptors
-        run: pipenv run python dll_check/check_dll_interceptors.py
-
       - name: Download Geckodriver
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
@@ -154,6 +151,11 @@ jobs:
         shell: pwsh
         run: |
           Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+
+      - name: Spike test - DLL Interceptors
+        run: |
+          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
+          pipenv run python dll_check/check_dll_interceptors.py
 
       - name: Select Tests (Win)
         id: select
