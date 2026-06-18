@@ -500,7 +500,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2048716
+    result: unstable
     splits:
     - functional1
 find_toolbar:
