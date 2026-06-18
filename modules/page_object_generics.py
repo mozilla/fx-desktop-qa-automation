@@ -285,3 +285,31 @@ class GenericPdf(BasePage):
             )
         )
         return self
+
+    def select_editor_tool(self, tool: str) -> BasePage:
+        """Select a PDF editor toolbar tool."""
+        self.get_element(tool).click()
+        self.element_attribute_contains(tool, "class", "toggled")
+        return self
+
+    def draw_on_pdf_page(self, page_number: str = "1") -> BasePage:
+        """Draw a short line on the selected PDF page."""
+        page = self.get_element("pdf-page", labels=[page_number])
+        (
+            self.actions.move_to_element_with_offset(page, 150, 150)
+            .click_and_hold()
+            .move_by_offset(80, 30)
+            .release()
+            .perform()
+        )
+        self.element_exists("added-drawing")
+        return self
+
+    def add_text_to_pdf_page(self, text: str, page_number: str = "1") -> BasePage:
+        """Add text to the selected PDF page."""
+        page = self.get_element("pdf-page", labels=[page_number])
+        self.actions.move_to_element_with_offset(page, 150, 220).click().perform()
+        self.actions.send_keys(text).perform()
+        self.element_visible("added-text")
+        self.element_has_text("added-text", text)
+        return self
