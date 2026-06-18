@@ -27,7 +27,7 @@ def test_deny_geolocation(driver: Firefox, web_page):
 
     # Block geolocation sharing for this website
     nav.element_clickable("popup-notification-secondary-button")
-    nav.click_on("popup-notification-secondary-button")
+    nav.js_click_on("popup-notification-secondary-button")
 
     # Check that the website cannot access the geolocation
     page.element_visible("not-allowed")

@@ -705,29 +705,24 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with
-      Mac GHA? trying pass to see what happens.
-    result: unstable
+    comment: Issue with Mac GHA? trying pass to see what happens.
+    result: pass
     splits:
     - functional1
   test_camera_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_cancel_webextension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_deny_geolocation:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_deny_screen_capture:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_downloads_button_is_displayed:
@@ -739,8 +734,7 @@ notifications:
     splits:
     - functional1
   test_geolocation_allow_browserleaks:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_geolocation_prompt_presence:
@@ -748,8 +742,7 @@ notifications:
     splits:
     - functional1
   test_microphone_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_notifications_displayed:
@@ -762,8 +755,7 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
 password_manager:
