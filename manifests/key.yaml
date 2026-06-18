@@ -856,8 +856,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -915,8 +914,7 @@ password_manager:
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_password_csv_correctness:
@@ -962,8 +960,7 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
