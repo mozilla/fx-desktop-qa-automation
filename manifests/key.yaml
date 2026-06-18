@@ -1058,11 +1058,19 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_modify_text_number_data:
+    result: pass
+    splits:
+    - functional1
   test_pdf_navigation:
     result: pass
     splits:
     - smoke
   test_pdf_prefilled_input_data:
+    result: pass
+    splits:
+    - functional1
+  test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:
     - functional1
