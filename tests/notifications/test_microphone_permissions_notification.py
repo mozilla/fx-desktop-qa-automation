@@ -56,4 +56,4 @@ def test_microphone_permissions_notification(driver: Firefox, web_page):
     # Verify that the notification is displayed
     _verify_microphone_permission_prompt(driver, nav)
 
-    nav.click_on("popup-notification-secondary-button")
+    nav.js_click_on("popup-notification-secondary-button")
