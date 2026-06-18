@@ -51,8 +51,9 @@ def main(bits: int):
     # run tests
     cproc = run([".\\TestDllInterceptor.exe"], capture_output=True)
     if not len(cproc.stdout):
+        fx_dir = os.path.dirname(os.environ.get("FX_EXECUTABLE"))
         for dll in MISSING_DLLS:
-            copyfile(os.path.join(os.environ.get("FX_EXECUTABLE"), dll), ".")
+            copyfile(os.path.join(fx_dir, dll), ".")
     itcptr_testout = check_output(
         [".\\TestDllInterceptor.exe"], stderr=STDOUT, shell=True
     ).decode()
