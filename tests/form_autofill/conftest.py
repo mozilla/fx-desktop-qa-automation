@@ -7,7 +7,6 @@ from modules.page_object import AboutPrefs, AddressFill, CreditCardFill
 from modules.util import Utilities
 
 
-# bump
 @pytest.fixture()
 def suite_id():
     return ("2054", "Form Autofill")
