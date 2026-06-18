@@ -10,8 +10,8 @@
     "groups": []
   },
   "saved-address-entry": {
-    "selectorData": "[data-l10n-id='address-moz-box-item']",
-    "strategy": "css",
+    "selectorData": "address-item",
+    "strategy": "id",
     "groups": [
       "doNotCache"
     ]
