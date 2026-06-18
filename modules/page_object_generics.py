@@ -313,3 +313,71 @@ class GenericPdf(BasePage):
         self.element_visible("added-text")
         self.element_has_text("added-text", text)
         return self
+
+    def get_element_rect(self, element: str | WebElement) -> dict[str, float]:
+        """Return the element bounding client rect."""
+        return self.driver.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            return {
+                x: rect.x,
+                y: rect.y,
+                width: rect.width,
+                height: rect.height,
+            };
+            """,
+            self.fetch(element),
+        )
+
+    def get_drawing_area(self) -> WebElement:
+        """Return the SVG container for the added drawing."""
+        drawing = self.get_element("added-drawing")
+        drawing_area = self.driver.execute_script(
+            "return arguments[0].closest('svg.draw');",
+            drawing,
+        )
+
+        assert drawing_area is not None, "Expected drawing SVG area to exist."
+        return drawing_area
+
+    def select_drawing_area(self) -> WebElement:
+        """Dismiss drawing mode and select the existing drawing area."""
+        self.actions.send_keys(Keys.ESCAPE).perform()
+
+        drawing_area = self.get_drawing_area()
+        self.actions.move_to_element(drawing_area).click().perform()
+
+        return drawing_area
+
+    def move_drawing_area(self) -> BasePage:
+        """Move the selected drawing area and verify its position changed."""
+        drawing_area = self.select_drawing_area()
+        initial_rect = self.get_element_rect(drawing_area)
+
+        self.actions.drag_and_drop_by_offset(drawing_area, 80, 50).perform()
+
+        self.expect(
+            lambda _: self.get_element_rect(self.get_drawing_area())["x"]
+            != initial_rect["x"]
+            or self.get_element_rect(self.get_drawing_area())["y"] != initial_rect["y"]
+        )
+        return self
+
+    def resize_drawing_area(self) -> BasePage:
+        """Resize the selected drawing area and verify its size changed."""
+        drawing_area = self.select_drawing_area()
+        initial_rect = self.get_element_rect(drawing_area)
+
+        self.actions.move_to_element_with_offset(
+            drawing_area,
+            initial_rect["width"] / 2,
+            initial_rect["height"] / 2,
+        ).click_and_hold().move_by_offset(40, 30).release().perform()
+
+        self.expect(
+            lambda _: self.get_element_rect(self.get_drawing_area())["width"]
+            != initial_rect["width"]
+            or self.get_element_rect(self.get_drawing_area())["height"]
+            != initial_rect["height"]
+        )
+        return self

@@ -1053,6 +1053,10 @@ pdf_viewer:
       win: pass
     splits:
     - functional2
+  test_pdf_drawing_area_actions:
+    result: pass
+    splits:
+    - functional1
   test_pdf_dropdown_functionality:
     result: pass
     splits:
