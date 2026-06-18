@@ -38,7 +38,7 @@ def test_cancel_webextension(driver: Firefox, web_page):
 
     # Click Cancel in permission panel (chrome)
     nav.element_clickable("popup-notification-cancel")
-    nav.click_on("popup-notification-cancel")
+    nav.action_click_on("popup-notification-cancel")
 
     # Button should become visible again
     page.expect(lambda _: page.get_element("add-to-firefox").is_displayed())

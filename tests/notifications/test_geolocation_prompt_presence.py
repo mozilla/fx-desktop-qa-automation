@@ -52,7 +52,6 @@ def test_geolocation_prompt_is_triggered_on_request_location_on_a_website(
     nav = Navigation(driver)
     page = GenericPage(driver, url=TEST_URL).open()
 
-    _dismiss_cookie_banner_if_present(driver, page)
-    page.find_element(*TRY_IT_BUTTON).click()
+    page.js_click_on(TRY_IT_BUTTON)
 
     nav.wait.until(lambda _: nav.element_visible("geolocation-notification-container"))

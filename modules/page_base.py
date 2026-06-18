@@ -812,6 +812,13 @@ class BasePage(Page):
             self.actions.context_click(el).perform()
         return self
 
+    @context_chrome
+    def action_click_on(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Click via an ActionChains pointer move-then-click."""
+        el = self.fetch(reference, labels)
+        self.actions.move_to_element(el).click().perform()
+        return self
+
     def copy(self) -> Page:
         """Copy the selected item"""
         mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
@@ -1352,11 +1359,12 @@ class BasePage(Page):
         # Default return if neither zoom nor transform is set
         return 1.0
 
-    @context_chrome
+    @context_of_model
     def js_click_on(self, reference, labels=None):
         """
         Perform a 'hard click' using a JS command. Use this when regular click_on()
-        doesn't work well
+        doesn't work well. Runs in the model's declared context, so it works for both
+        chrome BOMs and content POMs.
         """
         self.driver.execute_script(
             "arguments[0].click();", self.fetch(reference, labels=labels)

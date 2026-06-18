@@ -38,7 +38,7 @@ def test_webextension_completed_installation_successfully_displayed(
 
     # Click the Add button
     nav.element_clickable("popup-notification-add")
-    nav.click_on("popup-notification-add")
+    nav.action_click_on("popup-notification-add")
 
     # The WebExtension completed installation panel is successfully displayed
     nav.element_visible("popup-notification-panel")
