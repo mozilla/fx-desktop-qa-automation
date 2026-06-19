@@ -907,7 +907,7 @@
     "strategy": "id",
     "shadowParent": "primary-password-input-parent",
     "groups": [
-        "doNotCache"
+      "doNotCache"
     ]
   },
   "primary-password-reenter-input-parent": {
@@ -922,7 +922,7 @@
     "strategy": "id",
     "shadowParent": "primary-password-reenter-input-parent",
     "groups": [
-        "doNotCache"
+      "doNotCache"
     ]
   }
 }
