@@ -767,16 +767,26 @@
       "doNotCache"
     ]
   },
-  "current-primary-password": {
+  "primary-password-current-parent": {
     "selectorData": "oldpw",
     "strategy": "id",
-    "groups": [
-      "doNotCache"
-    ]
+    "groups": []
   },
-  "remove-current-password": {
+  "current-primary-password": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "primary-password-current-parent",
+    "groups": []
+  },
+  "remove-current-password-parent": {
     "selectorData": "password",
     "strategy": "id",
+    "groups": []
+  },
+  "remove-current-password": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "remove-current-password-parent",
     "groups": []
   },
   "remove-primary-password-box": {
@@ -881,7 +891,7 @@
     "strategy": "id",
     "groups": []
   },
-  "primary-password-input": {
+  "primary-password-input-parent": {
     "selectorData": "pw1",
     "strategy": "id",
     "groups": [
@@ -889,12 +899,14 @@
     ]
   },
   "primary-password-input-field": {
-    "selectorData": "input#input",
-    "strategy": "css",
-    "shadowParent": "primary-password-input",
-    "groups": []
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "primary-password-input-parent",
+    "groups": [
+        "doNotCache"
+    ]
   },
-  "primary-password-reenter-input": {
+  "primary-password-reenter-input-parent": {
     "selectorData": "pw2",
     "strategy": "id",
     "groups": [
@@ -902,9 +914,11 @@
     ]
   },
   "primary-password-reenter-input-field": {
-    "selectorData": "input#input",
-    "strategy": "css",
-    "shadowParent": "primary-password-reenter-input",
-    "groups": []
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "primary-password-reenter-input-parent",
+    "groups": [
+        "doNotCache"
+    ]
   }
 }

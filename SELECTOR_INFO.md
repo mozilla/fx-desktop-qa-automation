@@ -1476,17 +1476,31 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: current-primary-password
+Selector Name: primary-password-current-parent
 Selector Data: "oldpw"
-Description: Input for current password in the Change Primary Password dialog
-Location: about:preferences#privacy Primary Password popup
+Description: The outer moz-input-password element for the "Current password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-primary-password
+Selector Data: "input"
+Description: The inner input element inside the shadow DOM of the "Current password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-current-password-parent
+Selector Data: "password"
+Description: The outer moz-input-password element for the "Current password" field in the Remove Primary Password dialog
+Location: About Preferences - Passwords - Remove Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: remove-current-password
-Selector Data: "password"
-Description: Input for current password in the Remove Primary Password dialog
-Location: about:preferences#privacy Primary Password popup
+Selector Data: "input"
+Description: The inner input element inside the shadow DOM of the "Current password" field in the Remove Primary Password dialog
+Location: About Preferences - Passwords - Remove Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1574,21 +1588,21 @@ Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-new-input
+Selector Name: primary-password-input-parent
 Selector Data: "pw1"
 Description: The outer moz-input-password custom element for the "Enter new password" field in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-new-input-field
+Selector Name: primary-password-input-field
 Selector Data: "input#input"
 Description: The inner input field inside the shadow DOM of the "Enter new password" moz-input-password element in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-reenter-input
+Selector Name: primary-password-reenter-input-parent
 Selector Data: "pw2"
 Description: The outer moz-input-password custom element for the "Re-enter password" field in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
