@@ -770,13 +770,17 @@
   "current-primary-password-parent": {
     "selectorData": "oldpw",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "current-primary-password": {
     "selectorData": "input",
     "strategy": "id",
     "shadowParent": "current-primary-password-parent",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "remove-current-password-parent": {
     "selectorData": "password",
