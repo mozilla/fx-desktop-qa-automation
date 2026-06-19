@@ -44,8 +44,9 @@ def test_pdf_drawing_area_can_be_deleted_moved_or_resized(
     pdf_viewer.draw_on_pdf_page()
 
     # Step 3: Verify the drawing area can be resized, moved, and deleted.
-    pdf_viewer.resize_drawing_area()
-    pdf_viewer.move_drawing_area()
+    drawing_area = pdf_viewer.select_drawing_area()
+    pdf_viewer.resize_drawing_area(drawing_area)
+    pdf_viewer.move_drawing_area(drawing_area)
 
     drawing_area = pdf_viewer.select_drawing_area()
     pdf_viewer.context_click(drawing_area)

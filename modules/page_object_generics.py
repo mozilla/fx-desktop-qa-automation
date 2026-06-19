@@ -314,7 +314,7 @@ class GenericPdf(BasePage):
         self.element_has_text("added-text", text)
         return self
 
-    def get_element_rect(self, element: str | WebElement) -> dict[str, float]:
+    def get_element_rect(self, element: WebElement) -> dict[str, float]:
         """Return the element bounding client rect."""
         return self.driver.execute_script(
             """
@@ -326,7 +326,7 @@ class GenericPdf(BasePage):
                 height: rect.height,
             };
             """,
-            self.fetch(element),
+            element,
         )
 
     def get_drawing_area(self) -> WebElement:
@@ -341,7 +341,7 @@ class GenericPdf(BasePage):
         return drawing_area
 
     def select_drawing_area(self) -> WebElement:
-        """Dismiss drawing mode and select the existing drawing area."""
+        """Dismiss drawing mode, select, and return the existing drawing area."""
         self.actions.send_keys(Keys.ESCAPE).perform()
 
         drawing_area = self.get_drawing_area()
@@ -349,20 +349,18 @@ class GenericPdf(BasePage):
 
         return drawing_area
 
-    def get_drawing_resize_handle(self) -> WebElement:
+    def get_drawing_resize_handle(self, drawing_area: WebElement) -> WebElement:
         """
         Return the resize handle for the selected drawing area.
 
-        The handle is nested inside the selected drawing editor, so Selenium cannot
-        reliably fetch it directly with a normal selector. The script starts from
-        the selected drawing element and returns the resize handle used for dragging.
+        The script searches inside the PDF viewer for visible resize handle candidates
+        and returns the one closest to the drawing area's bottom-right corner.
         """
-        drawing_area = self.get_drawing_area()
-
         resize_handle = self.driver.execute_script(
             """
             const drawingArea = arguments[0];
             const drawingRect = drawingArea.getBoundingClientRect();
+            const viewer = drawingArea.closest("#viewer") || document;
 
             const selectors = [
                 ".resizer.bottomRight",
@@ -375,13 +373,15 @@ class GenericPdf(BasePage):
             ];
 
             const candidates = selectors
-                .flatMap(selector => [...document.querySelectorAll(selector)])
+                .flatMap(selector => [...viewer.querySelectorAll(selector)])
                 .filter(element => {
                     const rect = element.getBoundingClientRect();
                     return rect.width > 0 && rect.height > 0;
                 });
 
-            if (!candidates.length) {
+            const unique = [...new Set(candidates)];
+
+            if (!unique.length) {
                 return null;
             }
 
@@ -390,7 +390,7 @@ class GenericPdf(BasePage):
                 y: drawingRect.bottom,
             };
 
-            return candidates.sort((first, second) => {
+            return unique.sort((first, second) => {
                 const firstRect = first.getBoundingClientRect();
                 const secondRect = second.getBoundingClientRect();
 
@@ -412,30 +412,32 @@ class GenericPdf(BasePage):
         assert resize_handle is not None, "Expected drawing resize handle to exist."
         return resize_handle
 
-    def move_drawing_area(self) -> BasePage:
+    def move_drawing_area(self, drawing_area: WebElement) -> BasePage:
         """Move the selected drawing area and verify its position changed."""
-        drawing_area = self.select_drawing_area()
         initial_rect = self.get_element_rect(drawing_area)
 
         self.actions.drag_and_drop_by_offset(drawing_area, 80, 50).perform()
 
         def drawing_moved(_):
-            rect = self.get_element_rect(self.get_drawing_area())
+            rect = self.get_element_rect(drawing_area)
             return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
 
         self.expect(drawing_moved)
         return self
 
-    def resize_drawing_area(self) -> BasePage:
+    def resize_drawing_area(self, drawing_area: WebElement) -> BasePage:
         """Resize the selected drawing area and verify its size changed."""
-        drawing_area = self.select_drawing_area()
         initial_rect = self.get_element_rect(drawing_area)
-        resize_handle = self.get_drawing_resize_handle()
+        resize_handle = self.get_drawing_resize_handle(drawing_area)
 
-        self.actions.drag_and_drop_by_offset(resize_handle, 40, 30).perform()
+        self.actions.move_to_element(resize_handle)
+        self.actions.click_and_hold()
+        self.actions.move_by_offset(40, 40)
+        self.actions.release()
+        self.actions.perform()
 
         def drawing_resized(_):
-            rect = self.get_element_rect(self.get_drawing_area())
+            rect = self.get_element_rect(drawing_area)
             return (
                 rect["width"] != initial_rect["width"]
                 or rect["height"] != initial_rect["height"]
