@@ -1910,17 +1910,24 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
-Selector Name: doorhanger-more-actions-button
-Selector Data: "[data-l10n-id='popup-notification-more-actions-button']"
-Description: Arrow on the "Not now" button
-Location: Autofill save login doorhanger
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
 Selector Name: doorhanger-never-save-login-button
 Selector Data: "menuitem[label='Never save']"
 Description: The hidden button in save login doorhanger.
 Location: Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-secondary-split-button
+Selector Data: "moz-button.popup-notification-secondary-button"
+Description: The "Not now" split button (moz-button) in the save login/card doorhanger; its shadow root holds the more-actions chevron.
+Location: Inside the autofill save doorhangers, in the panel-footer moz-button-group
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-more-actions-chevron
+Selector Data: "chevron-button" (id; shadowParent: doorhanger-secondary-split-button)
+Description: The dropdown chevron inside the "Not now" split button's shadow root. Clicking it (via js_click_on) opens the more-actions menu that contains "Never save".
+Location: Shadow DOM of the doorhanger "Not now" split button
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
