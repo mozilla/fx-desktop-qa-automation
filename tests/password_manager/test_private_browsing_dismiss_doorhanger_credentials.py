@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object import AutofillPopup
 from modules.browser_object_navigation import Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_about_pages import AboutLogins
@@ -33,6 +34,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     nav = Navigation(driver)
     panel = PanelUi(driver)
     about_logins = AboutLogins(driver)
+    autofill_popup_panel = AutofillPopup(driver)
 
     # Open a private window and switch to it
     panel.open_and_switch_to_new_window("private")
@@ -60,8 +62,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     nav.wait_for_notification_popup_open()
 
     # Choose to save the credentials
-    nav.element_clickable("password-notification-save-button")
-    nav.click_on("password-notification-save-button")
+    autofill_popup_panel.click_doorhanger_button("save")
 
     # Re-load the form
     login_autofill.open()
@@ -80,7 +81,7 @@ def test_private_browsing_dismiss_doorhanger_credentials(driver: Firefox):
     nav.element_visible("password-notification-popup")
 
     # Confirm the changes in the doorhanger
-    nav.click_on("password-notification-save-button")
+    autofill_popup_panel.click_doorhanger_button("update")
 
     # The credentials have the password updated correctly, check this in about:logins
     about_logins.open()
