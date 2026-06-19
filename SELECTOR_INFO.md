@@ -1476,7 +1476,7 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-current-parent
+Selector Name: current-primary-password-parent
 Selector Data: "oldpw"
 Description: The outer moz-input-password element for the "Current password" field in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
