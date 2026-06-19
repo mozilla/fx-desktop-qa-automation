@@ -350,7 +350,13 @@ class GenericPdf(BasePage):
         return drawing_area
 
     def get_drawing_resize_handle(self) -> WebElement:
-        """Return the bottom-right resize handle for the selected drawing area."""
+        """
+        Return the resize handle for the selected drawing area.
+
+        The handle is nested inside the selected drawing editor, so Selenium cannot
+        reliably fetch it directly with a normal selector. The script starts from
+        the selected drawing element and returns the resize handle used for dragging.
+        """
         drawing_area = self.get_drawing_area()
 
         resize_handle = self.driver.execute_script(
@@ -422,8 +428,7 @@ class GenericPdf(BasePage):
 
     def resize_drawing_area(self) -> BasePage:
         """Resize the selected drawing area and verify its size changed."""
-        self.select_drawing_area()
-        drawing_area = self.get_drawing_area()
+        drawing_area = self.select_drawing_area()
         initial_rect = self.get_element_rect(drawing_area)
         resize_handle = self.get_drawing_resize_handle()
 
