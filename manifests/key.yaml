@@ -527,8 +527,7 @@ form_autofill:
     splits:
     - functional1
   test_autofill_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2048909
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
@@ -891,7 +890,8 @@ password_manager:
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047886
+    result: unstable
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
