@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import AutofillPopup, Navigation
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_object_about_pages import AboutLogins
 from modules.page_object_autofill import LoginAutofill
