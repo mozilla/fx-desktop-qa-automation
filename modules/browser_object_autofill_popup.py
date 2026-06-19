@@ -61,6 +61,14 @@ class AutofillPopup(BasePage):
         self.js_click_on(f"doorhanger-{button_type}-button")
         return self
 
+    @BasePage.context_chrome
+    def open_login_doorhanger_more_actions_menu(self) -> BasePage:
+        """Open the login doorhanger's 'More actions' menu and wait for it to render."""
+        self.element_visible("doorhanger-secondary-split-button")
+        self.js_click_on("doorhanger-more-actions-chevron")
+        self.element_visible("doorhanger-never-save-login-button")
+        return self
+
     # Interaction with form options
     @BasePage.context_chrome
     def click_autofill_form_option(self) -> BasePage:

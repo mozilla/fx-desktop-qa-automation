@@ -881,6 +881,32 @@
     "strategy": "id",
     "groups": []
   },
+  "primary-password-input": {
+    "selectorData": "pw1",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "primary-password-input-field": {
+    "selectorData": "input#input",
+    "strategy": "css",
+    "shadowParent": "primary-password-input",
+    "groups": []
+  },
+  "primary-password-reenter-input": {
+    "selectorData": "pw2",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "primary-password-reenter-input-field": {
+    "selectorData": "input#input",
+    "strategy": "css",
+    "shadowParent": "primary-password-reenter-input",
+    "groups": []
+  },
   "etp-advanced-settings-button": {
     "selectorData": "etpStatusAdvancedButton",
     "strategy": "id",
