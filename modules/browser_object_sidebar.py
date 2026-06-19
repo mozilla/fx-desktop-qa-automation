@@ -417,11 +417,6 @@ class Sidebar(BasePage):
         click the link. Waits for the document to be fully loaded before searching. The link opens about:addons in a
         new tab.
 
-        The link is matched by data-l10n-id prefix ("sidebar-manage-extensions") rather than the exact versioned id
-        ("...2"), with a[href="about:addons"] as a fallback — Mozilla bumps the version suffix when the string
-        changes (see #1389), so pinning the exact id makes this test break on every such bump. The link sits in a
-        per-extension <div class="extension-item"> that renders asynchronously after the panel loads, so use a longer
-        timeout to let it appear.
         """
         self.custom_wait(timeout=30).until(
             lambda _: self.driver.execute_script(
@@ -429,7 +424,7 @@ class Sidebar(BasePage):
                 "if (!cd || cd.readyState !== 'complete') return null;"
                 "function search(root) {"
                 "  const el = root.querySelector("
-                "    'a[data-l10n-id^=\"sidebar-manage-extensions\"], a[href=\"about:addons\"]'"
+                '    \'a[data-l10n-id^="sidebar-manage-extensions"], a[href="about:addons"]\''
                 "  );"
                 "  if (el) { el.click(); return true; }"
                 "  for (const host of root.querySelectorAll('*')) {"
