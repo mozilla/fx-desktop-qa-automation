@@ -605,21 +605,26 @@ class AboutPrefs(BasePage):
         self.double_click(select_el.options[idx])
         return self
 
-    def _get_tile_data(self, tile_type: str, idx=0) -> dict:
+    def _get_tile_type(self, tile_type: str, idx=0) -> WebElement:
         """Get data-l10n-args from a saved tile"""
         self.element_visible(f"saved-{tile_type}-entry")
-        raw_json = self.get_elements(f"saved-{tile_type}-entry")[idx].get_attribute(
-            "data-l10n-args"
-        )
-        return json.loads(raw_json)
+        return self.get_elements(f"saved-{tile_type}-entry")[idx]
 
     def get_data_from_saved_address(self, idx=0) -> dict:
         """Get data-l10n-args from the saved address card"""
-        return self._get_tile_data("address", idx)
+        tile = self._get_tile_type("address", idx)
+        json_out = {"name": tile.get_attribute("label")}
+        json_out["address"] = tile.get_attribute("description")
+        return json_out
 
     def get_data_from_saved_payment(self, idx=0) -> dict:
         """Get data-l10n-args from the saved payment card"""
-        return self._get_tile_data("payment", idx)
+        tile = self._get_tile_type("payment", idx)
+        json_out = {"cardNumber": tile.get_attribute("label")}
+        exp_date = tile.get_attribute("description")
+        json_out["expDate"] = exp_date
+        json_out["expMonth"], json_out["expYear"] = exp_date.split("/")
+        return json_out
 
     def _edit_tile(self, tile_type: str, idx=0):
         """Open the edit view of payment or address"""
@@ -1100,8 +1105,8 @@ class AboutPrefs(BasePage):
         """
         Sets a new primary password.
         """
-        self.get_element("enter-new-password").send_keys(password)
-        self.get_element("reenter-new-password").send_keys(password)
+        self.get_element("primary-password-input-field").send_keys(password)
+        self.get_element("primary-password-reenter-input-field").send_keys(password)
         self.click_on("submit-password")
         return self
 

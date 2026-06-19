@@ -50,4 +50,4 @@ def test_camera_and_microphone_permissions_notification(driver: Firefox, web_pag
     )
 
     nav.element_visible("popup-notification-secondary-button")
-    nav.click_on("popup-notification-secondary-button")
+    nav.js_click_on("popup-notification-secondary-button")

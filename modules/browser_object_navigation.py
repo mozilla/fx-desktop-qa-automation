@@ -664,7 +664,7 @@ class Navigation(BasePage):
         self.element_clickable(button_selector)
         if remember_this_decision:
             self.click_on("checkbox-remember-this-decision")
-        self.click_on(button_selector)
+        self.js_click_on(button_selector)
 
     def open_searchmode_switcher_settings(self):
         """Open search settings from searchmode switcher in awesome bar"""
