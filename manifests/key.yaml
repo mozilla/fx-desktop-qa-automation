@@ -528,7 +528,8 @@ form_autofill:
     splits:
     - functional1
   test_autofill_credit_card:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2048909
+    result: unstable
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
