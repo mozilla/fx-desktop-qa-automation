@@ -6,40 +6,23 @@
     "strategy": "id",
     "groups": []
   },
-  "doorhanger-save-button-parent": {
-    "selectorData": "moz-button.popup-notification-primary-button[label='Save']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-      ]
-  },
   "doorhanger-save-button": {
-    "selectorData": "main-button",
-    "strategy": "id",
-    "shadowParent": "doorhanger-save-button-parent",
-    "groups": [
-      "doNotCache"
-    ]
-  },
-  "doorhanger-not-now-button-parent": {
-    "selectorData": "moz-button.popup-notification-secondary-button[label='Not now']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ]
-  },
-  "doorhanger-not-now-button": {
-    "selectorData": "main-button",
-    "strategy": "id",
-    "shadowParent": "doorhanger-not-now-button-parent",
-    "groups": [
-      "doNotCache"
-    ]
-  },
-  "doorhanger-dropdown-button": {
-    "selectorData": "button[aria-label='More actions']",
+    "selectorData": ".popup-notification-primary-button[label^='Save']",
     "strategy": "css",
     "groups": []
+  },
+  "doorhanger-not-now-button": {
+    "selectorData": ".popup-notification-secondary-button[label^='Not now']",
+    "strategy": "css",
+    "groups": []
+  },
+  "doorhanger-dropdown-button": {
+    "selectorData": "chevron-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "doorhanger-not-now-button"
   },
   "doorhanger-dropdown-never-save-cards-button": {
     "selectorData": "menuitem[label='Never save cards']",
@@ -56,20 +39,10 @@
     "strategy": "css",
     "groups": []
   },
-  "doorhanger-update-button-parent": {
-    "selectorData": "moz-button.popup-notification-primary-button[label='Update']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ]
-  },
   "doorhanger-update-button": {
-    "selectorData": "main-button",
-    "strategy": "id",
-    "shadowParent": "doorhanger-update-button-parent",
-    "groups": [
-      "doNotCache"
-    ]
+    "selectorData": ".popup-notification-primary-button[label^='Update']",
+    "strategy": "css",
+    "groups": []
   },
   "pop-up-component": {
     "selectorData": "PopupAutoComplete",

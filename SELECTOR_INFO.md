@@ -1573,6 +1573,34 @@ Description: "Turn off Primary Password" / remove button in the Remove Primary P
 Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: primary-password-new-input
+Selector Data: "pw1"
+Description: The outer moz-input-password custom element for the "Enter new password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: primary-password-new-input-field
+Selector Data: "input#input"
+Description: The inner input field inside the shadow DOM of the "Enter new password" moz-input-password element in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: primary-password-reenter-input
+Selector Data: "pw2"
+Description: The outer moz-input-password custom element for the "Re-enter password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: primary-password-reenter-input-field
+Selector Data: "input#input"
+Description: The inner input field inside the shadow DOM of the "Re-enter password" moz-input-password element in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
