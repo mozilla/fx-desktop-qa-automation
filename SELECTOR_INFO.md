@@ -902,66 +902,115 @@ Location: about:preferences#home
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: custom-radio
-Selector Data: "customRadio"
-Description: In Enhanced Tracking Protection, the Custom radio button
+Selector Name: etp-advanced-button
+Selector Data: "etpStatusAdvancedButton"
+Description: ETP "Advanced" button on the privacy pane; opens the ETP settings subpage (Settings redesign)
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: custom-tracker-options-parent
-Selector Data: "contentBlockingOptionCustom"
-Description: Parent Element in custom tracker blocking checkboxes
-Location: about:preferences#privacy
+Selector Name: etp-level-standard
+Selector Data: "etpLevelStandard"
+Description: Enhanced Tracking Protection "Standard" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cookies-checkbox
-Selector Data: "contentBlockingBlockCookiesCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Cookies
-Location: about:preferences#privacy
+Selector Name: etp-level-strict
+Selector Data: "etpLevelStrict"
+Description: Enhanced Tracking Protection "Strict" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cookies-isolate-social-media-option
-Selector Data: "isolateCookiesSocialMedia"
-Description: In Enhanced Tracking Protection, the option for Cookies…, and isolate other…
-Location: about:preferences#privacy
+Selector Name: etp-level-custom
+Selector Data: "etpLevelCustom"
+Description: Enhanced Tracking Protection "Custom" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: tracking-in-all-windows
-Selector Data: "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']"
-Description: In Enhanced Tracking Protection, the option for Tracking content, In all windows
-Location: about:preferences#privacy
+Selector Name: etp-customize-button
+Selector Data: "etpCustomizeButton"
+Description: "Customize" button shown under the Custom ETP level; opens the ETP Customize subpage
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: tracking-checkbox
-Selector Data: "contentBlockingTrackingProtectionCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Tracking content
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-toggle
+Selector Data: "etpCustomTrackingProtectionEnabled"
+Description: Custom ETP "Tracking content" moz-toggle
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cryptominers-checkbox
-Selector Data: "contentBlockingCryptominersCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Cryptominers
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-context
+Selector Data: "etpCustomTrackingProtectionEnabledContext"
+Description: Custom ETP "Tracking content" context moz-select (all windows / private windows)
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: known-fingerprints-checkbox
-Selector Data: "contentBlockingFingerprintingCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Known fingerprinters
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-context-select
+Selector Data: "select"
+Description: Inner native <select> of the Tracking content context moz-select (shadowParent: etp-custom-tracking-context); values: all, pbmOnly
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: suspected-fingerprints-checkbox
-Selector Data: "contentBlockingFingerprintingProtectionCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Suspected fingerprinters
-Location: about:preferences#privacy
+Selector Name: etp-custom-cookies-toggle
+Selector Data: "etpCustomCookiesEnabled"
+Description: Custom ETP "Cookies" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cookie-behavior
+Selector Data: "cookieBehavior"
+Description: Custom ETP cookie-behavior moz-select (which cookies to block)
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cookie-behavior-select
+Selector Data: "select"
+Description: Inner native <select> of the cookie-behavior moz-select (shadowParent: etp-custom-cookie-behavior); values 0/4/5/3/1/2. Disabled until the cookies toggle is on.
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cryptomining-toggle
+Selector Data: "etpCustomCryptominingProtectionEnabled"
+Description: Custom ETP "Cryptominers" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-known-fingerprinting-toggle
+Selector Data: "etpCustomKnownFingerprintingProtectionEnabled"
+Description: Custom ETP "Known fingerprinters" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-toggle
+Selector Data: "etpCustomSuspectFingerprintingProtectionEnabled"
+Description: Custom ETP "Suspected fingerprinters" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-context
+Selector Data: "etpCustomSuspectFingerprintingProtectionEnabledContext"
+Description: Custom ETP "Suspected fingerprinters" context moz-select (all windows / private windows)
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-context-select
+Selector Data: "select"
+Description: Inner native <select> of the Suspected fingerprinters context moz-select (shadowParent: etp-custom-suspect-fingerprinting-context); values: all, pbmOnly
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1515,20 +1564,6 @@ Selector Name: remove-password
 Selector Data: "button[label^='Remove']"
 Description: Remove button to remove the primary password
 Location: about:preferences#privacy Primary Password popup
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: standard-radio
-Selector Data: "standardRadio"
-Description: In Enhanced Tracking Protection, the standard radio button
-Location: about:preferences#privacy
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: standard-section
-Selector Data: "contentBlockingOptionStandard"
-Description: In Enhanced Tracking Protection, the standard radio section
-Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -5346,20 +5381,6 @@ Selector Data: "trust-icon-container"
 Description: Address bar shield icon
 Location: Address bar
 Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: suspected-fingerprints-in-all-windows
-Selector Data: "#fingerprintingProtectionMenu menuitem[value='always']"
-Description: "In all windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
-Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: suspected-fingerprints-only-in-private-windows
-Selector Data: "#fingerprintingProtectionMenu menuitem[value='private']"
-Description: "Only in private windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
-Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
-Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: see-all-trackers-parent
