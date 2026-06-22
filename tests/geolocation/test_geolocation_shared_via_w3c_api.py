@@ -77,12 +77,12 @@ def test_allow_permission_on_geolocation_via_w3c_api(
     nav.wait_for_page_to_load()
     cookie_iframe = generic_page.get_elements("cookie-iframe")
     if cookie_iframe:
-        generic_page.switch_to_iframe(1)
+        generic_page.switch_to_iframe_context(cookie_iframe[0])
         generic_page.click_on("accept-choices")
         generic_page.switch_to_default_frame()
 
     # Click the 'Try It' button and Allow the location sharing
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="primary")
 
     # Check that the location marker is displayed
@@ -93,7 +93,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
 
     # Click the 'Try It' button and Allow the location sharing while choose the option Remember this decision
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=True)
 
     # Check that the location marker is displayed
@@ -128,12 +128,12 @@ def test_block_permission_on_geolocation_via_w3c_api(
     nav.wait_for_page_to_load()
     cookie_iframe = generic_page.get_elements("cookie-iframe")
     if cookie_iframe:
-        generic_page.switch_to_iframe(1)
+        generic_page.switch_to_iframe_context(cookie_iframe[0])
         generic_page.click_on("accept-choices")
         generic_page.switch_to_default_frame()
 
     # Click the 'Try It' button and Block the location sharing
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="secondary")
 
     # Check that the location marker is displayed
@@ -142,7 +142,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
 
     # Click the 'Try It' button and Block the location sharing while choose the option Remember this decision
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="secondary", remember_this_decision=True)
 
     # Check that the location marker is displayed
