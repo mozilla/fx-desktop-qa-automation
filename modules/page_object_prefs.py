@@ -367,21 +367,25 @@ class AboutPrefs(BasePage):
         sleep(0.25)
         return self
 
-    def get_history_menulist(self) -> WebElement:
-        """
-        Gets the web element for the list of history items that appear in about:preferences
-        """
-        return self.get_element("history_menulist")
-
     def set_history_option(self, option: str):
         """
         Set the history option in about:preferences.
+
+        Firefox now renders the history setting as a moz-radio-group rather than
+        a menulist. The legacy option keys are now mapped to the matching
+        moz-radio data-l10n-id and selected by click.
         """
-        history_menulist = self.get_history_menulist()
-        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
-        sleep(1)
-        menulist_popup = Select(self.get_element("history-option-select"))
-        menulist_popup.select_by_value(option)
+        history_option_l10n_ids = {
+            "remember": "history-remember-option-all2",
+            "dontremember": "history-remember-option-never2",
+            "custom": "history-remember-option-custom2",
+        }
+        if option not in history_option_l10n_ids:
+            raise ValueError(f"Unknown history option: {option!r}")
+        history_radio = self.get_element(
+            "history-option-radio", labels=[history_option_l10n_ids[option]]
+        )
+        history_radio.click()
         return self
 
     # ---- Payment and Address Management ---------------------------------------------------------

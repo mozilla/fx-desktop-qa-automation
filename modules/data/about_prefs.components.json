@@ -497,11 +497,6 @@
     "strategy": "id",
     "groups": []
   },
-  "history_menulist": {
-    "selectorData": "historyMode",
-    "strategy": "id",
-    "groups": []
-  },
   "mime-type-item": {
     "selectorData": "richlistitem[type='{item}']",
     "strategy": "css",
@@ -733,11 +728,12 @@
     "strategy": "id",
     "groups": []
   },
-  "history-option-select": {
-    "selectorData": "select[id='input']",
+  "history-option-radio": {
+    "selectorData": "moz-radio[data-l10n-id='{option}']",
     "strategy": "css",
-    "shadowParent": "history_menulist",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "tab-hover-preview-checkbox": {
     "selectorData": "tabPreviewShowThumbnails",
