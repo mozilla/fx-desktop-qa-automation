@@ -824,8 +824,7 @@ password_manager:
     splits:
     - functional1
   test_add_username_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
@@ -878,8 +877,7 @@ password_manager:
     splits:
     - functional1
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -911,13 +909,11 @@ password_manager:
     splits:
     - functional2
   test_password_field_only_triggers_dismissed_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_password_manager_key_icon_after_doorhanger_dismiss:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_password_manager_on_google_US:
@@ -969,8 +965,7 @@ password_manager:
     splits:
     - functional2
   test_username_edit_captured_in_dismissed_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
 pdf_viewer:

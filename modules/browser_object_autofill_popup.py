@@ -173,7 +173,11 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def dismiss_password_doorhanger(self) -> BasePage:
         """Dismiss the Password Manager doorhanger using ESC."""
-        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
+        parent = self.get_element("password-notification-username-field")
+        input_el = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('input')", parent
+        )
+        input_el.send_keys(Keys.ESCAPE)
         return self
 
     @BasePage.context_chrome
@@ -195,5 +199,9 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def type_username_in_password_doorhanger(self, username: str) -> BasePage:
         """Type a username into the Password Manager doorhanger."""
-        self.get_element("password-notification-username-field").send_keys(username)
+        parent = self.get_element("password-notification-username-field")
+        input_el = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('input')", parent
+        )
+        input_el.send_keys(username)
         return self
