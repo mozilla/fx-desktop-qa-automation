@@ -378,7 +378,7 @@ class AboutPrefs(BasePage):
         Set the history option in about:preferences.
 
         Firefox now renders the history setting as a moz-radio-group rather than
-        a menulist, so the legacy option keys are mapped to the matching
+        a menulist. The legacy option keys are now mapped to the matching
         moz-radio data-l10n-id and selected by click.
         """
         history_option_l10n_ids = {
