@@ -367,12 +367,6 @@ class AboutPrefs(BasePage):
         sleep(0.25)
         return self
 
-    def get_history_menulist(self) -> WebElement:
-        """
-        Gets the web element for the list of history items that appear in about:preferences
-        """
-        return self.get_element("history_menulist")
-
     def set_history_option(self, option: str):
         """
         Set the history option in about:preferences.
@@ -386,6 +380,8 @@ class AboutPrefs(BasePage):
             "dontremember": "history-remember-option-never2",
             "custom": "history-remember-option-custom2",
         }
+        if option not in history_option_l10n_ids:
+            raise ValueError(f"Unknown history option: {option!r}")
         history_radio = self.get_element(
             "history-option-radio", labels=[history_option_l10n_ids[option]]
         )
