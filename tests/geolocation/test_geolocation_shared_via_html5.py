@@ -41,7 +41,6 @@ def temp_selectors():
     }
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_allow_permission_on_geolocation_via_html5(
     driver: Firefox,
     nav: Navigation,
@@ -77,7 +76,6 @@ def test_allow_permission_on_geolocation_via_html5(
     )
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_block_permission_on_geolocation_via_w3c_api(
     driver: Firefox,
     nav: Navigation,
