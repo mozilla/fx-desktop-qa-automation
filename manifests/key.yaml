@@ -8,7 +8,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_add_engine_address_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049511
+    result: unstable
     splits:
     - smoke
   test_added_open_search_engine_default:
@@ -401,6 +402,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - ci
   test_close_browser_with_download_in_progress_shows_prompt:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
     result: unstable
