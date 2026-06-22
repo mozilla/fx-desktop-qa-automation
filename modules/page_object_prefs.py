@@ -1127,6 +1127,24 @@ class AboutPrefs(BasePage):
         self.accept_alert_and_verify_text(alert_text)
         return self
 
+    def change_primary_password(
+        self, current_password: str, new_password: str, alert_text: str, ba
+    ):
+        """Changes an existing Primary Password and confirms alert"""
+        self.open()
+        self.open_change_primary_password_popup(ba)
+        self.get_element("current-primary-password").send_keys(current_password)
+        self.set_primary_password(new_password)
+        self.accept_alert_and_verify_text(alert_text)
+        return self
+
+    def open_change_primary_password_popup(self, browser_actions):
+        """Opens the Change Primary Password popup and switches to the iframe context"""
+        self.click_on("change-primary-password")
+        popup = self.get_element("browser-popup")
+        browser_actions.switch_to_iframe_context(popup)
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
