@@ -186,7 +186,6 @@ class AutofillPopup(BasePage):
         )
         return self
 
-    @BasePage.context_chrome
     def _get_doorhanger_username_input(self):
         """Helper to get the input element inside the password doorhanger username shadow DOM.
         Must be called from chrome context.
