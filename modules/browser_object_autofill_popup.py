@@ -186,15 +186,19 @@ class AutofillPopup(BasePage):
         )
         return self
 
+    @BasePage.context_chrome
     def _get_doorhanger_username_input(self):
-        """Helper to get the input element inside the password doorhanger username shadow DOM"""
+        """Helper to get the input element inside the password doorhanger username shadow DOM.
+        Must be called from chrome context.
+        """
         parent = self.get_element("password-notification-username-field")
         input_el = self.driver.execute_script(
             "return arguments[0].shadowRoot.querySelector('input')", parent
         )
-        assert input_el is not None, (
-            "Could not find input inside password-notification-username-field shadow root"
-        )
+        if input_el is None:
+            raise RuntimeError(
+                "Could not find input inside password-notification-username-field shadow root"
+            )
         return input_el
 
     @BasePage.context_chrome
