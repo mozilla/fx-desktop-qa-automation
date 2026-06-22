@@ -1629,9 +1629,9 @@ tabs:
   test_close_pinned_tab_via_mouse:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
     result:
+      linux: unstable
       mac: pass
       win: pass
-      linux: unstable
     splits:
     - smoke
     - ci
