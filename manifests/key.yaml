@@ -500,7 +500,8 @@ drag_and_drop:
     splits:
     - functional1
   test_paste_image_text:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2048716
+    result: unstable
     splits:
     - functional1
 find_toolbar:
@@ -523,8 +524,7 @@ form_autofill:
     splits:
     - smoke
   test_autofill_cc_cvv:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_autofill_credit_card:
@@ -532,28 +532,23 @@ form_autofill:
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_autofill_credit_card_enable:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_autofill_credit_card_four_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_cc_clear_form:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_clear_form:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_create_new_cc_profile:
@@ -566,18 +561,15 @@ form_autofill:
     splits:
     - smoke
   test_delete_cc_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_edit_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_enable_disable_autofill:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_form_autofill_suggestions:
@@ -601,13 +593,11 @@ form_autofill:
     - smoke
     - ci
   test_updating_address:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_updating_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047889
-    result: unstable
+    result: pass
     splits:
     - functional1
 geolocation:
@@ -716,29 +706,24 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888; also Issue with
-      Mac GHA? trying pass to see what happens.
-    result: unstable
+    comment: Issue with Mac GHA? trying pass to see what happens.
+    result: pass
     splits:
     - functional1
   test_camera_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_cancel_webextension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_deny_geolocation:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_deny_screen_capture:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_downloads_button_is_displayed:
@@ -750,8 +735,7 @@ notifications:
     splits:
     - functional1
   test_geolocation_allow_browserleaks:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_geolocation_prompt_presence:
@@ -759,8 +743,7 @@ notifications:
     splits:
     - functional1
   test_microphone_permissions_notification:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_notifications_displayed:
@@ -773,14 +756,12 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047888
-    result: unstable
+    result: pass
     splits:
     - functional1
 password_manager:
   test_about_logins_copy_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_direct_navigation:
@@ -788,8 +769,7 @@ password_manager:
     splits:
     - functional1
   test_about_logins_edit_prompts_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_about_logins_navigation_from_about_preferences:
@@ -841,8 +821,7 @@ password_manager:
     splits:
     - smoke
   test_add_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047891
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_add_username_via_doorhanger:
@@ -859,8 +838,7 @@ password_manager:
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
@@ -876,13 +854,11 @@ password_manager:
     splits:
     - smoke
   test_delete_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
@@ -890,8 +866,7 @@ password_manager:
     splits:
     - functional2
   test_edit_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
@@ -913,13 +888,11 @@ password_manager:
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047886
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_password_csv_correctness:
@@ -965,18 +938,15 @@ password_manager:
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_saved_hyperlink_redirects_to_corresponding_page:
@@ -988,8 +958,7 @@ password_manager:
     splits:
     - functional2
   test_update_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:
@@ -1061,11 +1030,19 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
+  test_pdf_modify_text_number_data:
+    result: pass
+    splits:
+    - functional1
   test_pdf_navigation:
     result: pass
     splits:
     - smoke
   test_pdf_prefilled_input_data:
+    result: pass
+    splits:
+    - functional1
+  test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:
     - functional1

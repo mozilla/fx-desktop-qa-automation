@@ -326,9 +326,10 @@ class Navigation(BasePage):
         """
         self.click_search_mode_switcher()
 
-        # wait for menu to fully render
-        # We get "cannot scroll into view", so force with JS
-        self.element_visible("search-mode-switcher-prefs")
+        # The switcher popup is a <menupopup> whose engine entries are <menuitem>s that
+        # populate asynchronously. Wait for the target option itself to be clickable
+        # (this is the "menu fully rendered" gate), then JS-click it — a native click
+        # raises "cannot scroll into view" for menuitems.
         if local:
             self.element_clickable(
                 "search-mode-local-option", labels=[search_mode.lower()]
@@ -348,7 +349,8 @@ class Navigation(BasePage):
             search_mode (str): search mode to be selected
         """
         self.click_search_mode_switcher()
-        self.element_visible("search-mode-switcher-prefs")
+        # Wait for the target add-engine menuitem itself (the popup renders its
+        # items asynchronously), then JS-click it.
         self.element_clickable("search-mode-add-option", labels=[search_mode])
         self.js_click_on("search-mode-add-option", labels=[search_mode])
         return self
@@ -664,7 +666,7 @@ class Navigation(BasePage):
         self.element_clickable(button_selector)
         if remember_this_decision:
             self.click_on("checkbox-remember-this-decision")
-        self.click_on(button_selector)
+        self.js_click_on(button_selector)
 
     def open_searchmode_switcher_settings(self):
         """Open search settings from searchmode switcher in awesome bar"""

@@ -59,9 +59,15 @@ class AmoLanguages(BasePage):
 
     @BasePage.context_chrome
     def confirm_language_install_popup(self):
-        """Confirms the language install popup"""
-        # click one for "Add"
-        # click second time for "Okay", the button is not cached which allows for two different buttons to be different
-        for _ in range(2):
-            self.get_element("language-install-popup-add").click()
+        """Confirms the language install popup by clicking Add then OK"""
+        # Click "Add" button
+        self.js_click_on("addon-install-add-button-field")
+
+        # Wait for the OK button to appear
+        self.custom_wait(timeout=10).until(
+            lambda _: self.get_element("addon-install-ok-button-parent") is not None
+        )
+
+        # Click "OK" button
+        self.js_click_on("addon-install-ok-button-field")
         return self
