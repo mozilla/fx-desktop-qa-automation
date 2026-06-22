@@ -497,11 +497,6 @@
     "strategy": "id",
     "groups": []
   },
-  "history_menulist": {
-    "selectorData": "historyMode",
-    "strategy": "id",
-    "groups": []
-  },
   "mime-type-item": {
     "selectorData": "richlistitem[type='{item}']",
     "strategy": "css",
