@@ -60,10 +60,10 @@ jobs:
         run: |
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -87,14 +87,13 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run: |
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
-          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
-          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci;
+          uv sync;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
         id: install-fx
@@ -106,7 +105,8 @@ jobs:
 
       - name: Select Tests (macOS)
         run: |
-          pipenv run python scripts/choose_l10n_ci_set.py
+          uv sync;
+          uv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (macOS)
         if: ${{ inputs.dry_run == true }}
@@ -128,7 +128,7 @@ jobs:
           echo "0" > TEST_EXIT_CODE;
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            uv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-mac || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -158,10 +158,10 @@ jobs:
         run: |
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -187,14 +187,13 @@ jobs:
           sudo apt install gnome-screenshot;
           uname -m;
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
-          pipenv install;
-          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
-          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci;
+          uv sync;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install executables
         id: install-fx
@@ -207,7 +206,8 @@ jobs:
 
       - name: Select Tests (Linux)
         run: |
-          pipenv run python scripts/choose_l10n_ci_set.py;
+          uv sync;
+          uv run python scripts/choose_l10n_ci_set.py;
 
       - name: Dry Run - Print Selected Tests (Linux)
         if: ${{ inputs.dry_run == true }}
@@ -231,7 +231,7 @@ jobs:
           Xvfb :99 -screen 0 '1600x1200x24' -auth "$XAUTHORITY" > artifacts/xvfb.log &
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            DISPLAY=:99 pipenv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            DISPLAY=:99 uv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-linux || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -261,10 +261,10 @@ jobs:
         run: |
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         shell: pwsh
@@ -289,11 +289,10 @@ jobs:
         shell: pwsh
         run: |
           mkdir -p artifacts
-          pip3 install 'pipenv==2023.11.15'
-          pip3 install 'ruff>=0.4.8,<0.5'
-          rm ./pyproject.toml
-          mv ./config/ci_pyproject.toml ./pyproject.toml
-          pipenv install
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci;
+          uv sync;
 
       - name: Install Fx
         id: install-fx
@@ -303,10 +302,10 @@ jobs:
         shell: pwsh
         run: |
           if (-not $env:WIN_INSTALLER_LINK) {
-            $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+            $fx_url = (uv run python -m scripts.collect_executables) -join ""
             "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
-          $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
+          $gecko_url = (uv run python -m scripts.collect_executables -g) -join ""
           "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Download Geckodriver
@@ -343,7 +342,8 @@ jobs:
       - name: Select Tests (Win)
         shell: pwsh
         run: |
-          pipenv run python scripts/choose_l10n_ci_set.py
+          uv sync;
+          uv run python scripts/choose_l10n_ci_set.py
 
       - name: Dry Run - Print Selected Tests (Win)
         if: ${{ inputs.dry_run == true }}
@@ -360,7 +360,7 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && inputs.dry_run != true }}
         shell: pwsh
         run: |
-          pipenv run python -c "import sys; print(sys.platform)"
+          uv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = 'C:\Program Files\Custom Firefox\firefox.exe'
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
 
@@ -371,7 +371,7 @@ jobs:
               $line = $_
               Write-Host "Running tests for: $line"
               try {
-                  pipenv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" $line
+                  uv run python -m l10n_CM.run_l10n --geckodriver=geckodriver.exe --fx-executable="$env:FX_EXECUTABLE" $line
               } catch {
                   $SCRIPT_EXIT_CODE = $_.Exception.HResult
               }
@@ -406,15 +406,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
-          pip3 install 'pipenv==2023.11.15'
-          pipenv install
+          pip3 install 'uv==0.11.18';
+          uv sync;
 
       - name: Download Windows artifact
         if: ${{ needs.L10N-Windows.result == 'success' }}
@@ -459,5 +459,5 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          pipenv run python scripts/notifier.py
+          uv run python scripts/notifier.py
           

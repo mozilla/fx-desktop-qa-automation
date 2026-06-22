@@ -39,10 +39,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Stability Check)
         shell: pwsh
@@ -57,20 +57,19 @@ jobs:
         shell: pwsh
         run: |
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          Remove-Item ./pyproject.toml;
-          Move-Item ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
-          pipenv install;
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci_no_reruns;
+          uv sync;
 
       - name: Install Fx
         id: install-fx
         shell: pwsh
         run: |
-          $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+          $fx_url = (uv run python -m scripts.collect_executables) -join ""
           if (-not $fx_url) { throw "collect_executables returned an empty Firefox URL" }
           "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
+          $gecko_url = (uv run python -m scripts.collect_executables -g) -join ""
           if (-not $gecko_url) { throw "collect_executables returned an empty geckodriver URL" }
           "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
@@ -97,7 +96,7 @@ jobs:
         id: select
         shell: pwsh
         run: |
-          pipenv run python -m scripts.choose_test_split
+          uv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (Win)
         if: ${{steps.select.conclusion == 'success'}}
@@ -117,10 +116,10 @@ jobs:
           }}
         shell: pwsh
         run: |
-          pipenv run python -c "import sys; print(sys.platform)"
+          uv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
+          uv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       - name: Run Tests in Win
         if: |-
@@ -131,7 +130,7 @@ jobs:
         shell: pwsh
         run: |
           mkdir -p test-results
-          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
+          uv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win.json --reruns 0
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -148,13 +147,13 @@ jobs:
         shell: pwsh
         run: |
           Remove-Item -Path ./pyproject.toml -ErrorAction SilentlyContinue
-          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
+          uv run python scripts/switch_config.py ci_headed_no_reruns;
 
           New-Item -ItemType Directory -Force -Path test-results | Out-Null
 
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
 
-          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win-headed.json --reruns 0
+          uv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe --json-report --json-report-file=test-results/report-win-headed.json --reruns 0
 
           $env:TEST_EXIT_CODE = $LASTEXITCODE
 
@@ -198,10 +197,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Stability Check)
         run: |
@@ -219,14 +218,13 @@ jobs:
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm -f ./pyproject.toml;
-          mv ./config/ci_pyproject_no_reruns.toml ./pyproject.toml;
-          pipenv install
-          echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"
-          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci_no_reruns;
+          uv sync;
+          echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
         id: setup
@@ -236,7 +234,7 @@ jobs:
       - name: Select Tests (MacOS)
         id: select
         run: |
-          pipenv run python -m scripts.choose_test_split
+          uv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (MacOS)
         if: ${{steps.select.conclusion == 'success'}}
@@ -257,7 +255,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |-
@@ -270,8 +268,8 @@ jobs:
         run: |
           mkdir -p test-results
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) --json-report --json-report-file=test-results/report-mac.json --reruns 0 || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -289,8 +287,8 @@ jobs:
         run: |
           mkdir -p test-results
           rm -f ./pyproject.toml
-          mv ./config/ci_pyproject_headed_no_reruns.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
+          uv run python scripts/switch_config.py ci_headed_no_reruns;
+          uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
@@ -319,15 +317,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
-          pip3 install 'pipenv==2023.11.15'
-          pipenv install
+          pip3 install 'uv==0.11.18';
+          uv sync;
 
       - name: Download Windows artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
@@ -348,7 +346,7 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           STARFOX_PLATFORM: win
         run: |
-          pipenv run python scripts/notifier.py
+          uv run python scripts/notifier.py
 
   Use-Artifacts-Mac:
     runs-on: ubuntu-latest
@@ -361,15 +359,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
-          pip3 install 'pipenv==2023.11.15'
-          pipenv install
+          pip3 install 'uv==0.11.18';
+          uv sync;
 
       - name: Download MacOS artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
@@ -390,4 +388,4 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           STARFOX_PLATFORM: mac
         run: |
-          pipenv run python scripts/notifier.py
+          uv run python scripts/notifier.py
