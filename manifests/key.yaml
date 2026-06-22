@@ -854,13 +854,11 @@ password_manager:
     splits:
     - smoke
   test_delete_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
@@ -868,8 +866,7 @@ password_manager:
     splits:
     - functional2
   test_edit_primary_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
@@ -891,8 +888,7 @@ password_manager:
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047886
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_no_generated_password_options_with_pp_and_no_credentials:
@@ -946,13 +942,11 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_saved_hyperlink_redirects_to_corresponding_page:
@@ -964,8 +958,7 @@ password_manager:
     splits:
     - functional2
   test_update_login_via_doorhanger:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047910
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_use_saved_password_option_not_in_password_field_context_menu_without_saved_logins:

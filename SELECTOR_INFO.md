@@ -1476,17 +1476,31 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: current-primary-password
+Selector Name: current-primary-password-parent
 Selector Data: "oldpw"
-Description: Input for current password in the Change Primary Password dialog
-Location: about:preferences#privacy Primary Password popup
+Description: The outer moz-input-password element for the "Current password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: current-primary-password
+Selector Data: "input"
+Description: The inner input element inside the shadow DOM of the "Current password" field in the Primary Password dialog
+Location: About Preferences - Passwords - Primary Password dialog
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: remove-current-password-parent
+Selector Data: "password"
+Description: The outer moz-input-password element for the "Current password" field in the Remove Primary Password dialog
+Location: About Preferences - Passwords - Remove Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: remove-current-password
-Selector Data: "password"
-Description: Input for current password in the Remove Primary Password dialog
-Location: about:preferences#privacy Primary Password popup
+Selector Data: "input"
+Description: The inner input element inside the shadow DOM of the "Current password" field in the Remove Primary Password dialog
+Location: About Preferences - Passwords - Remove Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1574,21 +1588,21 @@ Location: about:preferences#privacy (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-new-input
+Selector Name: primary-password-input-parent
 Selector Data: "pw1"
 Description: The outer moz-input-password custom element for the "Enter new password" field in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-new-input-field
+Selector Name: primary-password-input-field
 Selector Data: "input#input"
 Description: The inner input field inside the shadow DOM of the "Enter new password" moz-input-password element in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: primary-password-reenter-input
+Selector Name: primary-password-reenter-input-parent
 Selector Data: "pw2"
 Description: The outer moz-input-password custom element for the "Re-enter password" field in the Primary Password dialog
 Location: About Preferences - Passwords - Primary Password dialog
@@ -1931,17 +1945,24 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
-Selector Name: doorhanger-more-actions-button
-Selector Data: "[data-l10n-id='popup-notification-more-actions-button']"
-Description: Arrow on the "Not now" button
-Location: Autofill save login doorhanger
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
 Selector Name: doorhanger-never-save-login-button
 Selector Data: "menuitem[label='Never save']"
 Description: The hidden button in save login doorhanger.
 Location: Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the "Not now" button
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-secondary-split-button
+Selector Data: "moz-button.popup-notification-secondary-button"
+Description: The "Not now" split button (moz-button) in the save login/card doorhanger; its shadow root holds the more-actions chevron.
+Location: Inside the autofill save doorhangers, in the panel-footer moz-button-group
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
+Selector Name: doorhanger-more-actions-chevron
+Selector Data: "chevron-button" (id; shadowParent: doorhanger-secondary-split-button)
+Description: The dropdown chevron inside the "Not now" split button's shadow root. Clicking it (via js_click_on) opens the more-actions menu that contains "Never save".
+Location: Shadow DOM of the doorhanger "Not now" split button
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
