@@ -14,7 +14,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
-BIG_MODELS = ["Navigation", "GenericPage"]
+BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs"]
 
 
 def snakify(pascal: str) -> str:
@@ -256,6 +256,8 @@ if __name__ == "__main__":
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
+                if model_name in BIG_MODELS:
+                    continue  # model too big, don't run all tests
                 for test_name in get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 ):
