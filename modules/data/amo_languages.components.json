@@ -19,16 +19,39 @@
         "strategy": "css",
         "groups": []
     },
-    "language-install-popup-add": {
-        "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
+    "language-addons-subpage-header": {
+        "selectorData": "AddonTitle",
+        "strategy": "class",
+        "groups": []
+    },
+    "addon-install-add-button": {
+        "selectorData": "moz-button.popup-notification-primary-button[label='Add']",
         "strategy": "css",
         "groups": [
             "doNotCache"
         ]
     },
-    "language-addons-subpage-header": {
-        "selectorData": "AddonTitle",
-        "strategy": "class",
-        "groups": []
+    "addon-install-add-button-field": {
+        "selectorData": "button#main-button",
+        "strategy": "css",
+        "shadowParent": "addon-install-add-button",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "addon-install-ok-button-parent": {
+        "selectorData": "moz-button.popup-notification-primary-button[label='OK']",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "addon-install-ok-button-field": {
+        "selectorData": "button#main-button",
+        "strategy": "css",
+        "shadowParent": "addon-install-ok-button-parent",
+        "groups": [
+            "doNotCache"
+        ]
     }
 }

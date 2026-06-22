@@ -10,8 +10,8 @@
     "groups": []
   },
   "saved-address-entry": {
-    "selectorData": "[data-l10n-id='address-moz-box-item']",
-    "strategy": "css",
+    "selectorData": "address-item",
+    "strategy": "id",
     "groups": [
       "doNotCache"
     ]
@@ -767,16 +767,30 @@
       "doNotCache"
     ]
   },
-  "current-primary-password": {
+  "current-primary-password-parent": {
     "selectorData": "oldpw",
     "strategy": "id",
     "groups": [
       "doNotCache"
     ]
   },
-  "remove-current-password": {
+  "current-primary-password": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "current-primary-password-parent",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "remove-current-password-parent": {
     "selectorData": "password",
     "strategy": "id",
+    "groups": []
+  },
+  "remove-current-password": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "remove-current-password-parent",
     "groups": []
   },
   "remove-primary-password-box": {
@@ -880,5 +894,35 @@
     "selectorData": "turnOffPrimaryPassword",
     "strategy": "id",
     "groups": []
+  },
+  "primary-password-input-parent": {
+    "selectorData": "pw1",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "primary-password-input-field": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "primary-password-input-parent",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "primary-password-reenter-input-parent": {
+    "selectorData": "pw2",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "primary-password-reenter-input-field": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "primary-password-reenter-input-parent",
+    "groups": [
+      "doNotCache"
+    ]
   }
 }
