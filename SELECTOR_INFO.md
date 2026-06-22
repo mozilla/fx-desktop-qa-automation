@@ -1156,7 +1156,14 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: history_menulist
 Selector Data: "historyMode"
-Description: Menu for "Firefox will" option
+Description: moz-radio-group for the "Firefox will" history option (Remember/Customize/Never remember history)
+Location: about:preferences#privacy History subsection
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: history-option-radio
+Selector Data: "moz-radio[data-l10n-id='{option}']"
+Description: History option moz-radio by data-l10n-id label; valid {option} values: history-remember-option-all2 (Remember), history-remember-option-never2 (Never remember), history-remember-option-custom2 (Customize)
 Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
