@@ -192,7 +192,9 @@ class AutofillPopup(BasePage):
         input_el = self.driver.execute_script(
             "return arguments[0].shadowRoot.querySelector('input')", parent
         )
-        assert input_el is not None, "Could not find input inside password-notification-username-field shadow root"
+        assert input_el is not None, (
+            "Could not find input inside password-notification-username-field shadow root"
+        )
         return input_el
 
     @BasePage.context_chrome
