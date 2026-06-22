@@ -459,6 +459,13 @@ class TestKey:
 
                 resplit = False
                 if testfile not in newkey[suite]:
+                    found_subsuite_test = False
+                    for subsuite in newkey[suite]:
+                        if testfile in newkey[suite][subsuite]:
+                            found_subsuite_test = True
+                            break
+                    if found_subsuite_test:
+                        continue
                     if not interactive:
                         sys.exit(
                             "Please run `python addtests.py` from your command prompt."

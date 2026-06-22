@@ -614,14 +614,16 @@ geolocation:
     splits:
     - functional1
 glean:
-  test_serp_abandonment:
-    result: pass
-    splits:
-    - glean
-  test_serp_impression:
-    result: pass
-    splits:
-    - glean
+  serp_abandonment:
+    test_serp_abandonment:
+      result: pass
+      splits:
+      - glean
+  serp_impression:
+    test_serp_impression:
+      result: pass
+      splits:
+      - glean
 language_packs:
   test_language_pack_install_addons:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047894
