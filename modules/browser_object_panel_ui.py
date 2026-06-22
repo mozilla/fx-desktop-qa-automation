@@ -1,3 +1,4 @@
+import logging
 import random
 from time import sleep
 from typing import List, Optional, Tuple
@@ -231,7 +232,7 @@ class PanelUi(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_random_history_entry(self) -> Optional[Tuple[str, str]]:
+    def get_history_entry_by_label(self, label) -> Optional[Tuple[str, str]]:
         """
         Retrieve a random browser history entry from the Panel UI.
 
@@ -244,7 +245,9 @@ class PanelUi(BasePage):
         if not items:
             return None
 
-        item = random.choice(items)
+        for item in items:
+            if label in item.get_attribute("label"):
+                break
         raw_url = item.get_attribute("image")
         label = item.get_attribute("label")
 
