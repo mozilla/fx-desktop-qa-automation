@@ -8,7 +8,7 @@ then
     then
         curl -o Firefox.dmg -L "${MANUAL_DOWNLOAD_LINK}"
     else
-        curl -o Firefox.dmg -L "$(pipenv run python ./scripts/collect_executables.py)"
+        curl -o Firefox.dmg -L "$(uv run python ./scripts/collect_executables.py)"
     fi
     hdiutil attach Firefox.dmg
 else
@@ -16,9 +16,9 @@ else
     then
         curl -o firefox.tar.xz -L "${MANUAL_DOWNLOAD_LINK}"
     else
-        curl -o firefox.tar.xz -L "$(pipenv run python ./scripts/collect_executables.py)"
+        curl -o firefox.tar.xz -L "$(uv run python ./scripts/collect_executables.py)"
     fi
     tar xf firefox.tar.xz
 fi
-curl -o geckodriver.tar.gz -L "$(pipenv run python ./scripts/collect_executables.py -g)"
+curl -o geckodriver.tar.gz -L "$(uv run python ./scripts/collect_executables.py -g)"
 tar -xvzf geckodriver.tar.gz
