@@ -204,7 +204,8 @@ jobs:
           ${{
             steps.setup.conclusion == 'success' &&
             inputs.dry_run != true &&
-            inputs.is_pull_request == true
+            inputs.is_pull_request == true &&
+            always()
           }}
         shell: pwsh
         run: |
@@ -217,7 +218,8 @@ jobs:
         if: |-
           ${{
             steps.setup.conclusion == 'success' &&
-            inputs.dry_run != true
+            inputs.dry_run != true &&
+            always()
           }}
         shell: pwsh
         run: |
@@ -379,7 +381,8 @@ jobs:
           ${{
             steps.setup.conclusion == 'success' &&
             inputs.dry_run != true &&
-            inputs.is_pull_request == true
+            inputs.is_pull_request == true &&
+            always()
           }}
         run: |
           export ORIGIN=$(git merge-base origin/main HEAD)
@@ -391,7 +394,8 @@ jobs:
         if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
-            inputs.dry_run != true
+            inputs.dry_run != true &&
+            always()
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
