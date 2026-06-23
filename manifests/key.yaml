@@ -602,15 +602,11 @@ form_autofill:
     - functional1
 geolocation:
   test_geolocation_shared_via_html5:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
-      (win only different target)
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_geolocation_shared_via_w3c_api:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047896, https://bugzilla.mozilla.org/show_bug.cgi?id=1990784
-      (win only different target)
-    result: unstable
+    result: pass
     splits:
     - functional1
 glean:
