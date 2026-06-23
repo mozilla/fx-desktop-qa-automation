@@ -2,7 +2,6 @@ import sys
 
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import Navigation

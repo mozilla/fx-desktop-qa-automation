@@ -138,29 +138,29 @@
         ]
     },
     "search-mode-switcher-option": {
-        "selectorData": ".searchmode-switcher-popup menuitem.searchmode-switcher-installed[label*='{title}']",
+        "selectorData": "panel-item.searchmode-switcher-installed[label*='{title}']",
         "strategy": "css",
         "groups": [
             "doNotCache"
         ]
     },
     "search-mode-local-option": {
-        "selectorData": ".searchmode-switcher-popup menuitem[id='search-button-{function}']",
+        "selectorData": "panel-item.searchmode-switcher-local.search-button-{function}",
         "strategy": "css",
         "groups": [
             "doNotCache"
         ]
     },
     "search-mode-add-option": {
-        "selectorData": ".searchmode-switcher-popup menuitem.searchmode-switcher-addEngine[label*='{title}']",
+        "selectorData": "panel-item.searchmode-switcher-addEngine[data-engine-name*='{title}']",
         "strategy": "css",
         "groups": [
             "doNotCache"
         ]
     },
     "search-mode-switcher-prefs": {
-        "selectorData": "searchmode-switcher-popup-search-settings-button",
-        "strategy": "class",
+        "selectorData": "panel-item.searchmode-switcher-panel-search-settings-button",
+        "strategy": "css",
         "groups": [
             "doNotCache"
         ]
@@ -579,7 +579,7 @@
         "groups": []
     },
     "searchmode-switcher-settings": {
-        "selectorData": "menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']",
+        "selectorData": "panel-item[data-l10n-id='urlbar-searchmode-popup-search-settings-panelitem']",
         "strategy": "css",
         "groups": []
     },
@@ -648,7 +648,7 @@
         ]
     },
     "search-mode-chicklet": {
-        "selectorData": "label.searchmode-switcher-title",
+        "selectorData": "span.searchmode-switcher-title",
         "strategy": "css",
         "groups": []
     },
@@ -658,7 +658,7 @@
         "groups": []
     },
     "exit-button-searchmode": {
-        "selectorData": "toolbarbutton[data-action='exitsearchmode']",
+        "selectorData": "button.searchmode-switcher-close",
         "strategy": "css",
         "groups": []
     },
