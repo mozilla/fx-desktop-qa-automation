@@ -1141,8 +1141,8 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "[data-l10n-id='sitedata-delete-on-close-private-browsing3']"
-Description: Message in Cookies and Site data when History is not remembered
+Selector Data: "deleteOnCloseInfo"
+Description: moz-message-bar shown in Cookies and Site Data when history is not remembered (Settings redesign: l10n id is now sitedata-delete-on-close-private-browsing4; read its `message` attribute)
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -1156,21 +1156,21 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: logins-ask-to-save-password
 Selector Data: "savePasswords"
-Description: Check box for Ask to save passwords
-Location: about:preferences#privacy Passwords subsection
+Description: Check box for Ask to save passwords (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)
+Location: about:preferences#passwordsAutofill Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: logins-exceptions
 Selector Data: "managePasswordExceptions"
-Description: Manage Exceptions… button
-Location: about:preferences#privacy Passwords subsection
+Description: Manage Exceptions… button (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)
+Location: about:preferences#passwordsAutofill Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: history-privacy-label
-Selector Data: "description[data-l10n-id='history-dontremember-description']"
-Description: Message History is not remembered
+Selector Data: "moz-radio[data-l10n-id='history-remember-option-never2']"
+Description: The "Never Remember History" moz-radio option; checked (checked='true') and its `description` reflects permanent private browsing when history is not remembered (Settings redesign: History section is now a moz-radio-group)
 Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -4105,16 +4105,37 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchmode-switcher-settings
-Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
-Description: Search settings button in the searchmode switcher dropdown
+Selector Data: panel-item[data-l10n-id='urlbar-searchmode-popup-search-settings-panelitem']
+Description: Search settings button in the searchmode switcher dropdown (Fx redesign: dropdown is now a panel-list of panel-items)
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: search-mode-switcher-option
-Selector Data: menuitem[label*='{title}']
-Description: Option by label in search mode list
-Location: Search mode of awesomebar
+Selector Data: panel-item.searchmode-switcher-installed[label*='{title}']
+Description: Installed search engine option by label in the search mode switcher list (Fx redesign: was a menuitem in a menupopup, now a panel-item in a panel-list)
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-local-option
+Selector Data: panel-item.searchmode-switcher-local.search-button-{function}
+Description: Local search mode option (bookmarks/tabs/history/actions) in the search mode switcher list, by {function}
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-add-option
+Selector Data: panel-item.searchmode-switcher-addEngine[data-engine-name*='{title}']
+Description: "Add <engine>" open-search option in the search mode switcher list; matched on data-engine-name since the add-engine item has no label attribute
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-switcher-prefs
+Selector Data: panel-item.searchmode-switcher-panel-search-settings-button
+Description: Search Settings button at the bottom of the search mode switcher dropdown
+Location: Search mode switcher dropdown of awesomebar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -4203,8 +4224,8 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: search-mode-chicklet
-Selector Data: label.searchmode-switcher-title
-Description: Search mode chicklet
+Selector Data: span.searchmode-switcher-title
+Description: Search mode chicklet (Fx redesign: title is now a span inside the moz-button switcher, was a label)
 Location: Address bar search mode
 Path to .json: modules/data/navigation.components.json
 ```
@@ -4217,8 +4238,8 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: exit-button-searchmode
-Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
-Description: Exit button searchmode
+Selector Data: button.searchmode-switcher-close
+Description: Exit button searchmode (Fx redesign: close button now lives inside the moz-button switcher, was a toolbarbutton[data-action='exitsearchmode'])
 Location: Address bar searchmode
 Path to .json: modules/data/navigation.components.json
 ```
