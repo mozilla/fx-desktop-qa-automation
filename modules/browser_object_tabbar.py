@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import ContextMenu
+from modules.browser_object_context_menu import ContextMenu
 from modules.page_base import BasePage
 
 

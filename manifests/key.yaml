@@ -8,13 +8,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_add_engine_address_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049511
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_addon_suggestion:
@@ -31,8 +29,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_bing_search_codes:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_clipboard_pref_flip:
@@ -52,13 +49,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_ddg_search_codes:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_search_provider_change_awesome_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_search_provider_change_legacy_search_bar:
@@ -71,8 +66,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_disable_websearch_from_awesome_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_dont_show_search_suggestions_in_private_window:
@@ -88,8 +82,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_insertion_point_no_search_terms_display:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_no_suggestions_for_empty_query:
@@ -123,7 +116,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
+    result: unstable
     splits:
     - functional1
   test_search_code_google_non_us:
@@ -139,18 +133,15 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_engine_selector:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049601
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_search_mode_appears_after_input:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_change_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_cleared_on_engine_removal:
@@ -159,13 +150,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_mode_exits_correctly:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_update_on_alias_prefix:
@@ -191,12 +180,12 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_term_persists:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
+    result: unstable
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_server_not_found_error:
@@ -223,13 +212,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_verify_url_after_tab_switch_with_search_mode:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049605
-    result: unstable
+    result: pass
     splits:
     - functional1
 ai_controls:
@@ -668,7 +655,8 @@ menus:
     splits:
     - functional1
   test_new_tab_label:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049824
+    result: unstable
     splits:
     - functional1
   test_tab_context_menu_actions:
@@ -1579,8 +1567,7 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
