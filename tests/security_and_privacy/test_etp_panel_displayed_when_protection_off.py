@@ -24,7 +24,7 @@ def test_etp_panel_displayed_when_protection_off(driver: Firefox):
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()
-    about_prefs.click_on("standard-radio")
+    about_prefs.select_etp_level("standard")
 
     # Click on the shield icon and turn off the Enhanced Tracking Protection
     test_page.open()
