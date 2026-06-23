@@ -271,10 +271,29 @@ class PanelUi(BasePage):
     @BasePage.context_chrome
     def confirm_history_clear(self):
         """
-        Confirm that the history is empty
+        Confirm that the Recent history list is empty.
+
+        The appMenu history subview is a snapshot captured when the menu opens. When the
+        preceding deletion/clear has not yet propagated to the Places database — common
+        under CI load — opening the menu once and waiting shows the stale list
+        indefinitely and times out. Re-open the menu on each poll so a slow deletion is
+        eventually reflected as "(Empty)". The value is read straight from the DOM to
+        avoid stale cached WebElement references across re-opens.
         """
-        self.open_history_menu()
-        self.element_attribute_contains("recent-history-content", "value", "(Empty)")
+
+        def _history_empty(_):
+            self.driver.execute_script(
+                "if (typeof PanelUI !== 'undefined') PanelUI.hide();"
+            )
+            self.open_history_menu()
+            return self.driver.execute_script(
+                "const el = document.querySelector("
+                "  '#appMenu_historyMenu .toolbarbutton-text'"
+                ");"
+                "return el ? (el.getAttribute('value') || '').includes('(Empty)') : false;"
+            )
+
+        self.custom_wait(timeout=30).until(_history_empty)
 
     @BasePage.context_chrome
     def verify_history_item_exists(self, item_title: str) -> BasePage:
