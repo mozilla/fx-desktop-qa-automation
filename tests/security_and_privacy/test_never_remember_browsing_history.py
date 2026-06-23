@@ -21,12 +21,10 @@ links = [
 ]
 
 COOKIE_LABEL_TEXT = (
-    "Firefox clears cookies and site data from your session "
-    "when you close the browser."
+    "Firefox clears cookies and site data from your session when you close the browser."
 )
 HISTORY_LABEL_TEXT = (
-    "Every window acts like a private window. "
-    "When on, extensions need to be allowed."
+    "Every window acts like a private window. When on, extensions need to be allowed."
 )
 
 
