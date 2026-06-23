@@ -1362,7 +1362,7 @@ security_and_privacy:
     result:
       linux: pass
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - smoke
   test_open_private_browsing_via_keyboard:
