@@ -34,27 +34,28 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
-        pip3 install 'pipenv==2023.11.15' --break-system-packages;
-        mv ./config/ci_pyproject.toml ./pyproject.toml;
+        pip3 install 'uv==0.11.18' --break-system-packages;
+        uv run python scripts/switch_config.py ci;
         curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs | sh -s -- -y
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
-        pipenv install;
+        uv sync;
         . ./scripts/setup-xauthority.sh
         export FX_CHANNEL="beta";
         ./scripts/collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
-        pipenv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
+        uv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
-        pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+        uv run python -m scripts.choose_test_split;
+        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
-        pipenv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
-        export FAILURE=$((FAILURE | ${?}));
-        mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
         export REPORTABLE=1;
-        pipenv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
+        uv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
+        export FAILURE=$((FAILURE | ${?}));
+        uv run python scripts/switch_config.py ci_headed;
+        mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
