@@ -418,6 +418,8 @@ class Sidebar(BasePage):
         new tab.
 
         """
+
+        # prefix match: handles sidebar - manage - extensions, -extensions2, -extensions3, etc.
         self.custom_wait(timeout=30).until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
