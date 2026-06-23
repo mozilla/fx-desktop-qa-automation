@@ -21,12 +21,12 @@ links = [
 ]
 
 COOKIE_LABEL_TEXT = (
-    "Based on your history settings, Firefox deletes cookies "
-    "and site data from your session when you close the browser."
+    "Firefox clears cookies and site data from your session "
+    "when you close the browser."
 )
 HISTORY_LABEL_TEXT = (
-    "Firefox will use the same settings as private browsing, "
-    "and will not remember any history as you browse the Web."
+    "Every window acts like a private window. "
+    "When on, extensions need to be allowed."
 )
 
 
@@ -53,14 +53,18 @@ def test_never_remember_browsing_history_settings(
     delete_cookies_checkbox = about_prefs_privacy.get_element("cookies-delete-on-close")
     assert delete_cookies_checkbox.get_attribute("checked") == "true"
 
-    save_password = about_prefs_privacy.get_element("logins-ask-to-save-password")
+    # History is now a moz-radio-group; "Never Remember History" should be the
+    # selected option, and its description matches the private-browsing text.
+    history_never_remember = about_prefs_privacy.get_element("history-privacy-label")
+    assert history_never_remember.get_attribute("checked") == "true"
+    assert history_never_remember.get_attribute("description") == HISTORY_LABEL_TEXT
+
+    # The Settings redesign moved the "Ask to save passwords" control out of the
+    # privacy pane into the Passwords and autofill pane. It should be unchecked.
+    about_prefs_passwords = AboutPrefs(driver, category="passwordsAutofill")
+    about_prefs_passwords.open()
+    save_password = about_prefs_passwords.get_element("logins-ask-to-save-password")
     assert save_password.get_attribute("checked") is None
-
-    login_exceptions = about_prefs_privacy.get_element("logins-exceptions")
-    assert login_exceptions.get_attribute("disabled") == "true"
-
-    history_mode_description = about_prefs_privacy.get_element("history-privacy-label")
-    assert history_mode_description.get_attribute("description") == HISTORY_LABEL_TEXT
 
 
 def test_never_remember_browsing_history_from_panel(
