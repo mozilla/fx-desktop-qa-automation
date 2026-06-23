@@ -52,8 +52,8 @@ tasks:
         export GIT_DIFF=$(git --no-pager diff --name-only $ORIGIN)
         if [[ $GIT_DIFF =~ "/glean/" ]]; then pipenv run pytest --fx-executable ./firefox/firefox tests/glean; export FAILURE=$((FAILURE | ${?})); fi;
         mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-        # pipenv run python -m scripts.choose_test_split;
-        pipenv run pytest --fx-executable ./firefox/firefox tests/password_manager/test_password_csv_export.py tests/pdf_viewer/test_pdf_download.py
+        pipenv run python -m scripts.choose_test_split;
+        pipenv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:

@@ -6,6 +6,8 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi
 from modules.page_object import GenericPage
 
+LABEL_TEXT = "Mozilla"
+
 
 @pytest.fixture()
 def test_case():
@@ -26,7 +28,7 @@ def test_open_websites_from_history(driver: Firefox):
 
     # Open History section from Hamburger Menu and get a random entry from browser history
     panel.open_history_menu()
-    result = panel.get_random_history_entry()
+    result = panel.get_history_entry_by_label("Mozilla")
 
     # Skip test if no history entries are available
     if result is None:
