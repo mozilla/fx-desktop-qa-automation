@@ -480,13 +480,13 @@
     "groups": []
   },
   "cookies-privacy-label": {
-    "selectorData": "moz-message-bar[data-l10n-id='sitedata-delete-on-close-private-browsing3']",
-    "strategy": "css",
+    "selectorData": "deleteOnCloseInfo",
+    "strategy": "id",
     "groups": []
   },
   "history-privacy-label": {
-    "selectorData": "historyMode",
-    "strategy": "id",
+    "selectorData": "moz-radio[data-l10n-id='history-remember-option-never2']",
+    "strategy": "css",
     "groups": []
   },
   "cookies-delete-on-close": {
