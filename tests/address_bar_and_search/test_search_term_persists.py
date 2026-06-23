@@ -37,13 +37,13 @@ def test_search_term_persists(driver: Firefox):
 
     nav.search(FIRST_SEARCH)
     tab.expect_title_contains(SEARCH_ENGINE)
-    address_bar_text = nav.get_awesome_bar_text()
-    assert FIRST_SEARCH == address_bar_text
+    # The "show search terms" feature swaps the SERP URL in the urlbar for the
+    # search term asynchronously, so wait for that value rather than reading once.
+    nav.element_attribute_is("awesome-bar", "value", FIRST_SEARCH)
 
     nav.set_content_context()
     driver.get("about:robots")
 
     nav.search(SECOND_SEARCH)
     tab.expect_title_contains(SEARCH_ENGINE)
-    address_bar_text = nav.get_awesome_bar_text()
-    assert SECOND_SEARCH == address_bar_text
+    nav.element_attribute_is("awesome-bar", "value", SECOND_SEARCH)
