@@ -35,9 +35,10 @@ def test_fingerprinters_blocked_and_shown_in_panel_and_preferences(driver: Firef
     # Navigate to about:preferences#privacy
     about_prefs.open()
 
-    # Check Standard section
-    about_prefs.click_on("standard-radio")
-
-    # Check Standard section contains "Fingerprinters"
-    standard_section = about_prefs.get_element("standard-section")
-    assert "Fingerprinters" in standard_section.text
+    # The ETP Customize settings expose a Fingerprinters protection control
+    about_prefs.select_etp_level("custom")
+    about_prefs.open_etp_customize()
+    fingerprinters_control = about_prefs.get_element(
+        "etp-custom-known-fingerprinting-toggle"
+    )
+    assert "fingerprinters" in fingerprinters_control.get_attribute("label").lower()

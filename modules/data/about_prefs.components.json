@@ -60,11 +60,6 @@
       "searchEngineDropdown"
     ]
   },
-  "custom-tracker-options-parent": {
-    "selectorData": "contentBlockingOptionCustom",
-    "strategy": "id",
-    "groups": []
-  },
   "search-engine-dropmarker": {
     "selectorData": "dropmarker",
     "strategy": "tag",
@@ -299,54 +294,87 @@
     "strategy": "css",
     "groups": []
   },
-  "custom-radio": {
-    "selectorData": "customRadio",
+  "etp-advanced-button": {
+    "selectorData": "etpStatusAdvancedButton",
     "strategy": "id",
     "groups": []
   },
-  "cookies-checkbox": {
-    "selectorData": "contentBlockingBlockCookiesCheckbox",
+  "etp-level-standard": {
+    "selectorData": "etpLevelStandard",
     "strategy": "id",
     "groups": []
   },
-  "cookies-isolate-social-media-option": {
-    "selectorData": "isolateCookiesSocialMedia",
+  "etp-level-strict": {
+    "selectorData": "etpLevelStrict",
     "strategy": "id",
     "groups": []
   },
-  "tracking-in-all-windows": {
-    "selectorData": "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']",
+  "etp-level-custom": {
+    "selectorData": "etpLevelCustom",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-customize-button": {
+    "selectorData": "etpCustomizeButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-tracking-toggle": {
+    "selectorData": "etpCustomTrackingProtectionEnabled",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-tracking-context": {
+    "selectorData": "etpCustomTrackingProtectionEnabledContext",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-tracking-context-select": {
+    "selectorData": "select",
     "strategy": "css",
+    "shadowParent": "etp-custom-tracking-context",
     "groups": []
   },
-  "tracking-checkbox": {
-    "selectorData": "contentBlockingTrackingProtectionCheckbox",
+  "etp-custom-cookies-toggle": {
+    "selectorData": "etpCustomCookiesEnabled",
     "strategy": "id",
     "groups": []
   },
-  "cryptominers-checkbox": {
-    "selectorData": "contentBlockingCryptominersCheckbox",
+  "etp-custom-cookie-behavior": {
+    "selectorData": "cookieBehavior",
     "strategy": "id",
     "groups": []
   },
-  "known-fingerprints-checkbox": {
-    "selectorData": "contentBlockingFingerprintersCheckbox",
-    "strategy": "id",
-    "groups": []
-  },
-  "suspected-fingerprints-checkbox": {
-    "selectorData": "contentBlockingFingerprintingProtectionCheckbox",
-    "strategy": "id",
-    "groups": []
-  },
-  "suspected-fingerprints-in-all-windows": {
-    "selectorData": "#fingerprintingProtectionMenu menuitem[value='always']",
+  "etp-custom-cookie-behavior-select": {
+    "selectorData": "select",
     "strategy": "css",
+    "shadowParent": "etp-custom-cookie-behavior",
     "groups": []
   },
-  "suspected-fingerprints-only-in-private-windows": {
-    "selectorData": "#fingerprintingProtectionMenu menuitem[value='private']",
+  "etp-custom-cryptomining-toggle": {
+    "selectorData": "etpCustomCryptominingProtectionEnabled",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-known-fingerprinting-toggle": {
+    "selectorData": "etpCustomKnownFingerprintingProtectionEnabled",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-suspect-fingerprinting-toggle": {
+    "selectorData": "etpCustomSuspectFingerprintingProtectionEnabled",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-suspect-fingerprinting-context": {
+    "selectorData": "etpCustomSuspectFingerprintingProtectionEnabledContext",
+    "strategy": "id",
+    "groups": []
+  },
+  "etp-custom-suspect-fingerprinting-context-select": {
+    "selectorData": "select",
     "strategy": "css",
+    "shadowParent": "etp-custom-suspect-fingerprinting-context",
     "groups": []
   },
   "cookies-shadow-root": {
@@ -494,11 +522,6 @@
   },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
-    "strategy": "id",
-    "groups": []
-  },
-  "history_menulist": {
-    "selectorData": "historyMode",
     "strategy": "id",
     "groups": []
   },
@@ -733,11 +756,12 @@
     "strategy": "id",
     "groups": []
   },
-  "history-option-select": {
-    "selectorData": "select[id='input']",
+  "history-option-radio": {
+    "selectorData": "moz-radio[data-l10n-id='{option}']",
     "strategy": "css",
-    "shadowParent": "history_menulist",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "tab-hover-preview-checkbox": {
     "selectorData": "tabPreviewShowThumbnails",
@@ -802,16 +826,6 @@
     "selectorData": "button[label^='Remove']",
     "strategy": "css",
     "shadowParent": "remove-primary-password-box",
-    "groups": []
-  },
-  "standard-section": {
-    "selectorData": "contentBlockingOptionStandard",
-    "strategy": "id",
-    "groups": []
-  },
-  "standard-radio": {
-    "selectorData": "standardRadio",
-    "strategy": "id",
     "groups": []
   },
   "ai-controls-toggle-tile": {

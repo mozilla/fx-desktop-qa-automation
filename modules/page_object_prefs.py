@@ -340,48 +340,155 @@ class AboutPrefs(BasePage):
         )  # verify selection
         return self
 
-    def select_trackers_to_block(self, *options):
-        """Select the trackers to block in the about:preferences page. Unchecks all first."""
-        self.elements |= {
-            "checkbox-by-label": {
-                "selectorData": "checkbox[label='{}']",
-                "strategy": "css",
-                "groups": ["doNotCache"],
-            }
-        }
-        self.click_on("custom-radio")
-        checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
-            By.TAG_NAME, "checkbox"
+    # ---- Enhanced Tracking Protection (Settings redesign, about:preferences#etp) -----------------
+
+    # Per-category toggles on the ETP Customize page (moz-toggle elements)
+    ETP_TOGGLE_OPTIONS = {
+        "tracking-checkbox": "etp-custom-tracking-toggle",
+        "cookies-checkbox": "etp-custom-cookies-toggle",
+        "cryptominers-checkbox": "etp-custom-cryptomining-toggle",
+        "known-fingerprints-checkbox": "etp-custom-known-fingerprinting-toggle",
+        "suspected-fingerprints-checkbox": "etp-custom-suspect-fingerprinting-toggle",
+    }
+    # Context dropdowns: option keyword -> (inner <select> element name, value)
+    ETP_CONTEXT_OPTIONS = {
+        "tracking-in-all-windows": ("etp-custom-tracking-context-select", "all"),
+        "suspected-fingerprints-in-all-windows": (
+            "etp-custom-suspect-fingerprinting-context-select",
+            "all",
+        ),
+        "suspected-fingerprints-only-in-private-windows": (
+            "etp-custom-suspect-fingerprinting-context-select",
+            "pbmOnly",
+        ),
+    }
+    # Cookie behavior dropdown: option keyword -> (inner <select> element name, value)
+    ETP_COOKIE_OPTIONS = {
+        "cookies-isolate-social-media-option": (
+            "etp-custom-cookie-behavior-select",
+            "5",
+        ),
+    }
+
+    ETP_LEVEL_RADIOS = {
+        "standard": "etp-level-standard",
+        "strict": "etp-level-strict",
+        "custom": "etp-level-custom",
+    }
+
+    def open_etp_settings(self) -> BasePage:
+        """
+        From about:preferences#privacy, open the ETP settings subpage
+        (about:preferences#etp) via the "Advanced" button.
+        """
+        self.click_on("etp-advanced-button")
+        self.element_visible("etp-level-custom")
+        return self
+
+    def set_etp_level(self, level: str) -> BasePage:
+        """
+        Select an Enhanced Tracking Protection level on about:preferences#etp.
+
+        level: one of "standard", "strict", "custom".
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        return self
+
+    def select_etp_level(self, level: str) -> BasePage:
+        """
+        From about:preferences#privacy, open the ETP settings subpage and select
+        an Enhanced Tracking Protection level. level: standard|strict|custom.
+        """
+        self.open_etp_settings()
+        self.set_etp_level(level)
+        return self
+
+    def open_etp_customize(self) -> BasePage:
+        """
+        From the Custom ETP level on about:preferences#etp, open the Customize
+        subpage (about:preferences#etpCustomize) where the per-category controls live.
+        """
+        self.click_on("etp-customize-button")
+        self.element_visible("etp-custom-tracking-toggle")
+        return self
+
+    def _set_etp_toggle(self, element_name: str, enabled: bool) -> None:
+        """Set a moz-toggle on the ETP Customize page to the desired on/off state."""
+        toggle = self.get_element(element_name)
+        is_on = bool(
+            self.driver.execute_script("return !!arguments[0].pressed;", toggle)
         )
-        for checkbox in checkboxes:
-            if checkbox.is_selected():
-                checkbox.click()
+        if is_on != enabled:
+            self.driver.execute_script(
+                "arguments[0].shadowRoot.querySelector('button, input').click();",
+                toggle,
+            )
+            self.wait.until(
+                lambda _: bool(
+                    self.driver.execute_script("return !!arguments[0].pressed;", toggle)
+                )
+                == enabled
+            )
+
+    def select_trackers_to_block(self, *options):
+        """
+        Configure Custom ETP blocking on about:preferences (Settings redesign).
+
+        Navigates Privacy -> Advanced -> Custom -> Customize, turns every category
+        toggle off, then enables only the requested options. The option keywords are
+        kept stable across the old/new UI:
+          toggles:  tracking-checkbox, cookies-checkbox, cryptominers-checkbox,
+                    known-fingerprints-checkbox, suspected-fingerprints-checkbox
+          contexts: tracking-in-all-windows, suspected-fingerprints-in-all-windows,
+                    suspected-fingerprints-only-in-private-windows
+          cookies:  cookies-isolate-social-media-option
+        """
+        self.select_etp_level("custom")
+        self.open_etp_customize()
+
+        # Reset: turn every category toggle off before enabling the requested ones.
+        for element_name in self.ETP_TOGGLE_OPTIONS.values():
+            self._set_etp_toggle(element_name, False)
+
         for option in options:
-            self.click_on(option)
-            tag = self.get_element(option).tag_name
-            if tag == "checkbox":
-                self.element_has_attribute(option, "checked")
-            elif tag == "menuitem":
-                self.element_attribute_is(option, "selected", "true")
+            if option in self.ETP_TOGGLE_OPTIONS:
+                self._set_etp_toggle(self.ETP_TOGGLE_OPTIONS[option], True)
+            elif option in self.ETP_CONTEXT_OPTIONS:
+                element_name, value = self.ETP_CONTEXT_OPTIONS[option]
+                Select(self.get_element(element_name)).select_by_value(value)
+            elif option in self.ETP_COOKIE_OPTIONS:
+                element_name, value = self.ETP_COOKIE_OPTIONS[option]
+                # The cookie-behavior dropdown is disabled until cookie blocking
+                # is enabled, so turn the toggle on before setting the value.
+                self._set_etp_toggle("etp-custom-cookies-toggle", True)
+                Select(self.get_element(element_name)).select_by_value(value)
+            else:
+                raise ValueError(f"Unknown tracker option: {option!r}")
 
         sleep(0.25)
         return self
 
-    def get_history_menulist(self) -> WebElement:
-        """
-        Gets the web element for the list of history items that appear in about:preferences
-        """
-        return self.get_element("history_menulist")
-
     def set_history_option(self, option: str):
         """
         Set the history option in about:preferences.
+
+        Firefox now renders the history setting as a moz-radio-group rather than
+        a menulist. The legacy option keys are now mapped to the matching
+        moz-radio data-l10n-id and selected by click.
         """
-        history_menulist = self.get_history_menulist()
-        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
-        sleep(1)
-        menulist_popup = Select(self.get_element("history-option-select"))
-        menulist_popup.select_by_value(option)
+        history_option_l10n_ids = {
+            "remember": "history-remember-option-all2",
+            "dontremember": "history-remember-option-never2",
+            "custom": "history-remember-option-custom2",
+        }
+        if option not in history_option_l10n_ids:
+            raise ValueError(f"Unknown history option: {option!r}")
+        history_radio = self.get_element(
+            "history-option-radio", labels=[history_option_l10n_ids[option]]
+        )
+        history_radio.click()
         return self
 
     # ---- Payment and Address Management ---------------------------------------------------------

@@ -19,6 +19,11 @@ def test_case():
     return "3054913"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("privacy.trackingprotection.socialtracking.enabled", True)]
+
+
 def test_social_media_trackers_displayed_subpanel(driver: Firefox):
     """
     C3054913 - Social media trackers are correctly displayed in the sub panel
