@@ -293,7 +293,10 @@ class PanelUi(BasePage):
                 "return el ? (el.getAttribute('value') || '').includes('(Empty)') : false;"
             )
 
-        self.custom_wait(timeout=30).until(_history_empty)
+        self.custom_wait(timeout=30).until(
+            _history_empty,
+            message="History menu did not show '(Empty)' within 30s",
+        )
 
     @BasePage.context_chrome
     def verify_history_item_exists(self, item_title: str) -> BasePage:
