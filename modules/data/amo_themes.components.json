@@ -13,35 +13,5 @@
         "selectorData": "AMInstallButton-button",
         "strategy": "class",
         "groups": []
-    },
-    "addon-install-add-button-parent": {
-        "selectorData": "addon-install-confirmation-notification",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-add-button-field": {
-        "selectorData": "main-button",
-        "strategy": "id",
-        "shadowParent": "addon-install-add-button-parent",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-ok-button-parent": {
-        "selectorData": "moz-button.popup-notification-primary-button[label='OK']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-ok-button-field": {
-        "selectorData": "main-button",
-        "strategy": "id",
-        "shadowParent": "addon-install-ok-button-parent",
-        "groups": [
-            "doNotCache"
-        ]
     }
 }

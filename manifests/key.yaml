@@ -622,8 +622,7 @@ glean:
       - glean
 language_packs:
   test_language_pack_install_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047894
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_language_pack_install_preferences:
@@ -1752,7 +1751,6 @@ theme_and_toolbar:
     - smoke
     - ci
   test_installed_theme_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047901
-    result: unstable
+    result: pass
     splits:
     - functional2
