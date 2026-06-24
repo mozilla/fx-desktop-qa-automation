@@ -1552,11 +1552,11 @@ wheels = [
 
 [[package]]
 name = "pip"
-version = "22.3.1"
+version = "26.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a3/50/c4d2727b99052780aad92c7297465af5fe6eec2dbae490aa9763273ffdc1/pip-22.3.1.tar.gz", hash = "sha256:65fd48317359f3af8e593943e6ae1506b66325085ea64b706a998c6e83eeaf38", size = 2078129, upload-time = "2022-11-05T15:56:20.116Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/7e/d2b04004e1068ad4fdfa2f227b839b5d03e602e47cdbbf49de71137c9546/pip-26.1.tar.gz", hash = "sha256:81e13ebcca3ffa8cc85e4deff5c27e1ee26dea0aa7fc2f294a073ac208806ff3", size = 1840316, upload-time = "2026-04-26T21:00:05.406Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/bd/2410905c76ee14c62baf69e3f4aa780226c1bbfc9485731ad018e35b0cb5/pip-22.3.1-py3-none-any.whl", hash = "sha256:908c78e6bc29b676ede1c4d57981d490cb892eb45cd8c214ab6298125119e077", size = 2051534, upload-time = "2022-11-05T15:56:17.843Z" },
+    { url = "https://files.pythonhosted.org/packages/70/7a/be4bd8bcbb24ea475856dd68159d78b03b2bb53dae369f69c9606b8888f5/pip-26.1-py3-none-any.whl", hash = "sha256:4e8486d821d814b77319acb7b9e8bf5a4ee7590a643e7cb21029f209be8573c1", size = 1812804, upload-time = "2026-04-26T21:00:03.194Z" },
 ]
 
 [[package]]
@@ -2512,7 +2512,7 @@ requires-dist = [
     { name = "pathspec", marker = "python_full_version >= '3.9'", specifier = "==1.1.1" },
     { name = "pep8-naming", marker = "python_full_version >= '3.9'", specifier = "==0.15.1" },
     { name = "pillow", marker = "python_full_version >= '3.8'", specifier = "==12.2.0" },
-    { name = "pip", marker = "python_full_version >= '3.7'", specifier = "==22.3.1" },
+    { name = "pip", marker = "python_full_version >= '3.7'", specifier = "==26.1" },
     { name = "platformdirs", marker = "python_full_version >= '3.10'", specifier = "==4.10.0" },
     { name = "pluggy", marker = "python_full_version >= '3.9'", specifier = "==1.6.0" },
     { name = "ply", specifier = "==3.11" },
