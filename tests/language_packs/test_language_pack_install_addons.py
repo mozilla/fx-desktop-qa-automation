@@ -42,7 +42,7 @@ def test_language_pack_install_from_addons(
     amo_languages.find_language_row_and_navigate(language_label)
     amo_languages.click_on("language-addons-subpage-add-to-firefox")
 
-    amo_languages.confirm_language_install_popup()
+    amo_languages.confirm_addon_install_popup()
 
     # Ensure that the about:addons has the language listed
     about_addons.open()
