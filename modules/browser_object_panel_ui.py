@@ -272,13 +272,6 @@ class PanelUi(BasePage):
     def confirm_history_clear(self):
         """
         Confirm that the Recent history list is empty.
-
-        The appMenu history subview is a snapshot captured when the menu opens. When the
-        preceding deletion/clear has not yet propagated to the Places database — common
-        under CI load — opening the menu once and waiting shows the stale list
-        indefinitely and times out. Re-open the menu on each poll so a slow deletion is
-        eventually reflected as "(Empty)". The value is read straight from the DOM to
-        avoid stale cached WebElement references across re-opens.
         """
 
         def _history_empty(_):
