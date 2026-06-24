@@ -32,6 +32,7 @@ brotli = "*"
 opencv-python = "*"
 python-dev-tools = "*"
 python3-xlib = "*"
+treeherder-client = "*"
 
 [dev-packages]
 werkzeug = "==3.1.6"
@@ -41,3 +42,4 @@ pytest-variables = "3.1.0"
 charset-normalizer = "3.4.6"
 urllib3 = "2.6.3"
 zizmor = "1.25.2"
+treeherder-client = "*"
