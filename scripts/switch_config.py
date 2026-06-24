@@ -4,6 +4,11 @@ import sys
 import toml
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2 or sys.argv[1] == "help" or sys.argv[1] == "-h":
+        print(
+            "Change the pyproject in the repo root. Overwrites pyproject.toml\n"
+            "Usage: python scripts/switch_config.py <config_name>"
+        )
     pyproject = toml.loads(open("pyproject.toml").read())
     config_path = os.path.join("config", f"{sys.argv[1]}_pyproject.toml")
     if not os.path.isfile(config_path):

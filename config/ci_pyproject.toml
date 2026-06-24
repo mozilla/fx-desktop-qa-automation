@@ -16,3 +16,4 @@ addopts = "-vs --ci --run-headless --timeout=300 --json-report --json-report-fil
 
 [tool.ruff]
 target-version = "py313"
+exclude = ["taskcluster"]
