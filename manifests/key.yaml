@@ -1085,10 +1085,7 @@ preferences:
     splits:
     - functional2
   test_clear_cookie_data:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: deprecated
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1105,7 +1102,7 @@ preferences:
     splits:
     - functional2
   test_manage_cookie_data:
-    result: pass
+    result: deprecated
     splits:
     - smoke
   test_never_remember_history:
@@ -1114,7 +1111,7 @@ preferences:
     - smoke
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
-    result: unstable
+    result: deprecated
     splits:
     - functional2
 printing_ui:

@@ -28,7 +28,7 @@ def test_url(driver):
 
 
 @pytest.mark.parametrize("button_data, button_text, permission", associated_labels)
-def test_notifications_allow(
+def test_notifications_change_set(
     driver: Firefox,
     button_data: str,
     button_text: str,
