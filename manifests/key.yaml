@@ -620,8 +620,7 @@ glean:
       - glean
 language_packs:
   test_language_pack_install_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047894
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_language_pack_install_preferences:
@@ -972,6 +971,10 @@ pdf_viewer:
     result: unstable
     splits:
     - functional2
+  test_download_pdf_data:
+    result: pass
+    splits:
+    - functional2
   test_download_pdf_with_form_fields:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: unstable
@@ -1014,6 +1017,10 @@ pdf_viewer:
       win: pass
     splits:
     - functional2
+  test_pdf_drawing_area_actions:
+    result: pass
+    splits:
+    - functional1
   test_pdf_dropdown_functionality:
     result: pass
     splits:
@@ -1358,7 +1365,11 @@ security_and_privacy:
     splits:
     - functional2
   test_open_link_in_private_window:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049894
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_open_private_browsing_via_keyboard:
@@ -1427,7 +1438,11 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_cryptominers_fingerprinters_blocked:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_tracking_content_custom_mode:
@@ -1738,7 +1753,6 @@ theme_and_toolbar:
     - smoke
     - ci
   test_installed_theme_enabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047901
-    result: unstable
+    result: pass
     splits:
     - functional2

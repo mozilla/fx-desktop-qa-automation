@@ -28,7 +28,7 @@ Install the build in a Custom directory as follows per Platform:
 Launch the build manually one time to navigate through any system permission dialogs, then exit Firefox.
 
 ### Getting set up
-- If you don't have Python 3.10 or higher installed install it. For most people,
+- If you don't have Python 3.13 or higher installed, install it. For most people,
   [Pyenv](https://github.com/pyenv/pyenv) will be a useful tool. If you don't want that, use your system's
   package manager or download and install it from the official website
   [Python Downloads](https://www.python.org/downloads/). Make sure to check the option to add Python to
@@ -48,18 +48,18 @@ Launch the build manually one time to navigate through any system permission dia
   - On MacOS:
     - run: `git --version` (likely already installed, follow install prompts if not)
   - In a location of your choice, run: `git clone https://github.com/mozilla/fx-desktop-qa-automation FxAutomation`
-- Use pip to install Pipenv:
-  - run: `pip install --user pipenv`. If prompted to add a directory to PATH, please do so. Windows
-    users may need to restart their shell.
-- Install dependencies: `pipenv install`
-- Start virtual environment: `pipenv shell`
+- Use pip to install `uv`:
+  - run: `pip install --user 'uv==0.11.18'`. If prompted to add a directory to PATH, please do so. Windows
+    users may need to restart their shell. You may be prompted to break your system packages. That's up to you.
+- Install dependencies: `uv sync`
+- Start virtual environment: `source ./.venv/bin/activate` or `.venv\bin\activate.bat`
 - Ensure your system allows the following to run in the virtual env:
   - Firefox (specifically the build being tested)
   - Terminal
 
 ### Run the tests
 - CD into the FxAutomation project directory
-- run `./devsetup.sh`
+- run `./devsetup.sh` or `devsetup.ps1`
 - run: `pytest`
 - IMPORTANT: On MacOS you may be prompted to allow Terminal to control accessibility settings.
   Allow this. You may need to re-run the tests.
@@ -78,7 +78,7 @@ Launch the build manually one time to navigate through any system permission dia
 
 ### Documentation
 
-We are trying documentation with [pdoc](https://pdoc.dev), run the following in a pipenv shell:
+We are trying documentation with [pdoc](https://pdoc.dev), run the following in your virtual env:
 
 ```bash
 pdoc --docformat "numpy" modules
@@ -178,8 +178,8 @@ files ("subtests"), as TestRail reporting is on the testfile level. Subtest supp
 Support for manifests is coded into `manifests/testkey.py`, including automating balancing of the list
 of functional splits.
 
-When you create a new test, run `python addtests.py` to add your test to the key via CLI. This script
-will be run on commit, if you have updated your git hooks by running `./devsetup.sh` recently.
+When you create a new test, run `python scripts/addtests.py` to add your test to the key via CLI. This
+script will be run on commit, if you have updated your git hooks by running `./devsetup.sh` recently.
 
 ### Manual Execution of Smoke Tests
 
@@ -191,7 +191,7 @@ tarball exists on the web**:
 - At the top right of the workflow history panel (near the top right of the page), press the button
   labeled "Run workflow"
 - Make sure you are running against `Branch: main`
-  - Alternately, runs can be made against ESR versions 128 and higher by running against `Branch: 00esr-manual`
+  - Alternately, runs can be made against ESR versions >128 by running against `Branch: 0esr140`
   - MacOS ESR manual runs are currently not supported
 - Add the URLs to your installers for Windows and MacOS, and the tarball for Linux in the fields below.
   - **Installers and tarballs must be available on the internet**
@@ -231,36 +231,3 @@ In order to create / upload a profile for testing:
 * Move `./profile.zip` to `./profiles/` and name it something else
 * Use the `use_profile` fixture in your test, such that it returns just the name of the profile, without
 the `.zip`.
-
-### Test Account Secrets Management (not fully implemented)
-To protect our test logins to various services, we encrypt them with a key. This key is available from repo
-maintainers if you ask. Please be careful with it. This key must exist in the environment as SVC_ACCT_DECRYPT
-in order for encryption and decryption to work. To encrypt secrets, use the create_secrets.py script and
-enter the secrets as JSON. Each type of account (e.g. GMail, Netflix) should have one file associated with it,
-and all of the secrets exist as follows:
-
-`data/secrets/examples` (after decryption):
-
-```json
-{
-  "account_one": {
-    "username": "bobs_account",
-    "password": "MosteSecurePasseworde",
-    "otp_url": "otpauth://totp/Mozilla:foxy@mozilla.com?secret=AAAAAAAAAAAAAAAA&issuer=Mozilla"
-  },
-
-  "account_two": {
-    "username": "janesAccount",
-    "password": "N0N33d4Apassword",
-    "recovery_email": "everyone@example.com"
-  }
-}
-```
-
-To decrypt in a test, request the `use_secrets` function factory fixture. Then, in a test, call e.g.
-`login = use_secrets("examples", "account_two")` and Jane's Example service account will be in a dict
-called `login`.
-
-**DO NOT PUSH UNENCRYPTED SECRETS.**
-
-**DO NOT ADD SECRETS UNNECESSARILY.**
