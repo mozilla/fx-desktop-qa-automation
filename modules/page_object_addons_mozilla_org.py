@@ -32,6 +32,7 @@ class AmoBase(BasePage):
         )
         return self
 
+
 class AmoThemes(AmoBase):
     """
     POM for AMO Themes
@@ -46,6 +47,7 @@ class AmoThemes(AmoBase):
         self.get_element("recommended-addon").click()
         self.theme_title = self.get_element("theme-title").get_attribute("innerText")
         self.get_element("install-button").click()
+
 
 class AmoLanguages(AmoBase):
     """
