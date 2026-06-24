@@ -66,10 +66,10 @@ jobs:
         run: |
           Write-Host "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job."
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         shell: pwsh
@@ -97,11 +97,10 @@ jobs:
       - name: Install dependencies
         run: |
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install;
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci;
+          uv sync;
 
       - name: Install Fx
         id: install-fx
@@ -111,14 +110,14 @@ jobs:
         shell: pwsh
         run: |
           if (-not $env:WIN_INSTALLER_LINK) {
-            $fx_url = (pipenv run python -m scripts.collect_executables) -join ""
+            $fx_url = (uv run python -m scripts.collect_executables) -join ""
             if (-not $fx_url) { throw "collect_executables returned an empty Firefox URL" }
             "FX_DOWNLOAD_URL=$fx_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
-          $gecko_url = (pipenv run python -m scripts.collect_executables -g) -join ""
+          $gecko_url = (uv run python -m scripts.collect_executables -g) -join ""
           if (-not $gecko_url) { throw "collect_executables returned an empty geckodriver URL" }
           "GECKO_DOWNLOAD_URL=$gecko_url" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          $fx_version = (pipenv run python -m scripts.collect_executables -n) -join ""
+          $fx_version = (uv run python -m scripts.collect_executables -n) -join ""
           "FX_VERSION=$fx_version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Download Geckodriver
@@ -156,7 +155,8 @@ jobs:
         id: select
         shell: pwsh
         run: |
-          pipenv run python -m scripts.choose_test_split
+          uv sync;
+          uv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (Win)
         if: ${{steps.select.conclusion == 'success'}}
@@ -179,10 +179,10 @@ jobs:
           TESTRAIL_REPORT: false
         shell: pwsh
         run: |
-          pipenv run python -c "import sys; print(sys.platform)"
+          uv run python -c "import sys; print(sys.platform)"
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
-          pipenv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
+          uv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       # --- REAL RUN: actually execute tests ---
       - name: Run Tests in Win
@@ -194,7 +194,7 @@ jobs:
           }}
         shell: pwsh
         run: |
-          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
+          uv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -225,7 +225,7 @@ jobs:
         run: |
           $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
           if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
-          pipenv run pytest tests/glean --geckodriver=geckodriver.exe
+          uv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
@@ -238,10 +238,11 @@ jobs:
           REPORTABLE: true
         shell: pwsh
         run: |
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
+          uv sync;
+          uv run python scripts/switch_config.py ci_headed;
+          uv sync;
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          pipenv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
+          uv run pytest $(Get-Content selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           rm artifacts/assets -r -Force
           Get-ChildItem -Path "artifacts" | ForEach-Object {
@@ -279,10 +280,10 @@ jobs:
         run: |
           echo "DRY_RUN enabled: skipping downloads, installs, tests and uploads in this job"
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -315,14 +316,13 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run: |
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_pyproject.toml ./pyproject.toml;
-          pipenv install
-          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
-          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          pip install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci;
+          uv sync;
+          if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install Fx
         id: install-fx
@@ -335,7 +335,8 @@ jobs:
       - name: Select Tests (MacOS)
         id: select
         run: |
-          pipenv run python -m scripts.choose_test_split
+          uv sync;
+          uv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (MacOS)
         if: ${{steps.select.conclusion == 'success'}}
@@ -358,7 +359,7 @@ jobs:
           TESTRAIL_REPORT: false
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |-
@@ -371,7 +372,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           "$FX_EXECUTABLE" --version
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -403,7 +404,7 @@ jobs:
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
           if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -413,9 +414,10 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
         run: |
-          rm -f ./pyproject.toml
-          mv ./config/ci_pyproject_headed.toml ./pyproject.toml;
-          pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          uv sync;
+          uv run python scripts/switch_config.py ci_headed
+          uv sync;
+          uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
@@ -436,10 +438,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set CI Environment (Default)
         run: |
@@ -468,13 +470,12 @@ jobs:
           sudo apt install gnome-screenshot
           uname -m;
           mkdir -p artifacts;
-          pip3 install 'pipenv==2023.11.15';
-          pip3 install 'ruff>=0.4.8,<0.5';
-          rm ./pyproject.toml;
-          mv ./config/ci_xvfb_pyproject.toml ./pyproject.toml;
-          pipenv install;
-          echo "FX_VERSION=$(pipenv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(pipenv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          pip3 install 'uv==0.11.18';
+          uv sync;
+          uv run python scripts/switch_config.py ci_xvfb;
+          uv sync;
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
 
       - name: Install executables
         if: ${{ steps.setup.conclusion == 'success' }}
@@ -490,7 +491,7 @@ jobs:
         if: ${{ steps.install-fx.conclusion == 'success' }}
         id: select
         run: |
-          pipenv run python -m scripts.choose_test_split
+          uv run python -m scripts.choose_test_split
 
       - name: Run Smoke Tests in Ubuntu
         if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}
@@ -499,7 +500,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
@@ -508,9 +509,10 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
           REPORTABLE: true
         run: |
-          rm -f ./pyproject.toml
-          mv ./config/ci_xvfb_pyproject_headed.toml ./pyproject.toml;
-          DISPLAY=:99 pipenv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          uv sync;
+          uv run python scripts/switch_config.py ci_xvfb_headed;
+          uv sync;
+          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
@@ -525,15 +527,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
-          pip3 install 'pipenv==2023.11.15'
-          pipenv install
+          pip3 install 'uv==0.11.18'
+          uv sync
 
       - name: Download Windows artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
@@ -562,4 +564,4 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          pipenv run python scripts/notifier.py
+          uv run python scripts/notifier.py

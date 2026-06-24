@@ -19,7 +19,6 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from modules.util import env_true
@@ -98,7 +97,8 @@ def sanitize_filename(filename):
 
 def pytest_exception_interact(node, call, report):
     """
-    Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
+    Method that wraps all test execution, on any exception/failure an artifact with the information
+    about the failure is kept.
     """
     if report.failed:
         try:
@@ -626,22 +626,6 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
     _delete_files()
     yield True
     _delete_files()
-
-
-@pytest.fixture()
-def use_secrets(opt_ci):
-    """Function factory: grab a named secret from a secrets file"""
-    if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        level = 3 if env_true("TESTRAIL_REPORT") else 1
-        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
-            "test-accts-key", level=level
-        ).get("SVC_ACCT_DECRYPT")
-
-    def _use_secrets(filename: str, secret_name: str) -> dict:
-        secrets = crypto.decrypt(filename)
-        return secrets.get(secret_name)
-
-    return _use_secrets
 
 
 @pytest.fixture(scope="session", autouse=True)
