@@ -1295,6 +1295,16 @@ class AboutPrefs(BasePage):
                 self.element_attribute_is_not(key, "disabled", "")
         return self
 
+    def open_etp_advanced_settings(self):
+        """Opens the ETP advanced settings in Privacy & Security preferences"""
+        self.click_on("etp-advanced-settings-button")
+        return self
+
+    def select_etp_level(self, level: str):
+        """Clicks the ETP level radio button, accepts 'standard', 'strict' or 'custom'"""
+        self.click_on(f"etp-{level}-radio")
+        return self
+
 
 class AboutAddons(BasePage):
     """

@@ -287,3 +287,19 @@ class TrustPanel(BasePage):
             )
         except (TypeError, NoSuchElementException):
             return 0
+
+    @BasePage.context_chrome
+    def detected_category_visible(self, category: str):
+        """
+        Verify a detected tracker category is visible in the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        canonical = category.strip().lower().replace(" ", "-")
+        locator = (
+            "detected-category",
+            [f"trustpanel-list-label-{canonical}"],
+        )
+
+        self.element_visible(*locator)
+        return self

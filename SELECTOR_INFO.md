@@ -1650,6 +1650,34 @@ Description: The inner input field inside the shadow DOM of the "Re-enter passwo
 Location: About Preferences - Passwords - Primary Password dialog
 Path to .json: modules/data/about_prefs.components.json
 ```
+```
+Selector Name: etp-advanced-settings-button
+Selector Data: "etpStatusAdvancedButton"
+Description: The "Advanced Settings" button in the Privacy & Security preferences that opens the ETP level selection
+Location: Privacy & Security preferences - Enhanced Tracking Protection section
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-standard-radio
+Selector Data: "etpLevelStandard"
+Description: The "Standard (default)" radio button in the ETP advanced settings that enables standard tracking protection
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-strict-radio
+Selector Data: "etpLevelStrict"
+Description: The "Strict" radio button in the ETP advanced settings that enables stricter tracking protection, blocks more trackers but may cause some sites to break
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-radio
+Selector Data: "etpLevelCustom"
+Description: The "Custom" radio button in the ETP advanced settings that allows users to choose which tracking protections to turn on or off
+Location: Privacy & Security preferences - ETP advanced settings
+Path to .json: modules/data/about_prefs.components.json
+```
 #### about_profiles
 ```
 Selector Name: profile-container
@@ -1980,24 +2008,17 @@ Location: Inside the autofill save credit card doorhanger, accessible by clickin
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
+Selector Name: doorhanger-more-actions-button
+Selector Data: "[data-l10n-id='popup-notification-more-actions-button']"
+Description: Arrow on the "Not now" button
+Location: Autofill save login doorhanger
+Path to .json: modules/data/autofill_popup.components.json
+```
+```
 Selector Name: doorhanger-never-save-login-button
 Selector Data: "menuitem[label='Never save']"
 Description: The hidden button in save login doorhanger.
 Location: Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the "Not now" button
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector Name: doorhanger-secondary-split-button
-Selector Data: "moz-button.popup-notification-secondary-button"
-Description: The "Not now" split button (moz-button) in the save login/card doorhanger; its shadow root holds the more-actions chevron.
-Location: Inside the autofill save doorhangers, in the panel-footer moz-button-group
-Path to .json: modules/data/autofill_popup.components.json
-```
-```
-Selector Name: doorhanger-more-actions-chevron
-Selector Data: "chevron-button" (id; shadowParent: doorhanger-secondary-split-button)
-Description: The dropdown chevron inside the "Not now" split button's shadow root. Clicking it (via js_click_on) opens the more-actions menu that contains "Never save".
-Location: Shadow DOM of the doorhanger "Not now" split button
 Path to .json: modules/data/autofill_popup.components.json
 ```
 ```
