@@ -18,7 +18,7 @@ _Leave a bullet-pointed list of changes you made._
 
 _Mark the relevant boxes, delete irrelevant lines._
 
-- [ ] Adds a dependency (rerun `pipenv install`)
+- [ ] Adds a dependency (rerun `uv sync`)
 - [ ] Modifies a git hook (rerun `./devsetup.sh`)
 - [ ] Changes the BasePage
 - [ ] Changes or creates a BOM/POM (name the object model): _
