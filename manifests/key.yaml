@@ -972,6 +972,10 @@ pdf_viewer:
     result: unstable
     splits:
     - functional2
+  test_download_pdf_data:
+    result: pass
+    splits:
+    - functional2
   test_download_pdf_with_form_fields:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: unstable
