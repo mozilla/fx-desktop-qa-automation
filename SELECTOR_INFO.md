@@ -902,66 +902,115 @@ Location: about:preferences#home
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: custom-radio
-Selector Data: "customRadio"
-Description: In Enhanced Tracking Protection, the Custom radio button
+Selector Name: etp-advanced-button
+Selector Data: "etpStatusAdvancedButton"
+Description: ETP "Advanced" button on the privacy pane; opens the ETP settings subpage (Settings redesign)
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: custom-tracker-options-parent
-Selector Data: "contentBlockingOptionCustom"
-Description: Parent Element in custom tracker blocking checkboxes
-Location: about:preferences#privacy
+Selector Name: etp-level-standard
+Selector Data: "etpLevelStandard"
+Description: Enhanced Tracking Protection "Standard" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cookies-checkbox
-Selector Data: "contentBlockingBlockCookiesCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Cookies
-Location: about:preferences#privacy
+Selector Name: etp-level-strict
+Selector Data: "etpLevelStrict"
+Description: Enhanced Tracking Protection "Strict" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cookies-isolate-social-media-option
-Selector Data: "isolateCookiesSocialMedia"
-Description: In Enhanced Tracking Protection, the option for Cookies…, and isolate other…
-Location: about:preferences#privacy
+Selector Name: etp-level-custom
+Selector Data: "etpLevelCustom"
+Description: Enhanced Tracking Protection "Custom" level moz-radio
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: tracking-in-all-windows
-Selector Data: "menuitem[data-l10n-id='content-blocking-tracking-protection-option-all-windows']"
-Description: In Enhanced Tracking Protection, the option for Tracking content, In all windows
-Location: about:preferences#privacy
+Selector Name: etp-customize-button
+Selector Data: "etpCustomizeButton"
+Description: "Customize" button shown under the Custom ETP level; opens the ETP Customize subpage
+Location: about:preferences#etp
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: tracking-checkbox
-Selector Data: "contentBlockingTrackingProtectionCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Tracking content
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-toggle
+Selector Data: "etpCustomTrackingProtectionEnabled"
+Description: Custom ETP "Tracking content" moz-toggle
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: cryptominers-checkbox
-Selector Data: "contentBlockingCryptominersCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Cryptominers
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-context
+Selector Data: "etpCustomTrackingProtectionEnabledContext"
+Description: Custom ETP "Tracking content" context moz-select (all windows / private windows)
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: known-fingerprints-checkbox
-Selector Data: "contentBlockingFingerprintingCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Known fingerprinters
-Location: about:preferences#privacy
+Selector Name: etp-custom-tracking-context-select
+Selector Data: "select"
+Description: Inner native <select> of the Tracking content context moz-select (shadowParent: etp-custom-tracking-context); values: all, pbmOnly
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
-Selector Name: suspected-fingerprints-checkbox
-Selector Data: "contentBlockingFingerprintingProtectionCheckbox"
-Description: In Enhanced Tracking Protection, the check-box for Suspected fingerprinters
-Location: about:preferences#privacy
+Selector Name: etp-custom-cookies-toggle
+Selector Data: "etpCustomCookiesEnabled"
+Description: Custom ETP "Cookies" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cookie-behavior
+Selector Data: "cookieBehavior"
+Description: Custom ETP cookie-behavior moz-select (which cookies to block)
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cookie-behavior-select
+Selector Data: "select"
+Description: Inner native <select> of the cookie-behavior moz-select (shadowParent: etp-custom-cookie-behavior); values 0/4/5/3/1/2. Disabled until the cookies toggle is on.
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-cryptomining-toggle
+Selector Data: "etpCustomCryptominingProtectionEnabled"
+Description: Custom ETP "Cryptominers" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-known-fingerprinting-toggle
+Selector Data: "etpCustomKnownFingerprintingProtectionEnabled"
+Description: Custom ETP "Known fingerprinters" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-toggle
+Selector Data: "etpCustomSuspectFingerprintingProtectionEnabled"
+Description: Custom ETP "Suspected fingerprinters" moz-toggle
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-context
+Selector Data: "etpCustomSuspectFingerprintingProtectionEnabledContext"
+Description: Custom ETP "Suspected fingerprinters" context moz-select (all windows / private windows)
+Location: about:preferences#etpCustomize
+Path to .json: modules/data/about_prefs.components.json
+```
+```
+Selector Name: etp-custom-suspect-fingerprinting-context-select
+Selector Data: "select"
+Description: Inner native <select> of the Suspected fingerprinters context moz-select (shadowParent: etp-custom-suspect-fingerprinting-context); values: all, pbmOnly
+Location: about:preferences#etpCustomize
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1092,8 +1141,8 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: cookies-privacy-label
-Selector Data: "[data-l10n-id='sitedata-delete-on-close-private-browsing3']"
-Description: Message in Cookies and Site data when History is not remembered
+Selector Data: "deleteOnCloseInfo"
+Description: moz-message-bar shown in Cookies and Site Data when history is not remembered (Settings redesign: l10n id is now sitedata-delete-on-close-private-browsing4; read its `message` attribute)
 Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -1107,21 +1156,21 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: logins-ask-to-save-password
 Selector Data: "savePasswords"
-Description: Check box for Ask to save passwords
-Location: about:preferences#privacy Passwords subsection
+Description: Check box for Ask to save passwords (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)
+Location: about:preferences#passwordsAutofill Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: logins-exceptions
 Selector Data: "managePasswordExceptions"
-Description: Manage Exceptions… button
-Location: about:preferences#privacy Passwords subsection
+Description: Manage Exceptions… button (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)
+Location: about:preferences#passwordsAutofill Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: history-privacy-label
-Selector Data: "description[data-l10n-id='history-dontremember-description']"
-Description: Message History is not remembered
+Selector Data: "moz-radio[data-l10n-id='history-remember-option-never2']"
+Description: The "Never Remember History" moz-radio option; checked (checked='true') and its `description` reflects permanent private browsing when history is not remembered (Settings redesign: History section is now a moz-radio-group)
 Location: about:preferences#privacy History subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
@@ -1515,20 +1564,6 @@ Selector Name: remove-password
 Selector Data: "button[label^='Remove']"
 Description: Remove button to remove the primary password
 Location: about:preferences#privacy Primary Password popup
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: standard-radio
-Selector Data: "standardRadio"
-Description: In Enhanced Tracking Protection, the standard radio button
-Location: about:preferences#privacy
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: standard-section
-Selector Data: "contentBlockingOptionStandard"
-Description: In Enhanced Tracking Protection, the standard radio section
-Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -4070,16 +4105,37 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: searchmode-switcher-settings
-Selector Data: menuitem[data-l10n-id='urlbar-searchmode-popup-search-settings-menuitem']
-Description: Search settings button in the searchmode switcher dropdown
+Selector Data: panel-item[data-l10n-id='urlbar-searchmode-popup-search-settings-panelitem']
+Description: Search settings button in the searchmode switcher dropdown (Fx redesign: dropdown is now a panel-list of panel-items)
 Location: Address bar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: search-mode-switcher-option
-Selector Data: menuitem[label*='{title}']
-Description: Option by label in search mode list
-Location: Search mode of awesomebar
+Selector Data: panel-item.searchmode-switcher-installed[label*='{title}']
+Description: Installed search engine option by label in the search mode switcher list (Fx redesign: was a menuitem in a menupopup, now a panel-item in a panel-list)
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-local-option
+Selector Data: panel-item.searchmode-switcher-local.search-button-{function}
+Description: Local search mode option (bookmarks/tabs/history/actions) in the search mode switcher list, by {function}
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-add-option
+Selector Data: panel-item.searchmode-switcher-addEngine[data-engine-name*='{title}']
+Description: "Add <engine>" open-search option in the search mode switcher list; matched on data-engine-name since the add-engine item has no label attribute
+Location: Search mode switcher dropdown of awesomebar
+Path to .json: modules/data/navigation.components.json
+```
+```
+Selector Name: search-mode-switcher-prefs
+Selector Data: panel-item.searchmode-switcher-panel-search-settings-button
+Description: Search Settings button at the bottom of the search mode switcher dropdown
+Location: Search mode switcher dropdown of awesomebar
 Path to .json: modules/data/navigation.components.json
 ```
 ```
@@ -4168,8 +4224,8 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: search-mode-chicklet
-Selector Data: label.searchmode-switcher-title
-Description: Search mode chicklet
+Selector Data: span.searchmode-switcher-title
+Description: Search mode chicklet (Fx redesign: title is now a span inside the moz-button switcher, was a label)
 Location: Address bar search mode
 Path to .json: modules/data/navigation.components.json
 ```
@@ -4182,8 +4238,8 @@ Path to .json: modules/data/navigation.components.json
 ```
 ```
 Selector Name: exit-button-searchmode
-Selector Data: toolbarbutton[data-l10n-id='urlbar-searchmode-exit-button']
-Description: Exit button searchmode
+Selector Data: button.searchmode-switcher-close
+Description: Exit button searchmode (Fx redesign: close button now lives inside the moz-button switcher, was a toolbarbutton[data-action='exitsearchmode'])
 Location: Address bar searchmode
 Path to .json: modules/data/navigation.components.json
 ```
@@ -5346,20 +5402,6 @@ Selector Data: "trust-icon-container"
 Description: Address bar shield icon
 Location: Address bar
 Path to .json: modules/data/trust_panel.components.json
-```
-```
-Selector Name: suspected-fingerprints-in-all-windows
-Selector Data: "#fingerprintingProtectionMenu menuitem[value='always']"
-Description: "In all windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
-Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
-Path to .json: modules/data/about_prefs.components.json
-```
-```
-Selector Name: suspected-fingerprints-only-in-private-windows
-Selector Data: "#fingerprintingProtectionMenu menuitem[value='private']"
-Description: "Only in private windows" option in the Suspected Fingerprinters dropdown under ETP Custom mode
-Location: about:preferences#privacy > Custom > Suspected fingerprinters dropdown
-Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: see-all-trackers-parent

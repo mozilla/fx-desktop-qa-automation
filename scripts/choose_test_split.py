@@ -14,7 +14,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
-BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs"]
+BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
 
 
 def snakify(pascal: str) -> str:

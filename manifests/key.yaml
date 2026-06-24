@@ -116,7 +116,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
+    result: unstable
     splits:
     - functional1
   test_search_code_google_non_us:
@@ -179,7 +180,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_term_persists:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047893
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
     result: unstable
     splits:
     - functional1
@@ -356,11 +357,7 @@ bookmarks_and_history:
     splits:
     - smoke
   test_open_websites_from_history:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043402
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - smoke
   test_opened_website_in_new_tab_present_in_hamburger_history_menu:
@@ -405,6 +402,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - ci
   test_close_browser_with_download_in_progress_shows_prompt:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026665
     result: unstable
@@ -648,15 +646,15 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917, https://bugzilla.mozilla.org/show_bug.cgi?id=2049603
     result:
       linux: unstable
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - functional1
   test_new_tab_label:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047899
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049824
     result: unstable
     splits:
     - functional1
@@ -935,7 +933,8 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049612
+    result: unstable
     splits:
     - functional2
   test_save_login_via_doorhanger:
@@ -1014,6 +1013,10 @@ pdf_viewer:
       win: pass
     splits:
     - functional2
+  test_pdf_drawing_area_actions:
+    result: pass
+    splits:
+    - functional1
   test_pdf_dropdown_functionality:
     result: pass
     splits:
@@ -1190,8 +1193,7 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_blocking_social_media_trackers:
@@ -1239,8 +1241,7 @@ security_and_privacy:
     splits:
     - functional2
   test_cross_site_tracking_cookies_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1252,23 +1253,19 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_cryptominers_subpanel_display_when_not_blocked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_only_in_private_windows:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_data_clearance_from_private_window_can_be_canceled:
@@ -1300,18 +1297,15 @@ security_and_privacy:
     splits:
     - functional2
   test_etp_panel_displayed_when_all_protections_disabled_custom:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_etp_panel_displayed_when_no_trackers_detected:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_etp_panel_displayed_when_protection_off:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_etp_toggle_on_off_behavior:
@@ -1327,18 +1321,15 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_fingerprinters_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_fingerprinters_subpanel_display_when_not_blocked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_http_lock_icon_connection_state:
@@ -1422,8 +1413,7 @@ security_and_privacy:
     splits:
     - functional2
   test_social_media_trackers_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_third_party_content_blocked_private_browsing:
@@ -1435,27 +1425,24 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_counted_correctly_in_panel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049609
+    result: unstable
     splits:
     - functional2
   test_trackers_cryptominers_fingerprinters_blocked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_tracking_content_custom_mode:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_tracking_content_subpanel_display_when_not_blocked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_tracking_elements_not_blocked_with_etp_disabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043366
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_undo_close_tab_private_browsing:
@@ -1583,8 +1570,7 @@ sidebar:
     splits:
     - functional2
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
@@ -1617,7 +1603,11 @@ tabs:
     splits:
     - functional2
   test_close_pinned_tab_via_mouse:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - smoke
     - ci
