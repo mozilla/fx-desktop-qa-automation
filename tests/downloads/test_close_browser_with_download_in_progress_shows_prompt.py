@@ -2,18 +2,12 @@ import logging
 
 import pytest
 from selenium.common.exceptions import NoAlertPresentException, TimeoutException
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import PanelUi  # , TabBar
-from modules.page_object import GenericPage
+from modules.browser_object import PanelUi, TabBar
+from modules.page_object_generics import GenericPage
 
 TEST_URL = "https://ash-speed.hetzner.com/"
-
-
-@pytest.fixture()
-def add_to_prefs_list():
-    return [("browser.warnOnQuitShortcut", False)]
 
 
 @pytest.fixture()
@@ -46,7 +40,7 @@ def test_close_browser_with_download_in_progress_shows_prompt(driver, extra_sele
     panel = PanelUi(driver)
     panel.elements |= extra_selectors
     page = GenericPage(driver, url=TEST_URL)
-    # tabs = TabBar(driver)
+    tabs = TabBar(driver)
 
     # Step 1: Open a Private Browsing window
     panel.open_and_switch_to_new_window("private")
@@ -64,8 +58,7 @@ def test_close_browser_with_download_in_progress_shows_prompt(driver, extra_sele
         pass
 
     # Step 4: Close the Private Browsing window (closing last tab should close the window)
-    page.actions.key_down(Keys.COMMAND).key_down("q").perform()
-    page.actions.key_up("q").key_up(Keys.COMMAND).perform()
+    tabs.close_first_tab_by_icon()
 
     # Step 5: Verify the native prompt text and accept it
     def alert_text_present(_):
