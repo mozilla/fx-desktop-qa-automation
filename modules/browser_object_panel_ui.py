@@ -271,10 +271,39 @@ class PanelUi(BasePage):
     @BasePage.context_chrome
     def confirm_history_clear(self):
         """
-        Confirm that the history is empty
+        Confirm that the Recent history list is empty.
         """
-        self.open_history_menu()
-        self.element_attribute_contains("recent-history-content", "value", "(Empty)")
+
+        last_state = {"value": "menu-never-rendered"}
+
+        def _history_empty(_):
+            self.driver.execute_script(
+                "if (typeof PanelUI !== 'undefined') PanelUI.hide();"
+            )
+            self.open_history_menu()
+            # 'empty' | 'not-empty' | 'no-element' — distinguishes a failed menu
+            # navigation (selector missing) from history that simply hasn't
+            # cleared yet. get_elements returns [] instead of raising when the
+            # menu didn't render, which lets us tell the two cases apart.
+            contents = self.get_elements("recent-history-content")
+            if not contents:
+                last_state["value"] = "no-element"
+                logging.warning(
+                    "confirm_history_clear: 'recent-history-content' not found "
+                    "— history menu may have failed to open this poll."
+                )
+                return False
+            is_empty = "(Empty)" in (contents[0].get_attribute("value") or "")
+            last_state["value"] = "empty" if is_empty else "not-empty"
+            return is_empty
+
+        self.custom_wait(timeout=30).until(
+            _history_empty,
+            message=(
+                "History '(Empty)' not confirmed within 30s; "
+                f"last observed state: {last_state['value']}"
+            ),
+        )
 
     @BasePage.context_chrome
     def verify_history_item_exists(self, item_title: str) -> BasePage:
