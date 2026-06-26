@@ -7,7 +7,7 @@ from modules.page_object import AboutPrefs, GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "446402"
+    return "450234"
 
 
 FIRST_TRACKER_WEBSITE = (

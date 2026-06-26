@@ -646,11 +646,7 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042917, https://bugzilla.mozilla.org/show_bug.cgi?id=2049603
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_new_tab_label:
