@@ -540,12 +540,13 @@ class AboutTelemetry(BasePage):
         """
         end_time = time() + timeout
         while True:
-            self.search_telemetry(search_term)
             try:
+                self.search_telemetry(search_term)
                 if self.is_telemetry_entry_present(table_selector_key, expected_data):
                     return True
             except WebDriverException:
-                # Section/rows not rendered yet; treat as not-present and retry.
+                # Page still loading / section not rendered yet after a refresh;
+                # treat as not-present and retry.
                 pass
             if time() >= end_time:
                 return False
