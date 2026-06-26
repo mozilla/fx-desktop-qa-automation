@@ -2,48 +2,82 @@
   "category-raw": {
     "selectorData": "category-raw",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Raw JSON option",
+      "location": "about:telemetry Sidebar option"
+    }
   },
   "rawdata-tab": {
     "selectorData": "//li[@class='tabs-menu-item rawdata ']//a[@id='rawdata-tab']",
     "strategy": "xpath",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Raw Data tab",
+      "location": "about:telemetry > data:application page"
+    }
   },
   "events-tab": {
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='events-section']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Events option",
+      "location": "about:telemetry Sidebar option"
+    }
   },
   "scalars-tab": {
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='scalars-section']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Scalars option",
+      "location": "about:telemetry Sidebar option"
+    }
   },
   "telemetry-events-table-rows": {
     "selectorData": "#events-section table tr",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Telemetry events table rows",
+      "location": "about:telemetry events or scalars table rows info"
+    }
   },
   "telemetry-scalars-table-rows": {
     "selectorData": "#scalars-section-parent table tr",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Telemetry scalars table rows",
+      "location": "about:telemetry events or scalars table rows info"
+    }
   },
   "keyed-scalars-tab": {
     "selectorData": "div[class='category category-no-icon has-data has-subsection'][value='keyed-scalars-section']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Keyed scalars option",
+      "location": "about:telemetry Sidebar option"
+    }
   },
   "telemetry-keyed-scalars-table-rows": {
     "selectorData": "#keyed-scalars-section-parent table tr",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Telemetry keyed scalars table rows",
+      "location": "about:telemetry events or scalars table rows info"
+    }
   },
   "search": {
     "selectorData": "search",
     "strategy": "id",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ]
   }
 }

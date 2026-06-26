@@ -1,12 +1,20 @@
 {
-    "no-downloads-label": {
-        "selectorData": "downloadsListEmptyDescription",
-        "strategy": "id",
-        "groups": []
-    },
-    "download-target": {
-        "selectorData": "downloadTarget",
-        "strategy": "class",
-        "groups": []
+  "no-downloads-label": {
+    "selectorData": "downloadsListEmptyDescription",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Label that exists when no downloads are present",
+      "location": "about:downloads page"
     }
+  },
+  "download-target": {
+    "selectorData": "downloadTarget",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Download item element",
+      "location": "In the about:downloads page when a download exists"
+    }
+  }
 }

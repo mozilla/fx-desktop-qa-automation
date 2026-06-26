@@ -4,79 +4,139 @@
     "strategy": "css",
     "groups": [
       "requiredForPage"
-    ]
+    ],
+    "comment": {
+      "description": "The FxAccount login email input field",
+      "location": "In the FxA login page"
+    }
   },
   "submit-button": {
     "selectorData": "button[type='submit']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The FxAccount login Submit button",
+      "location": "In the FxA login page"
+    }
   },
   "signup-password-input": {
     "selectorData": "[data-testid='new-password-input-field']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount password input field",
+      "location": "In the FxA signup page"
+    }
   },
   "signup-password-repeat-input": {
     "selectorData": "[data-testid='verify-password-input-field']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount repeat password input field",
+      "location": "In the FxA signup page"
+    }
   },
   "age-input": {
     "selectorData": "[data-testid='age-input-field']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount age input field",
+      "location": "In the FxA signup page"
+    }
   },
   "card-header": {
     "selectorData": "card-header",
     "strategy": "class",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount confirmation code card header",
+      "location": "In the FxA signup page flow"
+    }
   },
   "signup-otp-input": {
     "selectorData": "[data-testid='confirm-signup-code-input-field']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount One Time Password entry field",
+      "location": "In the FxA signup page flow"
+    }
   },
   "signin-otp-input": {
     "selectorData": "[data-testid='signin-token-code-input-field']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount One Time Password entry field",
+      "location": "In the FxA signin page flow"
+    }
   },
   "otp-input": {
     "selectorData": "input[inputmode='numeric']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount One Time Password entry field",
+      "location": "In the FxA signin page flow"
+    }
   },
   "connected-heading": {
     "selectorData": "fxa-connected-heading",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount account connected heading",
+      "location": "In the FxA signin page flow"
+    }
   },
   "continue-browsing-link": {
     "selectorData": "cad-not-now",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The continue browsing link",
+      "location": "In the FxA signin page flow"
+    }
   },
   "login-password-input": {
     "selectorData": "input[type='password']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Dont pair with phone now",
+      "location": "In the FxA signin page flow"
+    }
   },
   "signed-in-status": {
     "selectorData": "div[role='status']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Sign in status",
+      "location": "In the FxA signin page flow"
+    }
   },
   "manage-sync-button": {
     "selectorData": "signup_confirmed_sync_manage_sync_button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "sign up and sync confirmation",
+      "location": "In the FxA signin page flow"
+    }
   },
   "do-it-later-button": {
     "selectorData": "inline_recovery_key_setup_create_do_it_later",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Coninute fxa account creation flow",
+      "location": "In the FxA signin page flow"
+    }
   },
   "not-now-button": {
     "selectorData": "choice-pair-not-now",
@@ -86,6 +146,10 @@
   "sign-in-button": {
     "selectorData": "use-logged-in",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The FxAccount Signin button",
+      "location": "In the FxA signin page flow"
+    }
   }
 }

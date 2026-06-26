@@ -2567,21 +2567,21 @@ Selector Name: title-header
 Selector Data: "h1"
 Description: "Example Domain" title
 Location: The title of example.com page 
-Path to .json: modules/data/exemple_page.components.json
+Path to .json: modules/data/example_page.components.json
 ```
 ```
 Selector Name: take-screenshot-box
 Selector Data: "screenshotsPagePanel"
 Description:  Page context menu option "Take Screenshot"
 Location: Any non-linked content space inside example.com page  
-Path to .json: modules/data/exemple_page.components.json
+Path to .json: modules/data/example_page.components.json
 ```
 ```
 Selector Name: learn-more
 Selector Data: "Learn more"
 Description: "Learn more" link
 Location: The hyperlink positioned in the middle of example.com page  
-Path to .json: modules/data/exemple_page.components.json
+Path to .json: modules/data/example_page.components.json
 ```
 #### customize_firefox
 ```
@@ -4737,7 +4737,7 @@ Selector name: edit-bookmark-panel
 Selector Data: editBMPanel_namePicker
 Description: Edit bookmark panel
 Location: Bookmark panel
-Path to .json: modules/data/pane_ui.components.json
+Path to .json: modules/data/panel_ui.components.json
 ```
 ```
 Selector Name: toolbarspring
@@ -4749,7 +4749,7 @@ Path to .json: modules/data/navigation.components.json
 ```
 Selector Name: reopen-all-closed-tabs-button
 Selector Data: toolbarbutton[class='restoreallitem subviewbutton panel-subview-footer-button'][label='Reopen all tabs']
-Description: Reopen all closed tabs buttonutton
+Description: Reopen all closed tabs button
 Location: On the hamburger menu > History > Recently closed tabs
 Path to .json: modules/data/panel_ui.components.json
 ```

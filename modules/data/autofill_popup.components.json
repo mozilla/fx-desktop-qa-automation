@@ -4,12 +4,20 @@
   "autofill-panel": {
     "selectorData": "PopupAutoComplete",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "A dropdown panel displaying autofill suggestions for input fields (addresses, credit cards,login forms)",
+      "location": "Inside any autofill-eligible form field, triggered by user interaction such as a click or focus event"
+    }
   },
   "doorhanger-save-button": {
     "selectorData": ".popup-notification-primary-button[label^='Save']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Save\" button",
+      "location": "Inside the autofill save doorhangers (address and credit card) that is triggered in navigation bar"
+    }
   },
   "doorhanger-not-now-button": {
     "selectorData": ".popup-notification-secondary-button[label^='Not now']",
@@ -22,17 +30,29 @@
     "groups": [
       "doNotCache"
     ],
-    "shadowParent": "doorhanger-not-now-button"
+    "shadowParent": "doorhanger-not-now-button",
+    "comment": {
+      "description": "The down arrow next to the \"Not now\" button",
+      "location": "Inside the autofill save credit card doorhanger that is triggered in navigation bar"
+    }
   },
   "doorhanger-dropdown-never-save-cards-button": {
     "selectorData": "menuitem[label='Never save cards']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The hidden button in save credit card doorhanger.",
+      "location": "Inside the autofill save credit card doorhanger, accessible by clicking the down arrow next to the \"Not now\" button"
+    }
   },
   "doorhanger-secondary-split-button": {
     "selectorData": "moz-button.popup-notification-secondary-button",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Not now\" split button (moz-button) in the save login/card doorhanger; its shadow root holds the more-actions chevron.",
+      "location": "Inside the autofill save doorhangers, in the panel-footer moz-button-group"
+    }
   },
   "doorhanger-more-actions-chevron": {
     "selectorData": "chevron-button",
@@ -40,17 +60,29 @@
     "shadowParent": "doorhanger-secondary-split-button",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The dropdown chevron inside the \"Not now\" split button's shadow root. Clicking it (via js_click_on) opens the more-actions menu that contains \"Never save\".",
+      "location": "Shadow DOM of the doorhanger \"Not now\" split button"
+    }
   },
   "doorhanger-never-save-login-button": {
     "selectorData": "menuitem[label='Never save']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The hidden button in save login doorhanger.",
+      "location": "Inside the autofill save login doorhanger, accessible by clicking the down arrow next to the \"Not now\" button"
+    }
   },
   "doorhanger-update-button": {
     "selectorData": ".popup-notification-primary-button[label^='Update']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Update\" button",
+      "location": "Inside the autofill save addreses doorhanger that is triggered in navigation bar"
+    }
   },
   "pop-up-component": {
     "selectorData": "PopupAutoComplete",
@@ -69,17 +101,29 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "An individual entry within the autofill dropdown, representing a selectable suggestion such as a name, address, or card number",
+      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
+    }
   },
   "select-form-option-by-value": {
     "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "An individual entry within the autofill dropdown, with a label for the \"ac-value\" attr, usually a cardholder name.",
+      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
+    }
   },
   "clear-form-option": {
     "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Clear Autofill Form\" option in the dropdown that appears when interacting with an autofill-enabled input field",
+      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled."
+    }
   },
   "select-form-option-autofill": {
     "selectorData": ".autocomplete-richlistitem[originaltype='autofill']",
@@ -93,27 +137,47 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Select n individual entry within the autofill dropdown, using the index of the child.",
+      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
+    }
   },
   "update-card-info-popup-button": {
     "selectorData": "button[label='Update existing card']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Update existing card\" button",
+      "location": "Inside the autofill save credit card doorhanger that is triggered in navigation bar"
+    }
   },
   "cc-saved-options": {
     "selectorData": "option[data-l10n-id='credit-card-label-number-name-expiration-2']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "gets the selector element for the saved cc options",
+      "location": "Inside the Saved payment methods section on the about:preferences#privacy page"
+    }
   },
   "password-update-doorhanger": {
     "selectorData": "//*[contains(@class, 'popup-notification-description') and @popupid='password']",
     "strategy": "xpath",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The password update doorhanger",
+      "location": "In the Navigation bar, next to the url input field, after the key icon was pressed"
+    }
   },
   "address-save-doorhanger": {
     "selectorData": "address-save-update-notification-content",
     "strategy": "class",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger",
+      "location": "Address bar"
+    }
   },
   "cc-doorhanger-data": {
     "selectorData": "popupnotificationcontent[class='credit-card-save-update-notification-content'] description",
@@ -123,62 +187,110 @@
   "address-doorhanger-email": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:first-of-type span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger email section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-phone": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(2) div p:nth-of-type(2) span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger phone section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-name": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:first-of-type span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger name section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-org": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(2) span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger organization section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-street": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(3) span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger street address section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-city": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(1)",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger city section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-state": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-of-type(3)",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger state section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-zip": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(4) span:nth-last-of-type(1)",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger zip section",
+      "location": "Address bar"
+    }
   },
   "address-doorhanger-country": {
     "selectorData": "div.address-save-update-row-container:nth-of-type(1) div p:nth-of-type(5) span",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Save address doorhanger country section",
+      "location": "Address bar"
+    }
   },
   "preview-form-container": {
     "selectorData": ".autocomplete-richlistbox richlistitem",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Form container that is hidden in chrome context. Used to verify hover preview data",
+      "location": "Inside chrome context, holds the data that would be showed as a preview when autofill is hovered."
+    }
   },
   "manage-passwords": {
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Login autofill manage passwords button",
+      "location": "Login autofill"
+    }
   },
   "password-notification-username-field": {
     "selectorData": "password-notification-username",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Username field in the password notification popup",
+      "location": "Username field in the password notification popup"
+    }
   },
   "generated-securely-password": {
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
@@ -190,13 +302,21 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Firefox autocomplete warning item shown for login fields on insecure HTTP pages.",
+      "location": "Firefox chrome autofill popup"
+    }
   },
   "insecure-login-warning-text": {
     "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning'] .ac-title-text",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Text container for the insecure login warning message.",
+      "location": "Firefox chrome autofill popup"
+    }
   }
 }

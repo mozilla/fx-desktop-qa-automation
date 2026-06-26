@@ -1,19 +1,31 @@
 {
-    "title-header": {
-        "selectorData": "h1",
-        "strategy": "tag",
-        "groups": []
-    },
-    "take-screenshot-box": {
-        "selectorData": "screenshotsPagePanel",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "learn-more": {
-        "selectorData": "Learn more",
-        "strategy": "link_text",
-        "groups": []
+  "title-header": {
+    "selectorData": "h1",
+    "strategy": "tag",
+    "groups": [],
+    "comment": {
+      "description": "\"Example Domain\" title",
+      "location": "The title of example.com page"
     }
+  },
+  "take-screenshot-box": {
+    "selectorData": "screenshotsPagePanel",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Page context menu option \"Take Screenshot\"",
+      "location": "Any non-linked content space inside example.com page"
+    }
+  },
+  "learn-more": {
+    "selectorData": "Learn more",
+    "strategy": "link_text",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" link",
+      "location": "The hyperlink positioned in the middle of example.com page"
+    }
+  }
 }

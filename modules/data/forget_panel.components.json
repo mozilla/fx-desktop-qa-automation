@@ -1,23 +1,39 @@
 {
-    "context": "chrome",
-    "forget-five-minutes": {
-        "selectorData": "PanelUI-panic-5min",
-        "strategy": "id",
-        "groups": []
-    },
-    "forget-two-hours": {
-        "selectorData": "PanelUI-panic-2hr",
-        "strategy": "id",
-        "groups": []
-    },
-    "forget-one-day": {
-        "selectorData": "PanelUI-panic-day",
-        "strategy": "id",
-        "groups": []
-    },
-    "forget-confirm-button": {
-        "selectorData": "PanelUI-panic-view-button",
-        "strategy": "id",
-        "groups": []
+  "context": "chrome",
+  "forget-five-minutes": {
+    "selectorData": "PanelUI-panic-5min",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Forget Panel's option for 5 minutes",
+      "location": "In the Panel from the \"Forget\" toolbar button"
     }
+  },
+  "forget-two-hours": {
+    "selectorData": "PanelUI-panic-2hr",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Forget Panel's option for 2 hours",
+      "location": "In the Panel from the \"Forget\" toolbar button"
+    }
+  },
+  "forget-one-day": {
+    "selectorData": "PanelUI-panic-day",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Forget Panel's option for 1 day",
+      "location": "In the Panel from the \"Forget\" toolbar button"
+    }
+  },
+  "forget-confirm-button": {
+    "selectorData": "PanelUI-panic-view-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Forget Panel's Confirm button",
+      "location": "In the Panel from the \"Forget\" toolbar button"
+    }
+  }
 }

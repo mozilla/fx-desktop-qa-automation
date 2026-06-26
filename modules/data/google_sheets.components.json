@@ -1,27 +1,43 @@
 {
-    "insert-button": {
-        "selectorData": "docs-insert-menu",
-        "strategy": "id",
-        "groups": []
-    },
-    "table-options": {
-        "selectorData": "waffle-namedtable-gridpill-table-view-buttons-container",
-        "strategy": "class",
-        "groups": []
-    },
-    "formula-box-input": {
-        "selectorData": "cell-input",
-        "strategy": "class",
-        "groups": []
-    },
-    "text-colour": {
-        "selectorData": "goog-color-menu-button-indicator",
-        "strategy": "class",
-        "groups": []
-    },
-    "grid-table-container": {
-        "selectorData": "grid-table-container",
-        "strategy": "class",
-        "groups": []
+  "insert-button": {
+    "selectorData": "docs-insert-menu",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Insert button in the top menu bar",
+      "location": "Google sheets menu bar"
     }
+  },
+  "table-options": {
+    "selectorData": "waffle-namedtable-gridpill-table-view-buttons-container",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Table options menu",
+      "location": "Above the header of tables in google sheets"
+    }
+  },
+  "formula-box-input": {
+    "selectorData": "cell-input",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Input box/Formula bar",
+      "location": "Top part of google sheets"
+    }
+  },
+  "text-colour": {
+    "selectorData": "goog-color-menu-button-indicator",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Text colour button component",
+      "location": "Text colour button in the top part of google sheets"
+    }
+  },
+  "grid-table-container": {
+    "selectorData": "grid-table-container",
+    "strategy": "class",
+    "groups": []
+  }
 }

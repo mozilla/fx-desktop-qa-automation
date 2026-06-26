@@ -1,57 +1,93 @@
 {
-    "language-addons-title": {
-        "selectorData": "Card-header-text",
-        "strategy": "class",
-        "groups": []
-    },
-    "language-addons-row": {
-        "selectorData": "tr[class='{name}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "language-addons-row-link": {
-        "selectorData": "a",
-        "strategy": "tag",
-        "groups": []
-    },
-    "language-addons-subpage-add-to-firefox": {
-        "selectorData": "div[class='AMInstallButton AMInstallButton--noDownloadLink']",
-        "strategy": "css",
-        "groups": []
-    },
-    "language-addons-subpage-header": {
-        "selectorData": "AddonTitle",
-        "strategy": "class",
-        "groups": []
-    },
-    "addon-install-add-button": {
-        "selectorData": "moz-button.popup-notification-primary-button[label='Add']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-add-button-field": {
-        "selectorData": "button#main-button",
-        "strategy": "css",
-        "shadowParent": "addon-install-add-button",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-ok-button-parent": {
-        "selectorData": "moz-button.popup-notification-primary-button[label='OK']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "addon-install-ok-button-field": {
-        "selectorData": "button#main-button",
-        "strategy": "css",
-        "shadowParent": "addon-install-ok-button-parent",
-        "groups": [
-            "doNotCache"
-        ]
+  "language-addons-title": {
+    "selectorData": "Card-header-text",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Search results header",
+      "location": "Language addon search results header inside addons.mozilla.org/en-US/firefox/language-tools/"
     }
+  },
+  "language-addons-row": {
+    "selectorData": "tr[class='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The title row where the language is mentioned",
+      "location": "The row displaying the language addon\u2019s name and details in the search results section of addons.mozilla.org/en-US/firefox/language-tools/"
+    }
+  },
+  "language-addons-row-link": {
+    "selectorData": "a",
+    "strategy": "tag",
+    "groups": [],
+    "comment": {
+      "description": "The link with the desired language",
+      "location": "The clickable link within the search result section on the addons.mozilla.org/en-US/firefox/language-tools/ page, which directs users to the addon\u2019s detailed page"
+    }
+  },
+  "language-addons-subpage-add-to-firefox": {
+    "selectorData": "div[class='AMInstallButton AMInstallButton--noDownloadLink']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Add to Firefox\" button",
+      "location": "The large blue button on the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/"
+    }
+  },
+  "language-addons-subpage-header": {
+    "selectorData": "AddonTitle",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Tittle of the page",
+      "location": "The page title that displays the specific language addon name on the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/"
+    }
+  },
+  "addon-install-add-button": {
+    "selectorData": "moz-button.popup-notification-primary-button[label='Add']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The outer moz-button element for the \"Add\" button in the addon installation notification popup",
+      "location": "Addon installation notification popup - chrome UI"
+    }
+  },
+  "addon-install-add-button-field": {
+    "selectorData": "button#main-button",
+    "strategy": "css",
+    "shadowParent": "addon-install-add-button",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The inner button element inside the shadow DOM of the \"Add\" moz-button in the addon installation notification popup, used to actually click the button",
+      "location": "Addon installation notification popup - chrome UI"
+    }
+  },
+  "addon-install-ok-button-parent": {
+    "selectorData": "moz-button.popup-notification-primary-button[label='OK']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The outer moz-button element for the \"OK\" button in the addon installation confirmation popup that appears after clicking \"Add\", identified by the primary button class and \"OK\" label",
+      "location": "Addon installation confirmation popup - chrome UI"
+    }
+  },
+  "addon-install-ok-button-field": {
+    "selectorData": "button#main-button",
+    "strategy": "css",
+    "shadowParent": "addon-install-ok-button-parent",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The inner button element inside the shadow DOM of the \"OK\" moz-button in the addon installation confirmation popup, used to confirm the addon installation",
+      "location": "Addon installation confirmation popup - chrome UI"
+    }
+  }
 }

@@ -1,52 +1,84 @@
 {
-    "context": "chrome",
-    "find-toolbar-input": {
-        "selectorData": "findbar-textbox",
-        "strategy": "class",
-        "groups": [
-            "requiredForPage",
-            "doNotCache"
-        ]
-    },
-    "find-toolbar-close-button": {
-        "selectorData": "findbar-closebutton",
-        "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "next-match-button": {
-        "selectorData": "toolbarbutton[data-l10n-id='findbar-next']",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "previous-match-button": {
-        "selectorData": "toolbarbutton[data-l10n-id='findbar-previous']",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "matches-label": {
-        "selectorData": "label.found-matches",
-        "strategy": "css",
-        "groups": []
-    },
-    "find-status-label": {
-        "selectorData": "findbar-find-status",
-        "strategy": "class",
-        "groups": []
-    },
-    "reached-top-label": {
-        "selectorData": "description[data-l10n-id='findbar-wrapped-to-bottom']",
-        "strategy": "css",
-        "groups": []
-    },
-    "reached-bottom-label": {
-        "selectorData": "description[data-l10n-id='findbar-wrapped-to-top']",
-        "strategy": "css",
-        "groups": []
+  "context": "chrome",
+  "find-toolbar-input": {
+    "selectorData": "findbar-textbox",
+    "strategy": "class",
+    "groups": [
+      "requiredForPage",
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The find toolbar input area",
+      "location": "In the find toolbar"
     }
+  },
+  "find-toolbar-close-button": {
+    "selectorData": "findbar-closebutton",
+    "strategy": "class",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The find toolbar close button",
+      "location": "In the find toolbar"
+    }
+  },
+  "next-match-button": {
+    "selectorData": "toolbarbutton[data-l10n-id='findbar-next']",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The find toolbar next match button",
+      "location": "In the find toolbar"
+    }
+  },
+  "previous-match-button": {
+    "selectorData": "toolbarbutton[data-l10n-id='findbar-previous']",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The find toolbar previous match button",
+      "location": "In the find toolbar"
+    }
+  },
+  "matches-label": {
+    "selectorData": "label.found-matches",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The find toolbar all matches button",
+      "location": "In the find toolbar"
+    }
+  },
+  "find-status-label": {
+    "selectorData": "findbar-find-status",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "The find toolbar find status button",
+      "location": "In the find toolbar"
+    }
+  },
+  "reached-top-label": {
+    "selectorData": "description[data-l10n-id='findbar-wrapped-to-bottom']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The find toolbar status for reaching the top",
+      "location": "In the find toolbar"
+    }
+  },
+  "reached-bottom-label": {
+    "selectorData": "description[data-l10n-id='findbar-wrapped-to-top']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The find toolbar status for reaching the bottom",
+      "location": "In the find toolbar"
+    }
+  }
 }

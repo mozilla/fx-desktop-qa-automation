@@ -1,25 +1,49 @@
 {
-    "net-error-card": {
-        "selectorData": "net-error-card",
-        "strategy": "tag",
-        "groups": ["doNotCache"]
-    },
-    "error-title": {
-        "selectorData": "[data-l10n-id='neterror-dns-not-found-title']",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
-    },
-    "error-short-description": {
-        "selectorData": "#error-intro strong",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
-    },
-    "error-learn-more-link": {
-        "selectorData": "#error-learn-more-link",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
+  "net-error-card": {
+    "selectorData": "net-error-card",
+    "strategy": "tag",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The shadow host web component for the error page (Firefox 138+)",
+      "location": "In the error page body"
     }
+  },
+  "error-title": {
+    "selectorData": "[data-l10n-id='neterror-dns-not-found-title']",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The main error title inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-short-description": {
+    "selectorData": "#error-intro strong",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-learn-more-link": {
+    "selectorData": "#error-learn-more-link",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The \"Learn more\" link inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  }
 }

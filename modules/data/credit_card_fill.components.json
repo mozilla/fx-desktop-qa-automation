@@ -1,18 +1,26 @@
 {
-    "do-not-cache": true,
-    "form-field": {
-        "selectorData": "*[autocomplete='{name}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "submit-button": {
-        "selectorData": "input[type='{name}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "base-submit-button": {
-        "selectorData": "*[type='submit']",
-        "strategy": "css",
-        "groups": []
+  "do-not-cache": true,
+  "form-field": {
+    "selectorData": "*[autocomplete='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Input field",
+      "location": "Input field in the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html"
     }
+  },
+  "submit-button": {
+    "selectorData": "input[type='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Submit\" button",
+      "location": "\"Submit\" button at the bottom of the autofill credit card demo page - https://mozilla.github.io/form-fill-examples/basic_cc.html"
+    }
+  },
+  "base-submit-button": {
+    "selectorData": "*[type='submit']",
+    "strategy": "css",
+    "groups": []
+  }
 }

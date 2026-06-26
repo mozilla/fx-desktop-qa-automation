@@ -1,17 +1,29 @@
 {
-    "recommended-addon": {
-        "selectorData": ".RecommendedAddons .SearchResult-result",
-        "strategy": "css",
-        "groups": []
-    },
-    "theme-title": {
-        "selectorData": "AddonTitle",
-        "strategy": "class",
-        "groups": []
-    },
-    "install-button": {
-        "selectorData": "AMInstallButton-button",
-        "strategy": "class",
-        "groups": []
+  "recommended-addon": {
+    "selectorData": ".RecommendedAddons .SearchResult-result",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Theme section results",
+      "location": "Recommended themes section inside addons.mozilla.org/en-US/firefox/themes/"
     }
+  },
+  "theme-title": {
+    "selectorData": "AddonTitle",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Tittle of the page",
+      "location": "The page title that displays the specific theme addon name on the detailed addon page after being redirected from the recommended themes section on addons.mozilla.org/en-US/firefox/themes/"
+    }
+  },
+  "install-button": {
+    "selectorData": "AMInstallButton-button",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "\"Install Theme\" button",
+      "location": "The large blue button on the detailed addon page after being redirected from the recommended themes section on addons.mozilla.org/en-US/firefox/themes/"
+    }
+  }
 }
