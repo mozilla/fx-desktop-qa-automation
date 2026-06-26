@@ -524,47 +524,69 @@ class AboutTelemetry(BasePage):
             "telemetry-keyed-scalars-table-rows", expected_data
         )
 
-    def wait_for_telemetry_entry(
-        self,
-        table_selector_key: str,
-        search_term: str,
-        expected_data,
-        timeout: int = 30,
-        poll: float = 1.0,
-    ) -> bool:
-        """Poll about:telemetry until a matching row appears in the given table.
+    # JS that reads a legacy keyed-scalar value directly from the Telemetry API.
+    # Scraping the rendered about:telemetry table is unreliable across CI runners
+    # because the page does not force a child-process flush; reading the snapshot
+    # (after an explicit flush) mirrors the robust Glean BOM approach.
+    _KEYED_SCALAR_JS = """
+        const callback = arguments[arguments.length - 1];
+        const wantedKey = arguments[0];
+        (async () => {
+            try {
+                if (Services.fog && Services.fog.testFlushAllChildren) {
+                    await Services.fog.testFlushAllChildren();
+                }
+                const snapshot =
+                    Services.telemetry.getSnapshotForKeyedScalars("main", false) || {};
+                let value = null;
+                for (const proc of Object.keys(snapshot)) {
+                    const scalars = snapshot[proc] || {};
+                    for (const name of Object.keys(scalars)) {
+                        const keyed = scalars[name] || {};
+                        if (Object.prototype.hasOwnProperty.call(keyed, wantedKey)) {
+                            value = keyed[wantedKey];
+                        }
+                    }
+                }
+                callback(value);
+            } catch (e) {
+                callback({ error: String(e) });
+            }
+        })();
+    """
 
-        Telemetry scalars flush asynchronously, so a single read can miss a
-        just-recorded value (notably under CI load). Re-search each attempt and
-        refresh the page between attempts to pull the latest snapshot.
+    @BasePage.context_chrome
+    def poll_keyed_scalar(
+        self,
+        key: str,
+        expected_value,
+        timeout: int = 30,
+        poll_interval: float = 0.5,
+    ) -> bool:
+        """Poll a legacy keyed scalar until `key` reaches `expected_value`.
+
+        Reads the scalar snapshot directly via the chrome Telemetry API rather
+        than scraping about:telemetry, forcing a flush first. Returns True on
+        match, False on timeout.
         """
         end_time = time() + timeout
-        while True:
-            try:
-                self.search_telemetry(search_term)
-                if self.is_telemetry_entry_present(table_selector_key, expected_data):
-                    return True
-            except WebDriverException:
-                # Page still loading / section not rendered yet after a refresh;
-                # treat as not-present and retry.
-                pass
-            if time() >= end_time:
-                return False
-            sleep(poll)
-            self.driver.refresh()
-            # Wait for the reloaded page to be interactive before the next
-            # search so a retry isn't wasted hitting a still-loading DOM.
-            try:
-                self.element_clickable("search")
-            except WebDriverException:
-                pass
-
-    def wait_for_keyed_scalars_entry(
-        self, search_term: str, expected_data, **kwargs
-    ) -> bool:
-        return self.wait_for_telemetry_entry(
-            "telemetry-keyed-scalars-table-rows", search_term, expected_data, **kwargs
+        last = None
+        while time() < end_time:
+            result = self.driver.execute_async_script(self._KEYED_SCALAR_JS, key)
+            if isinstance(result, dict) and "error" in result:
+                raise AssertionError(f"Telemetry JS error: {result['error']}")
+            last = result
+            if result is not None and str(result) == str(expected_value):
+                return True
+            sleep(poll_interval)
+        logging.warning(
+            "Keyed scalar %r did not reach %r within %ss (last=%r)",
+            key,
+            expected_value,
+            timeout,
+            last,
         )
+        return False
 
 
 class AboutNetworking(BasePage):
