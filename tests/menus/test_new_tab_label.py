@@ -26,9 +26,8 @@ def test_new_tab_label(driver: Firefox):
     # Navigate the new tab to about:telemetry and verify scalar value is 1
     driver.switch_to.window(driver.window_handles[-1])
     about_telemetry.open()
-    about_telemetry.search_telemetry("context-openANewTab")
-    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-        ["context-openANewTab", "1"]
+    assert about_telemetry.wait_for_keyed_scalars_entry(
+        "context-openANewTab", ["context-openANewTab", "1"]
     ), "Expected context-openANewTab to have value 1 after Step 1"
 
     second_tab = tabs.get_tab(2)  # about:telemetry tab
@@ -40,9 +39,8 @@ def test_new_tab_label(driver: Firefox):
     tabs.wait_for_num_tabs(3)
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
-    about_telemetry.search_telemetry("context-openANewTab")
-    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-        ["context-openANewTab", "2"]
+    assert about_telemetry.wait_for_keyed_scalars_entry(
+        "context-openANewTab", ["context-openANewTab", "2"]
     ), "Expected context-openANewTab to have value 2 after Step 2"
 
     # Step 3: Right click in the Tab Bar and click New Tab
@@ -53,7 +51,6 @@ def test_new_tab_label(driver: Firefox):
     tabs.wait_for_num_tabs(4)
     driver.switch_to.window(driver.window_handles[1])
     driver.refresh()
-    about_telemetry.search_telemetry("toolbar-context-openANewTab")
-    assert about_telemetry.is_telemetry_keyed_scalars_entry_present(
-        ["toolbar-context-openANewTab", "1"]
+    assert about_telemetry.wait_for_keyed_scalars_entry(
+        "toolbar-context-openANewTab", ["toolbar-context-openANewTab", "1"]
     ), "Expected toolbar-context-openANewTab to have value 1 after Step 3"

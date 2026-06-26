@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from time import sleep, time
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -521,6 +522,41 @@ class AboutTelemetry(BasePage):
     def is_telemetry_keyed_scalars_entry_present(self, expected_data):
         return self.is_telemetry_entry_present(
             "telemetry-keyed-scalars-table-rows", expected_data
+        )
+
+    def wait_for_telemetry_entry(
+        self,
+        table_selector_key: str,
+        search_term: str,
+        expected_data,
+        timeout: int = 30,
+        poll: float = 1.0,
+    ) -> bool:
+        """Poll about:telemetry until a matching row appears in the given table.
+
+        Telemetry scalars flush asynchronously, so a single read can miss a
+        just-recorded value (notably under CI load). Re-search each attempt and
+        refresh the page between attempts to pull the latest snapshot.
+        """
+        end_time = time() + timeout
+        while True:
+            self.search_telemetry(search_term)
+            try:
+                if self.is_telemetry_entry_present(table_selector_key, expected_data):
+                    return True
+            except WebDriverException:
+                # Section/rows not rendered yet; treat as not-present and retry.
+                pass
+            if time() >= end_time:
+                return False
+            sleep(poll)
+            self.driver.refresh()
+
+    def wait_for_keyed_scalars_entry(
+        self, search_term: str, expected_data, **kwargs
+    ) -> bool:
+        return self.wait_for_telemetry_entry(
+            "telemetry-keyed-scalars-table-rows", search_term, expected_data, **kwargs
         )
 
 
