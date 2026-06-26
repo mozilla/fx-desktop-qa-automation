@@ -116,8 +116,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_code_google_non_us:
@@ -180,8 +179,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_term_persists:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049833
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_works_correctly_with_ddg_telemetry:
