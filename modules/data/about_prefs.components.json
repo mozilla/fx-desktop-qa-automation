@@ -77,7 +77,7 @@
     "selectorData": ".select-wrapper button",
     "strategy": "css",
     "shadowParent": "default-engine-dropdown",
-    "groups": []
+    "groups": ["doNotCache"]
   },
   "find-in-settings": {
     "selectorData": "searchInput",
