@@ -185,6 +185,11 @@
         "strategy": "css",
         "groups": []
     },
+    "duckduckgo-search-result": {
+        "selectorData": "a[data-testid='result-title-a']",
+        "strategy": "css",
+        "groups": ["doNotCache"]
+    },
     "ecosia-related-search-shortcut": {
         "selectorData": "a.related-queries__link-bottom",
         "strategy": "css",
