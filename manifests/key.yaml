@@ -1193,7 +1193,11 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_blocking_social_media_trackers:
@@ -1241,7 +1245,11 @@ security_and_privacy:
     splits:
     - functional2
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
