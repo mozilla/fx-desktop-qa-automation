@@ -552,6 +552,12 @@ class AboutTelemetry(BasePage):
                 return False
             sleep(poll)
             self.driver.refresh()
+            # Wait for the reloaded page to be interactive before the next
+            # search so a retry isn't wasted hitting a still-loading DOM.
+            try:
+                self.element_clickable("search")
+            except WebDriverException:
+                pass
 
     def wait_for_keyed_scalars_entry(
         self, search_term: str, expected_data, **kwargs
