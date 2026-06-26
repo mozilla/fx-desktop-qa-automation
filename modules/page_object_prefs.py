@@ -426,10 +426,14 @@ class AboutPrefs(BasePage):
                 toggle,
             )
             self.wait.until(
-                lambda _: bool(
-                    self.driver.execute_script("return !!arguments[0].pressed;", toggle)
+                lambda _: (
+                    bool(
+                        self.driver.execute_script(
+                            "return !!arguments[0].pressed;", toggle
+                        )
+                    )
+                    == enabled
                 )
-                == enabled
             )
 
     def select_trackers_to_block(self, *options):
@@ -1056,7 +1060,7 @@ class AboutPrefs(BasePage):
 
         # On Windows, Tab to and use the Skip button
         if platform.lower().startswith("win"):
-            for _ in range(3):
+            for _ in range(2):
                 self.actions.send_keys(Keys.TAB).perform()
             self.actions.send_keys(Keys.RETURN).perform()
 
