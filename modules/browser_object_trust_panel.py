@@ -1,7 +1,7 @@
 import json
 from time import sleep
 
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -95,12 +95,12 @@ class TrustPanel(BasePage):
             if args.get("count"):
                 return True
 
+            # Count not populated yet: refresh, reopen, and keep polling
+            # until a count appears. Returning True merely because the
+            # section is visible ends the wait while count is still 0.
             nav.click_on("refresh-button")
-
             self.open_panel()
-            if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
-                return False
-            return True
+            return False
 
         self.expect(_check_trustpanel)
 
@@ -267,23 +267,15 @@ class TrustPanel(BasePage):
         return self.get_element_args("trustpanel-blocker-section").get("count")
 
     @BasePage.context_chrome
-    def get_cross_site_cookies_count(self) -> int:
-        """Returns the cross-site tracking cookies count, 0 if not present"""
-        try:
-            return int(
-                self.get_element_args("trustpanel-cross-site-cookies-count").get(
-                    "count"
-                )
-            )
-        except (TypeError, NoSuchElementException):
-            return 0
-
-    @BasePage.context_chrome
-    def get_fingerprinter_count(self) -> int:
-        """Returns the fingerprinter count, 0 if not present"""
-        try:
-            return int(
-                self.get_element_args("trustpanel-fingerprinter-count").get("count")
-            )
-        except (TypeError, NoSuchElementException):
-            return 0
+    def get_blocked_trackers_total(self) -> int:
+        """
+        Sum the per-category tracker counts listed in the detailed (See All)
+        view. Robust to whichever categories a page triggers, so the total
+        matches the main panel count regardless of the site under test.
+        """
+        total = 0
+        for item in self.get_elements("blocked-items"):
+            raw_args = item.get_attribute("data-l10n-args")
+            if raw_args:
+                total += json.loads(raw_args).get("count", 0) or 0
+        return total
