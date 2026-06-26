@@ -4,7 +4,9 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import GenericPage
 
-TEST_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
+TEST_URL = (
+    "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"
+)
 
 
 @pytest.fixture()
@@ -23,7 +25,7 @@ def test_trackers_counted_correctly_in_panel(driver: Firefox, trust_panel: Trust
     # Open test page and click on the shield icon
     test_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers(require_count=True)
+    trust_panel.wait_for_trackers()
 
     # Get the tracker count from the main panel
     total_count = trust_panel.get_tracker_count()

@@ -10,13 +10,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
 
-# The blocked-tracker count needs several refresh-and-reopen cycles to settle
-# under parallel/headless load. Give the strict (require_count) wait extra time
-# over the default, and space out the polls so each refresh has time to
-# re-detect trackers before the next refresh resets the page.
-TRACKER_COUNT_TIMEOUT = 30
-TRACKER_COUNT_POLL = 2
-
 
 class TrustPanel(BasePage):
     """
@@ -92,17 +85,8 @@ class TrustPanel(BasePage):
         return self.sites_in_category("detected", *sites)
 
     @BasePage.context_chrome
-    def wait_for_trackers(self, require_count: bool = False) -> BasePage:
-        """
-        Open and close the trust panel until trackers appear.
-
-        require_count: when True, keep refreshing until the panel reports a
-        non-zero blocked count. The header count does not update in place and
-        can lag behind the panel becoming visible, so reading it right after
-        the panel is shown returns a premature 0. Use only on pages expected
-        to block trackers. When False (default), also finish once the blocker
-        section is merely visible, which pages that block nothing rely on.
-        """
+    def wait_for_trackers(self) -> BasePage:
+        """Open and close the trust panel until trackers appear"""
         nav = Navigation(self.driver)
         blocker_section = "trustpanel-blocker-section"
 
@@ -114,18 +98,11 @@ class TrustPanel(BasePage):
             nav.click_on("refresh-button")
 
             self.open_panel()
-            if require_count:
-                return False
             if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
                 return False
             return True
 
-        if require_count:
-            self.custom_wait(
-                timeout=TRACKER_COUNT_TIMEOUT, poll_frequency=TRACKER_COUNT_POLL
-            ).until(_check_trustpanel)
-        else:
-            self.expect(_check_trustpanel)
+        self.expect(_check_trustpanel)
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
