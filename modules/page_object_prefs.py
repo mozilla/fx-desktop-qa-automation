@@ -98,10 +98,22 @@ class AboutPrefs(BasePage):
             for _ in range(i):
                 self.actions.send_keys(Keys.DOWN)
             self.actions.send_keys(Keys.ENTER).perform()
-            if self.get_element("select-wrapper-button").text == option:
+            if self._selected_default_engine() == option:
                 break
-        assert self.get_element("select-wrapper-button").text == option
+        assert self._selected_default_engine() == option, (
+            f"Could not select default search engine {option!r}"
+        )
         return self
+
+    def _selected_default_engine(self) -> str:
+        """Return the selected default-engine label.
+
+        The label lives in a shadow root that can lag behind the ENTER keypress
+        on slower platforms, so wait for the button to exist before reading it
+        rather than dereferencing a possibly-None element.
+        """
+        button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
+        return button.text
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""

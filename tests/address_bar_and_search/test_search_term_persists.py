@@ -3,6 +3,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -31,19 +32,24 @@ def test_search_term_persists(driver: Firefox):
     nav = Navigation(driver)
     tab = TabBar(driver)
     prefs = AboutPrefs(driver, category="search")
+    # Only used to wait on SERP content via element_visible; never opened.
+    page = GenericPage(driver)
 
     prefs.open()
     prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     nav.search(FIRST_SEARCH)
+    # Wait for the SERP to actually render results before asserting; the "show
+    # search terms" feature swaps the SERP URL in the urlbar for the search term
+    # asynchronously, so gate on real SERP content rather than reading once.
+    page.element_visible("duckduckgo-search-result")
     tab.expect_title_contains(SEARCH_ENGINE)
-    # The "show search terms" feature swaps the SERP URL in the urlbar for the
-    # search term asynchronously, so wait for that value rather than reading once.
     nav.element_attribute_is("awesome-bar", "value", FIRST_SEARCH)
 
     nav.set_content_context()
     driver.get("about:robots")
 
     nav.search(SECOND_SEARCH)
+    page.element_visible("duckduckgo-search-result")
     tab.expect_title_contains(SEARCH_ENGINE)
     nav.element_attribute_is("awesome-bar", "value", SECOND_SEARCH)
