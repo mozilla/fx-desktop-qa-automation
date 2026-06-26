@@ -32,7 +32,8 @@ def test_search_term_persists(driver: Firefox):
     nav = Navigation(driver)
     tab = TabBar(driver)
     prefs = AboutPrefs(driver, category="search")
-    page = GenericPage(driver, url="about:blank")
+    # Only used to wait on SERP content via element_visible; never opened.
+    page = GenericPage(driver)
 
     prefs.open()
     prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
