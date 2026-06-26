@@ -1429,8 +1429,7 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_counted_correctly_in_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049609
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_trackers_cryptominers_fingerprinters_blocked:
