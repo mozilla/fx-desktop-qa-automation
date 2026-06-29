@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from time import sleep, time
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -522,6 +523,70 @@ class AboutTelemetry(BasePage):
         return self.is_telemetry_entry_present(
             "telemetry-keyed-scalars-table-rows", expected_data
         )
+
+    # JS that reads a legacy keyed-scalar value directly from the Telemetry API.
+    # Scraping the rendered about:telemetry table is unreliable across CI runners
+    # because the page does not force a child-process flush; reading the snapshot
+    # (after an explicit flush) mirrors the robust Glean BOM approach.
+    _KEYED_SCALAR_JS = """
+        const callback = arguments[arguments.length - 1];
+        const wantedKey = arguments[0];
+        (async () => {
+            try {
+                if (Services.fog && Services.fog.testFlushAllChildren) {
+                    await Services.fog.testFlushAllChildren();
+                }
+                const snapshot =
+                    Services.telemetry.getSnapshotForKeyedScalars("main", false) || {};
+                let value = null;
+                for (const proc of Object.keys(snapshot)) {
+                    const scalars = snapshot[proc] || {};
+                    for (const name of Object.keys(scalars)) {
+                        const keyed = scalars[name] || {};
+                        if (Object.prototype.hasOwnProperty.call(keyed, wantedKey)) {
+                            value = keyed[wantedKey];
+                        }
+                    }
+                }
+                callback(value);
+            } catch (e) {
+                callback({ error: String(e) });
+            }
+        })();
+    """
+
+    @BasePage.context_chrome
+    def poll_keyed_scalar(
+        self,
+        key: str,
+        expected_value,
+        timeout: int = 30,
+        poll_interval: float = 0.5,
+    ) -> bool:
+        """Poll a legacy keyed scalar until `key` reaches `expected_value`.
+
+        Reads the scalar snapshot directly via the chrome Telemetry API rather
+        than scraping about:telemetry, forcing a flush first. Returns True on
+        match, False on timeout.
+        """
+        end_time = time() + timeout
+        last = None
+        while time() < end_time:
+            result = self.driver.execute_async_script(self._KEYED_SCALAR_JS, key)
+            if isinstance(result, dict) and "error" in result:
+                raise AssertionError(f"Telemetry JS error: {result['error']}")
+            last = result
+            if result is not None and str(result) == str(expected_value):
+                return True
+            sleep(poll_interval)
+        logging.warning(
+            "Keyed scalar %r did not reach %r within %ss (last=%r)",
+            key,
+            expected_value,
+            timeout,
+            last,
+        )
+        return False
 
 
 class AboutNetworking(BasePage):
