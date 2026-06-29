@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -18,13 +16,11 @@ def test_open_link_in_private_window(driver: Firefox, nav: Navigation):
     context_menu = ContextMenu(driver)
     example.open()
 
-    sleep(1)
     example.context_click("learn-more")
-    sleep(1)
     context_menu.click_and_hide_menu("context-menu-open-link-in-new-private-window")
 
+    nav.wait_for_num_windows(2)
     nav.switch_to_new_window()
-    sleep(1)
     nav.is_private()
     example.title_contains(example.MORE_INFO_TITLE)
     example.url_contains(example.MORE_INFO_URL)
