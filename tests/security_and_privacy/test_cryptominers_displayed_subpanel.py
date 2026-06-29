@@ -12,7 +12,7 @@ DETECTED_CRYPTOMINER = "https://base-cryptomining-track-digest256.dummytracker.o
 
 @pytest.fixture()
 def test_case():
-    return "3054910"
+    return "446403"
 
 
 def test_cryptominers_displayed_subpanel(driver: Firefox):
