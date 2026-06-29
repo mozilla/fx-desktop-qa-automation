@@ -1255,7 +1255,11 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_cryptominers_subpanel_display_when_not_blocked:
@@ -1327,7 +1331,11 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_fingerprinters_subpanel_display_when_not_blocked:
