@@ -1,28 +1,56 @@
 {
-    "context": "chrome",
-    "sidebar-button": {
-        "selectorData": "sidebar-button",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-    "sidebar-main": {
-        "selectorData": "sidebar-main",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-    "sidebar-hide-option": {
-        "selectorData": "sidebar-context-menu-hide-sidebar",
-        "strategy": "id",
-        "groups": []
-    },
-    "confirmation-hint": {
-        "selectorData": "confirmation-hint",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-    "sidebar-box": {
-        "selectorData": "sidebar-box",
-        "strategy": "id",
-        "groups": ["doNotCache"]
+  "context": "chrome",
+  "sidebar-button": {
+    "selectorData": "sidebar-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Sidebar toolbar button used to toggle the sidebar",
+      "location": "Browser toolbar"
     }
+  },
+  "sidebar-main": {
+    "selectorData": "sidebar-main",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Sidebar main element",
+      "location": "Browser toolbar"
+    }
+  },
+  "sidebar-hide-option": {
+    "selectorData": "sidebar-context-menu-hide-sidebar",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Context menu option to hide the sidebar",
+      "location": "Context menu of the sidebar"
+    }
+  },
+  "confirmation-hint": {
+    "selectorData": "confirmation-hint",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The confirmation dialog when a tab is closed in the sidebar",
+      "location": "Sidebar"
+    }
+  },
+  "sidebar-box": {
+    "selectorData": "sidebar-box",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The box element that wraps the entire sidebar content",
+      "location": "Sidebar"
+    }
+  }
 }

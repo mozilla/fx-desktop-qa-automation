@@ -1,7 +1,11 @@
 {
-    "street-address-textarea": {
-        "selectorData": "street-address",
-        "strategy": "id",
-        "groups": []
+  "street-address-textarea": {
+    "selectorData": "street-address",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Input field",
+      "location": "Input field in the autofill textarea select demo page"
     }
+  }
 }

@@ -1,26 +1,42 @@
 {
-    "ping-id-input": {
-        "selectorData": "tag-pings",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "ping-submit-button": {
-        "selectorData": "controls-submit",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "ping-submit-label": {
-        "selectorData": "label[for='controls-submit']",
-        "strategy": "css",
-        "groups": []
-    },
-    "manual-testing": {
-        "selectorData": "category-manual-testing",
-        "strategy": "id",
-        "groups": []
+  "ping-id-input": {
+    "selectorData": "tag-pings",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "Text entry field to set a memorable tag for the ping",
+      "location": "Line 1 of the about:glean page's 'About testing' process"
     }
+  },
+  "ping-submit-button": {
+    "selectorData": "controls-submit",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "'Apply settings and submit ping' button",
+      "location": "Line 4 of the about:glean page's 'About testing' process"
+    }
+  },
+  "ping-submit-label": {
+    "selectorData": "label[for='controls-submit']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Text updated dynamically to reflect change in ping ID",
+      "location": "Line 4 of the about:glean page's 'About testing' process"
+    }
+  },
+  "manual-testing": {
+    "selectorData": "category-manual-testing",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The category of manual testing",
+      "location": "Side bar of the about:glean page"
+    }
+  }
 }

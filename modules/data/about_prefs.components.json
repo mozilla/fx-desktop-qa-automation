@@ -2,36 +2,60 @@
   "add-address": {
     "selectorData": "add-address-button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Add autofill address",
+      "location": "about:preferences#manageAddresses"
+    }
   },
   "edit-address": {
     "selectorData": "edit-address-button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Edit autofill address",
+      "location": "about:preferences#manageAddresses"
+    }
   },
   "saved-address-entry": {
     "selectorData": "address-item",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Autofill address entry",
+      "location": "about:preferences#manageAddresses"
+    }
   },
   "no-addresses": {
     "selectorData": "[data-l10n-id='addresses-no-addresses-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "No addresses saved",
+      "location": "about:preferences#manageAddresses"
+    }
   },
   "add-payment": {
     "selectorData": "add-payment-button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Add autofill payment",
+      "location": "about:preferences#managePayments"
+    }
   },
   "edit-payment": {
     "selectorData": "[data-l10n-id='payments-edit-payment-button-label']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Edit autofill payment",
+      "location": "about:preferences#managePayments"
+    }
   },
   "delete-payment": {
     "selectorData": "[data-l10n-id='payments-delete-payment-button-label']",
@@ -43,14 +67,22 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Autofill payment entry",
+      "location": "about:preferences#managePayments"
+    }
   },
   "no-payments": {
     "selectorData": "[data-l10n-id='payments-no-payments-stored-message']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "No payments saved",
+      "location": "about:preferences#managePayments"
+    }
   },
   "search-engine-dropdown-root": {
     "selectorData": "defaultEngineNormal",
@@ -58,7 +90,11 @@
     "groups": [
       "dropdownRoot",
       "searchEngineDropdown"
-    ]
+    ],
+    "comment": {
+      "description": "The element containing the search engine options list (is a shadow root)",
+      "location": "about:preferences#search"
+    }
   },
   "search-engine-dropmarker": {
     "selectorData": "dropmarker",
@@ -66,61 +102,107 @@
     "shadowParent": "search-engine-dropdown-root",
     "groups": [
       "searchEngineDropdown"
-    ]
+    ],
+    "comment": {
+      "description": "Button that opens the search engine options list",
+      "location": "about:preferences#search"
+    }
   },
   "default-engine-dropdown": {
     "selectorData": "defaultEngineNormal",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Button that opens the search engine options list (like above)",
+      "location": "about:preferences#search"
+    }
   },
   "select-wrapper-button": {
     "selectorData": ".select-wrapper button",
     "strategy": "css",
     "shadowParent": "default-engine-dropdown",
-    "groups": ["doNotCache"]
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Option inside the search engine options list",
+      "location": "about:preferences#search"
+    }
   },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
     "groups": [
       "requiredForPage"
-    ]
+    ],
+    "comment": {
+      "description": "Find in Settings input field (is a shadow root)",
+      "location": "about:preferences"
+    }
   },
   "find-in-settings-input": {
     "selectorData": "input[placeholder='Find in Settings']",
     "strategy": "css",
     "shadowParent": "find-in-settings",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Find in Settings input field",
+      "location": "about:preferences"
+    }
   },
   "h2-enhanced-tracking-protection": {
     "selectorData": "h2[data-l10n-id='content-blocking-enhanced-tracking-protection']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Enhance Tracking Protection sub-header",
+      "location": "about:preferences#privacy"
+    }
   },
   "save-and-fill-addresses": {
     "selectorData": "[data-l10n-id='autofill-addresses-checkbox-message']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Label for Autofill > Save and fill addresses option",
+      "location": "about:preferences#privacy"
+    }
   },
   "save-and-fill-payment-methods": {
     "selectorData": "[data-l10n-id='autofill-payment-methods-checkbox-message-2']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Label for Autofill > Save and fill payment methods option",
+      "location": "about:preferences#privacy"
+    }
   },
   "prefs-button": {
     "selectorData": "moz-box-button[label^='{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox for a option by label of moz box button",
+      "location": "about:preferences#privacy"
+    }
   },
   "action-button": {
     "selectorData": "button[label^='{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox for a option by label of normal button",
+      "location": "about:preferences#privacy"
+    }
   },
   "close-dialog": {
     "selectorData": "button[data-l10n-id='close-button']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Close dialog button",
+      "location": "about:preferences#privacy"
+    }
   },
   "clear-site-data-button": {
     "selectorData": "clearSiteDataButton",
@@ -130,42 +212,74 @@
   "search-shortcuts-group": {
     "selectorData": "oneClickSearchProvidersGroup",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Search shortcuts table",
+      "location": "about:preferences#search Search Shortcuts subsection"
+    }
   },
   "search-engine-list": {
     "selectorData": "engineList",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Search shortcuts options list",
+      "location": "about:preferences#search Search Shortcuts subsection"
+    }
   },
   "remove-search-engine-button": {
     "selectorData": "removeEngineButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Remove button under Search shortcuts tabel",
+      "location": "about:preferences#search Search Shortcuts subsection"
+    }
   },
   "restore-default-search-engines-button": {
     "selectorData": "restoreDefaultSearchEngines",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Restore Default Search Engines button under Search shortcuts tabel",
+      "location": "about:preferences#search Search Shortcuts subsection"
+    }
   },
   "saved-payments-button": {
     "selectorData": "[data-l10n-id='autofill-payment-methods-manage-payments-button']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Embedded button/label for \"Manage Saved Payments\"",
+      "location": "about:preferences#privacy"
+    }
   },
   "saved-addresses-button": {
     "selectorData": "[data-l10n-id='autofill-addresses-manage-addresses-button']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Embedded button/label for \"Manage Addresses and more...\"",
+      "location": "about:preferences#privacy"
+    }
   },
   "import-browser-data": {
     "selectorData": "moz-box-button[id='data-migration']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Import Browser Data > Import Data button",
+      "location": "about:preferences#general"
+    }
   },
   "migration-popup": {
     "selectorData": "migration-wizard",
     "strategy": "tag",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Import Browser Data popup (is a shadow root)",
+      "location": "about:preferences#general as result of Import Data button click"
+    }
   },
   "browser-profile-selector": {
     "selectorData": "browser-profile-selector",
@@ -177,69 +291,117 @@
     "selectorData": "button.primary.migration-import-button",
     "strategy": "css",
     "shadowParent": "migration-popup",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Import data popup Import button",
+      "location": "about:preferences#general as result of Import Data button click"
+    }
   },
   "migration-progress-header": {
     "selectorData": "h1#progress-header",
     "strategy": "css",
     "shadowParent": "migration-popup",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Import data popup progress",
+      "location": "about:preferences#general as result of Import Data button click"
+    }
   },
   "cc-saved-options": {
     "selectorData": "credit-cards",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The \"Add card\" modal, containing 4 fields",
+      "location": "Inside the \"Add card\" form in the Saved payment methods section on the about:preferences#privacy page"
+    }
   },
   "address-saved-options": {
     "selectorData": "addresses",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "gets the selector element for the saved addresses options",
+      "location": "Inside the Saved addresses methods section on the about:preferences#privacy page"
+    }
   },
   "panel-popup-button": {
     "selectorData": "button[data-l10n-id='{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Element for a button by label",
+      "location": "about:preferences#privacy popup dialog for adding a new address profile"
+    }
   },
   "browser-popup": {
     "selectorData": "dialogFrame",
     "strategy": "class",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The webelement for the iframe that commonly appears",
+      "location": "about:preferences#privacy popup dialog"
+    }
   },
   "saved-addresses": {
     "selectorData": "addresses",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element that contains the saved addresses",
+      "location": "about:preferences#privacy Saved Addresses popup dialog"
+    }
   },
   "saved-addresses-values": {
     "selectorData": "#addresses option",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element that contains the saved address values",
+      "location": "about:preferences#privacy Saved Addresses popup dialog"
+    }
   },
   "saved-credit-cards": {
     "selectorData": "credit-cards",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element that contains the saved credit cards",
+      "location": "about:preferences#privacy Saved Credit Cards popup dialog"
+    }
   },
   "saved-credit-cards-values": {
     "selectorData": "#credit-cards option",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element that contains the saved credit cards values",
+      "location": "about:preferences#privacy Saved Credit Cards popup dialog"
+    }
   },
   "panel-popup-stack": {
     "selectorData": "dialogStack",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element that contains the credit card profile values",
+      "location": "about:preferences#privacy Saved payment methods popup dialog"
+    }
   },
   "show-suggestions-awesomebar": {
     "selectorData": "urlBarSuggestion",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox element to show suggestions in the Awesomebar",
+      "location": "about:preferences#search"
+    }
   },
   "show-suggestions-parent": {
     "selectorData": "suggestionsInSearchFieldsCheckbox",
@@ -260,7 +422,11 @@
     "selectorData": "input",
     "strategy": "css",
     "shadowParent": "show-suggestions-parent",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Show search suggestions check-box",
+      "location": "about:preferences#search"
+    }
   },
   "show-suggestions-first": {
     "selectorData": "input",
@@ -277,154 +443,270 @@
   "prefs-html-root": {
     "selectorData": "preferences-root",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The html root element of about:prefs pages",
+      "location": "about:preferences"
+    }
   },
   "home-new-tabs-dropdown": {
     "selectorData": "newTabMode",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The expander for \"New tabs\" menu",
+      "location": "about:preferences#home"
+    }
   },
   "home-new-window-dropdown": {
     "selectorData": "homeMode",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The expander for \"Homepage and new windows\" menu",
+      "location": "about:preferences#home"
+    }
   },
   "home-new-tabs-dropdown-option-default": {
     "selectorData": "menuitem[data-l10n-id=\"home-mode-choice-default-fx\"]",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The default option for New tabs menu",
+      "location": "about:preferences#home"
+    }
   },
   "etp-advanced-button": {
     "selectorData": "etpStatusAdvancedButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "ETP \"Advanced\" button on the privacy pane; opens the ETP settings subpage (Settings redesign)",
+      "location": "about:preferences#privacy"
+    }
   },
   "etp-level-standard": {
     "selectorData": "etpLevelStandard",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Enhanced Tracking Protection \"Standard\" level moz-radio",
+      "location": "about:preferences#etp"
+    }
   },
   "etp-level-strict": {
     "selectorData": "etpLevelStrict",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Enhanced Tracking Protection \"Strict\" level moz-radio",
+      "location": "about:preferences#etp"
+    }
   },
   "etp-level-custom": {
     "selectorData": "etpLevelCustom",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Enhanced Tracking Protection \"Custom\" level moz-radio",
+      "location": "about:preferences#etp"
+    }
   },
   "etp-customize-button": {
     "selectorData": "etpCustomizeButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Customize\" button shown under the Custom ETP level; opens the ETP Customize subpage",
+      "location": "about:preferences#etp"
+    }
   },
   "etp-custom-tracking-toggle": {
     "selectorData": "etpCustomTrackingProtectionEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Tracking content\" moz-toggle",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-tracking-context": {
     "selectorData": "etpCustomTrackingProtectionEnabledContext",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Tracking content\" context moz-select (all windows / private windows)",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-tracking-context-select": {
     "selectorData": "select",
     "strategy": "css",
     "shadowParent": "etp-custom-tracking-context",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> of the Tracking content context moz-select (shadowParent: etp-custom-tracking-context); values: all, pbmOnly",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-cookies-toggle": {
     "selectorData": "etpCustomCookiesEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Cookies\" moz-toggle",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-cookie-behavior": {
     "selectorData": "cookieBehavior",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP cookie-behavior moz-select (which cookies to block)",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-cookie-behavior-select": {
     "selectorData": "select",
     "strategy": "css",
     "shadowParent": "etp-custom-cookie-behavior",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> of the cookie-behavior moz-select (shadowParent: etp-custom-cookie-behavior); values 0/4/5/3/1/2. Disabled until the cookies toggle is on.",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-cryptomining-toggle": {
     "selectorData": "etpCustomCryptominingProtectionEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Cryptominers\" moz-toggle",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-known-fingerprinting-toggle": {
     "selectorData": "etpCustomKnownFingerprintingProtectionEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Known fingerprinters\" moz-toggle",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-suspect-fingerprinting-toggle": {
     "selectorData": "etpCustomSuspectFingerprintingProtectionEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Suspected fingerprinters\" moz-toggle",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-suspect-fingerprinting-context": {
     "selectorData": "etpCustomSuspectFingerprintingProtectionEnabledContext",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Custom ETP \"Suspected fingerprinters\" context moz-select (all windows / private windows)",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "etp-custom-suspect-fingerprinting-context-select": {
     "selectorData": "select",
     "strategy": "css",
     "shadowParent": "etp-custom-suspect-fingerprinting-context",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> of the Suspected fingerprinters context moz-select (shadowParent: etp-custom-suspect-fingerprinting-context); values: all, pbmOnly",
+      "location": "about:preferences#etpCustomize"
+    }
   },
   "cookies-shadow-root": {
     "selectorData": "dialog[buttons='accept,cancel']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The Manage Cookies and Site Data dialog root (is a shadow root)",
+      "location": "about:preferences#privacy"
+    }
   },
   "cookies-manage-data": {
     "selectorData": "siteDataSettings",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "In Cookies and Site data, the Manage Data\u2026 button",
+      "location": "about:preferences#privacy"
+    }
   },
   "cookies-manage-data-sitelist": {
     "selectorData": "sitesList",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The list of stored cookies in Manage Cookies and Site Data dialog",
+      "location": "about:preferences#privacy"
+    }
   },
   "manage-cookies-site": {
     "selectorData": "richlistitem[host='{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Cookie item in Manage Cookies and Site Data dialog",
+      "location": "about:preferences#privacy Cookies and Site Data subsection"
+    }
   },
   "remove-selected-cookie-button": {
     "selectorData": "removeSelected",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "In Manage Cookie and Site Data dialog when a cookie item is selected",
+      "location": "about:preferences#privacy Cookies and Site Data subsection"
+    }
   },
   "remove-all-button": {
     "selectorData": "removeAll",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "In Manage Cookie and Site Data dialog",
+      "location": "about:preferences#privacy Cookies and Site Data subsection"
+    }
   },
   "notifications-allow-button": {
     "selectorData": "button[class='popup-notification-primary-button primary footer-button']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Notification popup Allow button",
+      "location": ""
+    }
   },
   "notifications-block-button": {
     "selectorData": "button[class='popup-notification-secondary-button footer-button']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Notification popup Block button",
+      "location": ""
+    }
   },
   "clear-data-dialog-options": {
     "selectorData": "hbox.checkbox-label-box",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The element containing the clear data dialog options",
+      "location": "about:preferences#privacy"
+    }
   },
   "clear-data-accept-button": {
     "selectorData": "[class='button-text'][value='Clear']",
@@ -432,7 +714,11 @@
     "shadowParent": "cookies-shadow-root",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The clear data dialog Clear button",
+      "location": "about:preferences#privacy"
+    }
   },
   "manage-data-save-changes-button": {
     "selectorData": "[dlgtype='accept']",
@@ -440,32 +726,56 @@
     "shadowParent": "cookies-shadow-root",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The manage data dialog Save Changes button",
+      "location": "about:preferences#privacy"
+    }
   },
   "permissions-notifications-button": {
     "selectorData": "notificationSettingsButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Permissions > Notifications > Settings\u2026 button",
+      "location": "about:preferences#privacy"
+    }
   },
   "permissions-notifications-popup-websites": {
     "selectorData": "permissionsBox",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Notifications Permissions site list",
+      "location": "about:preferences#privacy"
+    }
   },
   "permissions-notifications-popup-websites-item": {
     "selectorData": "richlistitem[origin='{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Notifications Permissions site by name",
+      "location": "about:preferences#privacy"
+    }
   },
   "permissions-notifications-popup-websites-item-status": {
     "selectorData": "website-status",
     "strategy": "class",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Notifications Permissions site status",
+      "location": "about:preferences#privacy"
+    }
   },
   "update_available_button": {
     "selectorData": "updateButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Firefox Updates > Update available button",
+      "location": "about:preferences#general"
+    }
   },
   "cookies-data-checkbox": {
     "selectorData": "cookiesAndStorage",
@@ -477,88 +787,156 @@
   "up_to_date_button": {
     "selectorData": "checkForUpdatesButton3",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Firefox Updates > Check for updates button",
+      "location": "about:preferences#general"
+    }
   },
   "cookies-privacy-label": {
     "selectorData": "deleteOnCloseInfo",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "moz-message-bar shown in Cookies and Site Data when history is not remembered (Settings redesign: l10n id is now sitedata-delete-on-close-private-browsing4; read its message attribute)",
+      "location": "about:preferences#privacy"
+    }
   },
   "history-privacy-label": {
     "selectorData": "moz-radio[data-l10n-id='history-remember-option-never2']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The \"Never Remember History\" moz-radio option; checked (checked='true') and its description reflects permanent private browsing when history is not remembered (Settings redesign: History section is now a moz-radio-group)",
+      "location": "about:preferences#privacy History subsection"
+    }
   },
   "cookies-delete-on-close": {
     "selectorData": "deleteOnClose",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Check box for Delete cookies and site data when Firefox is closed",
+      "location": "about:preferences#privacy Cookies and Site Data subsection"
+    }
   },
   "logins-ask-to-save-password": {
     "selectorData": "savePasswords",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Check box for Ask to save passwords (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)",
+      "location": "about:preferences#passwordsAutofill Passwords subsection"
+    }
   },
   "logins-exceptions": {
     "selectorData": "managePasswordExceptions",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Manage Exceptions\u2026 button (Settings redesign: moved from #privacy to the #passwordsAutofill pane; same id)",
+      "location": "about:preferences#passwordsAutofill Passwords subsection"
+    }
   },
   "browser-language-preferred": {
     "selectorData": "browserLanguagePreferred",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Preferred language moz-select on the Languages pane",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
   },
   "browser-language-preferred-select": {
     "selectorData": "select",
     "strategy": "css",
     "shadowParent": "browser-language-preferred",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> inside the Preferred language moz-select shadow DOM (shadowParent: browser-language-preferred)",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
   },
   "browser-language-heading": {
     "selectorData": "moz-fieldset[data-l10n-id='browser-language-heading']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Browser language card heading (label attribute is locale-translated, used to verify language switch)",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
   },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Show search suggestions in Private Windows",
+      "location": "about:preferences#search"
+    }
   },
   "mime-type-item": {
     "selectorData": "richlistitem[type='{item}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Content type option by item",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "mime-type-item-description": {
     "selectorData": "label[data-l10n-id='applications-use-app-default-label']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Content type option default label",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "pdf-content-type": {
     "selectorData": "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
     "strategy": "xpath",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "PDF content type option",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "pdf-actions-menu": {
     "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "PDF content type options list",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "actions-menu": {
     "selectorData": "richlistitem[type='{.*}'] menulist.actionsMenu",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Select Application list that handles how downloads are handled",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "actions-menu-option": {
     "selectorData": "richlistitem[type='{.*}'] menuitem[label='{.*}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Select download option from Application List",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "exceptions-item": {
     "selectorData": "//*[@id='permissionsBox']//*[@origin]",
     "strategy": "xpath",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Website list",
+      "location": "about:preferences#privacy in Exceptions - Saved Passwords modal"
+    }
   },
   "children-host-elements": {
     "selectorData": "richlistitem",
@@ -568,38 +946,62 @@
   "use-primary-password": {
     "selectorData": "addPrimaryPassword",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox for using primary password",
+      "location": "about:preferences#privacy Passwords subsection"
+    }
   },
   "current-password": {
     "selectorData": "message",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Input for current primary password",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "enter-new-password": {
     "selectorData": "pw1",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Input for new primary password",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "form-container": {
     "selectorData": "form",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Form to to fill in saved addresses data",
+      "location": "about:preferences#privacy"
+    }
   },
   "save-button": {
     "selectorData": "save",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Button to save filled in address form.",
+      "location": "about:preferences#privacy"
+    }
   },
   "reenter-new-password": {
     "selectorData": "pw2",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Input for new primary password again",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "submit-password": {
     "selectorData": "button[label^='OK']",
@@ -607,149 +1009,257 @@
     "shadowParent": "primary-password-box",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Ok button to submit the new primary password",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "primary-password-box": {
     "selectorData": "changemp",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Shadow parent of the OK and cancel button",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "autoplay-settings-button": {
     "selectorData": "moz-box-button[data-l10n-id='permissions-autoplay2']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Autoplay settings button",
+      "location": "about:preferences#permissionsData -> Permissions"
+    }
   },
   "autoplay-settings": {
     "selectorData": "#setAutoplayPref > menulist[label='Block Audio']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Default autoplay settings for all websites button",
+      "location": "Settings Autoplay popup"
+    }
   },
   "allow-audio-video": {
     "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-allow']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Allow audio video option",
+      "location": "Settings Autoplay popup"
+    }
   },
   "block-audio": {
     "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-block']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Block audio option",
+      "location": "Settings Autoplay popup"
+    }
   },
   "block-audio-video": {
     "selectorData": "menuitem[data-l10n-id='permissions-capabilities-autoplay-blockall']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Block audio video option",
+      "location": "Settings Autoplay popup"
+    }
   },
   "permission-dialog": {
     "selectorData": "[data-l10n-id='permission-dialog']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Permission dialog",
+      "location": "about:preferences#privacy -> Permissions"
+    }
   },
   "autoplay-save-changes": {
     "selectorData": "button[dlgtype='accept']",
     "strategy": "css",
     "shadowParent": "permission-dialog",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Autoplay save changes",
+      "location": "Settings Autoplay popup"
+    }
   },
   "spacer": {
     "selectorData": "button-spacer",
     "strategy": "class",
     "shadowParent": "permission-dialog",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Spacer to dismiss autoplay options menu",
+      "location": "Settings Autoplay popup"
+    }
   },
   "connection-advanced-button": {
     "selectorData": "connectionLinkButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Advanced settings\" moz-box-button under \"Connection and software security\"; navigates to the sub-pane containing the HTTPS-Only Mode card",
+      "location": "about:preferences#privacy - Connection and software security section"
+    }
   },
   "httpsonly-radio-enabled": {
     "selectorData": "httpsOnlyRadioEnabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Enable HTTPS-Only Mode in all windows\" moz-radio host element",
+      "location": "about:preferences#privacy - HTTPS-Only Mode card (reached via connection-advanced-button)"
+    }
   },
   "httpsonly-radio-enabled-input": {
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "httpsonly-radio-enabled"
+    "shadowParent": "httpsonly-radio-enabled",
+    "comment": {
+      "description": "Inner <input type=\"radio\"> inside the httpsOnlyRadioEnabled shadow root; used to click the \"Enable in all windows\" option",
+      "location": "about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabled)"
+    }
   },
   "httpsonly-radio-enabled-pbm": {
     "selectorData": "httpsOnlyRadioEnabledPBM",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Enable HTTPS-Only Mode in private windows only\" moz-radio host element",
+      "location": "about:preferences#privacy - HTTPS-Only Mode section"
+    }
   },
   "httpsonly-radio-enabled-pbm-input": {
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "httpsonly-radio-enabled-pbm"
+    "shadowParent": "httpsonly-radio-enabled-pbm",
+    "comment": {
+      "description": "Inner <input type=\"radio\"> inside the httpsOnlyRadioEnabledPBM shadow root; used to click the \"Enable in private windows only\" option",
+      "location": "about:preferences#privacy (shadow DOM of httpsOnlyRadioEnabledPBM)"
+    }
   },
   "httpsonly-radio-disabled": {
     "selectorData": "httpsOnlyRadioDisabled",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Don't enable HTTPS-Only Mode\" moz-radio host element",
+      "location": "about:preferences#privacy - HTTPS-Only Mode section"
+    }
   },
   "httpsonly-radio-disabled-input": {
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "httpsonly-radio-disabled"
+    "shadowParent": "httpsonly-radio-disabled",
+    "comment": {
+      "description": "Inner <input type=\"radio\"> inside the httpsOnlyRadioDisabled shadow root; used to click the \"Don't enable\" option",
+      "location": "about:preferences#privacy (shadow DOM of httpsOnlyRadioDisabled)"
+    }
   },
   "doh-mode-box-item": {
     "selectorData": "dohModeBoxItem",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Box item showing the currently selected DoH protection mode (label and description reflect the active mode)",
+      "location": "about:preferences#privacy - DNS over HTTPS section"
+    }
   },
   "doh-radio-default": {
     "selectorData": "dohRadioDefault",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Default\" DoH radio option host element (moz-radio)",
+      "location": "about:preferences#privacy - DNS over HTTPS advanced section"
+    }
   },
   "doh-radio-default-input": {
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "doh-radio-default"
+    "shadowParent": "doh-radio-default",
+    "comment": {
+      "description": "Inner <input type=\"radio\"> inside the dohRadioDefault shadow root; used to actually click/select the \"Default\" DoH option",
+      "location": "about:preferences#privacy (shadow DOM of dohRadioDefault)"
+    }
   },
   "doh-status-box": {
     "selectorData": "dohStatusBox",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name",
+      "location": "about:preferences#privacy - DNS over HTTPS advanced section"
+    }
   },
   "mlb-allow-audio-video-settings": {
     "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "mlb website autoplay settings",
+      "location": "about:preferences#privacy - Autoplay settings"
+    }
   },
   "zoom-text-only": {
     "selectorData": "zoomText",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The zoom text only checkbox",
+      "location": "about:preferences Zoom - Zoom settings"
+    }
   },
   "default-zoom-dropdown": {
     "selectorData": "defaultZoom",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The default zoom dropdown.",
+      "location": "about:preferences - Zoom settings"
+    }
   },
   "default-zoom-dropdown-value": {
     "selectorData": "menuitem[label='{.*}%']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The dropdown menu for default zoom selection",
+      "location": "about:preferences - Zoom settings"
+    }
   },
   "clipboard-suggestion-checkbox": {
     "selectorData": "#clipboardSuggestion",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The checkbox for Clipboard",
+      "location": "about:preferences#search"
+    }
   },
   "unknown-content-type-dialog": {
     "selectorData": "unknownContentTypeWindow",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The unknown content type dialog",
+      "location": "about:preferences#general Applications subsection"
+    }
   },
   "history-suggestion": {
     "selectorData": "historySuggestion",
@@ -761,22 +1271,38 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "History option moz-radio by data-l10n-id label; valid {option} values: history-remember-option-all2 (Remember), history-remember-option-never2 (Never remember), history-remember-option-custom2 (Customize)",
+      "location": "about:preferences#privacy History subsection"
+    }
   },
   "tab-hover-preview-checkbox": {
     "selectorData": "tabPreviewShowThumbnails",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox to toggle \"Show an image preview when you hover on a tab\"",
+      "location": "about:preferences#general"
+    }
   },
   "saved-passwords": {
     "selectorData": "manageSavedPasswords",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Saved passwords button in about:preferences#privacy",
+      "location": "about:preferences#privacy"
+    }
   },
   "show-sidebar-checkbox": {
     "selectorData": "browserLayoutShowSidebar",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Checkbox to toggle \"Show sidebar\"",
+      "location": "about:preferences (Browser Layout)"
+    }
   },
   "show-sidebar-shadow-box": {
     "selectorData": "input",
@@ -789,14 +1315,22 @@
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Change primary password button in about:preferences#privacy",
+      "location": "about:preferences#privacy"
+    }
   },
   "current-primary-password-parent": {
     "selectorData": "oldpw",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The outer moz-input-password element for the \"Current password\" field in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   },
   "current-primary-password": {
     "selectorData": "input",
@@ -804,29 +1338,49 @@
     "shadowParent": "current-primary-password-parent",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The inner input element inside the shadow DOM of the \"Current password\" field in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   },
   "remove-current-password-parent": {
     "selectorData": "password",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The outer moz-input-password element for the \"Current password\" field in the Remove Primary Password dialog",
+      "location": "About Preferences - Passwords - Remove Primary Password dialog"
+    }
   },
   "remove-current-password": {
     "selectorData": "input",
     "strategy": "id",
     "shadowParent": "remove-current-password-parent",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The inner input element inside the shadow DOM of the \"Current password\" field in the Remove Primary Password dialog",
+      "location": "About Preferences - Passwords - Remove Primary Password dialog"
+    }
   },
   "remove-primary-password-box": {
     "selectorData": "removemp",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Shadow parent of the remove button",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "remove-password": {
     "selectorData": "button[label^='Remove']",
     "strategy": "css",
     "shadowParent": "remove-primary-password-box",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Remove button to remove the primary password",
+      "location": "about:preferences#privacy Primary Password popup"
+    }
   },
   "ai-controls-toggle-tile": {
     "selectorData": "aiControlDefaultToggle",
@@ -869,52 +1423,88 @@
   "doh-advanced-button": {
     "selectorData": "dohAdvancedButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Advanced settings button in the DNS over HTTPS (DoH) section",
+      "location": "about:preferences#privacy"
+    }
   },
   "doh-radio-custom": {
     "selectorData": "dohRadioCustom",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Custom\" DoH radio option host element (moz-radio) in the DNS over HTTPS section",
+      "location": "about:preferences#privacy"
+    }
   },
   "doh-radio-custom-input": {
     "selectorData": "input",
     "strategy": "id",
     "groups": [],
-    "shadowParent": "doh-radio-custom"
+    "shadowParent": "doh-radio-custom",
+    "comment": {
+      "description": "Inner <input type=\"radio\"> inside the dohRadioCustom shadow root; used to actually click/select the \"Custom\" DoH option",
+      "location": "about:preferences#privacy (shadow DOM of dohRadioCustom)"
+    }
   },
   "doh-provider-select": {
     "selectorData": "dohProviderSelect",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Choose provider\" moz-select host element in the Custom-mode DoH provider menu; options are hydrated asynchronously from remote settings",
+      "location": "about:preferences#privacy - DNS over HTTPS advanced section (Custom mode)"
+    }
   },
   "doh-provider-select-inner": {
     "selectorData": "select",
     "strategy": "css",
     "groups": [],
-    "shadowParent": "doh-provider-select"
+    "shadowParent": "doh-provider-select",
+    "comment": {
+      "description": "Inner native <select> inside the dohProviderSelect shadow root; used with Selenium's Select class to pick a DoH provider by value",
+      "location": "about:preferences#privacy (shadow DOM of dohProviderSelect)"
+    }
   },
   "doh-custom-provider": {
     "selectorData": "dohCustomProvider",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "moz-input-text host for the custom DoH provider URL field; revealed when the \"Custom\" option is chosen in the dohProviderSelect menu. Pre-populated with the default provider URL",
+      "location": "about:preferences#privacy - DNS over HTTPS advanced section (Custom mode, Custom provider)"
+    }
   },
   "doh-custom-provider-input": {
     "selectorData": "input",
     "strategy": "css",
     "groups": [],
-    "shadowParent": "doh-custom-provider"
+    "shadowParent": "doh-custom-provider",
+    "comment": {
+      "description": "Inner native <input> inside the dohCustomProvider shadow root; used to type the custom DoH provider URL",
+      "location": "about:preferences#privacy (shadow DOM of dohCustomProvider)"
+    }
   },
   "turn-off-primary-password": {
     "selectorData": "turnOffPrimaryPassword",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "\"Turn off Primary Password\" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password",
+      "location": "about:preferences#privacy (Remove Primary Password dialog)"
+    }
   },
   "primary-password-input-parent": {
     "selectorData": "pw1",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The outer moz-input-password custom element for the \"Enter new password\" field in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   },
   "primary-password-input-field": {
     "selectorData": "input",
@@ -922,14 +1512,22 @@
     "shadowParent": "primary-password-input-parent",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The inner input field inside the shadow DOM of the \"Enter new password\" moz-input-password element in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   },
   "primary-password-reenter-input-parent": {
     "selectorData": "pw2",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The outer moz-input-password custom element for the \"Re-enter password\" field in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   },
   "primary-password-reenter-input-field": {
     "selectorData": "input",
@@ -937,6 +1535,10 @@
     "shadowParent": "primary-password-reenter-input-parent",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "The inner input field inside the shadow DOM of the \"Re-enter password\" moz-input-password element in the Primary Password dialog",
+      "location": "About Preferences - Passwords - Primary Password dialog"
+    }
   }
 }

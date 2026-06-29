@@ -1,15 +1,23 @@
 {
-    "context": "chrome",
-    "devtools-horizontal-splitter": {
-        "selectorData": "devtools-horizontal-splitter",
-        "strategy": "class",
-        "groups": []
-    },
-    "devtools-browser": {
-        "selectorData": "browser[aria-label='Developer Tools']",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+  "context": "chrome",
+  "devtools-horizontal-splitter": {
+    "selectorData": "devtools-horizontal-splitter",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "The horizontal splitter that is used in the devtools",
+      "location": "On the devtools menu"
     }
+  },
+  "devtools-browser": {
+    "selectorData": "browser[aria-label='Developer Tools']",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The devtools section of Firefox",
+      "location": "In the options of Firefox for opening the devtools"
+    }
+  }
 }

@@ -1,22 +1,38 @@
 {
-    "disk-cache-link": {
-        "selectorData": "a[href=\"about:cache?storage=disk\"]",
-        "strategy": "css",
-        "groups": []
-    },
-    "memory-cache-link": {
-        "selectorData": "a[href=\"about:cache?storage=memory\"]",
-        "strategy": "css",
-        "groups": []
-    },
-    "entries-table": {
-        "selectorData": "entries",
-        "strategy": "id",
-        "groups": []
-    },
-    "number-of-entries": {
-        "selectorData": "//th[normalize-space()='Number of entries:']/following-sibling::td[1]",
-        "strategy": "xpath",
-        "groups": []
+  "disk-cache-link": {
+    "selectorData": "a[href=\"about:cache?storage=disk\"]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"List Cache Entries\" link for the disk storage section",
+      "location": "about:cache overview page"
     }
+  },
+  "memory-cache-link": {
+    "selectorData": "a[href=\"about:cache?storage=memory\"]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"List Cache Entries\" link for the memory storage section",
+      "location": "about:cache overview page"
+    }
+  },
+  "entries-table": {
+    "selectorData": "entries",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The table containing cache entry rows",
+      "location": "about:cache?storage=disk or about:cache?storage=memory page"
+    }
+  },
+  "number-of-entries": {
+    "selectorData": "//th[normalize-space()='Number of entries:']/following-sibling::td[1]",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "The \"Number of entries\" value cell in the cache storage summary table",
+      "location": "about:cache"
+    }
+  }
 }

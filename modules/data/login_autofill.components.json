@@ -4,81 +4,133 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Input field",
+      "location": "Input field in the autofill demo page"
+    }
   },
   "username-field": {
     "selectorData": "input[placeholder='username']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Username field",
+      "location": "Username field in the autofill demo page"
+    }
   },
   "submit-form": {
     "selectorData": "input[value='Log In']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Login button in the submit form",
+      "location": "Login button in the autofill demo page"
+    }
   },
   "save-login-popup": {
     "selectorData": "notification-popup",
     "strategy": "id",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Save login doorhanger",
+      "location": "Save login doorhanger under the URL bar"
+    }
   },
   "facebook-credentials": {
     "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Autocomplete dropdown is toggled for focused login fields on facebook page load",
+      "location": "Facebook page load"
+    }
   },
   "username-login-field": {
     "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='username']",
     "strategy": "xpath",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Username login field",
+      "location": "Username field in the login demo page"
+    }
   },
   "password-login-field": {
     "selectorData": "//form[h2[text()='Login form:']]//input[@placeholder='current-password']",
     "strategy": "xpath",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Password login field",
+      "location": "Password field in the login demo page"
+    }
   },
   "submit-button-login": {
     "selectorData": "/html/body/div[1]/form[2]/input[3]",
     "strategy": "xpath",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Login submit button",
+      "location": "Submit button in the login demo page"
+    }
   },
   "generated-securely-password": {
     "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Use a Securely Generated Password option",
+      "location": "The dropdown under the password field in a login page"
+    }
   },
   "bsky-credentials": {
     "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Autocomplete dropdown is toggled for focused login fields on bsky page load",
+      "location": "bsky page load"
+    }
   },
   "mozilla-github-credentials": {
     "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Autocomplete dropdown is toggled for focused login fields on Mozilla github page load",
+      "location": "Mozilla Github page load"
+    }
   },
   "password-signup-field": {
     "selectorData": "input[placeholder='new-password']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Mozilla github registration password field",
+      "location": "Mozilla github registration page"
+    }
   },
   "reddit-username-parent": {
     "selectorData": "faceplate-text-input[name='username']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Shadow host for the Reddit username input field.",
+      "location": "Reddit login page"
+    }
   },
   "reddit-username-field": {
     "selectorData": "input[name='username']",
@@ -86,14 +138,22 @@
     "shadowParent": "reddit-username-parent",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Username input field inside the Reddit login shadow DOM.",
+      "location": "Reddit login page"
+    }
   },
   "reddit-password-parent": {
     "selectorData": "faceplate-text-input[name='password']",
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Shadow host for the Reddit password input on the login form",
+      "location": "Reddit login page"
+    }
   },
   "reddit-password-field": {
     "selectorData": "input[name='password']",
@@ -101,6 +161,10 @@
     "shadowParent": "reddit-password-parent",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "Password input inside the Reddit password shadow host",
+      "location": "Reddit login page password field"
+    }
   }
 }
