@@ -30,7 +30,7 @@ def test_paste_and_go_opens_correct_url(driver: Firefox):
 
     # Open a new tab and right click in the Address bar and choose Paste and Go
     nav.open_and_switch_to_new_window("tab")
-    nav.get_awesome_bar()
+    nav.context_click_in_awesome_bar()
     nav.click_and_hide_menu("context-menu-paste-and-go")
 
     # Check that the page is displayed
