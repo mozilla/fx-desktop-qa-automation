@@ -1090,8 +1090,7 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043953
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_firefox_home_on_launch:
