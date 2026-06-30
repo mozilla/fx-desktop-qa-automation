@@ -33,6 +33,14 @@ def test_copy_clean_link(driver: Firefox):
 
     # Paste in a new tab and verify query params are stripped
     nav.open_and_switch_to_new_window("tab")
-    nav.context_click_in_awesome_bar()
-    nav.context_menu.click_and_hide_menu("context-menu-paste")
-    assert nav.get_awesome_bar_text() == EXPECTED_URL
+
+    def _clean_link_pasted(_):
+        nav.clear_awesome_bar()
+        nav.context_click_in_awesome_bar()
+        nav.context_menu.click_and_hide_menu("context-menu-paste")
+        return nav.get_awesome_bar_text() == EXPECTED_URL
+
+    nav.custom_wait(timeout=20, poll_frequency=1).until(
+        _clean_link_pasted,
+        message=f"Address bar never showed stripped URL {EXPECTED_URL!r}",
+    )
