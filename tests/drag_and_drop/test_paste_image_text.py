@@ -1,7 +1,7 @@
 import pytest
-from pynput.keyboard import Controller
 from selenium.webdriver import Firefox
 
+from modules.browser_object import ContextMenu
 from modules.page_object import GenericPage, Navigation
 
 
@@ -63,18 +63,20 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     """
     # Initializing objects
     nav = Navigation(driver)
+    context_menu = ContextMenu(driver)
     web_page = GenericPage(driver, url=DEMO_URL).open()
     web_page.elements |= temp_selectors
-    keyboard = Controller()
 
     # Test pasting image data
     web_page.click_on("paste-image-data")
 
-    # Copy an image from another website
+    # Copy an image from another website via its context menu
     driver.switch_to.new_window("tab")
     nav.search(COPY_URL)
     web_page.element_exists("image-to-copy")
-    web_page.copy_image_from_element(keyboard, "image-to-copy")
+    web_page.scroll_to_element("image-to-copy")
+    web_page.context_click("image-to-copy")
+    context_menu.click_and_hide_menu("context-menu-copy-image")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])
@@ -84,11 +86,12 @@ def test_paste_image_text(driver: Firefox, sys_platform, temp_selectors):
     # Test pasting text data
     web_page.click_on("paste-html-data")
 
-    # Copy some text from another website
+    # Copy some text from another website via its context menu
     driver.switch_to.window(driver.window_handles[1])
     web_page.scroll_to_element("paragraph1")
     web_page.triple_click("paragraph1")
-    web_page.copy_selection(keyboard, "paragraph1")
+    web_page.context_click("paragraph1")
+    context_menu.click_and_hide_menu("context-menu-copy")
 
     # Paste it in the test area
     driver.switch_to.window(driver.window_handles[0])

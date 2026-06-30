@@ -208,6 +208,11 @@
         "strategy": "id",
         "groups": []
     },
+    "context-menu-copy-image": {
+        "selectorData": "context-copyimage-contents",
+        "strategy": "id",
+        "groups": []
+    },
     "context-menu-copy-image-link": {
         "selectorData": "context-copyimage",
         "strategy": "id",
