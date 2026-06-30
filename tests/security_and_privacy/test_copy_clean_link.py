@@ -35,4 +35,8 @@ def test_copy_clean_link(driver: Firefox):
     nav.open_and_switch_to_new_window("tab")
     nav.context_click_in_awesome_bar()
     nav.context_menu.click_and_hide_menu("context-menu-paste")
-    assert nav.get_awesome_bar_text() == EXPECTED_URL
+
+    # Paste fills the address bar asynchronously; poll the value until it
+    # settles rather than reading it once, so a render/clipboard delay isn't
+    # misread as a stripping failure.
+    nav.element_attribute_is("awesome-bar", "value", EXPECTED_URL)
