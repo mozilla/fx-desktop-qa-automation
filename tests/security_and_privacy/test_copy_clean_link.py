@@ -34,7 +34,6 @@ def test_copy_clean_link(driver: Firefox):
     # Paste in a new tab and verify query params are stripped
     nav.open_and_switch_to_new_window("tab")
 
-
     def _clean_link_pasted(_):
         nav.clear_awesome_bar()
         nav.context_click_in_awesome_bar()
