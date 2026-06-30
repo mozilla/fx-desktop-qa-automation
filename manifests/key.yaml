@@ -639,7 +639,11 @@ menus:
     splits:
     - smoke
   test_image_context_menu_actions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049603
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_new_tab_label:
