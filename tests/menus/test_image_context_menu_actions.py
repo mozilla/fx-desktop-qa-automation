@@ -30,7 +30,8 @@ LOADED_IMAGE_URL = (
 )
 # Match the saved file by stem; the served format varies (.webp/.png).
 SAVED_IMAGE_STEM = "Firefox_logo,_2019.svg"
-# Deterministic target path used with the mock file picker on Linux.
+# Mock picker needs a deterministic target path; the extension is the test's
+# choice (we only verify a non-empty file was saved). Native saves are auto-named.
 SAVED_IMAGE_FILENAME = f"{SAVED_IMAGE_STEM}.png"
 # Poll for the saved file, re-confirming the native save dialog each tick.
 SAVE_TIMEOUT_SECONDS = 15
@@ -79,8 +80,9 @@ def test_save_image_as(driver: Firefox, sys_platform, downloads_folder, delete_f
     image_logo = wiki_image_page.get_element("mediawiki-image")
     wiki_image_page.context_click(image_logo)
 
-    # Linux CI can't drive the native "Save As" dialog, so use the mock file
-    # picker (repo convention for downloads); win/mac confirm the native dialog.
+    # Linux CI can't reliably drive the native "Save As" dialog, so use the mock
+    # file picker, which is the repo convention for downloads. Other platforms
+    # confirm the native dialog.
     use_mock_picker = sys_platform == "Linux"
     mock_saved_image_location = os.path.join(downloads_folder, SAVED_IMAGE_FILENAME)
     if use_mock_picker:
@@ -92,16 +94,13 @@ def test_save_image_as(driver: Firefox, sys_platform, downloads_folder, delete_f
 
         if use_mock_picker:
             wiki_image_page.wait_for_mock_file_picker()
-            wiki_image_page.expect(
+            wiki_image_page.custom_wait(timeout=SAVE_TIMEOUT_SECONDS).until(
                 lambda _: (
                     os.path.exists(mock_saved_image_location)
                     and os.path.getsize(mock_saved_image_location) > 0
-                )
+                ),
+                message=f"No non-empty saved image at {mock_saved_image_location}",
             )
-            assert (
-                os.path.exists(mock_saved_image_location)
-                and os.path.getsize(mock_saved_image_location) > 0
-            ), f"No non-empty saved image at {mock_saved_image_location}"
         else:
             # Native dialog path: the save dialog opens after a variable delay, so
             # re-confirm on a poll loop until a non-empty file matching the stem appears.
