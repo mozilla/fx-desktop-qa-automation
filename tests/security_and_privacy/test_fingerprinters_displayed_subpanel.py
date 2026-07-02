@@ -12,7 +12,7 @@ DETECTED_FINGERPRINTER = "https://base-fingerprinting-track-digest256.dummytrack
 
 @pytest.fixture()
 def test_case():
-    return "446404"
+    return "3054911"
 
 
 def test_fingerprinters_displayed_subpanel(driver: Firefox):
