@@ -14,7 +14,7 @@ DETECTED_COOKIES = (
 
 @pytest.fixture()
 def test_case():
-    return "446402"
+    return "3054909"
 
 
 def test_cross_site_tracking_cookies_displayed_subpanel(driver: Firefox):
