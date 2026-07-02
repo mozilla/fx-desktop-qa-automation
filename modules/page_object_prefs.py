@@ -1114,15 +1114,42 @@ class AboutPrefs(BasePage):
         mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
         return mime_type_data["app-name"]
 
+    @BasePage.context_content
     def set_pdf_handling_to_always_ask(self) -> BasePage:
         """
-        Set PDF content type handling to "Always ask" in Applications settings.
+        Set PDF content type handling to "Always ask" in the Applications list.
+
+        Since the Firefox Settings redesign (bug 2043378, ~152/153) the
+        Applications handlers moved to about:preferences#downloads and each row's
+        action control is a moz-select with moz-option children (no native
+        <select>, so Selenium's Select() does not apply). Select the "Always ask"
+        option by its stable l10n id and fire change so preferences persists it.
         """
-        self.click_on("pdf-content-type")
-        self.click_on("pdf-actions-menu")
+        self.element_visible("pdf-actions-menu")
         menu = self.get_element("pdf-actions-menu")
-        menu.send_keys(Keys.DOWN)
-        menu.send_keys(Keys.ENTER)
+        self.driver.execute_script(
+            """
+            const sel = arguments[0];
+            const opt = [...sel.querySelectorAll('moz-option')].find(
+                o => o.getAttribute('data-l10n-id') === 'applications-always-ask'
+            );
+            if (!opt) throw new Error('"Always ask" moz-option not found');
+            sel.value = opt.getAttribute('value');
+            sel.dispatchEvent(new Event('input', { bubbles: true }));
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            menu,
+        )
+        # Confirm the control settled on the "Always ask" value before leaving.
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const s = arguments[0];"
+                "const o = [...s.querySelectorAll('moz-option')].find("
+                "  e => e.getAttribute('data-l10n-id') === 'applications-always-ask');"
+                "return o && s.value === o.getAttribute('value');",
+                menu,
+            )
+        )
         return self
 
     @BasePage.context_chrome
