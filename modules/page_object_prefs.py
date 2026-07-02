@@ -1146,7 +1146,7 @@ class AboutPrefs(BasePage):
                 "const o = [...s.querySelectorAll('moz-option')].find("
                 "  e => e.getAttribute('data-l10n-id') === 'applications-always-ask');"
                 "return o && s.value === o.getAttribute('value');",
-                menu,
+                self.get_element("pdf-actions-menu"),
             )
         )
         return self
