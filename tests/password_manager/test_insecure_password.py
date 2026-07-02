@@ -5,7 +5,6 @@ from modules.browser_object import AutofillPopup
 from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
 
-# Plain-HTTP login page (no HSTS) so Firefox shows the insecure-password warning.
 HTTP_LOGIN_URL = "http://the-internet.herokuapp.com/login"
 SUPPORT_PAGE_URL_PART = "support.mozilla.org"
 SUPPORT_PAGE_ARTICLE_PART = "insecure-password-warning-firefox"
