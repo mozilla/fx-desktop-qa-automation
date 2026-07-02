@@ -860,8 +860,7 @@ password_manager:
     splits:
     - functional1
   test_insecure_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043392
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_multiple_saved_logins:
