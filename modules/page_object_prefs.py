@@ -1125,8 +1125,7 @@ class AboutPrefs(BasePage):
         <select>, so Selenium's Select() does not apply). Select the "Always ask"
         option by its stable l10n id and fire change so preferences persists it.
         """
-        self.element_visible("pdf-actions-menu")
-        menu = self.get_element("pdf-actions-menu")
+        menu = self.wait.until(lambda _: self.get_element("pdf-actions-menu"))
         self.driver.execute_script(
             """
             const sel = arguments[0];
