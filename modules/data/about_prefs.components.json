@@ -536,14 +536,16 @@
     "groups": []
   },
   "pdf-content-type": {
-    "selectorData": "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
-    "strategy": "xpath",
+    "selectorData": "moz-box-item[type='application/pdf']",
+    "strategy": "css",
     "groups": []
   },
   "pdf-actions-menu": {
-    "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
+    "selectorData": "moz-box-item[type='application/pdf'] moz-select.actionsMenu",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "actions-menu": {
     "selectorData": "richlistitem[type='{.*}'] menulist.actionsMenu",
