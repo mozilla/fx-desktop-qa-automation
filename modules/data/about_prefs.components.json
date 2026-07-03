@@ -526,14 +526,18 @@
     "groups": []
   },
   "mime-type-item": {
-    "selectorData": "richlistitem[type='{item}']",
+    "selectorData": "moz-box-item[type='{item}']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "mime-type-item-description": {
-    "selectorData": "label[data-l10n-id='applications-use-app-default-label']",
+    "selectorData": "moz-option[data-l10n-id='applications-use-app-default']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "pdf-content-type": {
     "selectorData": "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
