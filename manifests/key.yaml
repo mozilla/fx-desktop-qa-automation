@@ -1092,7 +1092,8 @@ preferences:
     splits:
     - smoke
   test_firefox_home_new_tabs:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
+    result: unstable
     splits:
     - functional2
   test_firefox_home_on_launch:
@@ -1233,7 +1234,11 @@ security_and_privacy:
     splits:
     - functional2
   test_copy_clean_link:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052850
+    result:
+        linux: pass
+        mac: pass
+        win: unstable
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:
