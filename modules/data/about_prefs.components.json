@@ -878,13 +878,13 @@
   "mime-type-item": {
     "selectorData": "moz-box-item[type='{item}']",
     "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Content type option by item",
       "location": "about:preferences#general Applications subsection"
-    },
-    "groups": [
-      "doNotCache"
-    ]
+    }
   },
   "mime-type-item-description": {
     "selectorData": "moz-option[data-l10n-id='applications-use-app-default']",
