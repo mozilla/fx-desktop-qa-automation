@@ -11,14 +11,16 @@ def test_case():
     return "118173"
 
 
+COMPACT_DARK = "firefox-compact-dark_mozilla_org-heading"
+COMPACT_LIGHT = "firefox-compact-light_mozilla_org-heading"
+
 THEMES: dict[str, list[str]] = {
-    "firefox-compact-dark_mozilla_org-heading": [
+    COMPACT_DARK: [
         "rgb(43, 42, 51)",  # classic darker tone
         "rgb(143, 143, 148)",  # focused dark
         "rgb(120, 119, 126)",  # dark without focus
     ],
-    # Compact Light
-    "firefox-compact-light_mozilla_org-heading": [
+    COMPACT_LIGHT: [
         "rgb(249, 249, 251)",
     ],
 }
@@ -61,14 +63,6 @@ def test_activate_theme_background_matches_expected(
     nav = Navigation(driver)
     abt_addons = AboutAddons(driver).open()
     abt_addons.choose_sidebar_option("theme")
-
-    # Dynamically detect if running Developer Edition
-    if abt_addons.is_devedition():
-        if theme_name == "firefox-compact-dark_mozilla_org-heading":
-            pytest.skip("Compact Dark is default on DevEdition, skipping.")
-    else:
-        if theme_name == "firefox-compact-light_mozilla_org-heading":
-            pytest.skip("Compact Light is default on Firefox, skipping.")
 
     current_bg = abt_addons.activate_theme(nav, theme_name, "", perform_assert=False)
 

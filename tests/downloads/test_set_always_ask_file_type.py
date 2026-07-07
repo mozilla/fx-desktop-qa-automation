@@ -29,7 +29,9 @@ def test_set_always_ask_file_type(driver: Firefox, delete_files):
 
     # Initialize page objects
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="general")
+    # Moved the Applications file-handlers list
+    # from the General pane to about:preferences#downloads.
+    about_prefs = AboutPrefs(driver, category="downloads")
 
     # Set PDF handling to "Always ask"
     about_prefs.open()

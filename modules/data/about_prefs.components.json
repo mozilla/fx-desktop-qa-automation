@@ -876,26 +876,30 @@
     }
   },
   "mime-type-item": {
-    "selectorData": "richlistitem[type='{item}']",
+    "selectorData": "moz-box-item[type='{item}']",
     "strategy": "css",
-    "groups": [],
     "comment": {
       "description": "Content type option by item",
       "location": "about:preferences#general Applications subsection"
-    }
+    },
+    "groups": [
+      "doNotCache"
+    ]
   },
   "mime-type-item-description": {
-    "selectorData": "label[data-l10n-id='applications-use-app-default-label']",
+    "selectorData": "moz-option[data-l10n-id='applications-use-app-default']",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Content type option default label",
       "location": "about:preferences#general Applications subsection"
     }
   },
   "pdf-content-type": {
-    "selectorData": "//*[local-name()='hbox' and @class='typeContainer']//*[local-name()='label' and @class='typeDescription' and text()='Portable Document Format (PDF)']",
-    "strategy": "xpath",
+    "selectorData": "moz-box-item[type='application/pdf']",
+    "strategy": "css",
     "groups": [],
     "comment": {
       "description": "PDF content type option",
@@ -903,9 +907,11 @@
     }
   },
   "pdf-actions-menu": {
-    "selectorData": "richlistitem[type='application/pdf'] menulist.actionsMenu",
+    "selectorData": "moz-box-item[type='application/pdf'] moz-select.actionsMenu",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "PDF content type options list",
       "location": "about:preferences#general Applications subsection"

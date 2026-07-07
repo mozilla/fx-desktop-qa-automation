@@ -35,8 +35,10 @@ def test_firefox_home_new_tab(
     C161472: setting the default new window to be Firefox Home
     """
 
-    # click the dropdown
-    dropdown.select_option("Firefox Home (Default)")
+    # click the dropdown; select_option returns False (not self) when no
+    # option matched.
+    selected = dropdown.select_option("Firefox Home (Default)")
+    assert selected, "Dropdown option 'Firefox Home (Default)' was not found/selected"
 
     # make sure that the option was selected correctly
     about_prefs.element_attribute_is(
@@ -45,6 +47,10 @@ def test_firefox_home_new_tab(
 
     # open a new tab
     tabs.open_and_switch_to_new_tab()
+
+    # wait for the new tab page to finish rendering before probing its
+    # contents, so a slow async render isn't misread as a missing logo
+    about_new_tab.element_exists("newtab-main")
 
     # make sure we are on the correct new tab page
     about_new_tab.element_exists("body-logo")

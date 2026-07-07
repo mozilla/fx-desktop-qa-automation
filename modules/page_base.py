@@ -852,30 +852,6 @@ class BasePage(Page):
             self.actions.key_up(mod_key).perform()
         return self
 
-    def copy_image_from_element(
-        self, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the given element using right click (pyautogui)"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.scroll_to_element(el)
-            time.sleep(0.1)
-            self.context_click(el)
-            time.sleep(0.1)
-            self.gui_sequence("down", "down", "down", "enter")
-            time.sleep(0.5)
-        return self
-
-    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
-        """Copy from the current selection using right click (pyautogui)"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.scroll_to_element(el)
-            self.context_click(el)
-            self.gui_sequence("down", "enter")
-            time.sleep(0.5)
-        return self
-
     def click_and_hide_menu(
         self, reference: str | tuple | WebElement, labels=None
     ) -> Page:

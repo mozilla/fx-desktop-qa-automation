@@ -48,7 +48,7 @@ def test_add_zip_type(
     # Instantiate objects
     web_page = GenericPage(driver, url=ZIP_URL)
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="general")
+    about_prefs = AboutPrefs(driver, category="downloads")
 
     # Add temporary selectors for GitHub UI
     web_page.elements |= temp_selectors
