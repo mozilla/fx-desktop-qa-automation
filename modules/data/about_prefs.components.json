@@ -552,14 +552,18 @@
     ]
   },
   "actions-menu": {
-    "selectorData": "richlistitem[type='{.*}'] menulist.actionsMenu",
+    "selectorData": "moz-box-item[type='{.*}'] moz-select.actionsMenu",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "actions-menu-option": {
-    "selectorData": "richlistitem[type='{.*}'] menuitem[label='{.*}']",
+    "selectorData": "moz-box-item[type='{.*}'] moz-option[label='{.*}']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "exceptions-item": {
     "selectorData": "//*[@id='permissionsBox']//*[@origin]",

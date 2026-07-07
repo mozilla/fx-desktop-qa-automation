@@ -320,36 +320,43 @@ class AboutPrefs(BasePage):
         Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
+    @BasePage.context_content
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
         """
-        From the applications list that handles how downloaded media is used,
-        select a content type and action
+        From the Applications file-handlers list, set the action for a content type.
+
         """
         menu = self.get_element("actions-menu", labels=[content_type])
-        items = menu.find_elements(By.TAG_NAME, "menuitem")
-        target_index = next(
-            (
-                i
-                for i, item in enumerate(items)
-                if item.get_attribute("label") == action
-            ),
-            None,
+        selected = self.driver.execute_script(
+            """
+            const sel = arguments[0], action = arguments[1];
+            const opt = [...sel.querySelectorAll('moz-option')].find(
+                o => o.getAttribute('label') === action
+            );
+            if (!opt) return false;
+            sel.value = opt.getAttribute('value');
+            sel.dispatchEvent(new Event('input', { bubbles: true }));
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+            """,
+            menu,
+            action,
         )
-        if target_index is None:
+        if not selected:
             raise ValueError(
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
-        self.click_on("actions-menu", labels=[content_type])
+        # Confirm the control settled on the requested option before leaving.
         self.wait.until(
-            lambda _: menu.get_attribute("open") is not None
-        )  # wait for popup
-        menu.send_keys(Keys.HOME)
-        for _ in range(target_index):
-            menu.send_keys(Keys.DOWN)
-        menu.send_keys(Keys.ENTER)
-        self.wait.until(
-            lambda _: menu.get_attribute("label") == action
-        )  # verify selection
+            lambda _: self.driver.execute_script(
+                "const s = arguments[0], a = arguments[1];"
+                "const o = [...s.querySelectorAll('moz-option')].find("
+                "  e => e.getAttribute('label') === a);"
+                "return o && s.value === o.getAttribute('value');",
+                menu,
+                action,
+            )
+        )
         return self
 
     # ---- Enhanced Tracking Protection (Settings redesign, about:preferences#etp) -----------------
