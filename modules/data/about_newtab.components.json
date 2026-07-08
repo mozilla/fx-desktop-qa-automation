@@ -1,97 +1,161 @@
 {
-    "newtab-main": {
-        "selectorData": "newtab-main",
-        "strategy": "class",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "incontent-search-container": {
-        "selectorData": "content-search-handoff-ui",
-        "strategy": "css",
-        "groups": []
-    },
-    "incontent-search-input": {
-        "selectorData": "fake-editable",
-        "strategy": "class",
-        "shadowParent": "incontent-search-container",
-        "groups": []
-    },
-    "card-by-index": {
-        "selectorData": "article-ds-card",
-        "strategy": "css",
-        "groups": []
-    },
-    "loaded-image-by-index": {
-        "selectorData": "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded",
-        "strategy": "css",
-        "groups": []
-    },
-    "sponsored-site-card": {
-        "selectorData": "top-site-outer",
-        "strategy": "class",
-        "groups": [
-            "requiredForPage",
-            "doNotCache"
-        ]
-    },
-    "top-site-image-by-index": {
-        "selectorData": ".top-sites-list li:nth-of-type({index}) .top-site-icon.rich-icon",
-        "strategy": "css",
-        "groups": []
-    },
-    "sponsored-site-card-menu-button": {
-        "selectorData": "button[class='context-menu-button icon']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "top-sites-list": {
-        "selectorData": "top-sites-list",
-        "strategy": "class",
-        "groups": []
-    },
-    "recommended-by-pocket-list": {
-        "selectorData": "ds-card-grid-include-descriptions",
-        "strategy": "class",
-        "groups": []
-    },
-    "story-sponsored-footer": {
-        "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
-        "strategy": "css",
-        "groups": []
-    },
-    "popular-topics-list": {
-        "selectorData": ".ds-navigation > ul",
-        "strategy": "css",
-        "groups": []
-    },
-    "recent-activity-section": {
-        "selectorData": "discovery-stream",
-        "strategy": "class",
-        "groups": []
-    },
-    "recent-activity-list": {
-        "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
-        "strategy": "xpath",
-        "groups": []
-    },
-    "sponsored-site-context-menu-list": {
-        "selectorData": "ul[class=\"context-menu-list\"]",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "body-logo": {
-        "selectorData": "logo",
-        "strategy": "class",
-        "groups": []
-    },
-    "top-site-by-title": {
-        "selectorData": "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/..",
-        "strategy": "xpath",
-        "groups": []
+  "newtab-main": {
+    "selectorData": "newtab-main",
+    "strategy": "class",
+    "groups": [
+      "requiredForPage"
+    ]
+  },
+  "incontent-search-container": {
+    "selectorData": "content-search-handoff-ui",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The newtab handoff search UI container; clicking it activates the urlbar in handoff mode, tagging the resulting SERP as source='urlbar_handoff'",
+      "location": "The about:newtab page"
     }
+  },
+  "incontent-search-input": {
+    "selectorData": "fake-editable",
+    "strategy": "class",
+    "shadowParent": "incontent-search-container",
+    "groups": [],
+    "comment": {
+      "description": "The fake in-page search input field inside the handoff container (shadow DOM child of incontent-search-container)",
+      "location": "The about:newtab page"
+    }
+  },
+  "card-by-index": {
+    "selectorData": "article-ds-card",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Tile/card by index",
+      "location": "The about:newtab page"
+    }
+  },
+  "loaded-image-by-index": {
+    "selectorData": "article.ds-card:nth-child({index}) > div.img-wrapper > picture.loaded",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Tile image by index",
+      "location": "The about:newtab page"
+    }
+  },
+  "sponsored-site-card": {
+    "selectorData": "top-site-outer",
+    "strategy": "class",
+    "groups": [
+      "requiredForPage",
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Space containing sponsored site card",
+      "location": "The about:newtab page"
+    }
+  },
+  "top-site-image-by-index": {
+    "selectorData": ".top-sites-list li:nth-of-type({index}) .top-site-icon.rich-icon",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sponsored site card image by index",
+      "location": "The about:newtab page"
+    }
+  },
+  "sponsored-site-card-menu-button": {
+    "selectorData": "button[class='context-menu-button icon']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Sponsored site card open menu button (\u2026)",
+      "location": "The about:newtab page"
+    }
+  },
+  "top-sites-list": {
+    "selectorData": "top-sites-list",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Element containing all of the Top site cards",
+      "location": "The about:newtab page"
+    }
+  },
+  "recommended-by-pocket-list": {
+    "selectorData": "ds-card-grid-include-descriptions",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Element containing all of the recommended site cards",
+      "location": "The about:newtab page"
+    }
+  },
+  "story-sponsored-footer": {
+    "selectorData": "article.ds-card > div > div > p.story-sponsored-label",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Element containing all of the Sponsored site cards",
+      "location": "The about:newtab page"
+    }
+  },
+  "popular-topics-list": {
+    "selectorData": ".ds-navigation > ul",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Element containing all of the Popular Topics cards",
+      "location": "The about:newtab page"
+    }
+  },
+  "recent-activity-section": {
+    "selectorData": "discovery-stream",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "recent Activity section header",
+      "location": "The about:newtab page"
+    }
+  },
+  "recent-activity-list": {
+    "selectorData": "//div[following-sibling::div[@class='section-top-bar']]",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Element containing all of the Recent Activity cards",
+      "location": "The about:newtab page"
+    }
+  },
+  "sponsored-site-context-menu-list": {
+    "selectorData": "ul[class=\"context-menu-list\"]",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A Sponsored tile context menu options list",
+      "location": "The about:newtab page via Sponsored tile Open Menu button (\u2026)"
+    }
+  },
+  "body-logo": {
+    "selectorData": "logo",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "The Firefox logo",
+      "location": "The about:newtab page"
+    }
+  },
+  "top-site-by-title": {
+    "selectorData": "//li[@class='top-site-outer']//span[@class='title-label' and text()='{title}']/..",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Topsite tile by title",
+      "location": "The about:newtab page (middle section)"
+    }
+  }
 }

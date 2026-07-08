@@ -1,9 +1,13 @@
 {
-    "search-bar-textarea": {
-        "selectorData": "textarea[aria-label='Search']",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
+  "search-bar-textarea": {
+    "selectorData": "textarea[aria-label='Search']",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "Text entry area of the search field",
+      "location": "google.com content page"
     }
+  }
 }
