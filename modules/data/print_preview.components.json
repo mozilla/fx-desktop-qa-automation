@@ -1,40 +1,56 @@
 {
-    "context": "chrome",
-    "print-preview-browser": {
-        "selectorData": "browser[class='printPreviewBrowser']",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "print-preview-loading": {
-        "selectorData": "print-pending-label",
-        "strategy": "class",
-        "groups": []
-    },
-    "print-settings-browser": {
-        "selectorData": "browser.printSettingsBrowser",
-        "strategy": "css",
-        "groups": []
-    },
-    "footer-button-group": {
-        "selectorData": "button-container",
-        "strategy": "id",
-        "groups": []
-    },
-    "print-button": {
-        "selectorData": "print-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "cancel-button": {
-        "selectorData": "cancel-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "print-preview-pagination": {
-        "selectorData": "printPreviewNavigation",
-        "strategy": "class",
-        "groups": []
+  "context": "chrome",
+  "print-preview-browser": {
+    "selectorData": "browser[class='printPreviewBrowser']",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "Print Preview, whole window",
+      "location": "Overlaid over the content when previewing a print job"
     }
+  },
+  "print-preview-loading": {
+    "selectorData": "print-pending-label",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Header indicating that the print preview window is rendering",
+      "location": "Inside print preview window"
+    }
+  },
+  "print-settings-browser": {
+    "selectorData": "browser.printSettingsBrowser",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Print Settings bar in Print Preview",
+      "location": "Right sidebar in Print Preview"
+    }
+  },
+  "footer-button-group": {
+    "selectorData": "button-container",
+    "strategy": "id",
+    "groups": []
+  },
+  "print-button": {
+    "selectorData": "print-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "cancel-button": {
+    "selectorData": "cancel-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "print-preview-pagination": {
+    "selectorData": "printPreviewNavigation",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Pagination toolbar for navigating pages",
+      "location": "Over the Print Preview page thumbnail/preview"
+    }
+  }
 }

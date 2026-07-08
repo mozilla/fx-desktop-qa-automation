@@ -1,25 +1,61 @@
 {
-    "net-error-card": {
-        "selectorData": "net-error-card",
-        "strategy": "tag",
-        "groups": ["doNotCache"]
-    },
-    "error-title": {
-        "selectorData": "#error-title",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
-    },
-    "error-short-description": {
-        "selectorData": "#error-intro strong",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
-    },
-    "error-suggestion-link": {
-        "selectorData": "#dns-suggestion a",
-        "strategy": "css",
-        "shadowParent": "net-error-card",
-        "groups": ["doNotCache"]
+  "net-error-card": {
+    "selectorData": "net-error-card",
+    "strategy": "tag",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The shadow host web component for the error page (Firefox 138+)",
+      "location": "In the error page body"
     }
+  },
+  "error-title": {
+    "selectorData": "[data-l10n-id='neterror-dns-not-found-title']",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The main error title inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-short-description": {
+    "selectorData": "#error-intro strong",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The <strong> hostname inside the error page description, in the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-learn-more-link": {
+    "selectorData": "#error-learn-more-link",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The \"Learn more\" link inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-suggestion-link": {
+    "selectorData": "#dns-suggestion a",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The DNS 'Did you mean...' suggestion link inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  }
 }

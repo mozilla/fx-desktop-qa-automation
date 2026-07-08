@@ -1,64 +1,104 @@
 {
-    "context": "chrome",
-    "do-not-cache": true,
-    "downloads-panel": {
-        "selectorData": "downloadsPanel",
-        "strategy": "id",
-        "groups": []
-    },
-    "menu-root": {
-        "selectorData": "downloadsContextMenu",
-        "strategy": "id",
-        "groups": []
-    },
-    "open-in-system-viewer": {
-        "selectorData": "downloadUseSystemDefaultMenuItem",
-        "strategy": "class",
-        "groups": []
-    },
-    "always-open-in-system-viewer": {
-        "selectorData": "downloadAlwaysUseSystemDefaultMenuItem",
-        "strategy": "class",
-        "groups": []
-    },
-    "show-in-file-browser": {
-        "selectorData": "downloadShowMenuItem",
-        "strategy": "class",
-        "groups": []
-    },
-    "go-to-download-page": {
-        "selectorData": "downloadOpenReferrerMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-    "copy-download-link": {
-        "selectorData": "downloadCopyLocationMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-    "delete": {
-        "selectorData": "downloadDeleteFileMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-    "remove-from-history": {
-        "selectorData": "downloadRemoveFromHistoryMenuItem",
-        "strategy": "class",
-        "groups": [
-            "downloadOption"
-        ]
-    },
-    "clear-downloads": {
-        "selectorData": "menuitem[data-l10n-id='downloads-cmd-clear-downloads']",
-        "strategy": "css",
-        "groups": [
-            "downloadOption"
-        ]
+  "context": "chrome",
+  "do-not-cache": true,
+  "downloads-panel": {
+    "selectorData": "downloadsPanel",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Downloads panel identifier",
+      "location": "Downloads toolbar button"
     }
+  },
+  "menu-root": {
+    "selectorData": "downloadsContextMenu",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Downloads context menu root",
+      "location": "Context click an item in downloads list"
+    }
+  },
+  "open-in-system-viewer": {
+    "selectorData": "downloadUseSystemDefaultMenuItem",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Downloads context menu option",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "always-open-in-system-viewer": {
+    "selectorData": "downloadAlwaysUseSystemDefaultMenuItem",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Downloads context menu option \"Always Open Similar Files\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "show-in-file-browser": {
+    "selectorData": "downloadShowMenuItem",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Downloads context menu option \"Show in Finder\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "go-to-download-page": {
+    "selectorData": "downloadOpenReferrerMenuItem",
+    "strategy": "class",
+    "groups": [
+      "downloadOption"
+    ],
+    "comment": {
+      "description": "Downloads context menu option \"Go to Download Page\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "copy-download-link": {
+    "selectorData": "downloadCopyLocationMenuItem",
+    "strategy": "class",
+    "groups": [
+      "downloadOption"
+    ],
+    "comment": {
+      "description": "Downloads context menu option \"Copy Download Link\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "delete": {
+    "selectorData": "downloadDeleteFileMenuItem",
+    "strategy": "class",
+    "groups": [
+      "downloadOption"
+    ],
+    "comment": {
+      "description": "Downloads context menu option \"Delete\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "remove-from-history": {
+    "selectorData": "downloadRemoveFromHistoryMenuItem",
+    "strategy": "class",
+    "groups": [
+      "downloadOption"
+    ],
+    "comment": {
+      "description": "Downloads context menu option \"Remove From History\"",
+      "location": "Downloaded file context menu"
+    }
+  },
+  "clear-downloads": {
+    "selectorData": "menuitem[data-l10n-id='downloads-cmd-clear-downloads']",
+    "strategy": "css",
+    "groups": [
+      "downloadOption"
+    ],
+    "comment": {
+      "description": "Downloads context menu option \"Clear Preview Panel\"",
+      "location": "Downloaded file context menu"
+    }
+  }
 }

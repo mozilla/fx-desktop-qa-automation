@@ -1,60 +1,80 @@
 {
-    "warning-button": {
-        "selectorData": "warningButton",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "about-config-search-input": {
-        "selectorData": "about-config-search",
-        "strategy": "id",
-        "groups": []
-    },
-    "value-edit-button": {
-        "selectorData": "cell-edit",
-        "strategy": "class",
-        "groups": []
-    },
-    "pref-cell-value": {
-        "selectorData": "td.cell-value",
-        "strategy": "css",
-        "groups": []
-    },
-    "value-edit-field": {
-        "selectorData": "#form-edit > input:nth-child(1)",
-        "strategy": "css",
-        "groups": []
-    },
-    "use-primary-password": {
-        "selectorData": "useMasterPassword",
-        "strategy": "id",
-        "groups": []
-    },
-    "current-pw": {
-        "selectorData": "message",
-        "strategy": "id",
-        "groups": []
-    },
-    "enter-new-pw": {
-        "selectorData": "pw1",
-        "strategy": "id",
-        "groups": []
-    },
-    "reenter-new-pw": {
-        "selectorData": "pw2",
-        "strategy": "id",
-        "groups": []
-    },
-    "submit-pw": {
-        "selectorData": "button[label^='OK']",
-        "strategy": "css",
-        "shadowParent": "primary-pw-box",
-        "groups": []
-    },
-    "primary-pw-box": {
-        "selectorData": "changemp",
-        "strategy": "id",
-        "groups": []
+  "warning-button": {
+    "selectorData": "warningButton",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The button to acceot the risks of accessing about:config",
+      "location": "about:config page"
     }
+  },
+  "about-config-search-input": {
+    "selectorData": "about-config-search",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The search input field used to find configs",
+      "location": "about:config page"
+    }
+  },
+  "value-edit-button": {
+    "selectorData": "cell-edit",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "The button to toggle access to the value edit field",
+      "location": "Line item config in about:config page"
+    }
+  },
+  "pref-cell-value": {
+    "selectorData": "td.cell-value",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The cell displaying the current value of a preference",
+      "location": "Line item config in about:config page"
+    }
+  },
+  "value-edit-field": {
+    "selectorData": "#form-edit > input:nth-child(1)",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Text entry field when editing a str value of a config",
+      "location": "Line item config in about:config page"
+    }
+  },
+  "use-primary-password": {
+    "selectorData": "useMasterPassword",
+    "strategy": "id",
+    "groups": []
+  },
+  "current-pw": {
+    "selectorData": "message",
+    "strategy": "id",
+    "groups": []
+  },
+  "enter-new-pw": {
+    "selectorData": "pw1",
+    "strategy": "id",
+    "groups": []
+  },
+  "reenter-new-pw": {
+    "selectorData": "pw2",
+    "strategy": "id",
+    "groups": []
+  },
+  "submit-pw": {
+    "selectorData": "button[label^='OK']",
+    "strategy": "css",
+    "shadowParent": "primary-pw-box",
+    "groups": []
+  },
+  "primary-pw-box": {
+    "selectorData": "changemp",
+    "strategy": "id",
+    "groups": []
+  }
 }

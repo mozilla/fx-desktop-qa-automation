@@ -52,7 +52,7 @@ EOF
 fi
 
 # Check new tests in pytest
-if ! python scripts/run_commit_tests.py; then
+if ! python -m scripts.run_commit_tests; then
     echo "New test failed to pass!"
     exit 1
 fi

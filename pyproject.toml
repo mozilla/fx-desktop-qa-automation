@@ -187,6 +187,7 @@ dependencies = [
 
 [tool.ruff]
 target-version = "py313"
+exclude = [ "taskcluster",]
 
 [tool.pytest.ini_options]
 generate_report_on_test = false
