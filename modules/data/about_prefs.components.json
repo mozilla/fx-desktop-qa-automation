@@ -539,11 +539,6 @@
       "doNotCache"
     ]
   },
-  "pdf-content-type": {
-    "selectorData": "moz-box-item[type='application/pdf']",
-    "strategy": "css",
-    "groups": []
-  },
   "pdf-actions-menu": {
     "selectorData": "moz-box-item[type='application/pdf'] moz-select.actionsMenu",
     "strategy": "css",
@@ -558,8 +553,8 @@
       "doNotCache"
     ]
   },
-  "actions-menu-option": {
-    "selectorData": "moz-box-item[type='{.*}'] moz-option[label='{.*}']",
+  "menu-option": {
+    "selectorData": "moz-option",
     "strategy": "css",
     "groups": [
       "doNotCache"

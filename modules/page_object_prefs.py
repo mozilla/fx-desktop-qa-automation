@@ -325,38 +325,38 @@ class AboutPrefs(BasePage):
         """
         From the Applications file-handlers list, set the action for a content type.
 
+        Since the Settings redesign (bug 2043378) the list lives on
+        about:preferences#downloads and each row's action control is a moz-select.
+        Its moz-option children are not Selenium-interactable (they stay hidden
+        until the shadow popup opens), so the option is located and the result
+        verified with Selenium, and a minimal JS mutation only sets the value —
+        which the widget then persists to preferences.
         """
         menu = self.get_element("actions-menu", labels=[content_type])
-        selected = self.driver.execute_script(
-            """
-            const sel = arguments[0], action = arguments[1];
-            const opt = [...sel.querySelectorAll('moz-option')].find(
-                o => o.getAttribute('label') === action
-            );
-            if (!opt) return false;
-            sel.value = opt.getAttribute('value');
-            sel.dispatchEvent(new Event('input', { bubbles: true }));
-            sel.dispatchEvent(new Event('change', { bubbles: true }));
-            return true;
-            """,
-            menu,
-            action,
+        target = next(
+            (
+                option
+                for option in self.get_element(
+                    "menu-option", multiple=True, parent_element=menu
+                )
+                if option.get_attribute("label") == action
+            ),
+            None,
         )
-        if not selected:
+        if target is None:
             raise ValueError(
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
-        # Confirm the control settled on the requested option before leaving.
-        self.wait.until(
-            lambda _: self.driver.execute_script(
-                "const s = arguments[0], a = arguments[1];"
-                "const o = [...s.querySelectorAll('moz-option')].find("
-                "  e => e.getAttribute('label') === a);"
-                "return o && s.value === o.getAttribute('value');",
-                menu,
-                action,
-            )
+        target_value = target.get_attribute("value")
+        self.driver.execute_script(
+            "arguments[0].value = arguments[1];"
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            menu,
+            target_value,
         )
+        # Verify the selection with Selenium: the moz-select reflects the value.
+        self.wait.until(lambda _: menu.get_attribute("value") == target_value)
         return self
 
     # ---- Enhanced Tracking Protection (Settings redesign, about:preferences#etp) -----------------
