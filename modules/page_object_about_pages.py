@@ -2,6 +2,7 @@ import logging
 import os
 import re
 from time import sleep, time
+from typing import Optional
 
 from pypom import Page
 from selenium.common.exceptions import (
@@ -291,14 +292,27 @@ class AboutLogins(BasePage):
         for _ in range(attempts):
             if not self._primary_password_prompt_present():
                 return self
+            # Brief settle so the native prompt has keyboard focus before typing;
+            # it is not in the DOM, so its readiness cannot be polled directly.
             sleep(0.5)
             self.gui.write(primary_password, interval=0.05)
             self.gui.press("enter")
-            sleep(1)
+            # Condition-based wait for the prompt to dismiss (instead of a fixed
+            # sleep); only retry if it is still present afterward.
+            try:
+                self.custom_wait(timeout=5).until(
+                    lambda _: not self._primary_password_prompt_present()
+                )
+                return self
+            except TimeoutException:
+                continue
         return self
 
     def export_passwords_csv(
-        self, downloads_folder: str, filename: str, primary_password: str = None
+        self,
+        downloads_folder: str,
+        filename: str,
+        primary_password: Optional[str] = None,
     ):
         """
         Export passwords to a CSV file and navigate the save dialog to the target location.
@@ -393,13 +407,17 @@ class AboutLogins(BasePage):
             # The prompt closing is the definitive success signal.
             if len(self.driver.window_handles) < expected_tabs:
                 return True
-            input_field = self.get_element("primary-password-dialog-input-field")
-            # Re-enter if the dialog cleared the field during initialization.
-            if input_field.get_attribute("value") != primary_password:
-                input_field.clear()
-                input_field.send_keys(primary_password)
+            try:
+                input_field = self.get_element("primary-password-dialog-input-field")
+                # Re-enter if the dialog cleared the field during initialization.
+                if input_field.get_attribute("value") != primary_password:
+                    input_field.clear()
+                    input_field.send_keys(primary_password)
+                    return False
+                input_field.send_keys(Keys.ENTER)
+            except StaleElementReferenceException:
+                # The dialog re-rendered mid-interaction; retry on the next poll.
                 return False
-            input_field.send_keys(Keys.ENTER)
             return len(self.driver.window_handles) < expected_tabs
 
         self.wait.until(_enter_and_submit)
