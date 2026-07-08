@@ -378,6 +378,32 @@ def _abandonment_navigation(driver: Firefox, search_term: str, params: dict = No
     page.url_contains("example.com")
 
 
+@_abandonment("back_navigation")
+def _abandonment_back_navigation(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Open a SERP in a new tab and leave it via the back button, returning to the new-tab page,
+    so Firefox records a serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so the back button returns to the new-tab page, not a prior SERP
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; leaving
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Leave the SERP via the back button -> serp.abandonment reason='navigation'
+    nav.click_back_button()
+    page.url_contains("about:newtab")
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
