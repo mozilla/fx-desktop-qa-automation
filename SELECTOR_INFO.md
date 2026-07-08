@@ -2665,7 +2665,7 @@ Path to .json: modules/data/error_page.components.json
 ```
 ```
 Selector Name: error-title
-Selector Data: "[data-l10n-id='neterror-dns-not-found-title']"
+Selector Data: "#error-title"
 Description: The main error title inside the net-error-card shadow DOM
 Location: Inside the net-error-card shadow root
 Groups: doNotCache
@@ -2673,16 +2673,16 @@ Path to .json: modules/data/error_page.components.json
 ```
 ```
 Selector Name: error-short-description
-Selector Data: "netErrorIntro"
-Description: The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute
+Selector Data: "#error-intro strong"
+Description: The <strong> hostname inside the error page description, in the net-error-card shadow DOM
 Location: Inside the net-error-card shadow root
 Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
 ```
 ```
-Selector Name: error-learn-more-link
-Selector Data: "neterror-learn-more-link"
-Description: The "Learn more" link inside the net-error-card shadow DOM
+Selector Name: error-suggestion-link
+Selector Data: "#dns-suggestion a"
+Description: The DNS "Did you mean..." suggestion link inside the net-error-card shadow DOM
 Location: Inside the net-error-card shadow root
 Groups: doNotCache
 Path to .json: modules/data/error_page.components.json
