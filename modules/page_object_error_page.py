@@ -45,9 +45,11 @@ class ErrorPage(BasePage):
 
         def _suggestion_points_to_redirect(_):
             el = self.get_element("error-suggestion-link")
-            return el is not None and redirect_url in (el.get_attribute("href") or "")
+            if el is not None and redirect_url in (el.get_attribute("href") or ""):
+                return el
+            return False
 
-        self.wait.until(_suggestion_points_to_redirect)
-        self.get_element("error-suggestion-link").click()
+        link = self.wait.until(_suggestion_points_to_redirect)
+        link.click()
         self.url_contains(redirect_url)
         return self
