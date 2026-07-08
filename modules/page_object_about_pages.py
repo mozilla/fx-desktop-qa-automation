@@ -18,7 +18,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
-from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
 
 
@@ -315,7 +314,13 @@ class AboutLogins(BasePage):
         primary_password: Optional[str] = None,
     ):
         """
-        Export passwords to a CSV file and navigate the save dialog to the target location.
+        Export passwords to a CSV file at the target location.
+
+        The native "Save As" picker is mocked on all platforms so the export
+        runs headlessly in CI (driving the OS file dialog is unreliable there).
+        Disable the export re-auth prompt for logins that do not use a primary
+        password by setting `signon.management.page.os-auth.locked.enabled` to
+        False in the test's prefs.
 
         Args:
             downloads_folder (str): The folder where the CSV should be saved.
@@ -324,9 +329,7 @@ class AboutLogins(BasePage):
                 enter at the export re-authentication prompt.
         """
         target_path = os.path.join(downloads_folder, filename)
-        use_mock_picker = self.sys_platform() == "Linux"
-        if use_mock_picker:
-            self.install_mock_file_picker(target_path)
+        self.install_mock_file_picker(target_path)
 
         # Open about:logins and click export buttons
         try:
@@ -339,15 +342,9 @@ class AboutLogins(BasePage):
             if primary_password:
                 self.submit_export_primary_password(primary_password)
 
-            if use_mock_picker:
-                self.wait_for_mock_file_picker()
-            else:
-                # Wait for export dialog and navigate to folder
-                page = GenericPage(self.driver)
-                page.navigate_dialog_to_location(downloads_folder, filename)
+            self.wait_for_mock_file_picker()
         finally:
-            if use_mock_picker:
-                self.cleanup_mock_file_picker()
+            self.cleanup_mock_file_picker()
 
     def click_copy_username_button(self) -> Page:
         """Click the copy username button"""

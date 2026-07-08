@@ -18,7 +18,13 @@ def test_case():
     return "2241527"
 
 
-# This test is unstable on Ubuntu: Bug 2004938
+@pytest.fixture()
+def add_to_prefs_list():
+    # Disable OS re-auth on export; the primary-password prompt itself is
+    # handled separately in the export flow.
+    return [("signon.management.page.os-auth.locked.enabled", False)]
+
+
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
