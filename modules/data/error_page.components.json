@@ -30,7 +30,7 @@
       "doNotCache"
     ],
     "comment": {
-      "description": "The short description paragraph inside the net-error-card shadow DOM; hostname is read from its data-l10n-args attribute",
+      "description": "The <strong> hostname inside the error page description, in the net-error-card shadow DOM",
       "location": "Inside the net-error-card shadow root"
     }
   },
@@ -43,6 +43,18 @@
     ],
     "comment": {
       "description": "The \"Learn more\" link inside the net-error-card shadow DOM",
+      "location": "Inside the net-error-card shadow root"
+    }
+  },
+  "error-suggestion-link": {
+    "selectorData": "#dns-suggestion a",
+    "strategy": "css",
+    "shadowParent": "net-error-card",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The DNS 'Did you mean...' suggestion link inside the net-error-card shadow DOM",
       "location": "Inside the net-error-card shadow root"
     }
   }
