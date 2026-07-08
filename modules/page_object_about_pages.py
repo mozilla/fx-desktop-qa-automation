@@ -305,6 +305,10 @@ class AboutLogins(BasePage):
                 return self
             except TimeoutException:
                 continue
+        logging.warning(
+            "Primary password export prompt was never dismissed after %d attempts.",
+            attempts,
+        )
         return self
 
     def export_passwords_csv(
@@ -414,13 +418,15 @@ class AboutLogins(BasePage):
                 input_field.send_keys(Keys.ENTER)
             except StaleElementReferenceException:
                 # The dialog re-rendered mid-interaction; retry on the next poll.
-                return False
-            return len(self.driver.window_handles) < expected_tabs
+                pass
+            # Let the top-of-loop check confirm closure on the next poll so ENTER
+            # is not sent twice while the dialog is still processing.
+            return False
 
         self.wait.until(_enter_and_submit)
 
         # Switch back after prompt closes
-        self.wait.until(lambda d: len(d.window_handles) == 1)
+        self.wait.until(lambda d: len(d.window_handles) < expected_tabs)
         self.driver.switch_to.window(original_window)
 
         return self
