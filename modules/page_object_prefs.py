@@ -324,13 +324,6 @@ class AboutPrefs(BasePage):
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
         """
         From the Applications file-handlers list, set the action for a content type.
-
-        Since the Settings redesign (bug 2043378) the list lives on
-        about:preferences#downloads and each row's action control is a moz-select.
-        Its moz-option children are not Selenium-interactable (they stay hidden
-        until the shadow popup opens), so the option is located and the result
-        verified with Selenium, and a minimal JS mutation only sets the value —
-        which the widget then persists to preferences.
         """
         menu = self.get_element("actions-menu", labels=[content_type])
         target = next(
