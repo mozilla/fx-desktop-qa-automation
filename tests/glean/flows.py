@@ -353,6 +353,31 @@ def _abandonment_tab_close(driver: Firefox, search_term: str, params: dict = Non
     page.switch_to_new_tab()
 
 
+@_abandonment("navigation")
+def _abandonment_navigation(driver: Firefox, search_term: str, params: dict = None):
+    """Open a SERP and navigate away in the same tab by loading another page from the address
+    bar, so Firefox records a serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so the abandonment leaves the original tab (and session) alive
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; navigating
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Navigate away from the SERP in the same tab via the address bar -> serp.abandonment
+    # reason='navigation'
+    nav.type_in_awesome_bar(ExamplePage.URL_TEMPLATE + Keys.ENTER)
+    page.url_contains("example.com")
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
