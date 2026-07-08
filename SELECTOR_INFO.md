@@ -1126,17 +1126,24 @@ Location: about:preferences#privacy
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
+Selector Name: update_state_root
+Selector Data: "updateState"
+Description: Firefox Updates > update-state web component; shadow host for the update button
+Location: about:preferences#about
+Path to .json: modules/data/about_prefs.components.json
+```
+```
 Selector Name: update_available_button
-Selector Data: "updateButton"
-Description: Firefox Updates > Update available button
-Location: about:preferences#general
+Selector Data: "[data-l10n-id='update-updateButton']"
+Description: Firefox Updates > Update available button ("Restart to Update Firefox"); lives in the update_state_root shadow DOM. Matched by data-l10n-id because the element id varies by update substate
+Location: about:preferences#about
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: up_to_date_button
-Selector Data: "checkForUpdatesButton3"
-Description: Firefox Updates > Check for updates button
-Location: about:preferences#general
+Selector Data: "[data-l10n-id='update-checkForUpdatesButton']"
+Description: Firefox Updates > Check for updates button; lives in the update_state_root shadow DOM. Matched by data-l10n-id because the element id varies by update substate (checkForUpdatesButton/2/3/4)
+Location: about:preferences#about
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

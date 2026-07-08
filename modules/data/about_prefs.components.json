@@ -462,10 +462,18 @@
     "strategy": "class",
     "groups": []
   },
-  "update_available_button": {
-    "selectorData": "updateButton",
+  "update_state_root": {
+    "selectorData": "updateState",
     "strategy": "id",
     "groups": []
+  },
+  "update_available_button": {
+    "selectorData": "[data-l10n-id='update-updateButton']",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "cookies-data-checkbox": {
     "selectorData": "cookiesAndStorage",
@@ -475,9 +483,12 @@
     ]
   },
   "up_to_date_button": {
-    "selectorData": "checkForUpdatesButton3",
-    "strategy": "id",
-    "groups": []
+    "selectorData": "[data-l10n-id='update-checkForUpdatesButton']",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "cookies-privacy-label": {
     "selectorData": "deleteOnCloseInfo",
