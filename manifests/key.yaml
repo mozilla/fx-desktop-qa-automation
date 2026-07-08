@@ -1233,9 +1233,9 @@ security_and_privacy:
   test_copy_clean_link:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052850
     result:
-        linux: pass
-        mac: pass
-        win: unstable
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:

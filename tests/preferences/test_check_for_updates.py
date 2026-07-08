@@ -1,4 +1,5 @@
 import pytest
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -50,7 +51,16 @@ def test_check_for_updates(driver: Firefox, about_prefs: AboutPrefs):
                 return locator
         return False
 
-    WebDriverWait(driver, 30).until(
+    # The shadow content re-renders while the update state resolves, so ignore
+    # transient stale-element errors during the poll.
+    found_locator = WebDriverWait(
+        driver, 30, ignored_exceptions=[StaleElementReferenceException]
+    ).until(
         _update_button_present,
         message="No update-state button (check-for-updates or restart) was found",
+    )
+
+    # Confirm the surfaced button is displayed, clickable, and correctly labeled.
+    about_prefs.verify_element_is_interactable(
+        found_locator, UPDATE_BUTTON_STATES[found_locator]
     )
