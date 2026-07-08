@@ -608,7 +608,7 @@
     ]
   },
   "submit-password": {
-    "selectorData": "button[label^='OK']",
+    "selectorData": "button[dlgtype='accept']",
     "strategy": "css",
     "shadowParent": "primary-password-box",
     "groups": [

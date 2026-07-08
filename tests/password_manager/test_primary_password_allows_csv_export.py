@@ -28,7 +28,8 @@ def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
 
     # Instantiate objects
     about_logins = AboutLogins(driver)
-    about_prefs = AboutPrefs(driver, category="privacy")
+    # Passwords moved out of Privacy & Security into their own Settings category.
+    about_prefs = AboutPrefs(driver, category="passwordsAutofill")
     ba = BrowserActions(driver)
 
     # Ensure the export target folder doesn't contain a passwords.csv file
@@ -47,8 +48,10 @@ def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
     # Enter the correct Primary Password
     about_logins.enter_primary_password(PRIMARY_PASSWORD)
 
-    # Export the passwords CSV
-    about_logins.export_passwords_csv(downloads_folder, "passwords.csv")
+    # Export the passwords CSV (re-enter the primary password at the prompt)
+    about_logins.export_passwords_csv(
+        downloads_folder, "passwords.csv", primary_password=PRIMARY_PASSWORD
+    )
 
     # Verify the exported csv file is present in the target folder
     csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")

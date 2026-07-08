@@ -5,7 +5,9 @@ from time import sleep, time
 
 from pypom import Page
 from selenium.common.exceptions import (
+    NoAlertPresentException,
     StaleElementReferenceException,
+    TimeoutException,
     WebDriverException,
 )
 from selenium.webdriver import ActionChains, Firefox
@@ -258,13 +260,54 @@ class AboutLogins(BasePage):
             }
         )
 
-    def export_passwords_csv(self, downloads_folder: str, filename: str):
+    def _primary_password_prompt_present(self) -> bool:
+        """Return True if a modal primary-password prompt is currently open."""
+        try:
+            self.driver.switch_to.alert
+            return True
+        except NoAlertPresentException:
+            return False
+
+    def submit_export_primary_password(
+        self, primary_password: str, attempts: int = 5
+    ) -> BasePage:
+        """
+        Handle the modal 'Primary Password' prompt Firefox raises when exporting
+        with a primary password set.
+
+        Marionette cannot type into this prompt (it rejects Alert.send_keys), so
+        the password is entered with OS-level keystrokes. The prompt also appears
+        a moment after the export is confirmed, so wait for it before typing and
+        re-enter until it dismisses (guards against typing before it is ready).
+        """
+        try:
+            self.custom_wait(timeout=10).until(
+                lambda _: self._primary_password_prompt_present()
+            )
+        except TimeoutException:
+            logging.warning("No primary password prompt appeared during export.")
+            return self
+
+        for _ in range(attempts):
+            if not self._primary_password_prompt_present():
+                return self
+            sleep(0.5)
+            self.gui.write(primary_password, interval=0.05)
+            self.gui.press("enter")
+            sleep(1)
+        return self
+
+    def export_passwords_csv(
+        self, downloads_folder: str, filename: str, primary_password: str = None
+    ):
         """
         Export passwords to a CSV file and navigate the save dialog to the target location.
 
         Args:
             downloads_folder (str): The folder where the CSV should be saved.
             filename (str): The name of the CSV file.
+            primary_password (str): If a primary password is set, the value to
+                enter at the export re-authentication prompt.
         """
         target_path = os.path.join(downloads_folder, filename)
         use_mock_picker = self.sys_platform() == "Linux"
@@ -277,6 +320,10 @@ class AboutLogins(BasePage):
             self.click_on("menu-button")
             self.click_on("export-passwords-button")
             self.click_on("continue-export-button")
+
+            # A primary password (if set) must be re-entered before the save dialog.
+            if primary_password:
+                self.submit_export_primary_password(primary_password)
 
             if use_mock_picker:
                 self.wait_for_mock_file_picker()
@@ -323,6 +370,11 @@ class AboutLogins(BasePage):
         """
         Waits for the primary password prompt in chrome context,
         switches to the new tab, enters the password, and submits it.
+
+        The prompt can reset its input field while it finishes initializing,
+        which drops the typed password and leaves the dialog waiting. Re-enter
+        the password until the value sticks, then submit, treating the prompt
+        closing as success.
         """
 
         original_window = self.driver.current_window_handle
@@ -337,10 +389,20 @@ class AboutLogins(BasePage):
         primary_password_prompt = self.get_element("primary-password-prompt")
         assert primary_password_prompt.is_displayed()
 
-        # Enter password
-        input_field = self.get_element("primary-password-dialog-input-field")
-        input_field.send_keys(primary_password)
-        input_field.send_keys(Keys.ENTER)
+        def _enter_and_submit(_):
+            # The prompt closing is the definitive success signal.
+            if len(self.driver.window_handles) < expected_tabs:
+                return True
+            input_field = self.get_element("primary-password-dialog-input-field")
+            # Re-enter if the dialog cleared the field during initialization.
+            if input_field.get_attribute("value") != primary_password:
+                input_field.clear()
+                input_field.send_keys(primary_password)
+                return False
+            input_field.send_keys(Keys.ENTER)
+            return len(self.driver.window_handles) < expected_tabs
+
+        self.wait.until(_enter_and_submit)
 
         # Switch back after prompt closes
         self.wait.until(lambda d: len(d.window_handles) == 1)

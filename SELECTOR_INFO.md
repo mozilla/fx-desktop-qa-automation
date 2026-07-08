@@ -1261,43 +1261,43 @@ Path to .json: modules/data/about_prefs.components.json
 ```
 Selector Name: use-primary-password
 Selector Data: "addPrimaryPassword"
-Description: Checkbox for using primary password
-Location: about:preferences#privacy Passwords subsection
+Description: "Set primary password" button that opens the Primary Password dialog
+Location: about:preferences#passwordsAutofill Passwords subsection
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: current-password
 Selector Data: "message"
 Description: Input for current primary password
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: enter-new-password
 Selector Data: "pw1"
 Description: Input for new primary password
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: reenter-new-password
 Selector Data: "pw2"
 Description: Input for new primary password again
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: submit-password
-Selector Data: "button[label^='OK']
-Description: Ok button to submit the new primary password
-Location: about:preferences#privacy Primary Password popup
+Selector Data: "button[dlgtype='accept']"
+Description: Accept button to submit the new primary password. Selected by dlgtype (not label) because the label varies by build ("OK" vs "Submit")
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: primary-password-box
 Selector Data: "changemp"
 Description: Shadow parent of the OK and cancel button
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1556,14 +1556,14 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: remove-primary-password-box
 Selector Data: "removemp"
 Description: Shadow parent of the remove button
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
 Selector Name: remove-password
 Selector Data: "button[label^='Remove']"
 Description: Remove button to remove the primary password
-Location: about:preferences#privacy Primary Password popup
+Location: about:preferences#passwordsAutofill Primary Password popup
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```
@@ -1619,7 +1619,7 @@ Path to .json: modules/data/about_prefs.components.json
 Selector Name: turn-off-primary-password
 Selector Data: "turnOffPrimaryPassword"
 Description: "Turn off Primary Password" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password
-Location: about:preferences#privacy (Remove Primary Password dialog)
+Location: about:preferences#passwordsAutofill (Remove Primary Password dialog)
 Path to .json: modules/data/about_prefs.components.json
 ```
 ```

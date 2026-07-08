@@ -884,7 +884,7 @@ password_manager:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
-      mac: unstable
+      mac: pass
       win: pass
     splits:
     - functional2
@@ -892,7 +892,7 @@ password_manager:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2042917
     result:
       linux: unstable
-      mac: unstable
+      mac: pass
       win: pass
     splits:
     - functional2
@@ -916,8 +916,11 @@ password_manager:
     splits:
     - functional1
   test_primary_password_allows_csv_export:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843, https://bugzilla.mozilla.org/show_bug.cgi?id=2041399
-    result: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
+    result:
+      mac: pass
+      win: pass
+      linux: unstable
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
