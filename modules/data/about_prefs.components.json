@@ -768,10 +768,21 @@
       "location": "about:preferences#privacy"
     }
   },
-  "update_available_button": {
-    "selectorData": "updateButton",
+  "update_state_root": {
+    "selectorData": "updateState",
     "strategy": "id",
     "groups": [],
+    "comment": {
+      "description": "shadow root for update state elements"
+    }
+  },
+  "update_available_button": {
+    "selectorData": "[data-l10n-id='update-updateButton']",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Firefox Updates > Update available button",
       "location": "about:preferences#general"
@@ -785,9 +796,12 @@
     ]
   },
   "up_to_date_button": {
-    "selectorData": "checkForUpdatesButton3",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "[data-l10n-id='update-checkForUpdatesButton']",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Firefox Updates > Check for updates button",
       "location": "about:preferences#general"
