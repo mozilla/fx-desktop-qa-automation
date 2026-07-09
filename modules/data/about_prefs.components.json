@@ -940,8 +940,8 @@
       "doNotCache"
     ],
     "comment": {
-      "description": "Select download option from Application List",
-      "location": "about:preferences#general Applications subsection"
+      "description": "A single option within a moz-select actions menu. NOTE: the bare 'moz-option' selector matches every option on the page, so this MUST be fetched scoped to a specific menu via parent_element=<the row's moz-select> (see AboutPrefs.select_content_and_action); calling it without parent_element returns options from every dropdown.",
+      "location": "about:preferences#downloads Applications subsection"
     }
   },
   "exceptions-item": {
