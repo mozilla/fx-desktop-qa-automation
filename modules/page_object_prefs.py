@@ -341,6 +341,13 @@ class AboutPrefs(BasePage):
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
         target_value = target.get_attribute("value")
+        if target_value is None:
+            raise ValueError(
+                f"Option '{action}' has no value attribute in actions menu for {content_type}"
+            )
+        # The moz-select opens a NATIVE OS dropdown, not a DOM popup: its
+        # moz-option children are zero-size data nodes (not the rendered list),
+        # so Selenium cannot click an option (ElementNotInteractableException).
         self.driver.execute_script(
             "arguments[0].value = arguments[1];"
             "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
