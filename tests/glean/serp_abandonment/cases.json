@@ -10,7 +10,7 @@
     {"id": "3255503", "entry": "urlbar", "action": "navigation", "params": {"engine": "Google"}, "prefs": [], "expected": {"reason": "navigation"}},
     {"id": "3255508", "entry": "urlbar", "action": "navigation", "params": {"engine": "Bing"}, "prefs": [], "expected": {"reason": "navigation"}},
     {"id": "3255513", "entry": "urlbar", "action": "navigation", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"reason": "navigation"}},
-    {"id": "TBD-ecosia-navigation", "entry": "urlbar", "action": "navigation", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"reason": "navigation"}},
+    {"id": "4162725", "entry": "urlbar", "action": "navigation", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"reason": "navigation"}},
     {"id": "3255522", "entry": "urlbar", "action": "navigation", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"reason": "navigation"}},
 
     {"id": "3255504", "entry": "urlbar", "action": "back_navigation", "params": {"engine": "Google"}, "prefs": [], "expected": {"reason": "navigation"}},

@@ -363,7 +363,7 @@ def _abandonment_navigation(driver: Firefox, search_term: str, params: dict = No
     glean = Glean(driver)
     tabs = TabBar(driver)
 
-    # Open the search in a new tab so the abandonment leaves the original tab (and session) alive
+    # Open the search in a new tab so it starts from the new-tab page, then navigate away in that tab
     tabs.open_and_switch_to_new_tab()
     nav.search(search_term)
 
