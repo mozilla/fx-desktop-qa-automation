@@ -375,10 +375,10 @@ def pytest_sessionfinish(session):
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
-                if proc.create_time() > (
-                    getattr(reporter, "_session_start", None)
-                    or reporter._sessionstarttime
-                ) and proc.name().startswith("firefox"):
+                if (
+                    proc.create_time() > reporter._session_start.time
+                    and proc.name().startswith("firefox")
+                ):
                     logging.info(f"found remaining process: {proc.pid}")
                     proc.kill()
             except (ProcessLookupError, psutil.NoSuchProcess):
