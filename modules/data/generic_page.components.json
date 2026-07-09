@@ -1,198 +1,334 @@
 {
-    "page-body": {
-        "selectorData": "body",
-        "strategy": "tag",
-        "groups": []
-    },
-    "container-div": {
-        "selectorData": "container",
-        "strategy": "class",
-        "groups": []
-    },
-    "authorize-notifications-button": {
-        "selectorData": "button[onclick='notify.authorize()']",
-        "strategy": "css",
-        "groups": []
-    },
-    "mediawiki-image": {
-        "selectorData": "mw-mmv-image",
-        "strategy": "class",
-        "groups": []
-    },
-    "python-logo": {
-        "selectorData": "img[src*='python-logo']",
-        "strategy": "css",
-        "groups": []
-    },
-    "wiki-search-bar": {
-        "selectorData": "searchInput",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-    "wiki-search-button": {
-        "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
-        "strategy": "css",
-        "groups": []
-    },
-    "simulated-third-party-tracker-block-status": {
-        "selectorData": "blacklisted-blocked",
-        "strategy": "id",
-        "groups": []
-    },
-    "simulated-third-party-tracker-load-status": {
-        "selectorData": "blacklisted-loaded",
-        "strategy": "id",
-        "groups": []
-    },
-    "simulated-first-party-tracker-load-status": {
-        "selectorData": "whitelisted-loaded",
-        "strategy": "id",
-        "groups": []
-    },
-    "simulated-tracker-dnt-status": {
-        "selectorData": "dnt-off",
-        "strategy": "id",
-        "groups": []
-    },
-    "clear-history-button-box": {
-        "selectorData": "dialog",
-        "strategy": "tag",
-        "groups": []
-    },
-    "clear-history-button": {
-        "selectorData": "button[dlgtype='accept']",
-        "strategy": "css",
-        "shadowParent": "clear-history-button-box",
-        "groups": []
-    },
-    "sample-doc-download": {
-        "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bsky-signin-button": {
-        "selectorData": "//button[@aria-label='Sign in']",
-        "strategy": "xpath",
-        "groups": []
-    },
-    "url-to-copy": {
-        "selectorData": "p[contenteditable]",
-        "strategy": "css",
-        "groups": []
-    },
-    "vjs-play-button": {
-        "selectorData": "button[aria-label='Play']",
-        "strategy": "css",
-        "groups": []
-    },
-    "vjs-pause-button": {
-        "selectorData": "button[aria-label='Pause']",
-        "strategy": "css",
-        "groups": []
-    },
-    "vjs-fullscreen": {
-        "selectorData": "button[aria-label='Enter fullscreen']",
-        "strategy": "css",
-        "groups": []
-    },
-    "vjs-exit-fullscreen": {
-        "selectorData": "button[aria-label='Exit fullscreen']",
-        "strategy": "css",
-        "groups": []
-    },
-    "vjs-volume": {
-        "selectorData": ".media-button--mute",
-        "strategy": "css",
-        "groups": []
-    },
-    "sample-bin-download-100mb": {
-        "selectorData": "a[href='100MB.bin']",
-        "strategy": "css",
-        "groups": []
-    },
-    "sample-bin-download": {
-        "selectorData": "a[href='1GB.bin']",
-        "strategy": "css",
-        "groups": []
-    },
-    "sample-small-download": {
-        "selectorData": "a[href='http://ipv4.download.thinkbroadband.com/20MB.zip']",
-        "strategy": "css",
-        "groups": []
-    },
-    "gdoc-file": {
-        "selectorData": "docs-file-menu",
-        "strategy": "id",
-        "groups": []
-    },
-    "gdoc-file-download": {
-        "selectorData": "span.goog-menuitem-label[aria-label^='Download']",
-        "strategy": "css",
-        "groups": []
-    },
-    "gdoc-file-download-pdf": {
-        "selectorData": "span.goog-menuitem-label[aria-label^='PDF Document']",
-        "strategy": "css",
-        "groups": []
-    },
-    "gdoc-download-addon": {
-        "selectorData": "div[aria-label='Download']",
-        "strategy": "css",
-        "groups": []
-    },
-    "download-malicious-warning": {
-        "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
-        "strategy": "css",
-        "groups": []
-    },
-    "add-to-firefox": {
-        "selectorData": "AMInstallButton-button",
-        "strategy": "class",
-        "groups": []
-    },
-    "google-incontent-search-bar": {
-        "selectorData": "textarea[aria-label='Search']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bing-incontent-search-bar": {
-        "selectorData": "input#sb_form_q",
-        "strategy": "css",
-        "groups": []
-    },
-    "duckduckgo-incontent-search-bar": {
-        "selectorData": "input[name='q']",
-        "strategy": "css",
-        "groups": []
-    },
-    "ecosia-incontent-search-bar": {
-        "selectorData": "input[name='q']",
-        "strategy": "css",
-        "groups": []
-    },
-    "qwant-incontent-search-bar": {
-        "selectorData": "input[name='q']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bing-related-search-shortcut": {
-        "selectorData": "#brsv3 a",
-        "strategy": "css",
-        "groups": []
-    },
-    "duckduckgo-related-search-shortcut": {
-        "selectorData": "a.js-related-searches-link",
-        "strategy": "css",
-        "groups": []
-    },
-    "duckduckgo-search-result": {
-        "selectorData": "a[data-testid='result-title-a']",
-        "strategy": "css",
-        "groups": ["doNotCache"]
-    },
-    "ecosia-related-search-shortcut": {
-        "selectorData": "a.related-queries__link-bottom",
-        "strategy": "css",
-        "groups": []
+  "page-body": {
+    "selectorData": "body",
+    "strategy": "tag",
+    "groups": [],
+    "comment": {
+      "description": "An html pages body tag",
+      "location": "Generic html page"
     }
+  },
+  "container-div": {
+    "selectorData": "container",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "An html pages container class",
+      "location": "Generic html page"
+    }
+  },
+  "authorize-notifications-button": {
+    "selectorData": "button[onclick='notify.authorize()']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The notification popup Allow button",
+      "location": "Generic html page"
+    }
+  },
+  "mediawiki-image": {
+    "selectorData": "mw-mmv-image",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "The image inside the Wikipedia media viewer overlay. Supports browser right-click context menu actions (open in new tab, save, copy). Use for media viewer image interactions.",
+      "location": "wikipedia.org"
+    }
+  },
+  "python-logo": {
+    "selectorData": "img[src*='python-logo']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Python logo image on python.org. Stable inline <img> element suitable for context-menu image actions (search image, save image, etc.) when a banner-free, layout-stable test page is needed.",
+      "location": "python.org"
+    }
+  },
+  "wiki-search-bar": {
+    "selectorData": "searchInput",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The wikipedia search field",
+      "location": "wikipedia.org"
+    }
+  },
+  "wiki-search-button": {
+    "selectorData": "button[class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The wikipedia search button",
+      "location": "wikipedia.org"
+    }
+  },
+  "simulated-third-party-tracker-block-status": {
+    "selectorData": "blacklisted-blocked",
+    "strategy": "id",
+    "groups": []
+  },
+  "simulated-third-party-tracker-load-status": {
+    "selectorData": "blacklisted-loaded",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The third-party tracker loaded status",
+      "location": "Tracker test website"
+    }
+  },
+  "simulated-first-party-tracker-load-status": {
+    "selectorData": "whitelisted-loaded",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The first-party tracker allowed status",
+      "location": "Tracker test website"
+    }
+  },
+  "simulated-tracker-dnt-status": {
+    "selectorData": "dnt-off",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Do Not Track (DNT) status",
+      "location": "Tracker test website"
+    }
+  },
+  "clear-history-button-box": {
+    "selectorData": "dialog",
+    "strategy": "tag",
+    "groups": [],
+    "comment": {
+      "description": "The Clear History dialog (is a shadow root)",
+      "location": "Clear History dialog"
+    }
+  },
+  "clear-history-button": {
+    "selectorData": "button[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "clear-history-button-box",
+    "groups": [],
+    "comment": {
+      "description": "The Clear button",
+      "location": "Clear History dialog"
+    }
+  },
+  "sample-doc-download": {
+    "selectorData": "a[href='https://filesamples.com/samples/document/doc/sample2.doc']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sample download file URL",
+      "location": ""
+    }
+  },
+  "bsky-signin-button": {
+    "selectorData": "//button[@aria-label='Sign in']",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "bsky website sign in button",
+      "location": "Bsky website"
+    }
+  },
+  "url-to-copy": {
+    "selectorData": "p[contenteditable]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Clipboard page to copy url",
+      "location": "Clipboard test page"
+    }
+  },
+  "vjs-play-button": {
+    "selectorData": "button[aria-label='Play']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "videojs website play button",
+      "location": "videojs website player"
+    }
+  },
+  "vjs-pause-button": {
+    "selectorData": "button[aria-label='Pause']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "videojs website mute button",
+      "location": "videojs website player"
+    }
+  },
+  "vjs-fullscreen": {
+    "selectorData": "button[aria-label='Enter fullscreen']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "videojs website fullscreen button",
+      "location": "videojs website player"
+    }
+  },
+  "vjs-exit-fullscreen": {
+    "selectorData": "button[aria-label='Exit fullscreen']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "videojs website exit fullscreen button",
+      "location": "videojs website player"
+    }
+  },
+  "vjs-volume": {
+    "selectorData": ".media-button--mute",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "videojs website media player volume button",
+      "location": "videojs website player"
+    }
+  },
+  "sample-bin-download-100mb": {
+    "selectorData": "a[href='100MB.bin']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sample download",
+      "location": "ash-speed.hetzner website"
+    }
+  },
+  "sample-bin-download": {
+    "selectorData": "a[href='1GB.bin']",
+    "strategy": "css",
+    "groups": []
+  },
+  "sample-small-download": {
+    "selectorData": "a[href='http://ipv4.download.thinkbroadband.com/20MB.zip']",
+    "strategy": "css",
+    "groups": []
+  },
+  "gdoc-file": {
+    "selectorData": "docs-file-menu",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Gdoc file menu",
+      "location": "docs.google.com website"
+    }
+  },
+  "gdoc-file-download": {
+    "selectorData": "span.goog-menuitem-label[aria-label^='Download']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Gdoc file menu -> download",
+      "location": "docs.google.com website"
+    }
+  },
+  "gdoc-file-download-pdf": {
+    "selectorData": "span.goog-menuitem-label[aria-label^='PDF Document']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Gdoc file menu -> download -> PDF Document (.pdf)",
+      "location": "docs.google.com website"
+    }
+  },
+  "gdoc-download-addon": {
+    "selectorData": "div[aria-label='Download']",
+    "strategy": "css",
+    "groups": []
+  },
+  "download-malicious-warning": {
+    "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A link to download a file with malicious warning",
+      "location": "testsafebrowsing website"
+    }
+  },
+  "add-to-firefox": {
+    "selectorData": "AMInstallButton-button",
+    "strategy": "class",
+    "groups": []
+  },
+  "google-incontent-search-bar": {
+    "selectorData": "textarea[aria-label='Search']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The in-content search bar on the Google SERP, used to refine a search after the initial query",
+      "location": "google.com SERP"
+    }
+  },
+  "bing-incontent-search-bar": {
+    "selectorData": "input#sb_form_q",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The in-content search bar on the Bing SERP, used to refine a search after the initial query",
+      "location": "bing.com SERP"
+    }
+  },
+  "duckduckgo-incontent-search-bar": {
+    "selectorData": "input[name='q']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The in-content search bar on the DuckDuckGo SERP, used to refine a search after the initial query",
+      "location": "duckduckgo.com SERP"
+    }
+  },
+  "ecosia-incontent-search-bar": {
+    "selectorData": "input[name='q']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The in-content search bar on the Ecosia SERP, used to refine a search after the initial query",
+      "location": "ecosia.org SERP"
+    }
+  },
+  "qwant-incontent-search-bar": {
+    "selectorData": "input[name='q']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The in-content search bar on the Qwant SERP, used to refine a search after the initial query",
+      "location": "qwant.com SERP"
+    }
+  },
+  "bing-related-search-shortcut": {
+    "selectorData": "#brsv3 a",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A related-search link in the Bing SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')",
+      "location": "bing.com SERP"
+    }
+  },
+  "duckduckgo-related-search-shortcut": {
+    "selectorData": "a.js-related-searches-link",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A related-search link in the DuckDuckGo SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')",
+      "location": "duckduckgo.com SERP"
+    }
+  },
+  "duckduckgo-search-result": {
+    "selectorData": "a[data-testid='result-title-a']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "ecosia-related-search-shortcut": {
+    "selectorData": "a.related-queries__link-bottom",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A related-search link in the Ecosia SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')",
+      "location": "ecosia.org SERP"
+    }
+  }
 }

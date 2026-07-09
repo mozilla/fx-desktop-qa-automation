@@ -186,13 +186,11 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_server_not_found_error_pb:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041385
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_suggestion_engine_selection:
@@ -1079,8 +1077,7 @@ pocket:
       splits: []
 preferences:
   test_check_for_updates:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041395
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_clear_cookie_data:
@@ -1235,9 +1232,9 @@ security_and_privacy:
   test_copy_clean_link:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052850
     result:
-        linux: pass
-        mac: pass
-        win: unstable
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_cross_site_tracking_cookies_blocked:

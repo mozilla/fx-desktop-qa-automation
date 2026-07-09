@@ -4,132 +4,236 @@
     "strategy": "css",
     "groups": [
       "doNotCache"
-    ]
+    ],
+    "comment": {
+      "description": "attribute of text element",
+      "location": "any element that supports the attribute (usually text)"
+    }
   },
   "pdf-text-layer": {
     "selectorData": "textLayer",
     "strategy": "class",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "first instance of a text span.",
+      "location": "any element that supports the attribute (usually text)"
+    }
   },
   "html-body": {
     "selectorData": "html",
     "strategy": "tag",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The html tag of the pdf",
+      "location": "In the body of the pdf document"
+    }
   },
   "pdf-body": {
     "selectorData": "viewer",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The body of the pdf",
+      "location": "The pdf document"
+    }
   },
   "zoom-out": {
     "selectorData": "zoomOutButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The zoom out button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "zoom-in": {
     "selectorData": "zoomInButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The zoom out button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "download-button": {
     "selectorData": "downloadButton",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The save button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "zipcode-field": {
     "selectorData": "input[name='ZIP Code']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The zip code input field",
+      "location": "The test pdf page content"
+    }
   },
   "scroll-next": {
     "selectorData": "next",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Next Page button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "scroll-prev": {
     "selectorData": "previous",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Previous Page button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "pdf-page": {
     "selectorData": "div[data-page-number='{number}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Page number input field (takes a page number)",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "page-one-item": {
     "selectorData": "//span[contains(.,'Webcast Auction')]",
     "strategy": "xpath",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Page number of the first page",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "page-input": {
     "selectorData": "pageNumber",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Page field",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "toolbar-toggle": {
     "selectorData": "secondaryToolbarToggle",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Tools menu button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "toolbar-container": {
     "selectorData": "secondaryToolbarButtonContainer",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Tools menu",
+      "location": "The pdf viewer tools menu"
+    }
   },
   "toolbar-hand-tool": {
     "selectorData": "cursorHandTool",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Tools menu's hand grabber curser",
+      "location": "The pdf viewer tools menu"
+    }
   },
   "toolbar-select-tool": {
     "selectorData": "cursorSelectTool",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Tools menu's select curser",
+      "location": "The pdf viewer tools menu"
+    }
   },
   "toolbar-rotate-cw": {
     "selectorData": "pageRotateCw",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The rotate clockwise button",
+      "location": "The pdf viewer tools menu"
+    }
   },
   "toolbar-rotate-ccw": {
     "selectorData": "pageRotateCcw",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The rotate counter clockwise button",
+      "location": "The pdf viewer tools menu"
+    }
   },
   "first-name-field": {
     "selectorData": "input[name='First Name Given Name']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The first name text imput field",
+      "location": "The test pdf page content"
+    }
   },
   "first-checkbox": {
     "selectorData": "input[name='CB_1']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The check box for option 1.",
+      "location": "The test pdf page content"
+    }
   },
   "state-dropdown-field": {
     "selectorData": "select[name='State']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The State selection menu",
+      "location": "The test pdf page content"
+    }
   },
   "edited-name-field": {
     "selectorData": "input[name='First Name Given Name'][value='Mark']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The First name field with 'Mark' in it",
+      "location": "The test pdf page content"
+    }
   },
   "toolbar-add-image": {
     "selectorData": "editorStamp",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Add or edit images button",
+      "location": "The pdf viewer toolbar"
+    }
   },
   "toolbar-add-image-confirm": {
     "selectorData": "editorStampAddImage",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Add image option",
+      "location": "The pdf viewer toolbar when Add or edit is opened"
+    }
   },
   "added-goomy-image": {
     "selectorData": "[data-l10n-id='pdfjs-editor-stamp-editor'][aria-description='goomy.png']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The Added test image label",
+      "location": "The test pdf page content"
+    }
   },
   "toolbar-draw": {
     "selectorData": "editorInkButton",

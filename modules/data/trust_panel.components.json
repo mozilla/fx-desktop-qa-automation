@@ -1,257 +1,426 @@
 {
-    "context": "chrome",
-    "trustpanel": {
-        "selectorData": "trustpanel-popup",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "trustpanel-header": {
-        "selectorData": "trustpanel-header",
-        "strategy": "id",
-        "groups": []
-    },
-    "trustpanel-connect-button": {
-        "selectorData": "[data-l10n-id='trustpanel-connection-label-secure']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-connect-details-link": {
-        "selectorData": "#trustpanel-siteinformation-morelink",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-blocker-section": {
-        "selectorData": "trustpanel-blocker-section-header",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "blocked-list": {
-        "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons",
-        "strategy": "css",
-        "groups": []
-    },
-    "detected-list": {
-        "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons",
-        "strategy": "css",
-        "groups": []
-    },
-    "blocked-items": {
-        "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
-        "strategy": "css",
-        "groups": []
-    },
-    "detected-items": {
-        "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
-        "strategy": "css",
-        "groups": []
-    },
-    "detected-sites-header": {
-        "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "blocked-sites-header": {
-        "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "detected-site-entry": {
-        "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "blocked-site-entry": {
-        "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "shield-icon": {
-        "selectorData": "trust-icon-container",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "see-all-trackers-parent": {
-        "selectorData": "trustpanel-blocker-see-all",
-        "strategy": "id",
-        "groups": []
-    },
-    "see-all-trackers": {
-        "selectorData": "main-button",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "see-all-trackers-parent"
-    },
-    "protections-popup-list-host-label": {
-        "selectorData": ".protections-popup-list-host-label",
-        "strategy": "css",
-        "groups": []
-    },
-    "not-blocking-category": {
-        "selectorData": "panelview[title='Not Blocking {}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "detected-category": {
-        "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "blocked-trackers-title": {
-        "selectorData": "panelview[title='{} Blocked']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-toggle-parent": {
-        "selectorData": "trustpanel-toggle",
-        "strategy": "id",
-        "groups": []
-    },
-    "trustpanel-toggle-button": {
-        "selectorData": "input",
-        "strategy": "id",
-        "groups": [],
-        "shadowParent": "trustpanel-toggle-parent"
-    },
-    "trustpanel-etp-off": {
-        "selectorData": "//*[@id='trustpanel-header' and text()='You turned off protections']",
-        "strategy": "xpath",
-        "groups": []
-    },
-    "trustpanel-etp-on": {
-        "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
-        "strategy": "xpath",
-        "groups": []
-    },
-    "connection-not-secure": {
-        "selectorData": "[data-l10n-id='identity-connection-not-secure-security-view']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-connection-button": {
-        "selectorData": "trustpanel-connection-label",
-        "strategy": "id",
-        "groups": []
-    },
-    "connection-subview": {
-        "selectorData": ".identity-popup-security-connection.identity-popup-section",
-        "strategy": "css",
-        "groups": []
-    },
-    "connection-secure": {
-        "selectorData": "[data-l10n-id='identity-connection-verified']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-security-information-view": {
-        "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
-        "strategy": "css",
-        "groups": []
-    },
-    "identity-popup-content-verifier": {
-        "selectorData": "#identity-popup-content-verifier",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-privacy-link": {
-        "selectorData": "trustpanel-privacy-link",
-        "strategy": "id",
-        "groups": []
-    },
-    "trustpanel-connection-label-insecure": {
-        "selectorData": "[data-l10n-id='trustpanel-connection-label-insecure']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-insecure-section-header": {
-        "selectorData": "[data-l10n-id='trustpanel-insecure-section-header']",
-        "strategy": "css",
-        "groups": []
-    },
-    "site-icon": {
-        "selectorData": "trustpanel-popup-icon",
-        "strategy": "id",
-        "groups": []
-    },
-    "site-domain": {
-        "selectorData": "trustpanel-popup-host",
-        "strategy": "id",
-        "groups": []
-    },
-    "connection-icon": {
-        "selectorData": "trustpanel-connection-icon",
-        "strategy": "id",
-        "groups": []
-    },
-    "purple-card": {
-        "selectorData": "trustpanel-graphic-section",
-        "strategy": "id",
-        "groups": []
-    },
-    "clear-cookies-button": {
-        "selectorData": "trustpanel-clear-cookies-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "clear-cookies-button": {
-        "selectorData": "trustpanel-clear-cookies-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "clear-button": {
-        "selectorData": "trustpanel-clear-cookie-clear",
-        "strategy": "id",
-        "groups": ["doNotCache"]
-    },
-    "shield-icon-disabled": {
-        "selectorData": "#trust-icon-container.inactive",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "trustpanel-header-enabled": {
-        "selectorData": "[data-l10n-id='trustpanel-header-enabled']",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-tracking-protection-disabled": {
-        "selectorData": "#trustpanel-popup[tracking-protection='disabled']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "trustpanel-subview-back-button": {
-        "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
-        "strategy": "css",
-        "groups": []
-    },
-    "trustpanel-cross-site-cookies-count": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-tracking-cookies']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "trustpanel-fingerprinter-count": {
-        "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
+  "context": "chrome",
+  "trustpanel": {
+    "selectorData": "trustpanel-popup",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel main body",
+      "location": "trustpanel main"
     }
+  },
+  "trustpanel-header": {
+    "selectorData": "trustpanel-header",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel header",
+      "location": "trustpanel main"
+    }
+  },
+  "trustpanel-connect-button": {
+    "selectorData": "[data-l10n-id='trustpanel-connection-label-secure']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel connection security button",
+      "location": "trustpanel main top right"
+    }
+  },
+  "trustpanel-connect-details-link": {
+    "selectorData": "#trustpanel-siteinformation-morelink",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel connection security details link",
+      "location": "trustpanel connection sec view"
+    }
+  },
+  "trustpanel-blocker-section": {
+    "selectorData": "trustpanel-blocker-section-header",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel blockable items section header",
+      "location": "trustpanel main"
+    }
+  },
+  "blocked-list": {
+    "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel blocked items list",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "detected-list": {
+    "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel detected / allowed items list",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "blocked-items": {
+    "selectorData": "#trustpanel-blocked > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel blocked items individual",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "detected-items": {
+    "selectorData": "#trustpanel-detected > .trustpanel-blocker-buttons > .moz-button-subviewbutton-nav",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel allowed items individual",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "detected-sites-header": {
+    "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel blockable sites / cookies header",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "blocked-sites-header": {
+    "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel blocked sites / cookies individual",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "detected-site-entry": {
+    "selectorData": "[data-l10n-id='trustpanel-tracking-content-not-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel detected / allowed cookie individual",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "blocked-site-entry": {
+    "selectorData": "[data-l10n-id='trustpanel-tracking-content-blocking-tab-header'] + #trustpanel-blocker-items .protections-popup-list-host-label",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Trustpanel blocked cookie individual",
+      "location": "trustpanel blockable items view"
+    }
+  },
+  "shield-icon": {
+    "selectorData": "trust-icon-container",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Address bar shield icon",
+      "location": "Address bar"
+    }
+  },
+  "see-all-trackers-parent": {
+    "selectorData": "trustpanel-blocker-see-all",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "See all button (shadow parent)",
+      "location": "Trustpanel main view"
+    }
+  },
+  "see-all-trackers": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "see-all-trackers-parent",
+    "comment": {
+      "description": "See all button",
+      "location": "Trustpanel main view"
+    }
+  },
+  "protections-popup-list-host-label": {
+    "selectorData": ".protections-popup-list-host-label",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sites trying to fingerprint",
+      "location": "Trustpanel - Not blocking fingerprinters view"
+    }
+  },
+  "not-blocking-category": {
+    "selectorData": "panelview[title='Not Blocking {}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Not blocking tracker category title",
+      "location": "Trustpanel - Not blocking category view"
+    }
+  },
+  "detected-category": {
+    "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Detected tracker category from the protections panel",
+      "location": "Trustpanel - Detected tracker category from the protections panel"
+    }
+  },
+  "blocked-trackers-title": {
+    "selectorData": "panelview[title='{} Blocked']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Blocking tracker category title",
+      "location": "Trustpanel - Blocking category view"
+    }
+  },
+  "trustpanel-toggle-parent": {
+    "selectorData": "trustpanel-toggle",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Trust toggle button parent",
+      "location": "Trustpanel"
+    }
+  },
+  "trustpanel-toggle-button": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "trustpanel-toggle-parent",
+    "comment": {
+      "description": "Trustpanel toggle button",
+      "location": "Trustpanel"
+    }
+  },
+  "trustpanel-etp-off": {
+    "selectorData": "//*[@id='trustpanel-header' and text()='You turned off protections']",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Trust Panel ETP status",
+      "location": "Trustpanel"
+    }
+  },
+  "trustpanel-etp-on": {
+    "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Trust Panel ETP status when turned on",
+      "location": "Trustpanel"
+    }
+  },
+  "connection-not-secure": {
+    "selectorData": "[data-l10n-id='identity-connection-not-secure-security-view']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "'You are not securely connected to this site.' message is displayed in the connection subpanel",
+      "location": "Trustpanel - Connection protections tab"
+    }
+  },
+  "trustpanel-connection-button": {
+    "selectorData": "trustpanel-connection-label",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Conection secure/not secure button",
+      "location": "Trustpanel"
+    }
+  },
+  "connection-subview": {
+    "selectorData": ".identity-popup-security-connection.identity-popup-section",
+    "strategy": "css",
+    "groups": []
+  },
+  "connection-secure": {
+    "selectorData": "[data-l10n-id='identity-connection-verified']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "'You are securely connected to this site.' message is displayed in the connection subpanel",
+      "location": "Trustpanel - Connection protections tab"
+    }
+  },
+  "trustpanel-security-information-view": {
+    "selectorData": "#trustpanel-securityInformationView[title*='Connection protections for']",
+    "strategy": "css",
+    "groups": []
+  },
+  "identity-popup-content-verifier": {
+    "selectorData": "#identity-popup-content-verifier",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Verified by: Let's Encrypt\" message is displayed inside the panel",
+      "location": "Trustpanel - Connection protections tab"
+    }
+  },
+  "trustpanel-privacy-link": {
+    "selectorData": "trustpanel-privacy-link",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Privacy Settings\" footer link in the Trust Panel",
+      "location": "Trust Panel > footer section"
+    }
+  },
+  "trustpanel-connection-label-insecure": {
+    "selectorData": "[data-l10n-id='trustpanel-connection-label-insecure']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Connection status label shown in the Trustpanel when the connection is not secure (\"Connection not secure\")",
+      "location": "Trustpanel - Connection protections tab"
+    }
+  },
+  "trustpanel-insecure-section-header": {
+    "selectorData": "[data-l10n-id='trustpanel-insecure-section-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Banner header label shown in the Trustpanel when the connection is insecure (\"Your connection isn\u2019t secure\")",
+      "location": "Trustpanel - Connection protections tab (insecure banner)"
+    }
+  },
+  "site-icon": {
+    "selectorData": "trustpanel-popup-icon",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Site favicon displayed at the top of the Trustpanel (e.g. the YouTube icon)",
+      "location": "Trustpanel - header row"
+    }
+  },
+  "site-domain": {
+    "selectorData": "trustpanel-popup-host",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Domain/host label shown next to the site favicon (value attribute holds the host, e.g. \"youtube.com\")",
+      "location": "Trustpanel - header row"
+    }
+  },
+  "connection-icon": {
+    "selectorData": "trustpanel-connection-icon",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Lock-state icon shown in the \"Connection secure\" row of the Trustpanel",
+      "location": "Trustpanel - connection row"
+    }
+  },
+  "purple-card": {
+    "selectorData": "trustpanel-graphic-section",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Purple graphic/banner card in the Trustpanel (\"Firefox is on guard!\")",
+      "location": "Trustpanel - graphic section"
+    }
+  },
+  "clear-cookies-button": {
+    "selectorData": "trustpanel-clear-cookies-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Clear cookies and site data\" button in the Trustpanel that opens the clear confirmation dialog",
+      "location": "Trustpanel - main panel"
+    }
+  },
+  "clear-button": {
+    "selectorData": "trustpanel-clear-cookie-clear",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Clear\" confirmation button inside the clear cookies and site data dialog that performs the clear action",
+      "location": "Trustpanel - clear cookies and site data dialog"
+    }
+  },
+  "shield-icon-disabled": {
+    "selectorData": "#trust-icon-container.inactive",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The site info/shield icon container in the URL bar when ETP is disabled, identified by the \"inactive\" CSS class",
+      "location": "URL bar - site info button"
+    }
+  },
+  "trustpanel-header-enabled": {
+    "selectorData": "[data-l10n-id='trustpanel-header-enabled']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The header label in the Trustpanel graphic section when ETP is enabled and protections are active",
+      "location": "Trustpanel - graphic section"
+    }
+  },
+  "trustpanel-tracking-protection-disabled": {
+    "selectorData": "#trustpanel-popup[tracking-protection='disabled']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The main Trustpanel popup element when tracking protection has been disabled by the user for the current site",
+      "location": "Trustpanel - main panel"
+    }
+  },
+  "trustpanel-subview-back-button": {
+    "selectorData": ".subviewbutton.subviewbutton-iconic.subviewbutton-back",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Trustpanel subview back button",
+      "location": "Trustpanel - Connection protections tab"
+    }
+  },
+  "trustpanel-cross-site-cookies-count": {
+    "selectorData": "[data-l10n-id='trustpanel-list-label-tracking-cookies']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The cross-site tracking cookies button in the detailed tracker list showing the count of blocked cross-site tracking cookies",
+      "location": "Trustpanel - blocker details view"
+    }
+  },
+  "trustpanel-fingerprinter-count": {
+    "selectorData": "[data-l10n-id='trustpanel-list-label-fingerprinter']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The fingerprinters button in the detailed tracker list showing the count of blocked fingerprinters",
+      "location": "Trustpanel - blocker details view"
+    }
+  }
 }

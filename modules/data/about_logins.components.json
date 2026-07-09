@@ -1,208 +1,324 @@
 {
-    "login-list": {
-        "selectorData": "login-list",
-        "strategy": "css",
-        "groups": [
-            "requiredForPage",
-            "doNotCache"
-        ]
-    },
-    "login-count": {
-        "selectorData": "count",
-        "strategy": "class",
-        "shadowParent": "login-list",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "create-login-button": {
-        "selectorData": "create-login-button",
-        "strategy": "css",
-        "shadowParent": "login-list",
-        "groups": [
-            "requiredForPage",
-            "doNotCache"
-        ]
-    },
-    "login-filter": {
-        "selectorData": "login-filter",
-        "strategy": "css",
-        "shadowParent": "login-list",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "login-filter-input": {
-        "selectorData": "filter",
-        "strategy": "class",
-        "shadowParent": "login-filter",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "login-item": {
-        "selectorData": "login-item",
-        "strategy": "css",
-        "groups": []
-    },
-    "login-item-type": {
-        "selectorData": "{name}",
-        "strategy": "name",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "form-actions-row": {
-        "selectorData": "form-actions-row",
-        "strategy": "class",
-        "groups": []
-    },
-    "save-changes-button": {
-        "selectorData": "save-changes-button",
-        "strategy": "class",
-        "shadowParent": "form-actions-row",
-        "groups": []
-    },
-    "website-address": {
-        "selectorData": ".origin-input",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "about-logins-page-username-field": {
-        "selectorData": ".detail-row input[name='username']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "about-logins-page-password-hidden": {
-        "selectorData": ".detail-row .reveal-password-wrapper .password-display",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "about-logins-page-password-revealed": {
-        "selectorData": ".detail-row .reveal-password-wrapper input[name='password']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "login-sort": {
-        "selectorData": "login-sort",
-        "strategy": "id",
-        "shadowParent": "login-list",
-        "groups": []
-    },
-    "password-count": {
-        "selectorData": "count",
-        "strategy": "class",
-        "shadowParent": "login-list",
-        "groups": []
-    },
-    "login-list-item": {
-        "selectorData": "list-item",
-        "strategy": "class",
-        "shadowParent": "login-list",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "menu-button": {
-        "selectorData": "menu-button",
-        "strategy": "css",
-        "groups": []
-    },
-    "export-passwords-button": {
-        "selectorData": "button.menuitem-button:nth-child(3)",
-        "strategy": "css",
-        "shadowParent": "menu-button",
-        "groups": []
-    },
-    "confirmation-dialog": {
-        "selectorData": "confirmation-dialog",
-        "strategy": "css",
-        "groups": []
-    },
-    "continue-export-button": {
-        "selectorData": ".confirm-button.primary.danger-button",
-        "strategy": "css",
-        "shadowParent": "confirmation-dialog",
-        "groups": []
-    },
-    "remove-login-button-main-page": {
-        "selectorData": "delete-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "remove-login-confirmation-dialog": {
-        "selectorData": "confirmation-dialog",
-        "strategy": "css",
-        "groups": []
-    },
-    "remove-login-button-confirmation-dialog": {
-        "selectorData": "confirm-button",
-        "strategy": "class",
-        "shadowParent": "remove-login-confirmation-dialog",
-        "groups": []
-    },
-    "show-password-checkbox": {
-        "selectorData": "input.reveal-password-checkbox",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "primary-password-prompt": {
-        "selectorData": "commonDialogWindow",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "primary-password-dialog-input-field": {
-        "selectorData": "password1Textbox",
-        "strategy": "id",
-        "groups": []
-    },
-    "edit-login": {
-        "selectorData": "edit-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "save-edited-login": {
-        "selectorData": "save-changes-button",
-        "strategy": "class",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "copy-username": {
-        "selectorData": "copy-username-button.copy-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "copy-password": {
-        "selectorData": "copy-password-button.copy-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "copied-button": {
-        "selectorData": "copy-password-button.copied-button",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "password-reveal": {
-        "selectorData": "input[type='text'][name='password']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
-    },
-    "password-hidden": {
-        "selectorData": "input.password-display[type='password']",
-        "strategy": "css",
-        "shadowParent": "login-item",
-        "groups": []
+  "login-list": {
+    "selectorData": "login-list",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage",
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The list box containing the list of saved logins (is a shadow parent)",
+      "location": "The about:login's page's sidebar"
     }
+  },
+  "login-count": {
+    "selectorData": "count",
+    "strategy": "class",
+    "shadowParent": "login-list",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The number of passwords saved/is diplayed",
+      "location": "Top left of the about:logins page, under the add button"
+    }
+  },
+  "create-login-button": {
+    "selectorData": "create-login-button",
+    "strategy": "css",
+    "shadowParent": "login-list",
+    "groups": [
+      "requiredForPage",
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The add password (+) button",
+      "location": "The about:login's page's sidebar"
+    }
+  },
+  "login-filter": {
+    "selectorData": "login-filter",
+    "strategy": "css",
+    "shadowParent": "login-list",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The Search passwords text input field (is a shadow parent)",
+      "location": "The about:login's page's sidebar"
+    }
+  },
+  "login-filter-input": {
+    "selectorData": "filter",
+    "strategy": "class",
+    "shadowParent": "login-filter",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Search passwords text input field",
+      "location": "The about:login's page's sidebar"
+    }
+  },
+  "login-item": {
+    "selectorData": "login-item",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Individual saved login item (is a shadow parent)",
+      "location": "The about:login's page's sidebar"
+    }
+  },
+  "login-item-type": {
+    "selectorData": "{name}",
+    "strategy": "name",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Individual saved login item",
+      "location": "The about:login's page's sidebar"
+    }
+  },
+  "form-actions-row": {
+    "selectorData": "form-actions-row",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "New login page's Cancel and Save button container (is a shadow parent)",
+      "location": "The about:login's new login page"
+    }
+  },
+  "save-changes-button": {
+    "selectorData": "save-changes-button",
+    "strategy": "class",
+    "shadowParent": "form-actions-row",
+    "groups": [],
+    "comment": {
+      "description": "New login page's Save button",
+      "location": "The about:login's new login page"
+    }
+  },
+  "website-address": {
+    "selectorData": ".origin-input",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "The website address row",
+      "location": "The about:login's main login page"
+    }
+  },
+  "about-logins-page-username-field": {
+    "selectorData": ".detail-row input[name='username']",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "The Username field",
+      "location": "The about:login's main login page"
+    }
+  },
+  "about-logins-page-password-hidden": {
+    "selectorData": ".detail-row .reveal-password-wrapper .password-display",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "The Password field, when the password is hidden",
+      "location": "The about:login's main login page"
+    }
+  },
+  "about-logins-page-password-revealed": {
+    "selectorData": ".detail-row .reveal-password-wrapper input[name='password']",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "The Password field, when the password is revealed",
+      "location": "The about:login's main login page"
+    }
+  },
+  "login-sort": {
+    "selectorData": "login-sort",
+    "strategy": "id",
+    "shadowParent": "login-list",
+    "groups": [],
+    "comment": {
+      "description": "Sort login",
+      "location": "The about:login's main login page"
+    }
+  },
+  "password-count": {
+    "selectorData": "count",
+    "strategy": "class",
+    "shadowParent": "login-list",
+    "groups": [],
+    "comment": {
+      "description": "Password count",
+      "location": "The about:login's main login page"
+    }
+  },
+  "login-list-item": {
+    "selectorData": "list-item",
+    "strategy": "class",
+    "shadowParent": "login-list",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "All the saved login items, includes a hidden placeholder",
+      "location": "Left side of the about:logins page"
+    }
+  },
+  "menu-button": {
+    "selectorData": "menu-button",
+    "strategy": "css",
+    "groups": []
+  },
+  "export-passwords-button": {
+    "selectorData": "button.menuitem-button:nth-child(3)",
+    "strategy": "css",
+    "shadowParent": "menu-button",
+    "groups": []
+  },
+  "confirmation-dialog": {
+    "selectorData": "confirmation-dialog",
+    "strategy": "css",
+    "groups": []
+  },
+  "continue-export-button": {
+    "selectorData": ".confirm-button.primary.danger-button",
+    "strategy": "css",
+    "shadowParent": "confirmation-dialog",
+    "groups": []
+  },
+  "remove-login-button-main-page": {
+    "selectorData": "delete-button",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Remove button",
+      "location": "The about:login's main login page"
+    }
+  },
+  "remove-login-confirmation-dialog": {
+    "selectorData": "confirmation-dialog",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Remove login confirmation dialog",
+      "location": "The confirmation dialog trigered by Remove button in about:login"
+    }
+  },
+  "remove-login-button-confirmation-dialog": {
+    "selectorData": "confirm-button",
+    "strategy": "class",
+    "shadowParent": "remove-login-confirmation-dialog",
+    "groups": [],
+    "comment": {
+      "description": "Remove button",
+      "location": "The Remove button inside the confirmation dialog"
+    }
+  },
+  "show-password-checkbox": {
+    "selectorData": "input.reveal-password-checkbox",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Show password eye icon",
+      "location": "Inside about:logins page, next to the password field"
+    }
+  },
+  "primary-password-prompt": {
+    "selectorData": "commonDialogWindow",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Primary password prompt",
+      "location": "Alert on the about:logins page"
+    }
+  },
+  "primary-password-dialog-input-field": {
+    "selectorData": "password1Textbox",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Input field inside Primary password prompt",
+      "location": "Alert on the about:logins page"
+    }
+  },
+  "edit-login": {
+    "selectorData": "edit-button",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "About logins edit button",
+      "location": "The about:login's main login page after adding a login"
+    }
+  },
+  "save-edited-login": {
+    "selectorData": "save-changes-button",
+    "strategy": "class",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Save edited login",
+      "location": "The about:login's main login page after editing a login"
+    }
+  },
+  "copy-username": {
+    "selectorData": "copy-username-button.copy-button",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Copy username button",
+      "location": "The about:login's main login page after selecting a login"
+    }
+  },
+  "copy-password": {
+    "selectorData": "copy-password-button.copy-button",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Copy password button",
+      "location": "The about:login's main login page after selecting a login"
+    }
+  },
+  "copied-button": {
+    "selectorData": "copy-password-button.copied-button",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Copy password button confirmation",
+      "location": "The about:login's main login page after selecting a login"
+    }
+  },
+  "password-reveal": {
+    "selectorData": "input[type='text'][name='password']",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Password revealed state",
+      "location": "Inside about:logins page, next to the password field"
+    }
+  },
+  "password-hidden": {
+    "selectorData": "input.password-display[type='password']",
+    "strategy": "css",
+    "shadowParent": "login-item",
+    "groups": [],
+    "comment": {
+      "description": "Password hidden state",
+      "location": "Inside about:logins page, next to the password field"
+    }
+  }
 }

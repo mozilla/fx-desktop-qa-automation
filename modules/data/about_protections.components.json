@@ -2,21 +2,37 @@
   "about-protections-save-passwords-button": {
     "selectorData": "save-passwords-button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Saved passwords button in about:protections",
+      "location": "about:protections > Never forget a password again section"
+    }
   },
   "manage-privacy-security": {
     "selectorData": "protection-settings",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Manage your privacy and security settings link in about:protections",
+      "location": "about:protections page"
+    }
   },
   "lockwise-scanned-text": {
     "selectorData": "lockwise-scanned-text",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Lockwise scanned status text showing the number of passwords stored securely",
+      "location": "about:protections > Password manager section"
+    }
   },
   "manage-passwords-button": {
     "selectorData": "manage-passwords-button",
     "strategy": "id",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Manage passwords button in about:protections",
+      "location": "about:protections > Password manager section"
+    }
   }
 }

@@ -133,13 +133,17 @@ class TestKey:
             filename = filename + "::" + subtest
         return filename
 
-    def filter_filenames_by_pass(self, filenames: list) -> list:
+    def filter_filenames_by_pass(self, filenames: list, assume_pass=False) -> list:
         """
         Given a list of filenames, return only the ones marked 'pass'
         """
         passes = []
         for filename in filenames:
             full_entry = self.get_entry_from_filename(filename)
+            if not full_entry:
+                if assume_pass:
+                    passes.append(full_entry)
+                continue
             if has_subtests(full_entry):
                 subtests = get_subtests(full_entry)
                 subresults = [test_expected_to_pass(subtest) for subtest in subtests]

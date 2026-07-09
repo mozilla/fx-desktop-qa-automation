@@ -1,237 +1,373 @@
 {
-    "context": "chrome",
-    "tab-by-title": {
-        "selectorData": "tab[label='{title}']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache",
-            "tabSelector"
-        ]
-    },
-    "tab-by-index": {
-        "selectorData": "tab[linkedpanel$='-{index}']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache",
-            "tabSelector"
-        ]
-    },
-    "tabgroup": {
-        "selectorData": "tab-group",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "newtab-button": {
-        "selectorData": "tabs-newtab-button",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "tab-icon-overlay": {
-        "selectorData": "tab-icon-overlay",
-        "strategy": "class",
-        "groups": []
-    },
-    "tab-title": {
-        "selectorData": "tab-text",
-        "strategy": "class",
-        "groups": [
-            "subTabOnly"
-        ]
-    },
-    "list-all-tabs-button": {
-        "selectorData": "alltabs-button",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage",
-            "doNotCache"
-        ]
-    },
-    "all-tabs-menu": {
-        "selectorData": "allTabsMenu-allTabsView",
-        "strategy": "id",
-        "groups": [
-            "allTabsMenu"
-        ]
-    },
-    "all-tabs-menu-scrollbar": {
-        "selectorData": "#alltabs-popup scrollbox",
-        "strategy": "css",
-        "groups": [
-            "allTabsMenu"
-        ]
-    },
-    "all-tabs-entry": {
-        "selectorData": "all-tabs-item",
-        "strategy": "class",
-        "groups": [
-            "allTabsMenu"
-        ]
-    },
-    "all-tabs-entry-selected": {
-        "selectorData": "toolbaritem.all-tabs-item[selected='true']",
-        "strategy": "css",
-        "groups": [
-            "allTabsMenu"
-        ]
-    },
-    "tab-scrollbox": {
-        "selectorData": "tabbrowser-arrowscrollbox",
-        "strategy": "id",
-        "groups": []
-    },
-    "tab-scrollbox-left-button": {
-        "selectorData": "scrollbutton-up",
-        "strategy": "id",
-        "shadowParent": "tab-scrollbox",
-        "groups": []
-    },
-    "tab-scrollbox-right-button": {
-        "selectorData": "scrollbutton-down",
-        "strategy": "id",
-        "shadowParent": "tab-scrollbox",
-        "groups": []
-    },
-    "tab-icon": {
-        "selectorData": "tab-icon-image",
-        "strategy": "class",
-        "groups": []
-    },
-    "tab-x-icon": {
-        "selectorData": "image[class='tab-close-button close-icon']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-menu": {
-        "selectorData": "tab-group-editor",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-input": {
-        "selectorData": "[data-l10n-id='tab-group-editor-name-field']",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-create-button": {
-        "selectorData": "tab-group-editor-button-create",
-        "strategy": "id",
-        "groups": []
-    },
-    "tabgroup-label": {
-        "selectorData": "tab-group-label",
-        "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-menuitem": {
-        "selectorData": "tab-group-icon",
-        "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-overflow-count": {
-        "selectorData": "tab-group-overflow-count",
-        "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-line": {
-        "selectorData": "tab-group-line",
-        "strategy": "class",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tabgroup-ungroup-tabs": {
-        "selectorData": "tabGroupEditor_ungroupTabs",
-        "strategy": "id",
-        "groups": []
-    },
-    "tabgroup-name-input": {
-        "selectorData": "tab-group-name",
-        "strategy": "id",
-        "groups": []
-    },
-    "tabgroup-color-swatch": {
-        "selectorData": "tab-group-editor-swatch-{color}",
-        "strategy": "id",
-        "groups": []
-    },
-    "tabgroup-add-new-tab": {
-        "selectorData": "tabGroupEditor_addNewTabInGroup",
-        "strategy": "id",
-        "groups": []
-    },
-    "tabgroup-save-and-close-group": {
-        "selectorData": "tabGroupEditor_saveAndCloseGroup",
-        "strategy": "id",
-        "groups": []
-    },
-    "selected-tab": {
-        "selectorData": "tab.tabbrowser-tab[selected='true']",
-        "strategy": "css",
-        "groups": []
-    },
-    "non-multiselected-tab": {
-        "selectorData": "tab.tabbrowser-tab:not([multiselected])",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "all-tabs": {
-        "selectorData": "tabbrowser-tab",
-        "strategy": "class",
-        "groups": []
-    },
-    "play-tab-button": {
-        "selectorData": "moz-button.tab-audio-button[activemedia-blocked='{state}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "firefox-view-button": {
-        "selectorData": "firefox-view-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "tab-preview-panel": {
-        "selectorData": "tab-preview-panel",
-        "strategy": "id",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tab-preview-title": {
-        "selectorData": "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tab-preview-uri": {
-        "selectorData": "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
-    },
-    "tab-preview-thumbnail-container": {
-        "selectorData": "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container",
-        "strategy": "css",
-        "groups": [
-            "doNotCache"
-        ]
+  "context": "chrome",
+  "tab-by-title": {
+    "selectorData": "tab[label='{title}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache",
+      "tabSelector"
+    ],
+    "comment": {
+      "description": "Finds a tab given the title text",
+      "location": "In the tabbed browser."
     }
+  },
+  "tab-by-index": {
+    "selectorData": "tab[linkedpanel$='-{index}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache",
+      "tabSelector"
+    ],
+    "comment": {
+      "description": "Finds a tab given the index (tab position)",
+      "location": "In the tabbed browser."
+    }
+  },
+  "tabgroup": {
+    "selectorData": "tab-group",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Tab group container element (has color attribute)",
+      "location": "In the tabbed browser"
+    }
+  },
+  "newtab-button": {
+    "selectorData": "tabs-newtab-button",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "The new tab (+) button",
+      "location": "In the tabbed browser."
+    }
+  },
+  "tab-icon-overlay": {
+    "selectorData": "tab-icon-overlay",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "A tab's icon overlay",
+      "location": "In the tabbed browser."
+    }
+  },
+  "tab-title": {
+    "selectorData": "tab-text",
+    "strategy": "class",
+    "groups": [
+      "subTabOnly"
+    ],
+    "comment": {
+      "description": "Gets the text of a Tab (it's title)",
+      "location": "In the tabbed browser."
+    }
+  },
+  "list-all-tabs-button": {
+    "selectorData": "alltabs-button",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage",
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Opens the list tabs",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "all-tabs-menu": {
+    "selectorData": "allTabsMenu-allTabsView",
+    "strategy": "id",
+    "groups": [
+      "allTabsMenu"
+    ],
+    "comment": {
+      "description": "The list of open tabs",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "all-tabs-menu-scrollbar": {
+    "selectorData": "#alltabs-popup scrollbox",
+    "strategy": "css",
+    "groups": [
+      "allTabsMenu"
+    ],
+    "comment": {
+      "description": "The scrollbar of open tabs list",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "all-tabs-entry": {
+    "selectorData": "all-tabs-item",
+    "strategy": "class",
+    "groups": [
+      "allTabsMenu"
+    ],
+    "comment": {
+      "description": "An entry in the open tabs list",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "all-tabs-entry-selected": {
+    "selectorData": "toolbaritem.all-tabs-item[selected='true']",
+    "strategy": "css",
+    "groups": [
+      "allTabsMenu"
+    ],
+    "comment": {
+      "description": "A selected tab entry in the open tabs list",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "tab-scrollbox": {
+    "selectorData": "tabbrowser-arrowscrollbox",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The tabs scrollbox",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "tab-scrollbox-left-button": {
+    "selectorData": "scrollbutton-up",
+    "strategy": "id",
+    "shadowParent": "tab-scrollbox",
+    "groups": [],
+    "comment": {
+      "description": "The tab bar scroll left button",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "tab-scrollbox-right-button": {
+    "selectorData": "scrollbutton-down",
+    "strategy": "id",
+    "shadowParent": "tab-scrollbox",
+    "groups": [],
+    "comment": {
+      "description": "The tab bar scroll right button",
+      "location": "In the tabbed browser when tab overflow has occurred."
+    }
+  },
+  "tab-icon": {
+    "selectorData": "tab-icon-image",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "A tab's favicon image",
+      "location": "In the tabbed browser."
+    }
+  },
+  "tab-x-icon": {
+    "selectorData": "image[class='tab-close-button close-icon']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A tab's Close (X) button",
+      "location": "In the tabbed browser."
+    }
+  },
+  "tabgroup-menu": {
+    "selectorData": "tab-group-editor",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Adding tabs to a group menu",
+      "location": "Menu that opens when adding tabs to a group"
+    }
+  },
+  "tabgroup-input": {
+    "selectorData": "[data-l10n-id='tab-group-editor-name-field']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Name field",
+      "location": "Menu that opens when adding tabs to a group"
+    }
+  },
+  "tabgroup-create-button": {
+    "selectorData": "tab-group-editor-button-create",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Create button",
+      "location": "Menu that opens when adding tabs to a group"
+    }
+  },
+  "tabgroup-label": {
+    "selectorData": "tab-group-label",
+    "strategy": "class",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The label of tab group",
+      "location": "In the tabbed browser"
+    }
+  },
+  "tabgroup-menuitem": {
+    "selectorData": "tab-group-icon",
+    "strategy": "class",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Icon related to tab group",
+      "location": "In the tabbed browser"
+    }
+  },
+  "tabgroup-overflow-count": {
+    "selectorData": "tab-group-overflow-count",
+    "strategy": "class",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Numbers of tabs in tab group",
+      "location": "In the tabbed browser"
+    }
+  },
+  "tabgroup-line": {
+    "selectorData": "tab-group-line",
+    "strategy": "class",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Line indicator of tab group",
+      "location": "In the tabbed browser"
+    }
+  },
+  "tabgroup-ungroup-tabs": {
+    "selectorData": "tabGroupEditor_ungroupTabs",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Ungroup the tab group",
+      "location": "Menu that opens when right click on the tab group label"
+    }
+  },
+  "tabgroup-name-input": {
+    "selectorData": "tab-group-name",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Name input field in the tab group editor",
+      "location": "Menu that opens when right click on the tab group label"
+    }
+  },
+  "tabgroup-color-swatch": {
+    "selectorData": "tab-group-editor-swatch-{color}",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Color swatch button in the tab group editor (use labels parameter for color)",
+      "location": "Menu that opens when right click on the tab group label"
+    }
+  },
+  "tabgroup-add-new-tab": {
+    "selectorData": "tabGroupEditor_addNewTabInGroup",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Button to add a new tab in the group",
+      "location": "Menu that opens when right click on the tab group label"
+    }
+  },
+  "tabgroup-save-and-close-group": {
+    "selectorData": "tabGroupEditor_saveAndCloseGroup",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Save and close the tab group",
+      "location": "Menu that opens when right click on the tab group label"
+    }
+  },
+  "selected-tab": {
+    "selectorData": "tab.tabbrowser-tab[selected='true']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Selected tab locator",
+      "location": "Selected tab in the tabs bar"
+    }
+  },
+  "non-multiselected-tab": {
+    "selectorData": "tab.tabbrowser-tab:not([multiselected])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "all-tabs": {
+    "selectorData": "tabbrowser-tab",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "All tabs locator",
+      "location": "All tabs from the tabs bar"
+    }
+  },
+  "play-tab-button": {
+    "selectorData": "moz-button.tab-audio-button[activemedia-blocked='{state}']",
+    "strategy": "css",
+    "groups": []
+  },
+  "firefox-view-button": {
+    "selectorData": "firefox-view-button",
+    "strategy": "id",
+    "groups": []
+  },
+  "tab-preview-panel": {
+    "selectorData": "tab-preview-panel",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Tab hover preview panel container",
+      "location": "In the tabbed browser (shown when hovering a tab)"
+    }
+  },
+  "tab-preview-title": {
+    "selectorData": "#tab-preview-panel .tab-preview-title, #tab-preview-panel #tab-preview-title",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Title text inside the tab hover preview panel",
+      "location": "In the tabbed browser (hover preview panel)"
+    }
+  },
+  "tab-preview-uri": {
+    "selectorData": "#tab-preview-panel .tab-preview-uri, #tab-preview-panel #tab-preview-uri",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "URL text inside the tab hover preview panel",
+      "location": "In the tabbed browser (hover preview panel)"
+    }
+  },
+  "tab-preview-thumbnail-container": {
+    "selectorData": "#tab-preview-panel .tab-preview-thumbnail-container, #tab-preview-panel #tab-preview-thumbnail-container",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Thumbnail container inside the tab hover preview panel",
+      "location": "In the tabbed browser (hover preview panel)"
+    }
+  }
 }
