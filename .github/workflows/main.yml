@@ -30,6 +30,16 @@ on:
 
   workflow_dispatch:
     inputs:
+      automation_ref:
+        description: "Automation branch/ref to check out, for example release/firefox-151"
+        required: false
+        default: ""
+        type: string
+      test_set:
+        description: "Test set to run, for example smoke"
+        required: false
+        default: "smoke"
+        type: string
       win_installer_link:
         description: 'The link to the Windows installer (win64) for the Fx under test'
         required: false
@@ -58,8 +68,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          # Checkout the automation code from the requested branch/ref.
+          # If automation_ref is empty, fall back to the branch that triggered the workflow.
+          ref: ${{ inputs.automation_ref || github.ref }}
+
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Print checked out automation ref
+        shell: pwsh
+        run: |
+          # Print the automation ref requested from the workflow input.
+          Write-Host "Requested automation_ref: $env:AUTOMATION_REF"
+
+          # Print the current checked out branch/ref state.
+          git status -sb
+
+          # Print the exact commit used by this run.
+          git rev-parse HEAD
+
+          # Print the latest commit message for easier debugging.
+          git log -1 --oneline
+        env:
+          AUTOMATION_REF: ${{ inputs.automation_ref }}
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -273,6 +304,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
+          ref: ${{ inputs.automation_ref || github.ref }}
           fetch-depth: 0
 
       - name: Dry-run notice
@@ -436,7 +468,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: ${{ inputs.automation_ref || github.ref }}
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
