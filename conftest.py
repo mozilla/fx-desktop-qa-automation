@@ -559,18 +559,6 @@ def driver(
             driver.quit()
 
 
-# @pytest.hookimpl(tryfirst=True, wrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     # Execute all other hooks to obtain the report object
-#     outcome = yield
-#     for item in outcome:
-#         logging.warning(item)
-#     rep = outcome.get_result()
-#
-#     # Store the test result in the item
-#     setattr(item, "rep_" + rep.when, rep)
-
-
 @pytest.fixture()
 def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
     """
