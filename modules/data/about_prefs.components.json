@@ -911,15 +911,6 @@
       "location": "about:preferences#general Applications subsection"
     }
   },
-  "pdf-content-type": {
-    "selectorData": "moz-box-item[type='application/pdf']",
-    "strategy": "css",
-    "groups": [],
-    "comment": {
-      "description": "PDF content type option",
-      "location": "about:preferences#general Applications subsection"
-    }
-  },
   "pdf-actions-menu": {
     "selectorData": "moz-box-item[type='application/pdf'] moz-select.actionsMenu",
     "strategy": "css",
@@ -932,21 +923,25 @@
     }
   },
   "actions-menu": {
-    "selectorData": "richlistitem[type='{.*}'] menulist.actionsMenu",
+    "selectorData": "moz-box-item[type='{.*}'] moz-select.actionsMenu",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Select Application list that handles how downloads are handled",
       "location": "about:preferences#general Applications subsection"
     }
   },
-  "actions-menu-option": {
-    "selectorData": "richlistitem[type='{.*}'] menuitem[label='{.*}']",
+  "menu-option": {
+    "selectorData": "moz-option",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "Select download option from Application List",
-      "location": "about:preferences#general Applications subsection"
+      "description": "A single option within a moz-select actions menu. NOTE: the bare 'moz-option' selector matches every option on the page, so this MUST be fetched scoped to a specific menu via parent_element=<the row's moz-select> (see AboutPrefs.select_content_and_action); calling it without parent_element returns options from every dropdown.",
+      "location": "about:preferences#downloads Applications subsection"
     }
   },
   "exceptions-item": {
