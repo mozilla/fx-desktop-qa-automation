@@ -55,6 +55,7 @@ def _css_value(element: WebElement, prop: str) -> int:
     return float(val)
 
 
+@pytest.mark.headed
 @pytest.mark.parametrize("font", FONTS)
 def test_type_control_panel_font(
     driver: Firefox, font: Literal["sans-serif", "serif", "monospace"]
@@ -87,6 +88,7 @@ def test_type_control_panel_font(
     reader_view.wait.until(lambda _: font in body.value_of_css_property("font-family"))
 
 
+@pytest.mark.headed
 @pytest.mark.parametrize("control", SIZE_CONTROLS)
 def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
     """
@@ -108,6 +110,7 @@ def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
         reader_view.wait.until(lambda _: _css_value(body, "--font-size") > size_before)
 
 
+@pytest.mark.headed
 @pytest.mark.parametrize("alignment,intended_alignment", ALIGNMENTS)
 def test_type_control_panel_text_alignment(
     driver: Firefox,
@@ -133,6 +136,7 @@ def test_type_control_panel_text_alignment(
     )
 
 
+@pytest.mark.headed
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
 def test_type_control_panel_content_width(
     driver: Firefox, direction: SliderDirection
@@ -163,6 +167,7 @@ def test_type_control_panel_content_width(
         )
 
 
+@pytest.mark.headed
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
 def test_type_control_panel_line_spacing(
     driver: Firefox, direction: SliderDirection, screenshot
@@ -189,6 +194,7 @@ def test_type_control_panel_line_spacing(
         reader_view.wait.until(lambda _: _css_value(body, "block-size") > block_before)
 
 
+@pytest.mark.headed
 def test_type_control_panel_character_spacing(driver: Firefox) -> None:
     """
     C130919.6: Ensure the functionality of the type control panels works (character spacing slider).
@@ -212,6 +218,7 @@ def test_type_control_panel_character_spacing(driver: Firefox) -> None:
     )
 
 
+@pytest.mark.headed
 def test_type_control_panel_word_spacing(driver: Firefox) -> None:
     """
     C130919.7: Ensure the functionality of the type control panels works (word spacing slider).
