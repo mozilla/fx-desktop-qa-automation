@@ -80,14 +80,14 @@ class ReaderView(BasePage):
 
     def wait_for_reader_view_open(self) -> BasePage:
         """
-        Checks to see if the reader view toolbar is present demonstrating that the reader view is open.
+        Checks to see if the reader view toolbar is open (check for close button).
         """
-        self.element_exists("reader-toolbar")
+        self.element_exists("reader-close-button")
         return self
 
     def wait_for_reader_view_closed(self) -> BasePage:
         """
-        Checks to see if the reader view toolbar is not visible, demonstrating that reader view is not open.
+        Checks to see if the reader view toolbar is closed (check for close button).
         """
         self.element_not_visible("reader-toolbar")
         return self
