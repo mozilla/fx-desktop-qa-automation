@@ -10,9 +10,7 @@ def test_case():
     return "130912"
 
 
-READER_VIEW_URL = (
-    "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
-)
+READER_VIEW_URL = "https://en.wikipedia.org/"
 
 
 def test_reader_view_close_from_sidebar(driver: Firefox):
