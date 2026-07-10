@@ -15,8 +15,6 @@ def test_case():
 
 
 # Constants / parametrization
-READER_VIEW_URL: str = "https://en.wikipedia.org/"
-
 SizeControl = Literal["minus", "plus"]
 AlignKey = Literal["left", "right", "center"]
 AlignCSS = Literal["start", "right", "center"]
@@ -55,15 +53,14 @@ def _css_value(element: WebElement, prop: str) -> int:
     return float(val)
 
 
-@pytest.mark.headed
 @pytest.mark.parametrize("font", FONTS)
 def test_type_control_panel_font(
-    driver: Firefox, font: Literal["sans-serif", "serif", "monospace"]
+    driver: Firefox, local_doc_path, font: Literal["sans-serif", "serif", "monospace"]
 ) -> None:
     """
     C130919.1: Ensure the functionality of the type control panels works (font family).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -88,13 +85,14 @@ def test_type_control_panel_font(
     reader_view.wait.until(lambda _: font in body.value_of_css_property("font-family"))
 
 
-@pytest.mark.headed
 @pytest.mark.parametrize("control", SIZE_CONTROLS)
-def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
+def test_type_control_panel_size(
+    driver: Firefox, local_doc_path, control: SizeControl
+) -> None:
     """
     C130919.2: Ensure the functionality of the type control panels works (text size).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -110,17 +108,17 @@ def test_type_control_panel_size(driver: Firefox, control: SizeControl) -> None:
         reader_view.wait.until(lambda _: _css_value(body, "--font-size") > size_before)
 
 
-@pytest.mark.headed
 @pytest.mark.parametrize("alignment,intended_alignment", ALIGNMENTS)
 def test_type_control_panel_text_alignment(
     driver: Firefox,
+    local_doc_path,
     alignment: AlignKey,
     intended_alignment: AlignCSS,
 ) -> None:
     """
     C130919.3: Ensure the functionality of the type control panels works (text alignment).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -136,15 +134,14 @@ def test_type_control_panel_text_alignment(
     )
 
 
-@pytest.mark.headed
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
 def test_type_control_panel_content_width(
-    driver: Firefox, direction: SliderDirection
+    driver: Firefox, local_doc_path, direction: SliderDirection
 ) -> None:
     """
     C130919.4: Ensure the functionality of the type control panels works (content width slider).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -167,15 +164,14 @@ def test_type_control_panel_content_width(
         )
 
 
-@pytest.mark.headed
 @pytest.mark.parametrize("direction", SLIDER_DIRS)
 def test_type_control_panel_line_spacing(
-    driver: Firefox, direction: SliderDirection, screenshot
+    driver: Firefox, local_doc_path, direction: SliderDirection
 ) -> None:
     """
     C130919.5: Ensure the functionality of the type control panels works (line spacing slider).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -194,12 +190,11 @@ def test_type_control_panel_line_spacing(
         reader_view.wait.until(lambda _: _css_value(body, "block-size") > block_before)
 
 
-@pytest.mark.headed
-def test_type_control_panel_character_spacing(driver: Firefox) -> None:
+def test_type_control_panel_character_spacing(driver: Firefox, local_doc_path) -> None:
     """
     C130919.6: Ensure the functionality of the type control panels works (character spacing slider).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
@@ -218,12 +213,11 @@ def test_type_control_panel_character_spacing(driver: Firefox) -> None:
     )
 
 
-@pytest.mark.headed
-def test_type_control_panel_word_spacing(driver: Firefox) -> None:
+def test_type_control_panel_word_spacing(driver: Firefox, local_doc_path) -> None:
     """
     C130919.7: Ensure the functionality of the type control panels works (word spacing slider).
     """
-    web_page = GenericPage(driver, url=READER_VIEW_URL)
+    web_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     _open_reader_type_panel(web_page, reader_view)
