@@ -268,7 +268,7 @@ class AboutLogins(BasePage):
         except NoAlertPresentException:
             return False
 
-    def submit_export_primary_password(
+    def _submit_export_primary_password(
         self, primary_password: str, attempts: int = 5
     ) -> BasePage:
         """
@@ -344,7 +344,7 @@ class AboutLogins(BasePage):
 
             # A primary password (if set) must be re-entered before the save dialog.
             if primary_password:
-                self.submit_export_primary_password(primary_password)
+                self._submit_export_primary_password(primary_password)
 
             self.wait_for_mock_file_picker()
         finally:
@@ -404,29 +404,36 @@ class AboutLogins(BasePage):
         primary_password_prompt = self.get_element("primary-password-prompt")
         assert primary_password_prompt.is_displayed()
 
+        enter_sent = False
+
         def _enter_and_submit(_):
             # The prompt closing is the definitive success signal.
+            nonlocal enter_sent
             if len(self.driver.window_handles) < expected_tabs:
                 return True
             try:
                 input_field = self.get_element("primary-password-dialog-input-field")
-                # Re-enter if the dialog cleared the field during initialization.
+                # Re-enter if the dialog cleared the field during initialization;
+                # allow ENTER again once the value has been re-typed.
                 if input_field.get_attribute("value") != primary_password:
                     input_field.clear()
                     input_field.send_keys(primary_password)
+                    enter_sent = False
                     return False
-                input_field.send_keys(Keys.ENTER)
+                # Send ENTER once per typed value; wait for closure on later polls
+                # so it is not sent twice while the dialog is still processing.
+                if not enter_sent:
+                    input_field.send_keys(Keys.ENTER)
+                    enter_sent = True
             except StaleElementReferenceException:
                 # The dialog re-rendered mid-interaction; retry on the next poll.
                 pass
-            # Let the top-of-loop check confirm closure on the next poll so ENTER
-            # is not sent twice while the dialog is still processing.
             return False
 
+        # Resolves once _enter_and_submit sees the prompt tab close.
         self.wait.until(_enter_and_submit)
 
         # Switch back after prompt closes
-        self.wait.until(lambda d: len(d.window_handles) < expected_tabs)
         self.driver.switch_to.window(original_window)
 
         return self
