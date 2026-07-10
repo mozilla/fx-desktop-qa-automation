@@ -14,7 +14,13 @@ def test_case():
     return "2241522"
 
 
-# This test is unstable on Ubuntu: Bug 2004938
+@pytest.fixture()
+def add_to_prefs_list():
+    # Disable the OS re-authentication prompt shown on export so the flow can
+    # run headlessly in CI.
+    return [("signon.management.page.os-auth.locked.enabled", False)]
+
+
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_password_csv_correctness(
