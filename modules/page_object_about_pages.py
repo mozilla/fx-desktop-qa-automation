@@ -316,7 +316,7 @@ class AboutLogins(BasePage):
         downloads_folder: str,
         filename: str,
         primary_password: Optional[str] = None,
-    ):
+    ) -> None:
         """
         Export passwords to a CSV file at the target location.
 
@@ -329,8 +329,8 @@ class AboutLogins(BasePage):
         Args:
             downloads_folder (str): The folder where the CSV should be saved.
             filename (str): The name of the CSV file.
-            primary_password (str): If a primary password is set, the value to
-                enter at the export re-authentication prompt.
+            primary_password (Optional[str]): If a primary password is set, the
+                value to enter at the export re-authentication prompt.
         """
         target_path = os.path.join(downloads_folder, filename)
         self.install_mock_file_picker(target_path)
@@ -407,7 +407,9 @@ class AboutLogins(BasePage):
         enter_sent = False
 
         def _enter_and_submit(_):
-            # The prompt closing is the definitive success signal.
+            # wait_for_num_tabs(expected_tabs) already ran above, so if the count
+            # has since dropped the dialog has closed — the definitive success
+            # signal.
             nonlocal enter_sent
             if len(self.driver.window_handles) < expected_tabs:
                 return True
