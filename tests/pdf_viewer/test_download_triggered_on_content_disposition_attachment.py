@@ -42,11 +42,9 @@ def test_download_panel_triggered_on_content_disposition_attachment(
     # Instantiate object models
     tabs = TabBar(driver)
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="general").open()
-    browser_actions = BrowserActions(driver)
 
-    # search for Applications section in settings
-    about_prefs.find_in_settings("appl")
+    about_prefs = AboutPrefs(driver, category="downloads").open()
+    browser_actions = BrowserActions(driver)
 
     # set download option for pdf as always ask
     about_prefs.select_content_and_action("application/pdf", "Always ask")

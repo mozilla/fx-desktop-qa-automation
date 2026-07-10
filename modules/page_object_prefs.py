@@ -320,36 +320,43 @@ class AboutPrefs(BasePage):
         Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
+    @BasePage.context_content
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
         """
-        From the applications list that handles how downloaded media is used,
-        select a content type and action
+        From the Applications file-handlers list, set the action for a content type.
         """
         menu = self.get_element("actions-menu", labels=[content_type])
-        items = menu.find_elements(By.TAG_NAME, "menuitem")
-        target_index = next(
+        target = next(
             (
-                i
-                for i, item in enumerate(items)
-                if item.get_attribute("label") == action
+                option
+                for option in self.get_element(
+                    "menu-option", multiple=True, parent_element=menu
+                )
+                if option.get_attribute("label") == action
             ),
             None,
         )
-        if target_index is None:
+        if target is None:
             raise ValueError(
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
-        self.click_on("actions-menu", labels=[content_type])
-        self.wait.until(
-            lambda _: menu.get_attribute("open") is not None
-        )  # wait for popup
-        menu.send_keys(Keys.HOME)
-        for _ in range(target_index):
-            menu.send_keys(Keys.DOWN)
-        menu.send_keys(Keys.ENTER)
-        self.wait.until(
-            lambda _: menu.get_attribute("label") == action
-        )  # verify selection
+        target_value = target.get_attribute("value")
+        if target_value is None:
+            raise ValueError(
+                f"Option '{action}' has no value attribute in actions menu for {content_type}"
+            )
+        # The moz-select opens a NATIVE OS dropdown, not a DOM popup: its
+        # moz-option children are zero-size data nodes (not the rendered list),
+        # so Selenium cannot click an option (ElementNotInteractableException).
+        self.driver.execute_script(
+            "arguments[0].value = arguments[1];"
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            menu,
+            target_value,
+        )
+        # Verify the selection with Selenium: the moz-select reflects the value.
+        self.wait.until(lambda _: menu.get_attribute("value") == target_value)
         return self
 
     # ---- Enhanced Tracking Protection (Settings redesign, about:preferences#etp) -----------------
