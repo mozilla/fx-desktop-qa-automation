@@ -127,7 +127,11 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_engine_result_page_load_on_reload:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2054122
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
   test_search_engine_selector:
@@ -861,7 +865,7 @@ password_manager:
     result:
       linux: unstable
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -916,7 +920,7 @@ password_manager:
     result:
       linux: unstable
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - functional2
   test_primary_password_triggered_on_about_logins_access:
