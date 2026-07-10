@@ -1146,7 +1146,8 @@ reader_view:
     splits:
     - functional2
   test_reader_view_location_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2053930
+    result: unstable
     splits:
     - smoke
 scrolling_panning_zooming:
