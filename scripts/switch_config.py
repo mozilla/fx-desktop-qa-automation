@@ -10,6 +10,12 @@ if __name__ == "__main__":
             "Usage: python scripts/switch_config.py <config_name>"
         )
         sys.exit(1)
+    if not os.path.isfile("pyproject.toml"):
+        sys.exit(
+            "pyproject.toml not found in the current directory. Run this script "
+            "from the repo root; it merges the chosen config onto the existing "
+            "pyproject.toml, so that file must be present."
+        )
     pyproject = toml.loads(open("pyproject.toml").read())
     config_path = os.path.join("config", f"{sys.argv[1]}_pyproject.toml")
     if not os.path.isfile(config_path):
