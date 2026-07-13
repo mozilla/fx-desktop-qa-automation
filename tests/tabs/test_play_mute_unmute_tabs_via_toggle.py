@@ -32,16 +32,14 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
     wait = WebDriverWait(driver, 10)
-    DELAY = 2
-    POSITION_DELAY = 0.3
 
     # Open Mozilla's Youtube Page
-    playlist_url = "https://www.youtube.com/@Mozilla/videos"
+    playlist_url = "https://www.youtube.com/mozilla/videos"
     playlist_page = GenericPage(driver, url=playlist_url)
     playlist_page.open()
 
     # Locate and open 2 latest videos in new tabs
-    video_selector = "ytd-rich-item-renderer a#video-title-link"
+    video_selector = ".ytThumbnailViewModelHost"
     video_links = wait.until(
         EC.visibility_of_all_elements_located((By.CSS_SELECTOR, video_selector))
     )
@@ -52,7 +50,6 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
 
     # Verify correct number of tabs opened
     tabs.wait_for_num_tabs(3)
-    sleep(DELAY)
 
     # Select all tabs via Control/Command click while staying on first tab
     modifier_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
@@ -74,36 +71,8 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
                 f"Tab {i} should be multiselected"
             )
 
-        # Helper function to click the multi-tab audio control button
-        def click_multi_tab_audio_button():
-            tab = tabs.get_tab(2)
-            element_location = tab.location
-            element_size = tab.size
-            window_position = driver.get_window_position()
-
-            inner_height = driver.execute_script("return window.innerHeight;")
-            outer_height = driver.execute_script("return window.outerHeight;")
-            chrome_height = outer_height - inner_height
-
-            element_x = (
-                window_position["x"]
-                + element_location["x"]
-                + (element_size["width"] / 2)
-            )
-            element_y = (
-                window_position["y"]
-                + element_location["y"]
-                + (element_size["height"] / 2)
-                + chrome_height
-            )
-            # Offset to click on the audio control area (left side of tab)
-            tabs.gui.moveTo(element_x - 75, element_y)
-            sleep(POSITION_DELAY)  # Small delay for mouse positioning
-            tabs.gui.click()
-            sleep(DELAY)  # Wait for action to take effect
-
         # Click Play button
-        click_multi_tab_audio_button()
+        tabs.click_multi_tab_audio_button()
 
         # Verify all selected tabs are playing
         for i in [2, 3]:
@@ -114,7 +83,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             )
 
         # Click Mute button
-        click_multi_tab_audio_button()
+        tabs.click_multi_tab_audio_button()
 
         # Verify all selected tabs are muted
         for i in [2, 3]:
@@ -123,7 +92,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             assert tab.get_attribute("muted") is not None, f"Tab {i} should be muted"
 
         # Click Unmute button
-        click_multi_tab_audio_button()
+        tabs.click_multi_tab_audio_button()
 
         # Verify all selected tabs are unmuted and playing again
         for i in [2, 3]:

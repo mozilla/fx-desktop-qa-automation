@@ -547,6 +547,7 @@ def driver(
         yield driver
         if hard_quit:
             if hasattr(driver, "service") and driver.service is not None:
+                logging.warning("Attempting to force close Firefox")
                 driver.service.stop()
             return
 
