@@ -24,7 +24,9 @@ if __name__ == "__main__":
     if not os.path.isfile(config_path):
         sys.exit(f"Config not found at {config_path}")
 
-    config = toml.loads(open(config_path).read())
+    with open(config_path) as f:
+        config = toml.loads(f.read())
+
     pyproject |= config
     toml_text = toml.dumps(pyproject)
 
