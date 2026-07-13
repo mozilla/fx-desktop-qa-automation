@@ -16,10 +16,14 @@ if __name__ == "__main__":
             "from the repo root; it merges the chosen config onto the existing "
             "pyproject.toml, so that file must be present."
         )
-    pyproject = toml.loads(open("pyproject.toml").read())
+    with open("pyproject.toml") as f:
+        pyproject = toml.loads(f.read())
+
     config_path = os.path.join("config", f"{sys.argv[1]}_pyproject.toml")
+
     if not os.path.isfile(config_path):
         sys.exit(f"Config not found at {config_path}")
+
     config = toml.loads(open(config_path).read())
     pyproject |= config
     toml_text = toml.dumps(pyproject)
