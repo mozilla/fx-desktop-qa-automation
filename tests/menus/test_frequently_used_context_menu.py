@@ -1,5 +1,4 @@
 import os
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -27,27 +26,29 @@ def test_save_page_as(driver: Firefox, sys_platform):
     nav = Navigation(driver)
     util = Utilities()
 
-    # right click something that is not a hyperlink
-    title_header = example_page.get_element("title-header")
-    example_page.context_click(title_header)
+    if sys_platform == "Windows":
+        saved_file_name = "Example Domain.htm"
+    else:
+        saved_file_name = "Example Domain.html"
+    saved_image_location = util.get_saved_file_path(saved_file_name)
 
-    context_menu.click_and_hide_menu("context-menu-save-page-as")
+    # Mock the native Save As picker so the save runs headlessly on all
+    # platforms (driving the OS file dialog is unreliable in CI).
+    context_menu.install_mock_file_picker(saved_image_location)
+    try:
+        # right click something that is not a hyperlink
+        title_header = example_page.get_element("title-header")
+        example_page.context_click(title_header)
 
-    # short sleep to ensure menu is shown
-    sleep(2)
-    context_menu.handle_os_download_confirmation()
+        context_menu.click_and_hide_menu("context-menu-save-page-as")
+        context_menu.wait_for_mock_file_picker()
+    finally:
+        context_menu.cleanup_mock_file_picker()
 
     # Wait for the animation to complete
     nav.wait_for_download_animation_finish()
 
     # verify and delete downloaded file
-    if sys_platform == "Windows":
-        saved_file_name = "Example Domain.htm"
-    else:
-        saved_file_name = "Example Domain.html"
-
-    saved_image_location = util.get_saved_file_path(saved_file_name)
-
     example_page.expect(lambda _: os.path.exists(saved_image_location))
     util.remove_file(saved_image_location)
 

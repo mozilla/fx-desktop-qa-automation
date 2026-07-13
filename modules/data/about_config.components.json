@@ -6,7 +6,7 @@
       "requiredForPage"
     ],
     "comment": {
-      "description": "The button to acceot the risks of accessing about:config",
+      "description": "The button to accept the risks of accessing about:config",
       "location": "about:config page"
     }
   },

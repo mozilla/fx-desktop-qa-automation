@@ -1,6 +1,5 @@
 import logging
 import os
-from time import sleep
 
 import pytest
 from selenium.webdriver import Firefox
@@ -49,25 +48,15 @@ def test_pdf_download(
     """
 
     saved_pdf_location = os.path.join(downloads_folder, file_name)
-    use_mock_picker = sys_platform == "Linux"
-    if use_mock_picker:
-        pdf_viewer.install_mock_file_picker(saved_pdf_location)
 
-    # Click the download button
+    # Mock the native Save As picker so the download runs headlessly on all
+    # platforms (driving the OS file dialog is unreliable in CI).
+    pdf_viewer.install_mock_file_picker(saved_pdf_location)
     try:
         pdf_viewer.click_download_button()
-
-        if use_mock_picker:
-            pdf_viewer.wait_for_mock_file_picker()
-        else:
-            # Allow time for the download dialog to appear and pressing enter to download
-            sleep(2)
-
-            # Handle OS download prompt
-            pdf_viewer.handle_os_download_confirmation()
+        pdf_viewer.wait_for_mock_file_picker()
     finally:
-        if use_mock_picker:
-            pdf_viewer.cleanup_mock_file_picker()
+        pdf_viewer.cleanup_mock_file_picker()
 
     # Set the expected download path and the expected PDF name
     pdf_viewer.expect(lambda _: os.path.exists(saved_pdf_location))

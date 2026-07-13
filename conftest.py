@@ -376,7 +376,7 @@ def pytest_sessionfinish(session):
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
                 if (
-                    proc.create_time() > reporter._sessionstarttime
+                    proc.create_time() > reporter._session_start.time
                     and proc.name().startswith("firefox")
                 ):
                     logging.info(f"found remaining process: {proc.pid}")
@@ -557,16 +557,6 @@ def driver(
     finally:
         if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
-
-
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
-    outcome = yield
-    rep = outcome.get_result()
-
-    # Store the test result in the item
-    setattr(item, "rep_" + rep.when, rep)
 
 
 @pytest.fixture()

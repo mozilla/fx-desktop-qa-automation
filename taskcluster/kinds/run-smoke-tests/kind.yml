@@ -54,7 +54,7 @@ tasks:
         uv run python scripts/switch_config.py ci_headed;
         uv sync;
         # uv run python -m scripts.choose_test_split;
-        uv run pytest --fx-executable ./firefox/firefox tests/password_manager/test_password_csv_export.py tests/pdf_viewer/test_pdf_download.py
+        uv run pytest --fx-executable ./firefox/firefox $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
     notify:
       recipients:
