@@ -372,11 +372,19 @@ def pytest_sessionfinish(session):
         import psutil
 
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
+        # pytest 9 renamed the reporter's session-start attr from
+        # `_session_start` (an object with `.time`) to `_sessionstarttime`
+        # (a plain float). Support both.
+        session_start = getattr(reporter, "_sessionstarttime", None)
+        if session_start is None:
+            session_start_obj = getattr(reporter, "_session_start", None)
+            session_start = getattr(session_start_obj, "time", None)
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
                 if (
-                    proc.create_time() > reporter._session_start.time
+                    session_start is not None
+                    and proc.create_time() > session_start
                     and proc.name().startswith("firefox")
                 ):
                     logging.info(f"found remaining process: {proc.pid}")
@@ -396,14 +404,15 @@ def pytest_sessionfinish(session):
             os.environ["STATUS_REPORTED"] = "true"
         return None
 
-    if not hasattr(session.config, "_json_report") or not hasattr(
-        session.config._json_report, "report"
-    ):
+    # `_json_report` is a pytest-json-report internal; guard against it being
+    # absent/renamed so a plugin change degrades to a warning rather than crashing.
+    json_report = getattr(session.config, "_json_report", None)
+    report = getattr(json_report, "report", None)
+    if report is None:
         logging.warning("No json_report in config, will try again with other workers.")
         return None
 
-    report = session.config._json_report.report
-    if report is None or report.get("tests") is None:
+    if report.get("tests") is None:
         logging.warning(
             "Not reporting to TestRail. This thread does not have a report in its config object."
         )
