@@ -404,6 +404,57 @@ def _abandonment_back_navigation(
     page.url_contains("about:newtab")
 
 
+@_abandonment("refresh_navigation")
+def _abandonment_refresh_navigation(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Open a SERP and refresh it in the same tab via the refresh button, so Firefox records a
+    serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so it starts from the new-tab page, then refresh in that tab
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; refreshing
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Refresh the SERP in the same tab -> serp.abandonment reason='navigation'
+    nav.refresh_page()
+    page.url_contains(search_term)
+
+
+@_abandonment("window_close")
+def _abandonment_window_close(driver: Firefox, search_term: str, params: dict = None):
+    """Open a SERP in a new window and close that window without engaging, so Firefox records a
+    serp.abandonment with reason='window_close'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+
+    # Open the search in a new window so closing it leaves the original window (and session) alive
+    original_window_count = len(driver.window_handles)
+    nav.open_and_switch_to_new_window("window")
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; closing
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Close the window without engaging
+    driver.close()
+    page.wait_for_num_tabs(original_window_count)
+    page.switch_to_new_window()
+
+
 # ===========================================================================
 # serp.engagement
 # ===========================================================================
