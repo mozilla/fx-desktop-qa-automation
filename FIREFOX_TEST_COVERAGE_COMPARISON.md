@@ -221,87 +221,120 @@ Tagged `[A]` = automation candidate, `[M]` = manual candidate. Ordered roughly b
 
 ## 2.2 Address bar & search
 
-- Quick actions (screenshot, mute, translate, devtools, commands, tab-refocus) `[A]` — entire surface uncovered.
-- Urlbar keyboard/editing: result-list nav, Tab-key, cut/delete/delete-all, caret position `[A]`.
-- URL trimming / untrim-on-interaction / formatValue domain highlighting / unsafe-protocol strip on paste `[A]` (last is security-relevant).
-- Autofill dismissal (backspace) + typed/preserve/undo/first-result autofill `[A]`.
-- Result types: calculator, unit conversion, rich/trending/recent-search suggestions, best match `[A]`.
-- Quick Suggest breadth: block/dismiss, contextual opt-in, MDN, Yelp, weather `[A/M]`.
-- Result "…" menu (dismiss/manage per result) `[A]`.
-- One-off context menu / set-default / key-modifiers; search-mode preview/heuristic/local-one-offs/new-window `[A]`.
-- Legacy search bar interactive surface: popup, one-offs, keyboard nav, drag-drop, context menu, removal `[A]`.
-- Content-area "Search for <selection>" + visual search `[A]`.
-- Engagement telemetry family (n_chars/n_words, selected-action, reenter, exposure) `[A]`; SPA/subframe/multi-tab SERP telemetry `[M]`.
-- Trust panel / site security view in urlbar `[A]`; search tips/interventions `[A]`.
+| Gap | Tag | Note |
+|---|---|---|
+| Quick actions (screenshot, mute, translate, devtools, commands, tab-refocus) | A | Entire surface uncovered. |
+| Urlbar keyboard/editing: result-list nav, Tab-key, cut/delete/delete-all, caret position | A | Core interaction touched only indirectly. |
+| URL trimming / untrim-on-interaction / formatValue domain highlighting / unsafe-protocol strip on paste | A | Paste sanitization is security-relevant. |
+| Autofill dismissal (backspace) + typed / preserve / undo / first-result autofill | A | STARfox covers only adaptive-history autofill. |
+| Result types: calculator, unit conversion, rich / trending / recent-search suggestions, best match | A | Simple, high-visibility; trivially assertable. |
+| Quick Suggest breadth: block/dismiss, contextual opt-in, MDN, Yelp, weather | A / M | Block/opt-in automatable; realtime/geo may be manual. |
+| Result "…" menu (dismiss / manage per result) | A | Per-result menu unverified E2E. |
+| One-off context menu / set-default / key-modifiers; search-mode preview / heuristic / local-one-offs / new-window | A | STARfox covers one-off selection but not these. |
+| Legacy search bar interactive surface: popup, one-offs, keyboard nav, drag-drop, context menu, removal | A | STARfox only tests default-engine + new-tab + theme. |
+| Content-area `Search for <selection>` + visual search | A | Glean covers contextmenu telemetry, not the UX. |
+| Engagement telemetry family (n_chars/n_words, selected-action, reenter, exposure) | A | STARfox glean covers impression + abandonment only. |
+| SPA / subframe / multi-tab SERP telemetry | M | Deep integration-level; low ROI for Selenium. |
+| Trust panel / site security view in urlbar; search tips / interventions | A | STARfox only covers the update/refresh tip. |
 
 ## 2.3 Tabs / session / toolbar
 
-- Tab drag-and-drop (see 2.1).
-- Split view (see 2.1).
-- Tab Manager / all-tabs panel *actions* (close/drag/group/keyboard) — STARfox only opens the list `[A]`.
-- Multiselect beyond pin/mute/move: close/close-others/close-left/right, duplicate, bookmark, reload, Shift-range, keyboard `[A]`.
-- Tab groups: keyboard/list/insert-after-current `[A]`, a11y `[M]`, cross-window closed-group restore/undo `[A]`.
-- Full session/window restore: restore-previous-session, undo-close-window, restore-tabless-window `[A]`.
-- Session data persistence: form data, scroll positions, sessionStorage, cookies, restore-pinned `[A]`.
-- Customize-mode depth: drag widgets to/from palette, restore-defaults, UI density, flexible-space, toolbar visibility, vertical-tabs-navbar `[A]`.
-- Vertical tabs dedicated coverage (enable/reorder/pin/restore) `[A]`.
-- Firefox View beyond recently-closed: Open Tabs, History, search, keyboard nav `[A]`; Synced Tabs `[M]`.
-- Ctrl+Tab MRU switching, Ctrl+1..9 select, selectMRUOnClose `[A]`.
+| Gap | Tag | Note |
+|---|---|---|
+| Tab drag-and-drop (reorder, detach, drag-to-window/pin) | M | See 2.1. HTML5 DnD unreliable in WebDriver. |
+| Split view | A | See 2.1. |
+| Tab Manager / all-tabs panel *actions* (close / drag / group / keyboard) | A | STARfox only opens the list. |
+| Multiselect beyond pin/mute/move: close / close-others / close-left/right, duplicate, bookmark, reload, Shift-range, keyboard | A | Broad multiselect gap. |
+| Tab groups: keyboard / list / insert-after-current | A | STARfox has group CRUD but not these. |
+| Tab groups: a11y (screen-reader semantics) | M | Hard to automate in Selenium. |
+| Tab groups: cross-window closed-group restore / undo | A | |
+| Full session/window restore: restore-previous-session, undo-close-window, restore-tabless-window | A | STARfox restores tabs, not whole sessions. |
+| Session data persistence: form data, scroll positions, sessionStorage, cookies, restore-pinned | A | User-visible after reopening a tab. |
+| Customize-mode depth: drag widgets to/from palette, restore-defaults, UI density, flexible-space, toolbar visibility, vertical-tabs-navbar | A | STARfox only adds one widget once. |
+| Vertical tabs dedicated coverage (enable / reorder / pin / restore) | A | Only touched inside one group test today. |
+| Firefox View beyond recently-closed: Open Tabs, History, search, keyboard nav | A | STARfox uses Fx View only for recently-closed. |
+| Firefox View: Synced Tabs | M | Requires FxA sign-in. |
+| Ctrl+Tab MRU switching, Ctrl+1..9 select, selectMRUOnClose | A | Common shortcuts, untested. |
 
 ## 2.4 Security / privacy / networking / notifications
 
-- **Anti-tracking behavior** (not just panel text): blocking/partitioning of cookies, localStorage, IndexedDB, ServiceWorkers, cache, network `[A]` — biggest gap (~120 FF tests).
-- Storage Access API doorhanger + grant flow `[A]`.
-- WebRTC sharing lifecycle: indicator, stop-sharing, global mute, tab-switch warning, paused `[A]` — STARfox only covers initial prompt.
-- RFP observable behavior: spoofed timezone/navigator, canvas randomization, rounded window `[A]` for a few, matrix `[M]`.
-- popupNotification security-delay (anti-clickjacking) `[A]`, "remember" checkbox, keyboard nav `[A]`.
-- Popup blocker (`popups/browser_popup_blocker*.js`) `[A]`.
-- DoH first-run doorhanger (reject → rollback) `[A]`.
-- Report Broken Site (menu → form → send, anti-tracking data) `[A]`.
-- Notification management: close, do-not-disturb, remove-permission `[A]`.
-- Email tracking protection subview `[A]`; clear-site-data PBM/extensions variants `[A]`.
-- Cert-error page UI, HTTPS-Only per-site exception UI, "More Information" cert chain `[A]`.
+| Gap | Tag | Note |
+|---|---|---|
+| **Anti-tracking behavior** (not just panel text): blocking / partitioning of cookies, localStorage, IndexedDB, ServiceWorkers, cache, network | A | Biggest gap (~120 FF tests). STARfox checks only panel text. |
+| Storage Access API doorhanger + grant flow | A | User-facing permission doorhanger, no coverage at all. |
+| WebRTC sharing lifecycle: indicator, stop-sharing, global mute, tab-switch warning, paused | A | STARfox only covers the initial prompt. |
+| RFP observable behavior: spoofed timezone/navigator, canvas randomization, rounded window | A / M | A few E2E checks automatable; full matrix is integration-level. |
+| popupNotification security-delay (anti-clickjacking), "remember" checkbox, keyboard nav | A | Security-relevant timing STARfox bypasses. |
+| Popup blocker (`popups/browser_popup_blocker*.js`) | A | No popup-blocker coverage. |
+| DoH first-run doorhanger (reject → rollback) | A | STARfox covers provider selection, not first-run prompt. |
+| Report Broken Site (menu → form → send, anti-tracking data) | A | Menu → form → send flow untested. |
+| Notification management: close, do-not-disturb, remove-permission | A | STARfox only fires a notification. |
+| Email tracking protection subview; clear-site-data PBM / extensions variants | A | STARfox has only the plain clear-site-data path. |
+| Cert-error page UI, HTTPS-Only per-site exception UI, "More Information" cert chain | A | Panel text read, but not these states. |
 
 ## 2.5 Password manager & form autofill
 
-- **Address capture/save/edit doorhanger** (`browser_address_doorhanger_*`, `browser_edit_address_doorhanger_*`) `[A]` — parallels CC doorhanger STARfox already has; addresses only saved via prefs today.
-- **Login import** (CSV + from-browser) `[A]` — STARfox has export but not import (asymmetric).
-- **Breach / vulnerable-password alerts** in about:logins `[A]`.
-- **Sidebar Passwords (Megalist)** — entire newer UI surface (`satchel/megalist/browser_passwords_*`) `[A]`.
-- **Cross-origin / iframe autofill** (CC + login) `[A]` — high security value.
-- HTTP Basic-Auth / proxy prompt save flow `[A]`; remove-all-logins dialog `[A]`; login-list sort/errors (duplicate-origin, empty-required) `[A]`.
-- Doorhanger edges: multipage-form, reveal-in-doorhanger, httpsUpgrade, target=_blank/window.open/cross-frame `[A]`.
-- CC insecure-form + anti-clickjacking `[A]`; CC OS-auth reveal `[M]`; CC decryption failure `[M]`.
-- Firefox Relay email-mask `[M]`; about:logins tab/keyboard a11y `[M]`.
-- Plain satchel form-history autocomplete (non-login/non-CC) `[A]`.
+| Gap | Tag | Note |
+|---|---|---|
+| **Address capture / save / edit doorhanger** (`browser_address_doorhanger_*`, `browser_edit_address_doorhanger_*`) | A | Parallels CC doorhanger STARfox already has; addresses only saved via prefs today. |
+| **Login import** (CSV + from-browser) | A | STARfox has export but not import (asymmetric). |
+| **Breach / vulnerable-password alerts** in about:logins | A | User-visible security banner untested. |
+| **Sidebar Passwords (Megalist)** (`satchel/megalist/browser_passwords_*`) | A | Entire newer password UI surface, zero coverage. |
+| **Cross-origin / iframe autofill** (CC + login) | A | High security value. |
+| HTTP Basic-Auth / proxy prompt save flow; remove-all-logins dialog; login-list sort / errors (duplicate-origin, empty-required) | A | Distinct flows STARfox never exercises. |
+| Doorhanger edges: multipage-form, reveal-in-doorhanger, httpsUpgrade, target=_blank / window.open / cross-frame | A | Multipage + reveal are common; rest are edge cases. |
+| CC insecure-form + anti-clickjacking | A | Mirrors login insecure-warning STARfox already has. |
+| CC OS-auth reveal; CC decryption failure | M | OS-native auth / corrupt-storage setup. |
+| Firefox Relay email-mask; about:logins tab / keyboard a11y | M | Needs FxA/Relay account; a11y focus order. |
+| Plain satchel form-history autocomplete (non-login / non-CC) | A | Saved form-history entries covered by neither suite. |
 
 ## 2.6 Bookmarks / history / downloads / preferences / profiles
 
-- SelectableProfiles + Bookmarks Library (see 2.1).
-- Bookmark tags (add/remove/bulk) `[A]`; cut/copy/paste bookmarks `[A]`; bookmark-all-tabs `[A]`; bookmarks/history **sidebar** search+open `[A]`; HTML/JSON backup export-import `[A]`; toolbar drag/reorder/chevron-overflow `[M]`.
-- Downloads: pause/resume `[A]`, keyboard nav/focus `[A]`, "always open similar files" `[A]`, about:downloads + Library downloads view `[A]`, go-to-download-page `[A]`, overwrite/temp-file `[M]`, taskbar progress/autohide `[M]`.
-- **Preferences** (278 FF tests, STARfox touches ~5 panes): **Search pane** `[A]`, Privacy/ETP beyond cookies (content-blocking customize, DoH, HTTPS-only, GPC, sanitize-on-shutdown) `[A]`, Home pane custom-homepage/wallpaper/personalization `[A]`, Security + password-management pane `[A]`, AI features pane (new) `[A]`; Networking/proxy `[M]`, Sync pane `[M]`, prefs-search framework / fonts / colors / performance / experimental `[M]`.
-- Profiles migration: import passwords (Chrome/Windows) `[A]`, Safari import (mac) `[A]`, migration wizard flow (entrypoints/cancel/no-browsers) `[A]`, file-based (HTML/CSV) import `[A]`.
-- Locale: website-language ordering / Accept-Language fallback UI `[A]`.
+| Gap | Tag | Note |
+|---|---|---|
+| SelectableProfiles + Bookmarks Library | A | See 2.1 (entire features, zero coverage). |
+| Bookmark tags (add/remove/bulk); cut/copy/paste bookmarks; bookmark-all-tabs; bookmarks/history **sidebar** search+open; HTML/JSON backup export-import | A | Discrete scriptable features; sidebar surface untouched. |
+| Bookmarks toolbar drag / reorder / chevron-overflow | M | Drag/drop fragile in Selenium. |
+| Downloads: pause/resume, keyboard nav/focus, "always open similar files", about:downloads + Library downloads view, go-to-download-page | A | STARfox is panel-only today. |
+| Downloads: overwrite / temp-file, taskbar progress / autohide | M | Filesystem / OS-integration behavior. |
+| **Preferences — Search pane** | A | Default engine, add/reorder/remove engines, suggestions. Large, scriptable. |
+| **Preferences — Privacy/ETP beyond cookies** (content-blocking customize, DoH, HTTPS-only, GPC, sanitize-on-shutdown) | A | ETP redesign needs FX153+ (see memory). |
+| **Preferences — Home** (custom-homepage/wallpaper/personalization), **Security + password-management**, **AI features** (new) | A | Major panes STARfox doesn't touch. |
+| Preferences — Networking/proxy, Sync pane, prefs-search framework / fonts / colors / performance / experimental | M | Env-dependent / needs account / framework-level. |
+| Profiles migration: import passwords (Chrome/Windows), Safari import (mac), migration wizard flow (entrypoints/cancel/no-browsers), file-based (HTML/CSV) import | A | STARfox imports bookmarks only. |
+| Locale: website-language ordering / Accept-Language fallback UI | A | STARfox installs a pack but not the ordering UI. |
 
 ## 2.7 PDF / print / reader / find / media / zoom
 
-- Picture-in-Picture (see 2.1).
-- **Print settings controls** (copies, page-range, margins, scaling, duplex, paper size, orientation) `[A]` — modal already automated, high value/effort ratio; plus print-selection, simplified/reader print, destination change/sort, cancel/close, context-menu/frame print.
-- PDF depth: fullscreen/presentation `[A]`, document properties `[A]`, highlight/comment annotations `[A]`, digital signature `[A]`, pages organize (rotate/delete/reorder) `[A]`, login-autofill into PDF form `[A]`; alt-text/AI/HCM/caret-browsing `[M]`.
-- Reader: color-scheme/theme controls `[A]`, reading-time + scroll-save `[A]`, local-file reader `[A]`; tab-navigation/pinned-tab reuse `[M]`.
-- Find: Highlight-All + Match-Case/Whole-Word/Diacritics modifiers `[A]`, quick-find ("/" and "'") `[A]`; hidden/before-match/hidden-frame find `[M]`.
-- Audio: tab mute/unmute via sound icon + persistence `[A]`, multiselect + global mute `[A]`; media wakelock / background-video suspend `[M]`.
-- Zoom: **site-specific zoom persistence** (per-origin, image, video) `[A]`, image zoom across tab-switch `[A]`, scroll-to-text-fragment `[A]`; tab-switch flicker/tooltip zoom `[M]`.
+| Gap | Tag | Note |
+|---|---|---|
+| Picture-in-Picture | A / M | See 2.1 (~85 FF tests, 0 STARfox). |
+| **Print settings controls** (copies, page-range, margins, scaling, duplex, paper size, orientation) + print-selection, simplified/reader print, destination change/sort, cancel/close, context-menu/frame print | A | Modal already automated — high value/effort ratio. |
+| PDF depth: fullscreen/presentation, document properties, highlight/comment annotations, digital signature, pages organize (rotate/delete/reorder), login-autofill into PDF form | A | STARfox has draw/text/image editor but not these. |
+| PDF: alt-text / AI / HCM / caret-browsing | M | Accessibility / ML-gated flows. |
+| Reader: color-scheme / theme controls, reading-time + scroll-save, local-file reader | A | STARfox Type panel does font/size/spacing, not themes. |
+| Reader: tab-navigation / pinned-tab reuse | M | |
+| Find: Highlight-All + Match-Case / Whole-Word / Diacritics modifiers, quick-find ("/" and "'") | A | STARfox tests only basic search + nav. |
+| Find: hidden / before-match / hidden-frame find | M | Requires special DOM fixtures. |
+| Audio: tab mute/unmute via sound icon + persistence, multiselect + global mute | A | STARfox has autoplay but no mute-toggle coverage. |
+| Audio: media wakelock / background-video suspend | M | Timing / power-state behavior. |
+| Zoom: **site-specific zoom persistence** (per-origin, image, video), image zoom across tab-switch, scroll-to-text-fragment | A | STARfox covers default zoom, not per-site memory. |
+| Zoom: tab-switch flicker / tooltip zoom | M | Visual/rendering timing. |
 
 ## 2.8 Sidebar / AI / menus / sync
 
-- AI Window / Link Preview / Page Assist (see 2.1).
-- **Sidebar tool panels** (Bookmarks, History, Synced Tabs, Open Tabs) `[A]` — STARfox tests the strip, never the panels.
-- Sidebar behavior: resize/max-width/splitter `[A]`, escape-to-collapse `[A]`, launcher hidden/restore `[A]`; fullscreen `[M]`, a11y `[M]`.
-- Chat shortcuts/prompts beyond Summarize `[A]`; chat-sidebar permissions `[M]`.
-- Context menu: spellcheck `[A]`, add-search-engine/search-selection `[A]`, keyboard-driven context menu `[A]`; send-tab/send-page `[M]`, cross-boundary/iframe selection `[M]`, OS share sheet `[M]`.
-- **Sync preferences UI**: chooseWhatToSync, sync-settings, sync-disabled, account visibility `[A]`; sign-in/avatar CTA variants `[A]`; synced tabs in Fx View / menu `[A]`; pairing (QR) `[M]`.
+| Gap | Tag | Note |
+|---|---|---|
+| AI Window / Link Preview / Page Assist | A | See 2.1 (confirm ship/pref status first). |
+| **Sidebar tool panels** (Bookmarks, History, Synced Tabs, Open Tabs) | A | STARfox tests the strip, never the panels. |
+| Sidebar behavior: resize / max-width / splitter, escape-to-collapse, launcher hidden/restore | A | High-frequency interactions, zero coverage. |
+| Sidebar behavior: fullscreen, a11y | M | Fullscreen transitions flaky; a11y trees awkward in Selenium. |
+| Chat shortcuts / prompts beyond Summarize | A | STARfox only exercises "Summarize". |
+| Chat-sidebar permissions | M | Permission prompts. |
+| Context menu: spellcheck, add-search-engine / search-selection, keyboard-driven context menu | A | Complements STARfox's mouse-only menu tests. |
+| Context menu: send-tab / send-page, cross-boundary / iframe selection, OS share sheet | M | Needs second synced device / edge cases / OS sheet. |
+| **Sync preferences UI**: chooseWhatToSync, sync-settings, sync-disabled, account visibility; sign-in / avatar CTA variants; synced tabs in Fx View / menu | A | STARfox only does sign-in, not the settings surface. |
+| Sync pairing (QR / pair another device) | M | Needs a second device. |
 
 ---
 
