@@ -1,5 +1,4 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -23,21 +22,13 @@ def delete_files_regex_string():
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
-def wait_for_file_download(file_path, timeout=10, interval=0.5):
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(file_path):
-            return True
-        time.sleep(interval)
-    return False
-
-
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
     delete_files,
+    wait_for_file_download,
 ):
     """
     C1756790: Verify that Telemetry is recorded when Saving a PDF from the Context menu
@@ -74,7 +65,7 @@ def test_download_pdf_from_context_menu(
 
     # Allow the download to complete
     nav.wait_for_download_animation_finish()
-    assert wait_for_file_download(saved_pdf_location, timeout=10), (
+    assert wait_for_file_download(saved_pdf_location), (
         f"File not found: {saved_pdf_location}"
     )
 

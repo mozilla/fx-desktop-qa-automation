@@ -1,5 +1,4 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -17,21 +16,13 @@ def delete_files_regex_string():
     return r".*i-9.pdf"
 
 
-def wait_for_file_download(file_path, timeout=10, interval=0.5):
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(file_path):
-            return True
-        time.sleep(interval)
-    return False
-
-
 @pytest.mark.headed
 def test_download_pdf(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
     delete_files,
+    wait_for_file_download,
 ):
     """
     C1756769: Verify that the user can Download a PDF
@@ -59,7 +50,7 @@ def test_download_pdf(
     finally:
         pdf_page.cleanup_mock_file_picker()
 
-    # Wait up to 10 seconds for the file to appear and finish downloading
-    assert wait_for_file_download(saved_pdf_location, timeout=10), (
+    # Wait for the file to appear and finish downloading
+    assert wait_for_file_download(saved_pdf_location), (
         f"File not found: {saved_pdf_location}"
     )
