@@ -33,7 +33,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     context_menu = ContextMenu(driver)
     wait = WebDriverWait(driver, 10)
 
-    playlist_url = "https://www.youtube.com/@msrachel"
+    playlist_url = "https://www.youtube.com/@msrachel/videos"
     playlist_page = GenericPage(driver, url=playlist_url)
     playlist_page.open()
 
@@ -69,6 +69,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             assert tab.get_attribute("multiselected") == "true", (
                 f"Tab {i} should be multiselected"
             )
+        sleep(4)  # wait for all tabs to load and play video
 
         # Click Play button
         tabs.click_multi_tab_audio_button()
