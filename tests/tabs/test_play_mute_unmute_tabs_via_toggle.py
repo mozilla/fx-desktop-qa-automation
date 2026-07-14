@@ -33,8 +33,7 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     context_menu = ContextMenu(driver)
     wait = WebDriverWait(driver, 10)
 
-    # Open Mozilla's Youtube Page
-    playlist_url = "https://www.youtube.com/mozilla/videos"
+    playlist_url = "https://www.youtube.com/@msrachel"
     playlist_page = GenericPage(driver, url=playlist_url)
     playlist_page.open()
 
