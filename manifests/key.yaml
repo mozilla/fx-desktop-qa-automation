@@ -970,8 +970,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:

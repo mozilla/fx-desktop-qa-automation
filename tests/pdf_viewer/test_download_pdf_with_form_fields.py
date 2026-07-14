@@ -16,6 +16,15 @@ def test_case():
 
 
 @pytest.fixture()
+def add_to_prefs_list():
+    # Suppress the Firefox 150+ private-browsing download notification dialog.
+    return [
+        ("browser.download.enableDeletePrivate", False),
+        ("dom.disable_beforeunload", True),
+    ]
+
+
+@pytest.fixture()
 def delete_files_regex_string():
     """Regex used by the cleanup fixture to remove downloaded files."""
     return DOWNLOADED_PDF_REGEX
