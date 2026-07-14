@@ -42,7 +42,11 @@ _gui_auto = None
 
 
 def _make_gui_auto(sysname):
-    if sysname == "Linux" and not os.environ.get("DISPLAY"):
+    if (
+        sysname == "Linux"
+        and not os.environ.get("DISPLAY")
+        and not os.environ.get("WAYLAND_DISPLAY")
+    ):
         return None
     import pyautogui
 
