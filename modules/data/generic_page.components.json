@@ -322,6 +322,17 @@
       "doNotCache"
     ]
   },
+  "bing-search-result": {
+    "selectorData": "li.b_algo h2 a",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An organic (non-sponsored) result title link on the Bing SERP; clicked for serp.engagement target='non_ads_link'. Ads live in li.b_ad, so this must not match them.",
+      "location": "bing.com SERP"
+    }
+  },
   "ecosia-related-search-shortcut": {
     "selectorData": "a.related-queries__link-bottom",
     "strategy": "css",

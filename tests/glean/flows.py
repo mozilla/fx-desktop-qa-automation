@@ -222,7 +222,6 @@ def _entry_follow_on_from_refine_on_incontent_search(
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
     glean = Glean(driver)
-    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
 
     # Open a new tab and perform the initial search
     page.open()
@@ -236,6 +235,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # Refine the search via the in-content search bar and verify both the original term
     # and the refinement remain in the URL (guards against the engine auto-selecting and
     # replacing the existing query on focus)
+    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
     page.element_visible(search_bar_name)
     search_bar = page.get_element(search_bar_name)
     search_bar.click()
@@ -275,7 +275,6 @@ def _action_open_in_new_tab(driver: Firefox, params: dict = None):
     page = GenericPage(driver)
     glean = Glean(driver)
     tabs = TabBar(driver)
-    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
 
     # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP telemetry
     # context before we open the refinement; otherwise the new tab is attributed as source='unknown'
@@ -283,6 +282,7 @@ def _action_open_in_new_tab(driver: Firefox, params: dict = None):
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
 
     # Ctrl/Cmd+click the related-search shortcut to open the refined SERP in a new background tab
+    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
     page.element_visible(shortcut)
     page.control_click(shortcut)
 
@@ -402,6 +402,32 @@ def _abandonment_back_navigation(
     # Leave the SERP via the back button -> serp.abandonment reason='navigation'
     nav.click_back_button()
     page.url_contains("about:newtab")
+
+
+# ===========================================================================
+# serp.engagement
+# ===========================================================================
+
+
+@_action("click_non_ads_link")
+def _action_click_non_ads_link(driver: Firefox, params: dict = None):
+    """Click a non-sponsored (organic) result link on the SERP so Firefox records a
+    serp.engagement with action='clicked', target='non_ads_link'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    glean = Glean(driver)
+
+    # Wait for the SERP impression so Firefox has wired up the SERP telemetry context before we
+    # click; otherwise the engagement is not attributed to this SERP
+    page.url_contains(SEARCH_TERM)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Click an organic result link -> serp.engagement action='clicked', target='non_ads_link'.
+    # JS click: Firefox's SERP telemetry listens for the click event, and this bypasses the
+    # hover/preview overlays some engines lay over the result title (native click is intercepted).
+    result = f"{params['engine'].lower()}-search-result"
+    page.element_visible(result)
+    page.js_click_on(result)
 
 
 # ---------------------------------------------------------------------------
