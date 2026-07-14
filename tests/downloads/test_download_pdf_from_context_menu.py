@@ -1,4 +1,5 @@
-from time import sleep
+import os
+import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -22,24 +23,36 @@ def delete_files_regex_string():
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
+def wait_for_file_download(file_path, timeout=10, interval=0.5):
+    start = time.time()
+    while time.time() - start < timeout:
+        if os.path.exists(file_path):
+            return True
+        time.sleep(interval)
+    return False
+
+
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
-    sys_platform,
     delete_files,
 ):
     """
     C1756790: Verify that Telemetry is recorded when Saving a PDF from the Context menu
 
-     Notes:
-        - Firefox is launched with a new profile that has default download settings.
-        - This means the OS-level "Save File" dialog will appear for every download.
-        - Selenium cannot interact with this native dialog directly, so the test
-          must rely on fixed waits to give the OS time to render the dialog and to
-          finish writing the file.
+    Notes:
+        - The native "Save File" picker is mocked on all platforms so the
+          download runs headlessly in CI. Driving the OS file dialog is
+          unreliable there (Linux Wayland cannot drive GTK pickers through
+          desktop input, and Windows image-matching depends on the CI
+          resolution/DPI/theme).
     """
+
+    # Set the expected download path and the expected PDF name
+    file_name = "i-9.pdf"
+    saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Initialize objects
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url)
@@ -48,19 +61,22 @@ def test_download_pdf_from_context_menu(
     tabs = TabBar(driver)
     nav = Navigation(driver)
 
-    # Right-click on the body of the file and select Save page as
-    pdf_page.open()
-    body = pdf_page.get_element("pdf-body")
-    pdf_page.context_click(body)
-    context_menu.click_and_hide_menu("context-menu-save-page-as")
+    # Replace the native save dialog with a mock that returns our target path
+    pdf_page.install_mock_file_picker(saved_pdf_location)
+    try:
+        # Right-click on the body of the file and select Save page as
+        body = pdf_page.get_element("pdf-body")
+        pdf_page.context_click(body)
+        context_menu.click_and_hide_menu("context-menu-save-page-as")
+        pdf_page.wait_for_mock_file_picker()
+    finally:
+        pdf_page.cleanup_mock_file_picker()
 
-    # Allow time for the save dialog to appear and handle prompt
-    sleep(2)
-    context_menu.hide_popup_by_child_node("context-menu-save-page-as")
-    pdf_page.handle_os_download_confirmation()
-
-    # Allow time for the download to complete
+    # Allow the download to complete
     nav.wait_for_download_animation_finish()
+    assert wait_for_file_download(saved_pdf_location, timeout=10), (
+        f"File not found: {saved_pdf_location}"
+    )
 
     # Open about:telemetry in a new tab and go to the Events tab
     tabs.new_tab_by_button()
