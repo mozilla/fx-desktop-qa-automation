@@ -1,6 +1,6 @@
 # STARfox ↔ Firefox Desktop Test Coverage Comparison
 
-**Generated:** 2026-07-14
+**Generated:** 2026-07-14 — *LLM-generated analysis; all figures are approximations and reflect a point-in-time snapshot. Re-validate before acting on specific numbers.*
 **STARfox repo:** `fx-desktop-qa-automation` @ `main`
 **Firefox tree:** `github.com/mozilla-firefox/firefox` @ `main` (mozilla-central mirror)
 
