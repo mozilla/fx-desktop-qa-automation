@@ -863,7 +863,7 @@ password_manager:
   test_multiple_saved_logins:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308
     result:
-      linux: unstable
+      linux: pass
       mac: pass
       win: unstable
     splits:
