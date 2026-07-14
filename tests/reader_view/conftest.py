@@ -1,4 +1,11 @@
+from shutil import copyfile
+
 import pytest
+
+
+@pytest.fixture()
+def html_filename():
+    return "article_page.html"
 
 
 @pytest.fixture()
@@ -17,3 +24,10 @@ def prefs_list(add_to_prefs_list: dict):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def local_doc_path(tmp_path, html_filename):
+    loc = tmp_path / html_filename
+    copyfile(f"data/pages/{html_filename}", loc)
+    return f"file://{loc}"

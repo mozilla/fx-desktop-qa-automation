@@ -146,7 +146,7 @@ jobs:
         if: ${{ steps.setup.conclusion == 'success' && always() }}
         shell: pwsh
         run: |
-          Remove-Item -Path ./pyproject.toml -ErrorAction SilentlyContinue
+          git checkout -- pyproject.toml
           uv run python scripts/switch_config.py ci_headed_no_reruns;
 
           New-Item -ItemType Directory -Force -Path test-results | Out-Null
@@ -286,7 +286,7 @@ jobs:
           FX_EXECUTABLE: /Volumes/${{ steps.setup.outputs.app_name }}/${{ steps.setup.outputs.app_name }}.app/Contents/MacOS/firefox
         run: |
           mkdir -p test-results
-          rm -f ./pyproject.toml
+          git checkout -- pyproject.toml
           uv run python scripts/switch_config.py ci_headed_no_reruns;
           uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) --json-report --json-report-file=test-results/report-mac-headed.json --reruns 0 || TEST_EXIT_CODE=$?
           mv -n artifacts/* artifacts-mac/ || true

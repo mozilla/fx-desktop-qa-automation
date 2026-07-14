@@ -963,8 +963,8 @@
     "strategy": "id",
     "groups": [],
     "comment": {
-      "description": "Checkbox for using primary password",
-      "location": "about:preferences#privacy Passwords subsection"
+      "description": "\"Set primary password\" button that opens the Primary Password dialog",
+      "location": "about:preferences#passwordsAutofill Passwords subsection"
     }
   },
   "current-password": {
@@ -973,7 +973,7 @@
     "groups": [],
     "comment": {
       "description": "Input for current primary password",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "enter-new-password": {
@@ -984,7 +984,7 @@
     ],
     "comment": {
       "description": "Input for new primary password",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "form-container": {
@@ -1015,19 +1015,19 @@
     ],
     "comment": {
       "description": "Input for new primary password again",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "submit-password": {
-    "selectorData": "button[label^='OK']",
+    "selectorData": "button[dlgtype='accept']",
     "strategy": "css",
     "shadowParent": "primary-password-box",
     "groups": [
       "doNotCache"
     ],
     "comment": {
-      "description": "Ok button to submit the new primary password",
-      "location": "about:preferences#privacy Primary Password popup"
+      "description": "Accept button to submit the primary password; selected by dlgtype because the label varies by build (\"OK\"/\"Submit\")",
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "primary-password-box": {
@@ -1038,7 +1038,7 @@
     ],
     "comment": {
       "description": "Shadow parent of the OK and cancel button",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "autoplay-settings-button": {
@@ -1332,8 +1332,8 @@
       "doNotCache"
     ],
     "comment": {
-      "description": "Change primary password button in about:preferences#privacy",
-      "location": "about:preferences#privacy"
+      "description": "Change primary password button",
+      "location": "about:preferences#passwordsAutofill"
     }
   },
   "current-primary-password-parent": {
@@ -1384,7 +1384,7 @@
     "groups": [],
     "comment": {
       "description": "Shadow parent of the remove button",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "remove-password": {
@@ -1394,7 +1394,7 @@
     "groups": [],
     "comment": {
       "description": "Remove button to remove the primary password",
-      "location": "about:preferences#privacy Primary Password popup"
+      "location": "about:preferences#passwordsAutofill Primary Password popup"
     }
   },
   "ai-controls-toggle-tile": {
@@ -1507,7 +1507,7 @@
     "groups": [],
     "comment": {
       "description": "\"Turn off Primary Password\" / remove button in the Remove Primary Password dialog, used to confirm clearing the primary password",
-      "location": "about:preferences#privacy (Remove Primary Password dialog)"
+      "location": "about:preferences#passwordsAutofill (Remove Primary Password dialog)"
     }
   },
   "primary-password-input-parent": {
