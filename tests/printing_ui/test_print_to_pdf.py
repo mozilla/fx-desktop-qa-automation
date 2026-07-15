@@ -1,5 +1,4 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -29,20 +28,12 @@ TEST_PAGE = "https://example.com"
 DEFAULT_NAME = "Example Domain.pdf"
 
 
-def wait_for_file_download(file_path, timeout=10, interval=0.5) -> bool:
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(file_path):
-            return True
-        time.sleep(interval)
-    return False
-
-
 def test_print_to_pdf(
     driver: Firefox,
     downloads_folder: str,
     delete_files,
     print_preview: PrintPreview,
+    wait_for_file_download,
 ):
     """
     C965142 - Verify that the user can print a webpage to PDF

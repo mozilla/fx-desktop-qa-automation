@@ -34,7 +34,6 @@ def test_pdf_download(
     downloads_folder: str,
     sys_platform,
     delete_files,
-    file_name,
     delete_files_regex_string,
 ):
     """
@@ -46,7 +45,6 @@ def test_pdf_download(
         pdf_viewer: Fixture returning instance of GenericPdf with correct path.
         downloads_folder: Fixture returning downloads folder path
         delete_files: Fixture to remove the files after the test finishes
-        file_name: pdf file name
     """
 
     saved_pdf_location = os.path.join(downloads_folder, DOWNLOADED_PDF_NAME)
