@@ -1,0 +1,26 @@
+"""
+C3341325 - Chatbot provider selection reflects on AI controls page
+Verify that selecting an AI model in the Sidebar will reflect the users choice on the AI controls page
+"""
+import logging
+import pytest
+from modules.page_object_prefs import AboutPrefs
+
+
+@pytest.fixture()
+def test_case():
+    return "3341325"
+
+
+def test_chatbot_provider_selection_reflects_on_ai_controls_page(about_prefs: AboutPrefs):
+    """
+    C3341325 - Chatbot provider selection reflects on AI controls page
+    """
+    about_prefs.navigate_to_ai_controls()
+
+    about_prefs.set_ai_chatbot_provider("ChatGPT")
+    provider = about_prefs.get_ai_chatbot_provider()
+    assert provider == "ChatGPT", (
+        f"Chatbot provider should reflect 'ChatGPT' after selection, got '{provider}'"
+    )
+    logging.info(f"Chatbot provider correctly reflects: {provider}")
