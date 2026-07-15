@@ -1,6 +1,5 @@
 import logging
 import os
-import re
 from time import sleep, time
 from typing import Optional
 
@@ -203,13 +202,11 @@ class AboutLogins(BasePage):
         else:
             assert expected_logins == actual_logins
 
-    def remove_password_csv(self, downloads_dir):
-        # Delete password.csv, if there is one in the export location
-        passwords_csv = os.path.join(downloads_dir, "passwords.csv")
-        for file in os.listdir(downloads_dir):
-            delete_files_regex = re.compile(r"\bpasswords.csv\b")
-            if delete_files_regex.match(file):
-                os.remove(passwords_csv)
+    def remove_password_csv(self, downloads_dir, filename: str = "passwords.csv"):
+        # Delete the exported CSV, if there is one in the export location
+        passwords_csv = os.path.join(downloads_dir, filename)
+        if os.path.exists(passwords_csv):
+            os.remove(passwords_csv)
 
     def verify_csv_export(
         self, downloads_folder: str, filename: str, timeout: int = 20

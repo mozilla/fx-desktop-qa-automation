@@ -1125,8 +1125,7 @@ printing_ui:
     - smoke
     - ci
   test_print_to_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
-    result: unstable
+    result: pass
     splits:
     - functional2
 profile:

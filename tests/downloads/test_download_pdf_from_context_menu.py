@@ -16,13 +16,12 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*i-9.pdf"
+    return r".*i-9-context-menu\.pdf"
 
 
 PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 
-@pytest.mark.headed
 def test_download_pdf_from_context_menu(
     driver: Firefox,
     fillable_pdf_url: str,
@@ -42,7 +41,7 @@ def test_download_pdf_from_context_menu(
     """
 
     # Set the expected download path and the expected PDF name
-    file_name = "i-9.pdf"
+    file_name = "i-9-context-menu.pdf"
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Initialize objects
