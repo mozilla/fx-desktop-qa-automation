@@ -192,7 +192,7 @@ class TestKey:
         Given a filename, get a partial dict that represents
         the test's location in the manifest
         """
-        segments = filename.split(os.path.sep)
+        segments = re.split(r"[\\/]", filename)
         i = 0
         if segments[i] == ".":
             i += 1
