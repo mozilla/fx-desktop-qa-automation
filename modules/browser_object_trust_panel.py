@@ -1,7 +1,11 @@
 import json
 from time import sleep
 
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import (
+    NoSuchElementException,
+    TimeoutException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -116,22 +120,29 @@ class TrustPanel(BasePage):
         def _trackers_are_present(_):
             try:
                 args = self.get_element_args(blocker_section)
-            except (TypeError, ValueError):
+            except (
+                StaleElementReferenceException,
+                TypeError,
+                ValueError,
+            ):
                 return False
 
             return isinstance(args, dict) and args.get("count", 0) > 0
 
-        for attempt in range(attempts):
+        attempt = 1
+
+        while True:
             try:
                 self.custom_wait(timeout=timeout).until(_trackers_are_present)
                 return self
             except TimeoutException as exc:
-                if attempt == attempts - 1:
+                if attempt == attempts:
                     raise AssertionError(
                         "No trackers appeared in the trust panel after "
                         f"{attempts} attempts."
                     ) from exc
 
+                attempt += 1
                 nav.refresh_page()
                 self.open_panel()
 
