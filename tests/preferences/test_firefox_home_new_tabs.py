@@ -38,9 +38,7 @@ def test_firefox_home_new_tab(
     about_prefs.select_new_tabs_firefox_home()
 
     # make sure that the option was selected correctly
-    about_prefs.element_attribute_is(
-        "homepage-new-tabs-dropdown", "value", "home"
-    )
+    about_prefs.element_attribute_is("homepage-new-tabs-dropdown", "value", "home")
 
     # open a new tab
     tabs.open_and_switch_to_new_tab()
