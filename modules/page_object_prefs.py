@@ -1344,6 +1344,121 @@ class AboutPrefs(BasePage):
                 self.element_attribute_is_not(key, "disabled", "")
         return self
 
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
+        """
+        Verify that the three always-present AI Controls elements are visible
+        (the killswitch toggle, the translations select, and the chatbot select).
+        """
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation. Pass False when enterprise
+                    policies hide those controls.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        # The toggle reports its state through the aria-pressed attribute (the
+        # same signal expect_ai_killswitch_state waits on); "true" means blocked.
+        return (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "true"
+        )
+
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Note: this writes the pref directly and does NOT run the UI toggle's
+        side effects (e.g. flipping extensions.ml.enabled). Use
+        toggle_ai_killswitch_click when those side effects must be exercised
+        (see C3341331).
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        if block != self.get_ai_killswitch_state():
+            self.driver.execute_script(
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
+            )
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+
+        Returns:
+            str: Current state ("available" or "blocked")
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        return self.driver.execute_script("return arguments[0].value;", select_elem)
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+
+        Arguments:
+            state: "available" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        self.expect(lambda _: self.get_ai_translations_state() == state)
+        return self
+
+    def cancel_ai_killswitch_click(self) -> BasePage:
+        """
+        Click the AI killswitch toggle and dismiss the confirmation dialog with
+        its "Cancel" button, leaving AI unblocked. Mirrors
+        toggle_ai_killswitch_click but exercises the cancel path of the
+        "Block all AI enhancements?" prompt.
+        """
+        self.click_on("ai-controls-toggle")
+        self.element_visible("ai-controls-disable-dialog-button")
+        buttons = self.get_elements("ai-controls-disable-dialog-button")
+        cancel = [el for el in buttons if el.get_attribute("label") == "Cancel"]
+        assert cancel, "Cancel button not found in block-AI confirmation dialog"
+        cancel[0].click()
+        return self
+
+    def get_extensions_ml_enabled(self) -> bool:
+        """
+        Read the extensions.ml.enabled pref, which the AI killswitch flips off
+        while blocking. Returns True when the WebExtensions ML API is enabled.
+        """
+        return bool(
+            self.driver.execute_script(
+                "return Services.prefs.getBoolPref('extensions.ml.enabled', false);"
+            )
+        )
+
 
 class AboutAddons(BasePage):
     """
