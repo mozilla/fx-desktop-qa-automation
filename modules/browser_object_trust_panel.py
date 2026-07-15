@@ -40,15 +40,18 @@ class TrustPanel(BasePage):
         """Wait until the expected trackers appear in the requested category."""
 
         def _expected_trackers_are_present(_):
-            spotted = self.get_elements(f"{category}-items")
+            try:
+                spotted = self.get_elements(f"{category}-items")
 
-            if trackers and not spotted:
+                if trackers and not spotted:
+                    return False
+
+                return all(
+                    any(self.item_in_block(tracker, block) for block in spotted)
+                    for tracker in trackers
+                )
+            except StaleElementReferenceException:
                 return False
-
-            return all(
-                any(self.item_in_block(tracker, block) for block in spotted)
-                for tracker in trackers
-            )
 
         try:
             self.expect(_expected_trackers_are_present)
@@ -59,12 +62,10 @@ class TrustPanel(BasePage):
 
         return self
 
-    @BasePage.context_chrome
     def trackers_blocked(self, *trackers) -> BasePage:
         """Wait until the expected trackers appear in the blocked category."""
         return self.trackers_in_category("blocked", *trackers)
 
-    @BasePage.context_chrome
     def trackers_detected(self, *trackers) -> BasePage:
         """Wait until the expected trackers appear in the detected category."""
         return self.trackers_in_category("detected", *trackers)
