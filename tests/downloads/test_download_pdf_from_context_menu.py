@@ -24,11 +24,11 @@ PDF_TELEMETRY_DATA = ["downloads", "added", "fileExtension", "pdf"]
 
 @pytest.mark.headed
 def test_download_pdf_from_context_menu(
-        driver: Firefox,
-        fillable_pdf_url: str,
-        downloads_folder: str,
-        sys_platform,
-        delete_files,
+    driver: Firefox,
+    fillable_pdf_url: str,
+    downloads_folder: str,
+    sys_platform,
+    delete_files,
 ):
     """
     C1756790: Verify that Telemetry is recorded when Saving a PDF from the Context menu
@@ -49,6 +49,7 @@ def test_download_pdf_from_context_menu(
     nav = Navigation(driver)
 
     # Right-click on the body of the file and select Save page as
+    pdf_page.open()
     body = pdf_page.get_element("pdf-body")
     pdf_page.context_click(body)
     context_menu.click_and_hide_menu("context-menu-save-page-as")
