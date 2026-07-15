@@ -13,7 +13,7 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*i-9.pdf"
+    return r".*i-9-downloads\.pdf"
 
 
 def test_download_pdf(
@@ -35,7 +35,7 @@ def test_download_pdf(
     """
 
     # Set the expected download path and the expected PDF name
-    file_name = "i-9.pdf"
+    file_name = "i-9-downloads.pdf"
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Initialize objects

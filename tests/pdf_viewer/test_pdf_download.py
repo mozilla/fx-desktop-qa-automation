@@ -6,8 +6,11 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
 
+# Source PDF in data/ opened by the viewer; the saved copy uses a unique name
+# so this test can run in parallel without colliding with other PDF downloads.
 PDF_FILE_NAME = "i-9.pdf"
-DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
+DOWNLOADED_PDF_NAME = "i-9-viewer.pdf"
+DOWNLOADED_PDF_REGEX = r"i-9-viewer\.pdf"
 
 
 @pytest.fixture()
@@ -46,7 +49,7 @@ def test_pdf_download(
         file_name: pdf file name
     """
 
-    saved_pdf_location = os.path.join(downloads_folder, file_name)
+    saved_pdf_location = os.path.join(downloads_folder, DOWNLOADED_PDF_NAME)
 
     # Mock the native Save As picker so the download runs headlessly on all
     # platforms (driving the OS file dialog is unreliable in CI).
@@ -66,6 +69,6 @@ def test_pdf_download(
     )
 
     logging.info(
-        f"Test passed: The file {file_name} has been"
+        f"Test passed: The file {DOWNLOADED_PDF_NAME} has been"
         f" downloaded and is present at {saved_pdf_location}."
     )
