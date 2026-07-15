@@ -94,41 +94,42 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def wait_for_trackers(
-            self,
-            attempts: int = 3,
-            timeout: int = 10,
+        self,
+        attempts: int = 3,
+        timeout: int = 10,
     ) -> BasePage:
         """
         Wait until trackers appear in the trust panel.
 
-        If trackers are not detected, refresh the page and retry.
-        Refreshing is performed only between attempts, not during every
-        WebDriverWait polling cycle.
+        Refresh the page and retry when tracker data is not populated.
         """
+        if attempts < 1:
+            raise ValueError("attempts must be at least 1")
+
         nav = Navigation(self.driver)
         blocker_section = "trustpanel-blocker-section"
 
         def _trackers_are_present(_):
-            args = self.get_element_args(blocker_section)
-            return args.get("count", 0) > 0
+            try:
+                args = self.get_element_args(blocker_section)
+            except (TypeError, ValueError):
+                return False
+
+            return isinstance(args, dict) and args.get("count", 0) > 0
 
         for attempt in range(attempts):
             try:
-                self.custom_wait(timeout=timeout).until(
-                    _trackers_are_present
-                )
+                self.custom_wait(timeout=timeout).until(_trackers_are_present)
                 return self
-            except TimeoutException:
+            except TimeoutException as exc:
                 if attempt == attempts - 1:
                     raise AssertionError(
                         "No trackers appeared in the trust panel after "
                         f"{attempts} attempts."
-                    )
+                    ) from exc
 
                 nav.refresh_page()
                 self.open_panel()
-
-        return self
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
