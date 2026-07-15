@@ -1344,6 +1344,12 @@ class AboutPrefs(BasePage):
                 self.element_attribute_is_not(key, "disabled", "")
         return self
 
+    def select_new_tabs_firefox_home(self):
+        """Selects Firefox Home from the new tabs homepage dropdown"""
+        self.js_click_on("homepage-new-tabs-dropdown")
+        self.js_click_on("homepage-new-tabs-firefox-home-option")
+        return self
+
 
 class AboutAddons(BasePage):
     """
