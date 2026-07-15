@@ -5,7 +5,6 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
 
 from modules.page_base import BasePage
 
@@ -46,60 +45,59 @@ class GenericPage(BasePage):
             sleep(1)
             self.gui.press("enter")
 
-    def wait_for_reload_and_verify_empty_field(
-        self, old_field, field_id: str, wait_time: int = 10
+    def fill_field_and_verify(
+        self, field_name: str, text: str, verify_value: bool = True
     ):
         """
-        Wait until the page reloads (staleness of old field) and verify that the
-        new search field is visible and empty.
+        Clears the field, fills it with text, and optionally verifies the value.
 
         Args:
-            old_field: WebElement before reload.
-            field_id (str): ID of the field to locate.
-            wait_time (int): Max wait time in seconds.
+            field_name: POM/BOM element name to interact with.
+            text: Text to enter.
+            verify_value: If True, verifies that field value matches `text`.
 
         Returns:
-            WebElement: The refreshed search field.
+            GenericPage: The current page object.
         """
+        self.fill(field_name, text, press_enter=False)
 
-        # Wait for the old element to be stale (page reload)
-        self.wait.until(EC.staleness_of(old_field))
+        if verify_value:
+            self.element_attribute_is(field_name, "value", text)
 
-        # Wait for the new one to appear and be visible
-        new_field = self.wait.until(
-            lambda d: (
-                elem
-                if (elem := d.find_element(By.ID, field_id)).is_displayed()
-                else False
+        return self
+
+    def get_page_time_origin(self):
+        """
+        Returns the current page time origin.
+
+        Returns:
+            float: Current page time origin.
+        """
+        return self.driver.execute_script("return performance.timeOrigin")
+
+    def wait_for_reload_and_verify_empty_field(
+        self, field_name: str, previous_time_origin: float
+    ):
+        """
+        Waits until the page reloads, then verifies that the field is visible and empty.
+
+        Args:
+            field_name: POM/BOM element name to verify after reload.
+            previous_time_origin: Page time origin before reload.
+
+        Returns:
+            GenericPage: The current page object.
+        """
+        self.wait.until(
+            lambda _: (
+                self.driver.execute_script("return performance.timeOrigin")
+                != previous_time_origin
             )
         )
+        self.element_visible(field_name)
+        self.element_attribute_is(field_name, "value", "")
 
-        assert new_field.get_attribute("value") == "", (
-            "Search field should be empty after reload"
-        )
-        return new_field
-
-    def fill_field_and_verify(
-        self, field, text: str, clear_func, assert_nonempty: bool = True
-    ):
-        """
-        Clicks the field, clears it, fills with text, and optionally asserts the value.
-
-        Args:
-            field: WebElement to interact with.
-            text: Text to enter.
-            clear_func: Callable that clears and fills the field (e.g., ba.clear_and_fill).
-            assert_nonempty: If True, asserts that field value matches `text`.
-
-        Returns:
-            WebElement: The same field after filling.
-        """
-        field.click()
-        clear_func(field, text, press_enter=False)
-        if assert_nonempty:
-            actual = field.get_attribute("value")
-            assert actual == text, f"Expected field value '{text}', but got '{actual}'"
-        return field
+        return self
 
     def wait_for_geolocation_data(self, timeout=20):
         """Wait until both latitude and longitude data are available."""
@@ -113,6 +111,7 @@ class GenericPage(BasePage):
                 ]
             )
         )
+        return self
 
     def verify_volume_not_max(self):
         """
@@ -287,4 +286,164 @@ class GenericPdf(BasePage):
                 < scale_factor
             )
         )
+        return self
+
+    def select_editor_tool(self, tool: str) -> BasePage:
+        """Select a PDF editor toolbar tool."""
+        self.get_element(tool).click()
+        self.element_attribute_contains(tool, "class", "toggled")
+        return self
+
+    def draw_on_pdf_page(self, page_number: str = "1") -> BasePage:
+        """Draw a short line on the selected PDF page."""
+        page = self.get_element("pdf-page", labels=[page_number])
+        (
+            self.actions.move_to_element_with_offset(page, 150, 150)
+            .click_and_hold()
+            .move_by_offset(80, 30)
+            .release()
+            .perform()
+        )
+        self.element_exists("added-drawing")
+        return self
+
+    def add_text_to_pdf_page(self, text: str, page_number: str = "1") -> BasePage:
+        """Add text to the selected PDF page."""
+        page = self.get_element("pdf-page", labels=[page_number])
+        self.actions.move_to_element_with_offset(page, 150, 220).click().perform()
+        self.actions.send_keys(text).perform()
+        self.element_visible("added-text")
+        self.element_has_text("added-text", text)
+        return self
+
+    def get_element_rect(self, element: WebElement) -> dict[str, float]:
+        """Return the element bounding client rect."""
+        return self.driver.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            return {
+                x: rect.x,
+                y: rect.y,
+                width: rect.width,
+                height: rect.height,
+            };
+            """,
+            element,
+        )
+
+    def get_drawing_area(self) -> WebElement:
+        """Return the SVG container for the added drawing."""
+        drawing = self.get_element("added-drawing")
+        drawing_area = self.driver.execute_script(
+            "return arguments[0].closest('svg.draw');",
+            drawing,
+        )
+
+        assert drawing_area is not None, "Expected drawing SVG area to exist."
+        return drawing_area
+
+    def select_drawing_area(self) -> WebElement:
+        """Dismiss drawing mode, select, and return the existing drawing area."""
+        self.actions.send_keys(Keys.ESCAPE).perform()
+
+        drawing_area = self.get_drawing_area()
+        self.actions.move_to_element(drawing_area).click().perform()
+
+        return drawing_area
+
+    def get_drawing_resize_handle(self, drawing_area: WebElement) -> WebElement:
+        """
+        Return the resize handle for the selected drawing area.
+
+        The script searches inside the PDF viewer for visible resize handle candidates
+        and returns the one closest to the drawing area's bottom-right corner.
+        """
+        resize_handle = self.driver.execute_script(
+            """
+            const drawingArea = arguments[0];
+            const drawingRect = drawingArea.getBoundingClientRect();
+            const viewer = drawingArea.closest("#viewer") || document;
+
+            const selectors = [
+                ".resizer.bottomRight",
+                ".resizer[data-resizer-name='bottomRight']",
+                "[data-resizer-name='bottomRight']",
+                "[class*='bottomRight']",
+                "[class*='resize']",
+                "[class*='resizer']",
+                "[class*='handle']"
+            ];
+
+            const candidates = selectors
+                .flatMap(selector => [...viewer.querySelectorAll(selector)])
+                .filter(element => {
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && rect.height > 0;
+                });
+
+            const unique = [...new Set(candidates)];
+
+            if (!unique.length) {
+                return null;
+            }
+
+            const drawingBottomRight = {
+                x: drawingRect.right,
+                y: drawingRect.bottom,
+            };
+
+            return unique.sort((first, second) => {
+                const firstRect = first.getBoundingClientRect();
+                const secondRect = second.getBoundingClientRect();
+
+                const firstDistance = Math.hypot(
+                    firstRect.left - drawingBottomRight.x,
+                    firstRect.top - drawingBottomRight.y
+                );
+                const secondDistance = Math.hypot(
+                    secondRect.left - drawingBottomRight.x,
+                    secondRect.top - drawingBottomRight.y
+                );
+
+                return firstDistance - secondDistance;
+            })[0];
+            """,
+            drawing_area,
+        )
+
+        assert resize_handle is not None, "Expected drawing resize handle to exist."
+        return resize_handle
+
+    def move_drawing_area(self, drawing_area: WebElement) -> BasePage:
+        """Move the selected drawing area and verify its position changed."""
+        initial_rect = self.get_element_rect(drawing_area)
+
+        self.actions.drag_and_drop_by_offset(drawing_area, 80, 50).perform()
+
+        def drawing_moved(_):
+            rect = self.get_element_rect(drawing_area)
+            return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
+
+        self.expect(drawing_moved)
+        return self
+
+    def resize_drawing_area(self, drawing_area: WebElement) -> BasePage:
+        """Resize the selected drawing area and verify its size changed."""
+        initial_rect = self.get_element_rect(drawing_area)
+        resize_handle = self.get_drawing_resize_handle(drawing_area)
+
+        self.actions.move_to_element(resize_handle)
+        self.actions.click_and_hold()
+        self.actions.move_by_offset(40, 40)
+        self.actions.release()
+        self.actions.perform()
+
+        def drawing_resized(_):
+            rect = self.get_element_rect(drawing_area)
+            return (
+                rect["width"] != initial_rect["width"]
+                or rect["height"] != initial_rect["height"]
+            )
+
+        self.expect(drawing_resized)
         return self

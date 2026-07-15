@@ -37,5 +37,5 @@ def test_server_not_found_error(driver: Firefox):
     # Verify title and short description on the error page
     error_page.verify_error_header(ERROR_TITLES, SHORT_SITE)
 
-    # Verify the "Learn more" link redirects correctly
-    error_page.click_learn_more_and_verify_redirect(REDIRECT_URL)
+    # Verify the "Did you mean..." suggestion link redirects correctly
+    error_page.click_suggestion_and_verify_redirect(REDIRECT_URL)

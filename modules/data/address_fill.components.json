@@ -1,63 +1,107 @@
 {
-    "do-not-cache": true,
-    "form-field": {
-        "selectorData": "*[autocomplete='{name}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "submit-button": {
-        "selectorData": "*[type='{name}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "base-submit-button": {
-        "selectorData": "*[type='submit']",
-        "strategy": "css",
-        "groups": []
-    },
-    "name-field": {
-        "selectorData": "input[autocomplete=name]",
-        "strategy": "css",
-        "groups": []
-    },
-    "org-field": {
-        "selectorData": "input[autocomplete=organization]",
-        "strategy": "css",
-        "groups": []
-    },
-    "street-field": {
-        "selectorData": "input[autocomplete=street-address]",
-        "strategy": "css",
-        "groups": []
-    },
-    "add-level2-field": {
-        "selectorData": "input[autocomplete=address-level2]",
-        "strategy": "css",
-        "groups": []
-    },
-    "add-level1-field": {
-        "selectorData": "input[autocomplete=address-level1]",
-        "strategy": "css",
-        "groups": []
-    },
-    "zip-field": {
-        "selectorData": "input[autocomplete=postal-code]",
-        "strategy": "css",
-        "groups": []
-    },
-    "country-field": {
-        "selectorData": "input[autocomplete=country]",
-        "strategy": "css",
-        "groups": []
-    },
-    "email-field": {
-        "selectorData": "input[autocomplete=email]",
-        "strategy": "css",
-        "groups": []
-    },
-    "phone-field": {
-        "selectorData": "input[autocomplete=tel]",
-        "strategy": "css",
-        "groups": []
+  "do-not-cache": true,
+  "form-field": {
+    "selectorData": "*[autocomplete='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Input field",
+      "location": "Input field in the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
     }
+  },
+  "submit-button": {
+    "selectorData": "*[type='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Submit\" button",
+      "location": "At the bottom of the autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "base-submit-button": {
+    "selectorData": "*[type='submit']",
+    "strategy": "css",
+    "groups": []
+  },
+  "name-field": {
+    "selectorData": "input[autocomplete=name]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Name field",
+      "location": "Name field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "org-field": {
+    "selectorData": "input[autocomplete=organization]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Organization field",
+      "location": "Organization field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "street-field": {
+    "selectorData": "input[autocomplete=street-address]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Street field",
+      "location": "Street field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "add-level2-field": {
+    "selectorData": "input[autocomplete=address-level2]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Address level 2 field",
+      "location": "Address level 2 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "add-level1-field": {
+    "selectorData": "input[autocomplete=address-level1]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Address level 1 field",
+      "location": "Address level 1 field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "zip-field": {
+    "selectorData": "input[autocomplete=postal-code]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Zip field",
+      "location": "Zip field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "country-field": {
+    "selectorData": "input[autocomplete=country]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Country field",
+      "location": "Country field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "email-field": {
+    "selectorData": "input[autocomplete=email]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Email field",
+      "location": "Email field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  },
+  "phone-field": {
+    "selectorData": "input[autocomplete=tel]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Phone field",
+      "location": "Phone field on autofill address demo page - https://mozilla.github.io/form-fill-examples/basic.html"
+    }
+  }
 }

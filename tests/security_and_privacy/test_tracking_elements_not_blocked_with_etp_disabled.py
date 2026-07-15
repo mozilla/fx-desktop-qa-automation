@@ -23,7 +23,7 @@ def test_tracking_elements_not_blocked_with_etp_disabled(
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()
-    about_prefs.click_on("standard-radio")
+    about_prefs.select_etp_level("standard")
 
     # open the trackers page
     tracker_website = GenericPage(driver, url=TRACKER_URL)

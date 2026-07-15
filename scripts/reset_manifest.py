@@ -15,5 +15,5 @@ if __name__ == "__main__":
             for k in entry:
                 entry = entry[k]
                 break
-            entry["splits"].append(sys.argv[1])
+        entry["splits"].append(sys.argv[1])
     manifest.write()

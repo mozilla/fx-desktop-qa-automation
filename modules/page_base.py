@@ -766,6 +766,7 @@ class BasePage(Page):
     def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform control-click on given element"""
         element = self.fetch(reference, labels)
+        self.scroll_to_element(element)
         if self.sys_platform() == "Darwin":
             mod_key = Keys.COMMAND
         else:
@@ -849,30 +850,6 @@ class BasePage(Page):
             self.actions.key_down(mod_key)
             self.actions.send_keys_to_element(el, "v")
             self.actions.key_up(mod_key).perform()
-        return self
-
-    def copy_image_from_element(
-        self, reference: str | tuple | WebElement, labels=None
-    ) -> Page:
-        """Copy from the given element using right click (pyautogui)"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.scroll_to_element(el)
-            time.sleep(0.1)
-            self.context_click(el)
-            time.sleep(0.1)
-            self.gui_sequence("down", "down", "down", "enter")
-            time.sleep(0.5)
-        return self
-
-    def copy_selection(self, reference: str | tuple | WebElement, labels=None) -> Page:
-        """Copy from the current selection using right click (pyautogui)"""
-        with self.driver.context(self.context_id):
-            el = self.fetch(reference, labels)
-            self.scroll_to_element(el)
-            self.context_click(el)
-            self.gui_sequence("down", "enter")
-            time.sleep(0.5)
         return self
 
     def click_and_hide_menu(
@@ -1351,11 +1328,12 @@ class BasePage(Page):
         # Default return if neither zoom nor transform is set
         return 1.0
 
-    @context_chrome
+    @context_of_model
     def js_click_on(self, reference, labels=None):
         """
         Perform a 'hard click' using a JS command. Use this when regular click_on()
-        doesn't work well
+        doesn't work well. Runs in the model's declared context, so it works for both
+        chrome BOMs and content POMs.
         """
         self.driver.execute_script(
             "arguments[0].click();", self.fetch(reference, labels=labels)

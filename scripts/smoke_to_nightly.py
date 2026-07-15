@@ -3,5 +3,5 @@ if __name__ == "__main__":
         config = fh.read()
 
     config = config.replace("smoke", "nightly-as-beta")
-    with open(".github/workflows/main.yml") as fh:
+    with open(".github/workflows/main.yml", "w") as fh:
         fh.write(config)

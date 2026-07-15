@@ -58,7 +58,15 @@ class AutofillPopup(BasePage):
     def click_doorhanger_button(self, button_type: str) -> BasePage:
         """Presses a button in the doorhanger popup (e.g., save, update, dropdown)"""
         self.element_visible(f"doorhanger-{button_type}-button")
-        self.click_on(f"doorhanger-{button_type}-button")
+        self.js_click_on(f"doorhanger-{button_type}-button")
+        return self
+
+    @BasePage.context_chrome
+    def open_login_doorhanger_more_actions_menu(self) -> BasePage:
+        """Open the login doorhanger's 'More actions' menu and wait for it to render."""
+        self.element_visible("doorhanger-secondary-split-button")
+        self.js_click_on("doorhanger-more-actions-chevron")
+        self.element_visible("doorhanger-never-save-login-button")
         return self
 
     # Interaction with form options
@@ -163,12 +171,6 @@ class AutofillPopup(BasePage):
         return element
 
     @BasePage.context_chrome
-    def dismiss_password_doorhanger(self) -> BasePage:
-        """Dismiss the Password Manager doorhanger using ESC."""
-        self.get_element("password-notification-username-field").send_keys(Keys.ESCAPE)
-        return self
-
-    @BasePage.context_chrome
     def click_securely_generated_password(self) -> BasePage:
         """Click the 'Use a Securely Generated Password' option from the autofill popup."""
         self.click_on("generated-securely-password")
@@ -184,8 +186,28 @@ class AutofillPopup(BasePage):
         )
         return self
 
+    def _get_doorhanger_username_input(self):
+        """Helper to get the input element inside the password doorhanger username shadow DOM.
+        Must be called from chrome context.
+        """
+        parent = self.get_element("password-notification-username-field")
+        input_el = self.driver.execute_script(
+            "return arguments[0].shadowRoot.querySelector('input')", parent
+        )
+        if input_el is None:
+            raise RuntimeError(
+                "Could not find input inside password-notification-username-field shadow root"
+            )
+        return input_el
+
     @BasePage.context_chrome
     def type_username_in_password_doorhanger(self, username: str) -> BasePage:
         """Type a username into the Password Manager doorhanger."""
-        self.get_element("password-notification-username-field").send_keys(username)
+        self._get_doorhanger_username_input().send_keys(username)
+        return self
+
+    @BasePage.context_chrome
+    def dismiss_password_doorhanger(self) -> BasePage:
+        """Dismiss the Password Manager doorhanger using ESC."""
+        self._get_doorhanger_username_input().send_keys(Keys.ESCAPE)
         return self

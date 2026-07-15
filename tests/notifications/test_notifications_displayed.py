@@ -70,6 +70,6 @@ def test_notifications_displayed(driver: Firefox, temp_page, web_page):
 
     # Grant permission if we need to
     if _permission_was_requested(page):
-        nav.click_on("popup-notification-primary-button")
+        nav.js_click_on("popup-notification-primary-button")
 
     page.element_has_text("notification-log", TEST_PHRASE)

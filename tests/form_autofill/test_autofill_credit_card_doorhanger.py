@@ -25,7 +25,7 @@ def test_autofill_credit_card_door_hanger(
     C122392, ensures that pressing not now > never save cards toggles off the setting
 
     Arguments:
-        about_prefs_privacy: AboutPrefs instance (privacy category)
+        about_prefs: AboutPrefs instance (privacy category)
         autofill_popup: AutofillPopup instance
         credit_card_autofill: CreditCardFill instance
     """
@@ -40,7 +40,7 @@ def test_autofill_credit_card_door_hanger(
 
     # press the arrow
     autofill_popup.click_doorhanger_button("dropdown")
-    autofill_popup.click_doorhanger_button("dropdown-never-save-cards")
+    autofill_popup.js_click_on("doorhanger-dropdown-never-save-cards-button")
 
     # ensure that the checked attribute is off
     about_prefs.open()

@@ -3,7 +3,8 @@ import logging
 import os
 import platform
 import re
-from shutil import unpack_archive
+from pathlib import Path
+from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
@@ -18,7 +19,6 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules import crypto
 from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from modules.util import env_true
@@ -97,7 +97,8 @@ def sanitize_filename(filename):
 
 def pytest_exception_interact(node, call, report):
     """
-    Method that wraps all test execution, on any exception/failure an artifact with the information about the failure is kept.
+    Method that wraps all test execution, on any exception/failure an artifact with the information
+    about the failure is kept.
     """
     if report.failed:
         try:
@@ -375,7 +376,7 @@ def pytest_sessionfinish(session):
         for proc in psutil.process_iter(["name", "pid", "status"]):
             try:
                 if (
-                    proc.create_time() > reporter._sessionstarttime
+                    proc.create_time() > reporter._session_start.time
                     and proc.name().startswith("firefox")
                 ):
                     logging.info(f"found remaining process: {proc.pid}")
@@ -558,16 +559,6 @@ def driver(
             driver.quit()
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
-    outcome = yield
-    rep = outcome.get_result()
-
-    # Store the test result in the item
-    setattr(item, "rep_" + rep.when, rep)
-
-
 @pytest.fixture()
 def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
     """
@@ -608,30 +599,23 @@ def delete_files(sys_platform, delete_files_regex_string, home_folder):
     downloads_folder = os.path.join(home_folder, "Downloads")
 
     def _delete_files():
+        delete_files_regex = re.compile(delete_files_regex_string)
         for file in os.listdir(downloads_folder):
-            delete_files_regex = re.compile(delete_files_regex_string)
             if delete_files_regex.match(file):
-                os.remove(os.path.join(downloads_folder, file))
+                target = os.path.join(downloads_folder, file)
+                if os.path.isdir(target):
+                    # Is target likely to be harmful to delete?
+                    if target == downloads_folder or len(Path(target).parts) < 4:
+                        raise PermissionError(
+                            "Cannot delete directory, looks important!"
+                        )
+                    rmtree(target)
+                else:
+                    os.remove(target)
 
     _delete_files()
     yield True
     _delete_files()
-
-
-@pytest.fixture()
-def use_secrets(opt_ci):
-    """Function factory: grab a named secret from a secrets file"""
-    if os.environ.get("TASKCLUSTER_ROOT_URL") and opt_ci:
-        level = 3 if env_true("TESTRAIL_REPORT") else 1
-        os.environ["SVC_ACCT_DECRYPT"] = get_tc_secret(
-            "test-accts-key", level=level
-        ).get("SVC_ACCT_DECRYPT")
-
-    def _use_secrets(filename: str, secret_name: str) -> dict:
-        secrets = crypto.decrypt(filename)
-        return secrets.get(secret_name)
-
-    return _use_secrets
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -3,6 +3,7 @@ import logging
 from typing import List, Optional
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -880,10 +881,12 @@ class LoginAutofill(Autofill):
             """Select credentials from the autocomplete dropdown."""
 
             # Clear any auto-filled value so the dropdown appears when focused
-            self.parent.get_element(field_reference).clear()
+            field = self.parent.get_element(field_reference)
+            field.clear()
 
-            # Open the autocomplete dropdown
+            # Focus the field; ARROW_DOWN reliably opens the dropdown
             self.parent.click_on(field_reference)
+            field.send_keys(Keys.ARROW_DOWN)
 
             # Click the credential entry from the Firefox chrome autocomplete popup
             with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):

@@ -2,7 +2,11 @@
   "networking-sidebar-category": {
     "selectorData": "div.category[id='category-{name}']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "The tab category in the sidebar",
+      "location": "Sidebar of about:networking page"
+    }
   },
   "dns-content": {
     "selectorData": "dns",

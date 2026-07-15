@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import GenericPage
 
+# Mock the network geolocation provider so coordinates resolve deterministically,
+# independent of OS location services or a build-substituted Google API key.
+MOCK_GEOLOCATION_URL = (
+    'data:application/json,{"location": {"lat": 48.0, "lng": 17.0}, "accuracy": 100.0}'
+)
+
 
 @pytest.fixture()
 def test_case():
@@ -14,11 +20,8 @@ def test_case():
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [
-        (
-            "geo.provider.network.url",
-            "https://www.googleapis.com/geolocation/v1/geolocate?key"
-            "=%GOOGLE_LOCATION_SERVICE_API_KEY%",
-        )
+        ("geo.provider.testing", True),
+        ("geo.provider.network.url", MOCK_GEOLOCATION_URL),
     ]
 
 
@@ -53,7 +56,6 @@ def temp_selectors():
     }
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_allow_permission_on_geolocation_via_w3c_api(
     driver: Firefox,
     nav: Navigation,
@@ -74,12 +76,12 @@ def test_allow_permission_on_geolocation_via_w3c_api(
     nav.wait_for_page_to_load()
     cookie_iframe = generic_page.get_elements("cookie-iframe")
     if cookie_iframe:
-        generic_page.switch_to_iframe(1)
+        generic_page.switch_to_iframe_context(cookie_iframe[0])
         generic_page.click_on("accept-choices")
         generic_page.switch_to_default_frame()
 
     # Click the 'Try It' button and Allow the location sharing
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="primary")
 
     # Check that the location marker is displayed
@@ -90,7 +92,7 @@ def test_allow_permission_on_geolocation_via_w3c_api(
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
 
     # Click the 'Try It' button and Allow the location sharing while choose the option Remember this decision
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="primary", remember_this_decision=True)
 
     # Check that the location marker is displayed
@@ -104,7 +106,6 @@ def test_allow_permission_on_geolocation_via_w3c_api(
     )
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_block_permission_on_geolocation_via_w3c_api(
     driver: Firefox,
     nav: Navigation,
@@ -125,12 +126,12 @@ def test_block_permission_on_geolocation_via_w3c_api(
     nav.wait_for_page_to_load()
     cookie_iframe = generic_page.get_elements("cookie-iframe")
     if cookie_iframe:
-        generic_page.switch_to_iframe(1)
+        generic_page.switch_to_iframe_context(cookie_iframe[0])
         generic_page.click_on("accept-choices")
         generic_page.switch_to_default_frame()
 
     # Click the 'Try It' button and Block the location sharing
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="secondary")
 
     # Check that the location marker is displayed
@@ -139,7 +140,7 @@ def test_block_permission_on_geolocation_via_w3c_api(
 
     # Click the 'Try It' button and Block the location sharing while choose the option Remember this decision
     tabs.open_single_page_in_new_tab(generic_page, num_tabs=2)
-    generic_page.click_on("geolocation-button-selector")
+    generic_page.js_click_on("geolocation-button-selector")
     nav.handle_geolocation_prompt(button_type="secondary", remember_this_decision=True)
 
     # Check that the location marker is displayed

@@ -133,13 +133,17 @@ class TestKey:
             filename = filename + "::" + subtest
         return filename
 
-    def filter_filenames_by_pass(self, filenames: list) -> list:
+    def filter_filenames_by_pass(self, filenames: list, assume_pass=False) -> list:
         """
         Given a list of filenames, return only the ones marked 'pass'
         """
         passes = []
         for filename in filenames:
             full_entry = self.get_entry_from_filename(filename)
+            if not full_entry:
+                if assume_pass:
+                    passes.append(full_entry)
+                continue
             if has_subtests(full_entry):
                 subtests = get_subtests(full_entry)
                 subresults = [test_expected_to_pass(subtest) for subtest in subtests]
@@ -188,7 +192,7 @@ class TestKey:
         Given a filename, get a partial dict that represents
         the test's location in the manifest
         """
-        segments = filename.split(os.path.sep)
+        segments = re.split(r"[\\/]", filename)
         i = 0
         if segments[i] == ".":
             i += 1
@@ -459,6 +463,13 @@ class TestKey:
 
                 resplit = False
                 if testfile not in newkey[suite]:
+                    found_subsuite_test = False
+                    for subsuite in newkey[suite]:
+                        if testfile in newkey[suite][subsuite]:
+                            found_subsuite_test = True
+                            break
+                    if found_subsuite_test:
+                        continue
                     if not interactive:
                         sys.exit(
                             "Please run `python addtests.py` from your command prompt."

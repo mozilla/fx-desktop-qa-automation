@@ -10,7 +10,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "446404"
+    return "387364"
 
 
 FINGERPRINTERS_URL = (

@@ -44,7 +44,9 @@ def test_installed_theme_enabled(driver: Firefox) -> None:
     )
 
     # Go to AMO and install a recommended theme (POM encapsulates waits and flows)
-    AmoThemes(driver).open().install_recommended_theme()
+    amo_themes = AmoThemes(driver).open()
+    amo_themes.install_recommended_theme()
+    amo_themes.confirm_addon_install_popup()
 
     # Return to about:addons > Themes and verify the enabled theme changed
     about_addons = AboutAddons(driver).open()
