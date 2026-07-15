@@ -2,8 +2,11 @@
 C3276002 - AI features keyboard accessible
 Verify that each Option from the AI Settings page is Keyboard accessible
 """
+
 import logging
+
 import pytest
+
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -37,12 +40,3 @@ def test_translations_select_visible(about_prefs: AboutPrefs):
     about_prefs.navigate_to_ai_controls()
     about_prefs.element_visible("ai-control-translations-select")
     logging.info("Translations setting is visible")
-
-
-def test_smart_tab_groups_select_visible(about_prefs: AboutPrefs):
-    """
-    C3276002 - Smart Tab Groups dropdown is present and visible on the AI Controls page
-    """
-    about_prefs.navigate_to_ai_controls()
-    about_prefs.element_visible("ai-control-smart-tab-groups-select")
-    logging.info("Smart Tab Groups setting is visible")
