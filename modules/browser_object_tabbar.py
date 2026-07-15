@@ -735,6 +735,7 @@ class TabBar(BasePage):
 
     # Helper function to click the multi-tab audio control button
     def click_multi_tab_audio_button(self, starting_tab=2, element_offset=75):
+        element_buffer = 2.5  # element size is wider than it appears
         tab = self.get_tab(starting_tab)
         element_location = tab.location
         element_size = tab.size
@@ -745,12 +746,14 @@ class TabBar(BasePage):
         chrome_height = outer_height - inner_height
 
         element_x = (
-            window_position["x"] + element_location["x"] + (element_size["width"] / 2)
+            window_position["x"]
+            + element_location["x"]
+            + (element_size["width"] / element_buffer)
         )
         element_y = (
             window_position["y"]
             + element_location["y"]
-            + (element_size["height"] / 2)
+            + (element_size["height"] / element_buffer)
             + chrome_height
         )
         # Offset to click on the audio control area (left side of tab)

@@ -1,3 +1,5 @@
+from os import listdir
+from shutil import copyfile
 from time import sleep
 
 import pytest
@@ -18,6 +20,19 @@ def test_case():
 
 
 @pytest.fixture()
+def local_doc_path(tmp_path, html_filename):
+    for file in listdir("data/pages"):
+        copyfile(f"data/pages/{file}", tmp_path / file)
+    loc = tmp_path / html_filename
+    return f"file://{loc}"
+
+
+@pytest.fixture()
+def html_filename():
+    return "web_audio_landing.html"
+
+
+@pytest.fixture()
 def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
@@ -25,7 +40,9 @@ def add_to_prefs_list():
 # This test is unstable in Windows GHA for now
 @pytest.mark.audio
 @pytest.mark.headed
-def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
+def test_play_mute_unmute_tabs_via_toggle(
+    driver: Firefox, sys_platform: str, local_doc_path
+):
     """
     C246981 - Verify that play/mute/unmute tabs via toggle audio works
     """
@@ -33,12 +50,11 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
     context_menu = ContextMenu(driver)
     wait = WebDriverWait(driver, 10)
 
-    playlist_url = "https://www.youtube.com/@msrachel/videos"
-    playlist_page = GenericPage(driver, url=playlist_url)
+    playlist_page = GenericPage(driver, url=local_doc_path)
     playlist_page.open()
 
     # Locate and open 2 latest videos in new tabs
-    video_selector = ".ytThumbnailViewModelHost"
+    video_selector = ".audiolink"
     video_links = wait.until(
         EC.visibility_of_all_elements_located((By.CSS_SELECTOR, video_selector))
     )
@@ -69,7 +85,6 @@ def test_play_mute_unmute_tabs_via_toggle(driver: Firefox, sys_platform: str):
             assert tab.get_attribute("multiselected") == "true", (
                 f"Tab {i} should be multiselected"
             )
-        sleep(4)  # wait for all tabs to load and play video
 
         # Click Play button
         tabs.click_multi_tab_audio_button()
