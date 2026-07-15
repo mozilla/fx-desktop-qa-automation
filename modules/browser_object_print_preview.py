@@ -1,17 +1,7 @@
-from selenium.common import NoAlertPresentException
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object_panel_ui import PanelUi
 from modules.page_base import BasePage
-from modules.util import BrowserActions
-
-
-def _get_alert(d):
-    try:
-        alert = d.switch_to.alert
-    except NoAlertPresentException:
-        return False
-    return alert
 
 
 class PrintPreview(BasePage):
@@ -44,22 +34,31 @@ class PrintPreview(BasePage):
         return self
 
     @BasePage.context_chrome
-    def switch_to_preview_window(self) -> BasePage:
-        """Switch to the iframe holding the Print Preview settings."""
-        ba = BrowserActions(self.driver)
-        ba.switch_to_iframe_context(self.get_element("print-settings-browser"))
-        # Wait for print button to be present as indicator of readiness
-        self.element_exists("print-button")
-        return self
+    def click_primary_button(self) -> BasePage:
+        """
+        Click the primary action button in the print settings dialog.
 
-    @BasePage.context_content
-    def start_print(self) -> BasePage:
-        """Press Enter in Print Preview Page."""
-        self.switch_to_preview_window()
-        self.get_element("print-button").click()
-        # Wait for print dialog to appear
-        self.custom_wait(timeout=5).until(lambda d: _get_alert(d))
-        self.gui.press("enter")
+        With the "Mozilla Save to PDF" destination this button is labelled
+        "Save" and opens the native file picker (nsIFilePicker); install a mock
+        file picker beforehand to capture the save location.
+
+        The print settings live in a XUL <browser> (printSettingsBrowser) whose
+        content cannot be entered with Selenium frame switching, so the button
+        is clicked through the browser's contentDocument, the same way
+        _click_pagination_button reaches through the shadow root.
+        """
+        settings_browser = self.get_element("print-settings-browser")
+        self.custom_wait(timeout=10).until(
+            lambda _: self.driver.execute_script(
+                "return !!arguments[0].contentDocument"
+                "?.getElementById('print-button');",
+                settings_browser,
+            )
+        )
+        self.driver.execute_script(
+            "arguments[0].contentDocument.getElementById('print-button').click();",
+            settings_browser,
+        )
         return self
 
     @BasePage.context_chrome

@@ -16,7 +16,6 @@ def delete_files_regex_string():
     return r".*i-9.pdf"
 
 
-@pytest.mark.headed
 def test_download_pdf(
     driver: Firefox,
     fillable_pdf_url: str,

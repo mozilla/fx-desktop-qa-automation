@@ -19,8 +19,6 @@ def add_to_prefs_list():
     return [("signon.management.page.os-auth.locked.enabled", False)]
 
 
-@pytest.mark.headed
-@pytest.mark.noxvfb
 def test_password_csv_export(driver_and_saved_logins, downloads_folder, opt_ci):
     """
     C2241521: Verify that a password.csv file can be exported from about:logins

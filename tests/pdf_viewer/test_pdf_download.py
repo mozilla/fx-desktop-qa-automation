@@ -25,7 +25,6 @@ def file_name():
     return PDF_FILE_NAME
 
 
-@pytest.mark.headed
 def test_pdf_download(
     driver: Firefox,
     pdf_viewer: GenericPdf,

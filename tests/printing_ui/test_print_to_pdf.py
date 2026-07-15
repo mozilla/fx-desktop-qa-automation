@@ -1,5 +1,5 @@
-import logging
 import os
+import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -22,7 +22,6 @@ def add_to_prefs_list():
     return [
         ("print_printer", "Mozilla Save to PDF"),
         ("print.save_print_settings", False),
-        ("print.print_to_file", True),
     ]
 
 
@@ -30,37 +29,45 @@ TEST_PAGE = "https://example.com"
 DEFAULT_NAME = "Example Domain.pdf"
 
 
-def file_is_somewhere():
-    locs = [
-        os.getcwd(),
-        os.path.join(os.path.expanduser("~"), "Documents"),
-        os.path.join(os.path.expanduser("~"), "Downloads"),
-    ]
-    for loc in locs:
-        for _, _, files in os.walk(loc):
-            if DEFAULT_NAME in files:
-                logging.warning(f"File found in {loc}")
-                return True
+def wait_for_file_download(file_path, timeout=10, interval=0.5) -> bool:
+    start = time.time()
+    while time.time() - start < timeout:
+        if os.path.exists(file_path):
+            return True
+        time.sleep(interval)
     return False
 
 
-# Test is unstable in Windows GHA and Linux Taskcluster for now: Bug 1974011
-@pytest.mark.headed
 def test_print_to_pdf(
     driver: Firefox,
     downloads_folder: str,
-    sys_platform,
     delete_files,
     print_preview: PrintPreview,
 ):
     """
     C965142 - Verify that the user can print a webpage to PDF
+
+    Notes:
+        - The native "Save" picker is mocked on all platforms so the print-to-PDF
+          save runs headlessly in CI. Driving the OS file dialog is unreliable
+          there (Linux Wayland cannot drive GTK pickers through desktop input,
+          and Windows image-matching depends on the CI resolution/DPI/theme).
     """
+    saved_pdf_location = os.path.join(downloads_folder, DEFAULT_NAME)
 
     driver.get(TEST_PAGE)
 
-    # Select Print option from Hamburger Menu in order to trigger the silent printing
+    # Open Print via the Hamburger Menu; destination defaults to Save to PDF
     print_preview.open_and_load_print_from_panelui()
-    print_preview.start_print()
 
-    print_preview.expect(lambda _: file_is_somewhere())
+    # Replace the native save dialog with a mock that returns our target path
+    print_preview.install_mock_file_picker(saved_pdf_location)
+    try:
+        print_preview.click_primary_button()
+        print_preview.wait_for_mock_file_picker()
+    finally:
+        print_preview.cleanup_mock_file_picker()
+
+    assert wait_for_file_download(saved_pdf_location), (
+        f"File not found: {saved_pdf_location}"
+    )

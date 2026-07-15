@@ -21,8 +21,6 @@ def add_to_prefs_list():
     return [("signon.management.page.os-auth.locked.enabled", False)]
 
 
-@pytest.mark.headed
-@pytest.mark.noxvfb
 def test_password_csv_correctness(
     driver_and_saved_logins, downloads_folder, sys_platform
 ):
