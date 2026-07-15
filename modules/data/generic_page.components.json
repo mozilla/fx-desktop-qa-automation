@@ -239,11 +239,11 @@
     "groups": []
   },
   "download-malicious-warning": {
-    "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
+    "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/badrep.exe']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "A link to download a file with malicious warning",
+      "description": "A link to download a file with malicious warning. Uses badrep.exe because content.exe now serves text/html and no longer triggers a download.",
       "location": "testsafebrowsing website"
     }
   },
