@@ -32,8 +32,8 @@ class TrustPanel(BasePage):
         return intext or inattr
 
     @BasePage.context_chrome
-    def trackers_in_category(self, category: str, *trackers) -> bool:
-        """Wait until the expected tracker types appear in the requested category."""
+    def trackers_in_category(self, category: str, *trackers) -> BasePage:
+        """Wait until the expected trackers appear in the requested category."""
 
         def _expected_trackers_are_present(_):
             spotted = self.get_elements(f"{category}-items")
@@ -46,20 +46,24 @@ class TrustPanel(BasePage):
                 for tracker in trackers
             )
 
-        self.expect(_expected_trackers_are_present)
-        return True
+        try:
+            self.expect(_expected_trackers_are_present)
+        except TimeoutException as exc:
+            raise AssertionError(
+                f"Trackers {trackers} were not found in the '{category}' category."
+            ) from exc
+
+        return self
 
     @BasePage.context_chrome
-    def trackers_blocked(self, *trackers) -> bool:
-        assert self.trackers_in_category("blocked", *trackers), (
-            f"Trackers {trackers} not blocked"
-        )
+    def trackers_blocked(self, *trackers) -> BasePage:
+        """Wait until the expected trackers appear in the blocked category."""
+        return self.trackers_in_category("blocked", *trackers)
 
     @BasePage.context_chrome
-    def trackers_detected(self, *trackers) -> bool:
-        assert self.trackers_in_category("detected", *trackers), (
-            f"Trackers {trackers} not detected"
-        )
+    def trackers_detected(self, *trackers) -> BasePage:
+        """Wait until the expected trackers appear in the detected category."""
+        return self.trackers_in_category("detected", *trackers)
 
     @BasePage.context_chrome
     def get_element_args(self, reference: str | tuple | WebElement, labels=None):
