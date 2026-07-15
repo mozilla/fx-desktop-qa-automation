@@ -1187,11 +1187,7 @@ security_and_privacy:
     splits:
     - smoke
   test_blocking_fingerprinters:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_blocking_social_media_trackers:
@@ -1251,11 +1247,7 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_blocked_and_shown_in_info_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
@@ -1447,11 +1439,7 @@ security_and_privacy:
     splits:
     - functional2
   test_trackers_cryptominers_fingerprinters_blocked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2041401
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
   test_tracking_content_custom_mode:

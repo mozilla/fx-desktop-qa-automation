@@ -20,7 +20,9 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def open_panel(self) -> BasePage:
+        self.element_clickable("shield-icon")
         self.click_on("shield-icon")
+        self.element_visible("trustpanel")
         return self
 
     @BasePage.context_chrome
@@ -31,14 +33,20 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def trackers_in_category(self, category: str, *trackers) -> bool:
-        """Confirm that text or data-l10n-id for blocked items exists within blocked area"""
-        sleep(0.5)  # Must hard-wait because trackers may not exist
-        spotted = self.get_elements(f"{category}-items")
-        if trackers and not spotted:
-            return False
-        for tracker in trackers:
-            if not any([self.item_in_block(tracker, block) for block in spotted]):
+        """Wait until the expected tracker types appear in the requested category."""
+
+        def _expected_trackers_are_present(_):
+            spotted = self.get_elements(f"{category}-items")
+
+            if trackers and not spotted:
                 return False
+
+            return all(
+                any(self.item_in_block(tracker, block) for block in spotted)
+                for tracker in trackers
+            )
+
+        self.expect(_expected_trackers_are_present)
         return True
 
     @BasePage.context_chrome
@@ -85,24 +93,42 @@ class TrustPanel(BasePage):
         return self.sites_in_category("detected", *sites)
 
     @BasePage.context_chrome
-    def wait_for_trackers(self) -> BasePage:
-        """Open and close the trust panel until trackers appear"""
+    def wait_for_trackers(
+            self,
+            attempts: int = 3,
+            timeout: int = 10,
+    ) -> BasePage:
+        """
+        Wait until trackers appear in the trust panel.
+
+        If trackers are not detected, refresh the page and retry.
+        Refreshing is performed only between attempts, not during every
+        WebDriverWait polling cycle.
+        """
         nav = Navigation(self.driver)
         blocker_section = "trustpanel-blocker-section"
 
-        def _check_trustpanel(driver):
+        def _trackers_are_present(_):
             args = self.get_element_args(blocker_section)
-            if args.get("count"):
-                return True
+            return args.get("count", 0) > 0
 
-            nav.click_on("refresh-button")
+        for attempt in range(attempts):
+            try:
+                self.custom_wait(timeout=timeout).until(
+                    _trackers_are_present
+                )
+                return self
+            except TimeoutException:
+                if attempt == attempts - 1:
+                    raise AssertionError(
+                        "No trackers appeared in the trust panel after "
+                        f"{attempts} attempts."
+                    )
 
-            self.open_panel()
-            if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
-                return False
-            return True
+                nav.refresh_page()
+                self.open_panel()
 
-        self.expect(_check_trustpanel)
+        return self
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
