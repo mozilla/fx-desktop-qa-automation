@@ -30,10 +30,7 @@ def delete_files_regex_string():
 @pytest.fixture()
 def add_to_prefs_list():
     # Suppress the Firefox 150+ private-browsing download notification dialog.
-    return [
-        ("browser.download.enableDeletePrivate", False),
-        ("dom.disable_beforeunload", True),
-    ]
+    return [("browser.download.enableDeletePrivate", False)]
 
 
 @pytest.fixture()

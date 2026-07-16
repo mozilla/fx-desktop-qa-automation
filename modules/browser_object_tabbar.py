@@ -736,8 +736,6 @@ class TabBar(BasePage):
     # Helper function to click the multi-tab audio control button
     def click_multi_tab_audio_button(self, starting_tab=2, element_offset=75):
         element_buffer = 2.5  # element size is wider than it appears
-        if self.sys_platform == "Windows":
-            element_buffer = 2  # except on win
         tab = self.get_tab(starting_tab)
         element_location = tab.location
         element_size = tab.size
