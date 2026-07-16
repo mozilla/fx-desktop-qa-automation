@@ -1351,7 +1351,6 @@ class AboutPrefs(BasePage):
         return self
 
 
-
 class AboutAddons(BasePage):
     """
     The POM for the about:addons page
