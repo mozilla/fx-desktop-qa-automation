@@ -28,9 +28,9 @@ for test_suite in test_suites:
             d[test_case] = file_name
 
 if count > 2:
-    logging.warning("""|\---/|""")
+    logging.warning("""|\\---/|""")
     logging.warning(
         """| o_o | Someone copied and pasted a test without changing test_case()!!!!"""
     )
-    logging.warning(""" \_^_/""")
+    logging.warning(""" \\_^_/""")
     exit(1)

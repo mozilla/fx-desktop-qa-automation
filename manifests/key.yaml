@@ -1312,10 +1312,6 @@ security_and_privacy:
       win: unstable
     splits:
     - functional2
-  test_blocking_social_media_trackers:
-    result: pass
-    splits:
-    - functional2
   test_bookmarks_removed_via_private_browsing:
     result: pass
     splits:
