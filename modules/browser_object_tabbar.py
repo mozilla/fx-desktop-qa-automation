@@ -760,6 +760,7 @@ class TabBar(BasePage):
         )
         # Offset to click on the audio control area (left side of tab)
         self.gui.moveTo(element_x - element_offset, element_y)
+        logging.warning(f"Moving to {element_x - element_offset}, {element_y}...")
         sleep(self.POSITION_DELAY)  # Small delay for mouse positioning
         self.gui.click()
         sleep(self.TAB_DELAY)  # Wait for action to take effect
