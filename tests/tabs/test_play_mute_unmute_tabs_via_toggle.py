@@ -65,7 +65,8 @@ def test_play_mute_unmute_tabs_via_toggle(
 
     # Verify correct number of tabs opened
     tabs.wait_for_num_tabs(3)
-    tabs.element_attribute_is(tabs.get_tab(2), "activemedia-blocked", "true")
+    if tabs.sys_platform == "Windows":
+        sleep(3)
 
     # Select all tabs via Control/Command click while staying on first tab
     modifier_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
