@@ -24,10 +24,31 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def open_panel(self) -> BasePage:
-        self.element_clickable("shield-icon")
-        self.click_on("shield-icon")
+        """
+        Ensure the trust panel is open.
+
+        Clicking the shield icon toggles the panel, so we only click when it is
+        not already open. This keeps the method idempotent and safe to call from
+        retry/fallback paths without accidentally toggling an open panel closed.
+        """
+        if not self._panel_is_open():
+            self.element_clickable("shield-icon")
+            self.click_on("shield-icon")
         self.element_visible("trustpanel")
         return self
+
+    @BasePage.context_chrome
+    def _panel_is_open(self) -> bool:
+        """Return True when the trust panel popup is open (or opening)."""
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            return any(
+                panel.get_attribute("state") in ("open", "showing")
+                for panel in self.get_elements("trustpanel")
+            )
+        finally:
+            self.driver.implicitly_wait(original)
 
     @BasePage.context_chrome
     def item_in_block(self, item: str, block: WebElement) -> bool:
@@ -138,15 +159,13 @@ class TrustPanel(BasePage):
             return isinstance(args, dict) and args.get("count", 0) > 0
 
         for attempt in range(1, attempts + 1):
+            self.open_panel()
             try:
                 self.custom_wait(timeout=timeout).until(_trackers_are_present)
                 return self
             except TimeoutException:
-                if attempt == attempts:
-                    break
-
-                nav.refresh_page()
-                self.open_panel()
+                if attempt < attempts:
+                    nav.refresh_page()
 
         self.open_panel()
         return self
