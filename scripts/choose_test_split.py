@@ -12,6 +12,9 @@ MIN_RUN_SIZE = 7
 OUTPUT_FILE = "selected_tests"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
+ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
+BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
 
 
 def snakify(pascal: str) -> str:
@@ -42,7 +45,7 @@ def pascalify(snake: str) -> str:
 
 def localify(path: str) -> str:
     """Remove the script dir from an item"""
-    return path.replace(SCRIPT_DIR, ".")
+    return path.replace(ROOT_DIR, ".")
 
 
 def get_tests_by_model(
@@ -122,8 +125,9 @@ def dedupe(run_list: list) -> list:
 if __name__ == "__main__":
     manifest = TestKey(MANIFEST_KEY)
 
-    if os.environ.get("STARFOX_CATEGORY"):
-        category = os.environ["STARFOX_CATEGORY"]
+    category = os.environ.get("STARFOX_CATEGORY")
+    if category:
+        category = category.lower()
         split_name = os.environ.get("STARFOX_SPLIT", "all")
 
         # platform MUST be set by the job environment (win|mac|linux)
@@ -134,6 +138,11 @@ if __name__ == "__main__":
             )
 
         platform = platform.lower()
+        if platform not in SUPPORTED_OSES:
+            raise SystemExit(
+                f"Unsupported STARFOX_PLATFORM: '{platform}'. Expected one of: {', '.join(SUPPORTED_OSES)}."
+            )
+
         print(
             f"Gathering tests from split '{split_name}', category '{category}', platform '{platform}'..."
         )
@@ -143,6 +152,7 @@ if __name__ == "__main__":
             split_name=split_name, platform=platform, category=category
         )
         run_list = dedupe(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
         sys.exit(0)
@@ -153,9 +163,10 @@ if __name__ == "__main__":
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
-            sys.exit(0)
+        sys.exit(0)
 
     re_obj = {
         "test_re_string": r".*/.*/test_.*\.py",
@@ -179,6 +190,11 @@ if __name__ == "__main__":
         .splitlines()
     )
 
+    # Never select tests that work in a different flow
+    # TODO: fully move glean out of the main starfox flow, like l10n
+    for reg in [re.compile(ignore) for ignore in IGNORE_FILE_REGEXES]:
+        committed_files = [f for f in committed_files if reg.search(f) is None]
+
     print("Committed files:\n\t", end="")
     print("\n\t".join(committed_files))
 
@@ -193,7 +209,7 @@ if __name__ == "__main__":
 
     all_tests = []
     test_paths_and_contents = {}
-    for root, _, files in os.walk(os.path.join(SCRIPT_DIR, "tests")):
+    for root, _, files in os.walk(os.path.join(ROOT_DIR, "tests")):
         for f in files:
             this_file = os.path.join(root, f)
             if re_obj.get("test_re").search(this_file) and "__pycache" not in this_file:
@@ -225,6 +241,8 @@ if __name__ == "__main__":
         for selector_file in changed_selectors:
             (_, filename) = os.path.split(selector_file)
             model_name = pascalify(filename.split(".")[0])
+            if model_name in BIG_MODELS:
+                continue  # some models are too big to run all tests
             for test_name in get_tests_by_model(
                 model_name, test_paths_and_contents, run_list
             ):
@@ -238,6 +256,8 @@ if __name__ == "__main__":
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
+                if model_name in BIG_MODELS:
+                    continue  # model too big, don't run all tests
                 for test_name in get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 ):

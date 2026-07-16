@@ -30,7 +30,7 @@ def distribute_mappings_evenly(mappings):
             f"{site} {' '.join(regions)}"
             for site, regions in balanced_splits[i].items()
         ]
-        logging.info(f"{'\n'.join(current_split)}")
+        logging.info(f"{','.join(current_split)}")
     return balanced_splits
 
 
