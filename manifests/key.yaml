@@ -429,14 +429,12 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042659
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci
   test_download_pdf_from_context_menu:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2042660
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_download_telemetry_recorded:
@@ -612,6 +610,10 @@ glean:
       result: pass
       splits:
       - glean
+  test_serp_engagement:
+    result: pass
+    splits:
+    - glean
 language_packs:
   test_language_pack_install_addons:
     result: pass
@@ -1127,8 +1129,7 @@ printing_ui:
     - smoke
     - ci
   test_print_to_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974011
-    result: unstable
+    result: pass
     splits:
     - functional2
 profile:
@@ -1149,8 +1150,7 @@ reader_view:
     splits:
     - functional2
   test_reader_view_location_bar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2053930
-    result: unstable
+    result: pass
     splits:
     - smoke
 scrolling_panning_zooming:

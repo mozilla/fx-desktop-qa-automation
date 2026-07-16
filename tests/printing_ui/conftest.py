@@ -1,6 +1,29 @@
+import os
+import time
+
 import pytest
 
 from modules.browser_object import PrintPreview
+
+DOWNLOAD_TIMEOUT_SEC = 10.0
+POLL_INTERVAL_SEC = 0.5
+
+
+@pytest.fixture()
+def wait_for_file_download():
+    """Return a helper that blocks until a file finishes downloading."""
+
+    def _wait_for_file_download(
+        file_path, timeout=DOWNLOAD_TIMEOUT_SEC, interval=POLL_INTERVAL_SEC
+    ) -> bool:
+        start = time.time()
+        while time.time() - start < timeout:
+            if os.path.exists(file_path):
+                return True
+            time.sleep(interval)
+        return False
+
+    return _wait_for_file_download
 
 
 @pytest.fixture()
