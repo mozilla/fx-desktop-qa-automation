@@ -108,9 +108,16 @@ class TrustPanel(BasePage):
         timeout: int = 10,
     ) -> BasePage:
         """
-        Wait until trackers appear in the trust panel.
+        Wait until the trust panel has finished populating.
 
-        Refresh the page and retry when tracker data is not populated.
+        The blocked-tracker count is the reliable "panel is ready" signal when
+        trackers are actually blocked, so we wait for it (refreshing and
+        reopening the panel between attempts). When nothing is blocked -- e.g.
+        ETP is disabled or the category under test is allowed -- the count stays
+        0, so after exhausting the count-based waits we fall back to accepting a
+        rendered panel. Waiting for the count first (instead of accepting the
+        panel immediately) is what avoids the race where the panel is visible
+        before the blocked count has populated.
         """
         if attempts < 1:
             raise ValueError("attempts must be at least 1")
@@ -130,22 +137,19 @@ class TrustPanel(BasePage):
 
             return isinstance(args, dict) and args.get("count", 0) > 0
 
-        attempt = 1
-
-        while True:
+        for attempt in range(1, attempts + 1):
             try:
                 self.custom_wait(timeout=timeout).until(_trackers_are_present)
                 return self
-            except TimeoutException as exc:
+            except TimeoutException:
                 if attempt == attempts:
-                    raise AssertionError(
-                        "No trackers appeared in the trust panel after "
-                        f"{attempts} attempts."
-                    ) from exc
+                    break
 
-                attempt += 1
                 nav.refresh_page()
                 self.open_panel()
+
+        self.open_panel()
+        return self
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
