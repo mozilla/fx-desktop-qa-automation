@@ -37,9 +37,7 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
-# This test is unstable in Windows GHA for now
 @pytest.mark.audio
-@pytest.mark.headed
 def test_play_mute_unmute_tabs_via_toggle(
     driver: Firefox, sys_platform: str, local_doc_path
 ):
@@ -89,7 +87,8 @@ def test_play_mute_unmute_tabs_via_toggle(
             )
 
         # Click Play button
-        tabs.click_multi_tab_audio_button()
+        tabs.element_attribute_is(tabs.get_tab(2), "activemedia-blocked", "true")
+        tabs.click_on("any-media-button-by-tab-index", labels=["2"])
 
         # Verify all selected tabs are playing
         for i in [2, 3]:
@@ -100,7 +99,7 @@ def test_play_mute_unmute_tabs_via_toggle(
             )
 
         # Click Mute button
-        tabs.click_multi_tab_audio_button()
+        tabs.click_on("any-media-button-by-tab-index", labels=["2"])
 
         # Verify all selected tabs are muted
         for i in [2, 3]:
@@ -109,7 +108,7 @@ def test_play_mute_unmute_tabs_via_toggle(
             assert tab.get_attribute("muted") is not None, f"Tab {i} should be muted"
 
         # Click Unmute button
-        tabs.click_multi_tab_audio_button()
+        tabs.click_on("any-media-button-by-tab-index", labels=["2"])
 
         # Verify all selected tabs are unmuted and playing again
         for i in [2, 3]:

@@ -16,8 +16,6 @@ class TabBar(BasePage):
     """Page Object Model for tab navigation"""
 
     URL_TEMPLATE = "about:blank"
-    POSITION_DELAY = 0.3  # delay for OS automation to move cursor
-    TAB_DELAY = 2  # delay for a tab to change statuses / close
 
     class MediaStatus:
         """Fake enum: just return a string based on a constant name"""
@@ -732,35 +730,3 @@ class TabBar(BasePage):
             0,
         ).context_click().perform()
         return self
-
-    # Helper function to click the multi-tab audio control button
-    def click_multi_tab_audio_button(self, starting_tab=2, element_offset=75):
-        element_buffer = 2.5  # element size is wider than it appears
-        if self.sys_platform == "Windows":
-            element_buffer = 3  # except on win, where it's wider
-        tab = self.get_tab(starting_tab)
-        element_location = tab.location
-        element_size = tab.size
-        window_position = self.driver.get_window_position()
-
-        inner_height = self.driver.execute_script("return window.innerHeight;")
-        outer_height = self.driver.execute_script("return window.outerHeight;")
-        chrome_height = outer_height - inner_height
-
-        element_x = (
-            window_position["x"]
-            + element_location["x"]
-            + (element_size["width"] / element_buffer)
-        )
-        element_y = (
-            window_position["y"]
-            + element_location["y"]
-            + (element_size["height"] / element_buffer)
-            + chrome_height
-        )
-        # Offset to click on the audio control area (left side of tab)
-        self.gui.moveTo(element_x - element_offset, element_y)
-        logging.warning(f"Moving to {element_x - element_offset}, {element_y}...")
-        sleep(self.POSITION_DELAY)  # Small delay for mouse positioning
-        self.gui.click()
-        sleep(self.TAB_DELAY)  # Wait for action to take effect
