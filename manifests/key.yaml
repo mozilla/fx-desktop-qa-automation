@@ -610,6 +610,10 @@ glean:
       result: pass
       splits:
       - glean
+  test_serp_engagement:
+    result: pass
+    splits:
+    - glean
 language_packs:
   test_language_pack_install_addons:
     result: pass
