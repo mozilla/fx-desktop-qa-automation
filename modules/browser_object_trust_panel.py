@@ -1,7 +1,7 @@
 import json
 from time import sleep
 
-from selenium.common import NoSuchElementException,TimeoutException,StaleElementReferenceException
+from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -35,14 +35,17 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def _panel_is_open(self) -> bool:
-        """Return True when the trust panel popup is open (or opening)."""
+        """Return True when the trust panel popup is open or opening."""
         original = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
+
         try:
             return any(
                 panel.get_attribute("state") in ("open", "showing")
                 for panel in self.get_elements("trustpanel")
             )
+        except StaleElementReferenceException:
+            return False
         finally:
             self.driver.implicitly_wait(original)
 
@@ -124,10 +127,10 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def wait_for_trackers(
-        self,
-        expect_blocked: bool = True,
-        attempts: int = 3,
-        timeout: int = 10,
+            self,
+            expect_blocked: bool = True,
+            attempts: int = 3,
+            timeout: int = 10,
     ) -> BasePage:
         """
         Wait until the trust panel has finished populating.
@@ -190,10 +193,10 @@ class TrustPanel(BasePage):
         try:
             args = self.get_element_args("trustpanel-blocker-section")
         except (
-            NoSuchElementException,
-            StaleElementReferenceException,
-            TypeError,
-            ValueError,
+                NoSuchElementException,
+                StaleElementReferenceException,
+                TypeError,
+                ValueError,
         ):
             return None
         finally:
