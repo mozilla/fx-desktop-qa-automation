@@ -37,13 +37,13 @@ def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
     # Open page and click on the shield icon
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
 
     # Click on "See All" button
     trust_panel.click_see_all()
 
     # Click on "Fingerprinters"
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
     trust_panel.open_detected_category("fingerprinter")
 
     # "Not Blocking Fingerprinters" title is displayed in the subpanel

@@ -38,7 +38,7 @@ def test_tracking_elements_not_blocked_with_etp_disabled(
     # verify that the toggle has been turned off and wait for trackers
     trust_panel.open_panel()
     trust_panel.trustpanel_status("off")
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
 
     # Assert the various statuses, ensure that the correct one is displayed
     third_party_load_status = tracker_website.get_element(

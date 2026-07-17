@@ -62,5 +62,5 @@ def test_allowed_tracking_content(
     driver.get(TRACKER_URL)
 
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
     trust_panel.trackers_detected("tracking-content")

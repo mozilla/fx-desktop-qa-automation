@@ -41,17 +41,17 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     # Open page and click on the shield icon
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
 
     # Click on "See All" button
     trust_panel.click_see_all()
 
     # Click on "Tracking content"
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
     trust_panel.open_detected_category("tracking content")
 
     # "Not Blocking Tracking Content" title is displayed in the subpanel
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(expect_blocked=False)
     trust_panel.not_blocked_trackers_title_displayed_in_subpanel("tracking content")
 
     # The allowed tracking content is displayed inside the subpanel

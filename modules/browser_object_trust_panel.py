@@ -1,11 +1,7 @@
 import json
 from time import sleep
 
-from selenium.common import (
-    NoSuchElementException,
-    TimeoutException,
-    StaleElementReferenceException,
-)
+from selenium.common import NoSuchElementException,TimeoutException,StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -85,10 +81,12 @@ class TrustPanel(BasePage):
 
         return self
 
+    @BasePage.context_chrome
     def trackers_blocked(self, *trackers) -> BasePage:
         """Wait until the expected trackers appear in the blocked category."""
         return self.trackers_in_category("blocked", *trackers)
 
+    @BasePage.context_chrome
     def trackers_detected(self, *trackers) -> BasePage:
         """Wait until the expected trackers appear in the detected category."""
         return self.trackers_in_category("detected", *trackers)
@@ -127,28 +125,43 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def wait_for_trackers(
         self,
+        expect_blocked: bool = True,
         attempts: int = 3,
         timeout: int = 10,
     ) -> BasePage:
         """
         Wait until the trust panel has finished populating.
 
-        The blocked-tracker count is the reliable "panel is ready" signal when
-        trackers are actually blocked, so we wait for it (reloading and
-        reopening the panel between attempts). Waiting for the count first is
-        what avoids the race where the panel is visible before the blocked
-        count has populated.
+        With ``expect_blocked`` True (the default, for pages that block
+        trackers) wait for the blocked-tracker count to become positive,
+        reloading and reopening the panel between attempts. Waiting for the
+        count avoids the race where the panel is visible before the blocked
+        count has populated; AssertionError is raised if no blocked trackers
+        ever appear.
 
-        When nothing is blocked -- e.g. ETP is disabled or the category under
-        test is allowed -- the count stays 0. In that case we return once the
-        blocker section has rendered (count 0 is a valid populated state) and
-        raise AssertionError only if the panel never populated at all.
+        With ``expect_blocked`` False (ETP disabled, or the category under test
+        is allowed) the blocked count stays 0, so instead wait only for the
+        blocker section to render -- count 0 is a valid populated state -- and
+        return without reloading the page (which would discard any subview the
+        caller has navigated into). AssertionError is raised if the section
+        never renders.
         """
         if attempts < 1:
             raise ValueError("attempts must be at least 1")
 
-        nav = Navigation(self.driver)
+        if not expect_blocked:
+            self.open_panel()
+            try:
+                self.custom_wait(timeout=timeout).until(
+                    lambda _: self._blocked_tracker_count() is not None
+                )
+            except TimeoutException as exc:
+                raise AssertionError(
+                    "Trust panel blocker section did not render."
+                ) from exc
+            return self
 
+        nav = Navigation(self.driver)
         for attempt in range(1, attempts + 1):
             self.open_panel()
             try:
@@ -160,15 +173,9 @@ class TrustPanel(BasePage):
                 if attempt < attempts:
                     nav.refresh_page()
 
-        # Retries exhausted without a positive blocked count. That is expected
-        # when nothing is blocked (ETP disabled or the category under test is
-        # allowed): the panel still renders with a count of 0. A panel whose
-        # blocker section never rendered, though, is a genuine failure.
-        if self._blocked_tracker_count() is None:
-            raise AssertionError(
-                f"Trust panel did not populate after {attempts} attempts."
-            )
-        return self
+        raise AssertionError(
+            f"No blocked trackers appeared in the trust panel after {attempts} attempts."
+        )
 
     @BasePage.context_chrome
     def _blocked_tracker_count(self) -> int | None:
@@ -176,9 +183,10 @@ class TrustPanel(BasePage):
         Return the blocked-tracker count from the panel header.
 
         Returns None when the blocker section has not rendered or its
-        localization args cannot be parsed yet, which lets callers tell a
-        "nothing blocked" panel (count 0) apart from one that never populated.
+        localization args cannot be parsed yet.
         """
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
         try:
             args = self.get_element_args("trustpanel-blocker-section")
         except (
@@ -188,6 +196,8 @@ class TrustPanel(BasePage):
             ValueError,
         ):
             return None
+        finally:
+            self.driver.implicitly_wait(original)
         if not isinstance(args, dict):
             return None
         return args.get("count", 0)
