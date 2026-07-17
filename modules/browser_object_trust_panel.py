@@ -52,8 +52,10 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def item_in_block(self, item: str, block: WebElement) -> bool:
-        intext = block.text.endswith(item) or block.text.endswith(f"{item}s")
-        inattr = block.get_attribute("data-l10n-id").endswith(item)
+        text = block.text or ""
+        l10n_id = block.get_attribute("data-l10n-id") or ""
+        intext = text.endswith(item) or text.endswith(f"{item}s")
+        inattr = l10n_id.endswith(item)
         return intext or inattr
 
     @BasePage.context_chrome
@@ -97,7 +99,7 @@ class TrustPanel(BasePage):
         return json.loads(raw_args)
 
     @BasePage.context_chrome
-    def assert_no_trackers(self) -> bool:
+    def assert_no_trackers(self) -> None:
         args = self.get_element_args("trustpanel-blocker-section")
         assert args.get("count") == 0
 
@@ -132,43 +134,63 @@ class TrustPanel(BasePage):
         Wait until the trust panel has finished populating.
 
         The blocked-tracker count is the reliable "panel is ready" signal when
-        trackers are actually blocked, so we wait for it (refreshing and
-        reopening the panel between attempts). When nothing is blocked -- e.g.
-        ETP is disabled or the category under test is allowed -- the count stays
-        0, so after exhausting the count-based waits we fall back to accepting a
-        rendered panel. Waiting for the count first (instead of accepting the
-        panel immediately) is what avoids the race where the panel is visible
-        before the blocked count has populated.
+        trackers are actually blocked, so we wait for it (reloading and
+        reopening the panel between attempts). Waiting for the count first is
+        what avoids the race where the panel is visible before the blocked
+        count has populated.
+
+        When nothing is blocked -- e.g. ETP is disabled or the category under
+        test is allowed -- the count stays 0. In that case we return once the
+        blocker section has rendered (count 0 is a valid populated state) and
+        raise AssertionError only if the panel never populated at all.
         """
         if attempts < 1:
             raise ValueError("attempts must be at least 1")
 
         nav = Navigation(self.driver)
-        blocker_section = "trustpanel-blocker-section"
-
-        def _trackers_are_present(_):
-            try:
-                args = self.get_element_args(blocker_section)
-            except (
-                StaleElementReferenceException,
-                TypeError,
-                ValueError,
-            ):
-                return False
-
-            return isinstance(args, dict) and args.get("count", 0) > 0
 
         for attempt in range(1, attempts + 1):
             self.open_panel()
             try:
-                self.custom_wait(timeout=timeout).until(_trackers_are_present)
+                self.custom_wait(timeout=timeout).until(
+                    lambda _: (self._blocked_tracker_count() or 0) > 0
+                )
                 return self
             except TimeoutException:
                 if attempt < attempts:
                     nav.refresh_page()
 
-        self.open_panel()
+        # Retries exhausted without a positive blocked count. That is expected
+        # when nothing is blocked (ETP disabled or the category under test is
+        # allowed): the panel still renders with a count of 0. A panel whose
+        # blocker section never rendered, though, is a genuine failure.
+        if self._blocked_tracker_count() is None:
+            raise AssertionError(
+                f"Trust panel did not populate after {attempts} attempts."
+            )
         return self
+
+    @BasePage.context_chrome
+    def _blocked_tracker_count(self) -> int | None:
+        """
+        Return the blocked-tracker count from the panel header.
+
+        Returns None when the blocker section has not rendered or its
+        localization args cannot be parsed yet, which lets callers tell a
+        "nothing blocked" panel (count 0) apart from one that never populated.
+        """
+        try:
+            args = self.get_element_args("trustpanel-blocker-section")
+        except (
+            NoSuchElementException,
+            StaleElementReferenceException,
+            TypeError,
+            ValueError,
+        ):
+            return None
+        if not isinstance(args, dict):
+            return None
+        return args.get("count", 0)
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
