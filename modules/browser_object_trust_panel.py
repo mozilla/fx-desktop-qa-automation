@@ -37,7 +37,6 @@ class TrustPanel(BasePage):
         self.element_visible("trustpanel")
         return self
 
-    @BasePage.context_chrome
     def _panel_is_open(self) -> bool:
         """Return True when the trust panel popup is open or opening."""
         original = self.driver.timeouts.implicit_wait
@@ -131,10 +130,10 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def wait_for_trackers(
-            self,
-            expect_blocked: bool = True,
-            attempts: int = 3,
-            timeout: int = 10,
+        self,
+        expect_blocked: bool = True,
+        attempts: int = 3,
+        timeout: int = 10,
     ) -> BasePage:
         """
         Wait until the trust panel has finished populating.
@@ -184,7 +183,6 @@ class TrustPanel(BasePage):
             f"No blocked trackers appeared in the trust panel after {attempts} attempts."
         )
 
-    @BasePage.context_chrome
     def _blocked_tracker_count(self) -> int | None:
         """
         Return the blocked-tracker count from the panel header.
@@ -197,10 +195,10 @@ class TrustPanel(BasePage):
         try:
             args = self.get_element_args("trustpanel-blocker-section")
         except (
-                NoSuchElementException,
-                StaleElementReferenceException,
-                TypeError,
-                ValueError,
+            NoSuchElementException,
+            StaleElementReferenceException,
+            TypeError,
+            ValueError,
         ):
             return None
         finally:
