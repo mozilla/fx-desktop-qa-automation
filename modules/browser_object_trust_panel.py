@@ -130,10 +130,10 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def wait_for_trackers(
-        self,
-        expect_blocked: bool = True,
-        attempts: int = 3,
-        timeout: int = 10,
+            self,
+            expect_blocked: bool = True,
+            attempts: int = 3,
+            timeout: int = 10,
     ) -> BasePage:
         """
         Wait until the trust panel has finished populating.
@@ -195,10 +195,10 @@ class TrustPanel(BasePage):
         try:
             args = self.get_element_args("trustpanel-blocker-section")
         except (
-            NoSuchElementException,
-            StaleElementReferenceException,
-            TypeError,
-            ValueError,
+                NoSuchElementException,
+                StaleElementReferenceException,
+                TypeError,
+                ValueError,
         ):
             return None
         finally:
@@ -206,6 +206,71 @@ class TrustPanel(BasePage):
         if not isinstance(args, dict):
             return None
         return args.get("count", 0)
+
+    def _wait_for_panel_button(
+            self,
+            reference: str,
+            labels: list[str] | None = None,
+    ) -> WebElement:
+        """Wait for an enabled button in the visible panel view."""
+
+        def _button_is_ready(_):
+            try:
+                for button in self.get_elements(reference, labels=labels):
+                    if not button.is_displayed() or not button.is_enabled():
+                        continue
+
+                    panel_is_ready = self.driver.execute_script(
+                        """
+                        const button = arguments[0];
+                        const view = button.closest("panelview");
+                        const multiview = button.closest("panelmultiview");
+
+                        return Boolean(
+                            view?.hasAttribute("visible") &&
+                            multiview &&
+                            !multiview.hasAttribute("transitioning")
+                        );
+                        """,
+                        button,
+                    )
+
+                    if panel_is_ready:
+                        return button
+
+            except StaleElementReferenceException:
+                return False
+
+            return False
+
+        return self.wait.until(_button_is_ready)
+
+    def _wait_for_panel_view(self, *, main_view: bool) -> None:
+        """Wait until panel navigation finishes on the requested view type."""
+
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                """
+                const popup = document.getElementById("trustpanel-popup");
+                const multiview = popup?.querySelector("panelmultiview");
+                const visibleView =
+                    multiview?.querySelector("panelview[visible]");
+
+                if (
+                    !multiview ||
+                    !visibleView ||
+                    multiview.hasAttribute("transitioning")
+                ) {
+                    return false;
+                }
+
+                return (
+                    visibleView.hasAttribute("mainview") === arguments[0]
+                );
+                """,
+                main_view,
+            )
+        )
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
@@ -257,20 +322,23 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
-    def open_detected_category(self, category: str):
+    def open_detected_category(self, category: str) -> BasePage:
         """
         Open a detected tracker category from the protections panel.
 
-        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        Canonical input format: hyphenated singular
+        (e.g. "tracking-content").
         """
         canonical = category.strip().lower().replace(" ", "-")
-        locator = (
+
+        button = self._wait_for_panel_button(
             "detected-category",
-            [f"trustpanel-list-label-{canonical}"],
+            labels=[f"trustpanel-list-label-{canonical}"],
         )
 
-        sleep(0.5)
-        self.js_click_on(*locator)
+        self.driver.execute_script("arguments[0].click();", button)
+        self._wait_for_panel_view(main_view=False)
+
         return self
 
     @BasePage.context_chrome
@@ -356,12 +424,14 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
-    def click_subview_back_button(self):
-        """Click the back arrow to return from a subview to the main Trust Panel."""
-        self.element_visible("trustpanel-subview-back-button")
-        sleep(0.5)  # "visible" in trustpanel doesn't mean what it seems to
-        self.js_click_on("trustpanel-subview-back-button")
-        self.element_attribute_is("trustpanel", "mainviewshowing", "true")
+    def click_subview_back_button(self) -> BasePage:
+        """Return from the current subview to the main Trust Panel."""
+
+        button = self._wait_for_panel_button("trustpanel-subview-back-button")
+
+        self.driver.execute_script("arguments[0].click();", button)
+        self._wait_for_panel_view(main_view=True)
+
         return self
 
     @BasePage.context_chrome
