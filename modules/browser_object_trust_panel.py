@@ -130,10 +130,10 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def wait_for_trackers(
-            self,
-            expect_blocked: bool = True,
-            attempts: int = 3,
-            timeout: int = 10,
+        self,
+        expect_blocked: bool = True,
+        attempts: int = 3,
+        timeout: int = 10,
     ) -> BasePage:
         """
         Wait until the trust panel has finished populating.
@@ -195,10 +195,10 @@ class TrustPanel(BasePage):
         try:
             args = self.get_element_args("trustpanel-blocker-section")
         except (
-                NoSuchElementException,
-                StaleElementReferenceException,
-                TypeError,
-                ValueError,
+            NoSuchElementException,
+            StaleElementReferenceException,
+            TypeError,
+            ValueError,
         ):
             return None
         finally:
@@ -208,9 +208,9 @@ class TrustPanel(BasePage):
         return args.get("count", 0)
 
     def _wait_for_panel_button(
-            self,
-            reference: str,
-            labels: list[str] | None = None,
+        self,
+        reference: str,
+        labels: list[str] | None = None,
     ) -> WebElement:
         """Wait for an enabled button in the visible panel view."""
 
