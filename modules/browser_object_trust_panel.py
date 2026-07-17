@@ -120,6 +120,8 @@ class TrustPanel(BasePage):
         else:
             self.expect(_check_trustpanel)
 
+        return self
+
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
         self.element_clickable("trustpanel-connect-button")
