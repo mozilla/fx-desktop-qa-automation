@@ -1555,5 +1555,23 @@
       "description": "The inner input field inside the shadow DOM of the \"Re-enter password\" moz-input-password element in the Primary Password dialog",
       "location": "About Preferences - Passwords - Primary Password dialog"
     }
+  },
+  "homepage-new-tabs-dropdown": {
+    "selectorData": "homepageNewTabs",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The moz-select dropdown for the \"New tabs\" homepage setting in About Preferences Home section",
+      "location": "About Preferences - Home - Homepage section"
+    }
+  },
+  "homepage-new-tabs-firefox-home-option": {
+    "selectorData": "moz-option[value='home']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Firefox Home (Default)\" option inside the New tabs dropdown in About Preferences Home section",
+      "location": "About Preferences - Home - Homepage section"
+    }
   }
 }
