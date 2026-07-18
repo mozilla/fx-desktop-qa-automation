@@ -67,7 +67,11 @@ def test_play_mute_unmute_tabs_via_toggle(
         sleep(3)
 
     # Select all tabs via Control/Command click while staying on first tab
-    modifier_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+    modifier_key = Keys.SHIFT
+    if tabs.sys_platform == "Darwin":
+        modifier_key = Keys.COMMAND
+    elif tabs.sys_platform == "Linux":
+        modifier_key = Keys.CONTROL
 
     with driver.context(driver.CONTEXT_CHROME):
         actions = tabs.actions
