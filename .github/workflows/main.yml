@@ -331,6 +331,7 @@ jobs:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
           echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
+          echo "PATH=$PATH:$(pwd)" >> "$GITHUB_ENV"
 
       - name: Select Tests (MacOS)
         id: select
