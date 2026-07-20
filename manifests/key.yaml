@@ -73,14 +73,6 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_google_search_counts_us:
-    result: pass
-    splits:
-    - functional1
-  test_google_withads_url_bar_us:
-    result: pass
-    splits:
-    - functional1
   test_insertion_point_no_search_terms_display:
     result: pass
     splits:
@@ -103,10 +95,6 @@ address_bar_and_search:
     splits:
     - functional1
   test_refresh_firefox_dialog:
-    result: pass
-    splits:
-    - functional1
-  test_sap_google_adclick:
     result: pass
     splits:
     - functional1
