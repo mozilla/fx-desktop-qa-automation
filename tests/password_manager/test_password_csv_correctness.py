@@ -6,7 +6,7 @@ import pytest
 
 from modules.page_object import AboutLogins
 
-PASSWORDS_FILE = "passwords.csv"
+PASSWORDS_FILE = "passwords_correctness.csv"
 
 
 @pytest.fixture()
@@ -21,8 +21,6 @@ def add_to_prefs_list():
     return [("signon.management.page.os-auth.locked.enabled", False)]
 
 
-@pytest.mark.headed
-@pytest.mark.noxvfb
 def test_password_csv_correctness(
     driver_and_saved_logins, downloads_folder, sys_platform
 ):
@@ -33,14 +31,14 @@ def test_password_csv_correctness(
     (driver, usernames, logins) = driver_and_saved_logins
     about_logins = AboutLogins(driver)
 
-    # Ensure the export target folder doesn't contain a passwords.csv file
-    about_logins.remove_password_csv(downloads_folder)
+    # Ensure the export target folder doesn't contain the exported CSV yet
+    about_logins.remove_password_csv(downloads_folder, PASSWORDS_FILE)
 
     # Export the passwords CSV
-    about_logins.export_passwords_csv(downloads_folder, "passwords.csv")
+    about_logins.export_passwords_csv(downloads_folder, PASSWORDS_FILE)
 
     # Verify the exported csv file is present in the target folder
-    csv_file = about_logins.verify_csv_export(downloads_folder, "passwords.csv")
+    csv_file = about_logins.verify_csv_export(downloads_folder, PASSWORDS_FILE)
     assert os.path.exists(csv_file)
 
     # Verify the contents of the exported csv file
@@ -61,5 +59,5 @@ def test_password_csv_correctness(
         assert "formActionOrigin" in row.keys()
     about_logins.check_logins_present(actual_logins, logins)
 
-    # Delete the password.csv created
-    about_logins.remove_password_csv(downloads_folder)
+    # Delete the exported CSV
+    about_logins.remove_password_csv(downloads_folder, PASSWORDS_FILE)

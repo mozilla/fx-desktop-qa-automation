@@ -1,5 +1,4 @@
 import os
-import time
 
 import pytest
 from selenium.webdriver import Firefox
@@ -14,53 +13,43 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*i-9.pdf"
+    return r".*i-9-downloads\.pdf"
 
 
-def wait_for_file_download(file_path, timeout=10, interval=0.5):
-    start = time.time()
-    while time.time() - start < timeout:
-        if os.path.exists(file_path):
-            return True
-        time.sleep(interval)
-    return False
-
-
-@pytest.mark.headed
 def test_download_pdf(
     driver: Firefox,
     fillable_pdf_url: str,
     downloads_folder: str,
-    sys_platform,
     delete_files,
+    wait_for_file_download,
 ):
     """
     C1756769: Verify that the user can Download a PDF
 
     Notes:
-        - Firefox is launched with a new profile that has default download settings.
-        - This means the OS-level "Save File" dialog will appear for every download.
-        - Selenium cannot interact with this native dialog directly, so the test
-          must rely on fixed waits to give the OS time to render the dialog and to
-          finish writing the file.
+        - The native "Save File" picker is mocked on all platforms so the
+          download runs headlessly in CI. Driving the OS file dialog is
+          unreliable there (Linux Wayland cannot drive GTK pickers through
+          desktop input, and Windows image-matching depends on the CI
+          resolution/DPI/theme).
     """
+
+    # Set the expected download path and the expected PDF name
+    file_name = "i-9-downloads.pdf"
+    saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Initialize objects
     pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url)
 
-    # Click the download button
-    pdf_page.open()
-    pdf_page.click_download_button()
+    # Replace the native save dialog with a mock that returns our target path
+    pdf_page.install_mock_file_picker(saved_pdf_location)
+    try:
+        pdf_page.click_download_button()
+        pdf_page.wait_for_mock_file_picker()
+    finally:
+        pdf_page.cleanup_mock_file_picker()
 
-    # Allow time for the download dialog to appear and pressing handle the prompt
-    time.sleep(2)
-    pdf_page.handle_os_download_confirmation()
-
-    # Set the expected download path and the expected PDF name
-    file_name = "i-9.pdf"
-    saved_pdf_location = os.path.join(downloads_folder, file_name)
-
-    # Wait up to 10 seconds for the file to appear and finish downloading
-    assert wait_for_file_download(saved_pdf_location, timeout=10), (
+    # Wait for the file to appear and finish downloading
+    assert wait_for_file_download(saved_pdf_location), (
         f"File not found: {saved_pdf_location}"
     )

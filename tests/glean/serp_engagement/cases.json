@@ -1,0 +1,9 @@
+{
+  "metric": "serp.engagement",
+  "cases": [
+    {"id": "3255530", "entry": "urlbar", "action": "click_non_ads_link", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"action": "clicked", "target": "non_ads_link"}},
+    {"id": "3255533", "entry": "urlbar", "action": "click_non_ads_link", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "DE"]], "expected": {"action": "clicked", "target": "non_ads_link"}},
+    {"id": "3255534", "entry": "urlbar", "action": "click_non_ads_link", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"action": "clicked", "target": "non_ads_link"}},
+    {"id": "3255537", "entry": "urlbar", "action": "click_non_ads_link", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "DE"]], "expected": {"action": "clicked", "target": "non_ads_link"}}
+  ]
+}
