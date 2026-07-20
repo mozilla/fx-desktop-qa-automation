@@ -734,6 +734,7 @@ class BasePage(Page):
             logging.info(f"{reference} clicked")
         return self
 
+    @context_of_model
     def multi_click(
         self, iters: int, reference: str | tuple | WebElement, labels=None
     ) -> Page:
@@ -766,6 +767,7 @@ class BasePage(Page):
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
 
+    @context_of_model
     def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform control-click on given element"""
         element = self.fetch(reference, labels)

@@ -37,6 +37,7 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
+# This test is unstable in Windows GHA for now
 @pytest.mark.audio
 def test_play_mute_unmute_tabs_via_toggle(
     driver: Firefox, sys_platform: str, local_doc_path
@@ -67,60 +68,23 @@ def test_play_mute_unmute_tabs_via_toggle(
         sleep(3)
 
     # Select all tabs via Control/Command click while staying on first tab
-    modifier_key = Keys.SHIFT
-    if tabs.sys_platform == "Darwin":
-        modifier_key = Keys.COMMAND
-    elif tabs.sys_platform == "Linux":
-        modifier_key = Keys.CONTROL
+    for i in [2, 3]:
+        tabs.control_click(tabs.get_tab(i))
+    for i in [2, 3]:
+        tabs.element_attribute_is(tabs.get_tab(i), "multiselected", "true")
 
-    with driver.context(driver.CONTEXT_CHROME):
-        actions = tabs.actions
+    tabs.element_attribute_is(tabs.get_tab(2), "activemedia-blocked", "true")
 
-        # Hold modifier and select the video tabs
-        actions.key_down(modifier_key)
-        for i in range(2, 4):  # Select tabs 2 and 3
-            tab_to_select = tabs.get_tab(i)
-            actions.click(tab_to_select)
-        actions.key_up(modifier_key).perform()
-
-        # Verify tabs are selected (multiselected attribute)
-        for i in range(2, 4):
-            tab = tabs.get_tab(i)
-            assert tab.get_attribute("multiselected") == "true", (
-                f"Tab {i} should be multiselected"
-            )
-
+    for _ in range(2):
         # Click Play button
-        tabs.element_attribute_is(tabs.get_tab(2), "activemedia-blocked", "true")
         tabs.click_on("any-media-button-by-tab-index", labels=["2"])
 
-        # Verify all selected tabs are playing
         for i in [2, 3]:
             tabs.expect_tab_sound_status(i, tabs.MEDIA_STATUS.PLAYING)
-            tab = tabs.get_tab(i)
-            assert tab.get_attribute("soundplaying") is not None, (
-                f"Tab {i} should be playing audio"
-            )
 
         # Click Mute button
         tabs.click_on("any-media-button-by-tab-index", labels=["2"])
 
-        # Verify all selected tabs are muted
         for i in [2, 3]:
             tabs.expect_tab_sound_status(i, tabs.MEDIA_STATUS.MUTED)
-            tab = tabs.get_tab(i)
-            assert tab.get_attribute("muted") is not None, f"Tab {i} should be muted"
-
-        # Click Unmute button
-        tabs.click_on("any-media-button-by-tab-index", labels=["2"])
-
-        # Verify all selected tabs are unmuted and playing again
-        for i in [2, 3]:
-            tabs.expect_tab_sound_status(i, tabs.MEDIA_STATUS.PLAYING)
-            tab = tabs.get_tab(i)
-            assert tab.get_attribute("soundplaying") is not None, (
-                f"Tab {i} should be playing audio after unmute"
-            )
-            assert tab.get_attribute("muted") is None, (
-                f"Tab {i} should not be muted after unmute"
-            )
+        # Iterate so we know that mute -> play functionality works
