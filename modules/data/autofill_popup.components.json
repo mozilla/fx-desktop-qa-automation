@@ -275,7 +275,7 @@
     }
   },
   "manage-passwords": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginsFooter']",
     "strategy": "css",
     "groups": [],
     "comment": {
