@@ -1707,11 +1707,11 @@ tabs:
     splits:
     - functional2
   test_play_mute_unmute_tabs_via_toggle:
-    comment: Linux broken because PyAutoGUI doesn't support Wayland
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056387
     result:
-      linux: unstable
+      linux: pass
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - functional2
   test_reload_overiding_cache_keys:
