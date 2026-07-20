@@ -10,6 +10,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from modules.browser_object_navigation import Navigation
 from modules.page_base import BasePage
 
+# Windows tracker detection can lag several seconds behind a reload; poll slowly so
+# each reload gets time to run detection instead of restarting it every ~0.5s.
+TRACKER_DETECT_TIMEOUT = 30
+TRACKER_DETECT_POLL = 3
+
 
 class TrustPanel(BasePage):
     """
@@ -85,14 +90,20 @@ class TrustPanel(BasePage):
         return self.sites_in_category("detected", *sites)
 
     @BasePage.context_chrome
-    def wait_for_trackers(self) -> BasePage:
-        """Open and close the trust panel until trackers appear"""
+    def wait_for_trackers(self, require_count: bool = False) -> BasePage:
+        """
+        Open and close the trust panel until trackers appear.
+
+        require_count: when True, keep refreshing until the blocker section reports a
+        non-zero count. Needed on slower platforms (Windows) where tracker detection
+        lags the panel opening; otherwise a visible-but-empty panel is accepted.
+        """
         nav = Navigation(self.driver)
         blocker_section = "trustpanel-blocker-section"
 
         def _check_trustpanel(driver):
-            args = self.get_element_args(blocker_section)
-            if args.get("count"):
+            count = self.get_element_args(blocker_section).get("count")
+            if count:
                 return True
 
             nav.click_on("refresh-button")
@@ -100,9 +111,16 @@ class TrustPanel(BasePage):
             self.open_panel()
             if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
                 return False
-            return True
+            return not require_count
 
-        self.expect(_check_trustpanel)
+        if require_count:
+            self.custom_wait(
+                timeout=TRACKER_DETECT_TIMEOUT, poll_frequency=TRACKER_DETECT_POLL
+            ).until(_check_trustpanel)
+        else:
+            self.expect(_check_trustpanel)
+
+        return self
 
     @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
