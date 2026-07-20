@@ -359,7 +359,7 @@ jobs:
           TESTRAIL_REPORT: false
         run: |
           "$FX_EXECUTABLE" --version
-          uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |-
