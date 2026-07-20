@@ -321,8 +321,8 @@ jobs:
           uv run python scripts/switch_config.py ci;
           uv sync;
           if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
-          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV";
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV";
 
       - name: Install Fx
         id: install-fx
@@ -330,7 +330,7 @@ jobs:
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
+          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT";
 
       - name: Select Tests (MacOS)
         id: select
@@ -359,7 +359,7 @@ jobs:
           TESTRAIL_REPORT: false
         run: |
           "$FX_EXECUTABLE" --version
-          uv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |-
