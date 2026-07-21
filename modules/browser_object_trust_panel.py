@@ -3,8 +3,8 @@ from time import sleep
 
 from selenium.common import (
     NoSuchElementException,
-    TimeoutException,
     StaleElementReferenceException,
+    TimeoutException,
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
