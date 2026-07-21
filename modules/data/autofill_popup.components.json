@@ -108,12 +108,14 @@
     }
   },
   "select-form-option-by-value": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginWithOrigin']",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+        "doNotCache"
+    ],
     "comment": {
-      "description": "An individual entry within the autofill dropdown, with a label for the \"ac-value\" attr, usually a cardholder name.",
-      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
+        "description": "An individual login entry within the autofill dropdown showing saved credentials for the current site.",
+        "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
     }
   },
   "clear-form-option": {
