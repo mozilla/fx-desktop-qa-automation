@@ -15,7 +15,10 @@ def test_case():
     return "3054911"
 
 
-def test_fingerprinters_displayed_subpanel(driver: Firefox):
+def test_fingerprinters_displayed_subpanel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054911 - Fingerprinters are correctly displayed in the sub panel
     """
@@ -23,7 +26,6 @@ def test_fingerprinters_displayed_subpanel(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=FINGERPRINTING_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy select only the option "Known fingerprinters" in the Custom section
     about_prefs.open()

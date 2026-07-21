@@ -24,7 +24,10 @@ def add_to_prefs_list():
     return [("privacy.trackingprotection.socialtracking.enabled", True)]
 
 
-def test_social_media_trackers_displayed_subpanel(driver: Firefox):
+def test_social_media_trackers_displayed_subpanel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054913 - Social media trackers are correctly displayed in the sub panel
     """
@@ -32,7 +35,6 @@ def test_social_media_trackers_displayed_subpanel(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=SOCIAL_TRACKER_URL)
-    trust_panel = TrustPanel(driver)
 
     # "Custom" option is selected from the ETP section in about:preferences#privacy and everything is deselected
     about_prefs.open()

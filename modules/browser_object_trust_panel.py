@@ -1,7 +1,11 @@
 import json
 from time import sleep
 
-from selenium.common import NoSuchElementException, TimeoutException, StaleElementReferenceException
+from selenium.common import (
+    NoSuchElementException,
+    TimeoutException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -139,8 +143,8 @@ class TrustPanel(BasePage):
 
                 return blocked_visible and detected_visible
             except (
-                    NoSuchElementException,
-                    StaleElementReferenceException,
+                NoSuchElementException,
+                StaleElementReferenceException,
             ):
                 return False
 
@@ -150,8 +154,7 @@ class TrustPanel(BasePage):
         ).until(
             _sections_are_visible,
             message=(
-                "The blocked and detected tracker sections "
-                "did not both become visible."
+                "The blocked and detected tracker sections did not both become visible."
             ),
         )
 

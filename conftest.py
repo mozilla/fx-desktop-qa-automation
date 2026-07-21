@@ -3,7 +3,6 @@ import logging
 import os
 import platform
 import re
-import sys
 from pathlib import Path
 from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
@@ -336,27 +335,21 @@ def machine_config():
 def test_case():
     return None
 
+
 def pytest_collection_modifyitems(
     config: pytest.Config,
     items: list[pytest.Item],
 ) -> None:
-    """Serialize Trust Panel tests on Windows."""
+    """Serialize Security & Privacy tests on all platforms."""
 
     del config
 
-    if sys.platform != "win32":
-        return
-
     for item in items:
-        is_security_and_privacy_test = (
-            "tests/security_and_privacy" in item.nodeid.replace("\\", "/")
-        )
-        uses_trust_panel = "trust_panel" in item.fixturenames
+        nodeid = item.nodeid.replace("\\", "/")
 
-        if is_security_and_privacy_test and uses_trust_panel:
-            item.add_marker(
-                pytest.mark.xdist_group(name="windows-trust-panel")
-            )
+        if nodeid.startswith("tests/security_and_privacy/"):
+            item.add_marker(pytest.mark.xdist_group(name="security-and-privacy"))
+
 
 def pytest_configure(config):
     logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
