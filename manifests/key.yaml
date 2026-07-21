@@ -980,11 +980,10 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
-    result: pass
+    result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018768
     result: unstable
     splits:
     - functional2
@@ -1726,10 +1725,10 @@ tabs:
     splits:
     - functional2
   test_play_mute_unmute_tabs_via_toggle:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056387
     result:
-      linux: unstable
-      mac: unstable
+      linux: pass
+      mac: pass
       win: unstable
     splits:
     - functional2
