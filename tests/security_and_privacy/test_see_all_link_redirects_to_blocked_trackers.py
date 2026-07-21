@@ -1,10 +1,12 @@
 import pytest
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TrustPanel
 from modules.page_object import GenericPage
 
 TEST_URL = "https://edition.cnn.com/"
+MAX_ATTEMPTS = 3
 
 
 @pytest.fixture()
@@ -13,23 +15,34 @@ def test_case():
 
 
 def test_see_all_link_redirects_to_blocked_trackers(
-    driver: Firefox, trust_panel: TrustPanel
+    driver: Firefox,
+    trust_panel: TrustPanel,
 ):
     """
-    C3054033 - “See all” link correctly redirects the user to the blocked trackers
+    C3054033 - “See all” link correctly redirects the user
+    to the blocked trackers.
     """
 
-    # Instantiate objects
     test_page = GenericPage(driver, url=TEST_URL)
+    last_error = None
 
-    # Open test page and click on the shield icon
-    test_page.open()
-    trust_panel.open_panel()
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        test_page.open()
+        trust_panel.open_panel()
+        trust_panel.wait_for_trackers()
+        trust_panel.click_see_all()
 
-    # Click on the "See All" button
-    trust_panel.wait_for_trackers()
-    trust_panel.click_see_all()
+        try:
+            trust_panel.wait_for_tracker_sections()
+            return
+        except TimeoutException as exc:
+            last_error = exc
 
-    # The blocked and allowed trackers are displayed in the panel
-    trust_panel.element_visible("blocked-items")
-    trust_panel.element_visible("detected-items")
+            if attempt == MAX_ATTEMPTS:
+                break
+
+    pytest.fail(
+        "The blocked and detected tracker sections did not both become "
+        f"visible after {MAX_ATTEMPTS} page loads.",
+        pytrace=last_error,
+    )

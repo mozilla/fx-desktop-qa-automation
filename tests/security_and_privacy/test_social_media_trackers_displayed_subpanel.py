@@ -43,7 +43,7 @@ def test_social_media_trackers_displayed_subpanel(driver: Firefox):
     # Open page and click on the shield icon
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # Click on "See All" button
     trust_panel.click_see_all()
