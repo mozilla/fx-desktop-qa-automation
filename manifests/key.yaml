@@ -1231,7 +1231,7 @@ security_and_privacy:
     splits:
     - functional2
   test_cross_site_tracking_cookies_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056170
     result:
       linux: pass
       mac: pass
@@ -1243,7 +1243,7 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056170
     result:
       linux: pass
       mac: pass
@@ -1319,7 +1319,7 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2050617
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056170
     result:
       linux: pass
       mac: pass

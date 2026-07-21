@@ -518,8 +518,8 @@ def driver(
         Fixture that does other environment work, like set logging levels.
     """
     options = Options()
+    service_args = ["--allow-system-access"]
     # options.log.level = "trace"
-    options.add_argument("--remote-allow-system-access")
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
@@ -534,10 +534,10 @@ def driver(
         options.set_preference(opt, value)
     try:
         if geckodriver:
-            service = Service(executable_path=geckodriver)
-            driver = Firefox(service=service, options=options)
+            service = Service(executable_path=geckodriver, service_args=service_args)
         else:
-            driver = Firefox(options=options)
+            service = Service(service_args=service_args)
+        driver = Firefox(service=service, options=options)
 
         # Uncomment below to find Fx process info
         # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
@@ -569,6 +569,7 @@ def driver(
         yield driver
         if hard_quit:
             if hasattr(driver, "service") and driver.service is not None:
+                logging.warning("Attempting to force close Firefox")
                 driver.service.stop()
             return
 
