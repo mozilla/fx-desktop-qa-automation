@@ -12,8 +12,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_added_open_search_engine_default:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056526
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_addon_suggestion:
@@ -141,8 +140,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_mode_exits_correctly:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056526
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_persists_mixed_with_bing:
@@ -915,7 +913,9 @@ password_manager:
     splits:
     - functional2
   test_password_manager_on_google_US:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524, mac was unstable before this issue was filed, no comment on the reason, keet this in mind when reverting the status
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524, mac was unstable
+      before this issue was filed, no comment on the reason, keep this in mind when
+      reverting the status
     result:
       linux: unstable
       mac: unstable
