@@ -177,7 +177,7 @@ class AutofillPopup(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_autocomplete_option(self, value: str) -> BasePage:
+    def verify_autocomplete_option(self) -> BasePage:
         """Wait until an autocomplete login option is displayed in the dropdown."""
         self.custom_wait(timeout=10).until(
             lambda _: self.get_element("select-form-option-by-value") is not None
