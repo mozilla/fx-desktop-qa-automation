@@ -27,7 +27,7 @@ def test_fingerprinters_blocked_and_shown_in_panel_and_preferences(driver: Firef
     # Open page and check the Information panel
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # The "Blocked" string is displayed under the Fingerprinters section
     trust_panel.trackers_blocked("fingerprinter")
