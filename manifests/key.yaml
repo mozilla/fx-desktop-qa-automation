@@ -1113,8 +1113,7 @@ preferences:
     splits:
     - functional2
   test_lang_pack_changed_from_about_prefs:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056529
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_manage_cookie_data:
