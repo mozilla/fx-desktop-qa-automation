@@ -212,8 +212,20 @@ class AboutPrefs(BasePage):
     def set_alternative_language(self, lang_code: str) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
-        Firefox applies the locale live once the dropdown value changes.
+        The available-languages list is hydrated asynchronously — Firefox
+        appends the installable locales fetched from a remote source after the
+        pane opens — so the target option may be missing the instant we look.
+        Wait for it before selecting. Firefox applies the locale live once the
+        dropdown value changes.
         """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "browser-language-preferred-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
         Select(self.get_element("browser-language-preferred-select")).select_by_value(
             lang_code
         )

@@ -312,8 +312,28 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_search_mode_switcher(self) -> BasePage:
+        """Open the Unified Search Button (USB) popup.
+
+        The switcher is a toolbar button that toggles the search-mode
+        panel-list. When clicked right after typing in the urlbar, the first
+        click is occasionally swallowed while the urlbar is still settling, so
+        the popup never opens and callers time out waiting for an engine
+        option. Re-click until the popup is actually open, checking its state
+        first each poll so an already-open popup is never toggled shut.
+        """
         self.element_visible("searchmode-switcher")
-        self.click_on("searchmode-switcher")
+
+        def _popup_open() -> bool:
+            popups = self.get_elements("legacy-searchbar-switcher-popup")
+            return bool(popups) and popups[0].is_displayed()
+
+        def _open_popup(_) -> bool:
+            if _popup_open():
+                return True
+            self.click_on("searchmode-switcher")
+            return _popup_open()
+
+        self.expect(_open_popup)
         return self
 
     @BasePage.context_chrome
