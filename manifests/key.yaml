@@ -1120,8 +1120,7 @@ preferences:
     splits:
     - smoke
   test_never_remember_history:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056512
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_notifications_change_set:
