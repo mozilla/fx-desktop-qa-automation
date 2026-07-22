@@ -849,8 +849,7 @@ password_manager:
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055601
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_edit_primary_password:
