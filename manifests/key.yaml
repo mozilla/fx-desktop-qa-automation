@@ -878,8 +878,7 @@ password_manager:
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055602
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
@@ -940,8 +939,7 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055603
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
