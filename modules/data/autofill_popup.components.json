@@ -97,7 +97,7 @@
     "groups": []
   },
   "select-form-option": {
-    "selectorData": "#PopupAutoComplete .autocomplete-richlistitem",
+    "selectorData": "#PopupAutoComplete richlistbox richlistitem",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -126,7 +126,7 @@
     }
   },
   "select-form-option-autofill": {
-    "selectorData": ".autocomplete-richlistitem[originaltype='autofill']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='autofill']",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -275,11 +275,11 @@
     }
   },
   "manage-passwords": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginsFooter']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Login autofill manage passwords button",
+      "description": "Login autofill 'Manage Passwords' footer row (Firefox 154+ autocomplete-row-item; the ac-value attribute was removed so match on originaltype)",
       "location": "Login autofill"
     }
   },

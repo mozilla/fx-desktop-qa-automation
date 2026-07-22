@@ -520,23 +520,19 @@ form_autofill:
     splits:
     - functional1
   test_autofill_credit_card_four_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_cc_clear_form:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522, https://bugzilla.mozilla.org/show_bug.cgi?id=2055590
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_clear_form:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_create_new_cc_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_create_profile_autofill:
@@ -549,8 +545,7 @@ form_autofill:
     splits:
     - functional1
   test_edit_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_enable_disable_autofill:
@@ -578,13 +573,11 @@ form_autofill:
     - smoke
     - ci
   test_updating_address:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_updating_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056522
-    result: unstable
+    result: pass
     splits:
     - functional1
 geolocation:
@@ -818,8 +811,7 @@ password_manager:
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055597
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_can_view_password_when_PP_enabled:
@@ -831,8 +823,7 @@ password_manager:
     splits:
     - functional2
   test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055598
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_delete_login:
@@ -844,8 +835,12 @@ password_manager:
     splits:
     - functional2
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056533
-    result: unstable
+    comment: uses pyautogui (headed) to answer the native Primary Password prompt;
+      not reliable on linux (Wayland) or win CI, so mac-only like the CSV-export PP tests
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_edit_generated_password_triggers_autosave:
@@ -857,26 +852,19 @@ password_manager:
     splits:
     - functional2
   test_facebook_login_autofill_dropdown:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_insecure_password:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308, https://bugzilla.mozilla.org/show_bug.cgi?id=2056533
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055602
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_never_save_login_via_doorhanger:
@@ -912,18 +900,13 @@ password_manager:
     splits:
     - functional2
   test_password_manager_on_google_US:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524, mac was unstable
-      before this issue was filed, no comment on the reason, keep this in mind when
-      reverting the status
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    comment: external site; mac was historically unstable for unknown reasons before
+      bug 2056524, keep in mind if it re-flakes
+    result: pass
     splits:
     - functional1
   test_password_manager_on_reddit:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056524
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_primary_password_allows_csv_export:
@@ -939,8 +922,7 @@ password_manager:
     splits:
     - functional2
   test_private_browsing_dismiss_doorhanger_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055603
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_save_login_via_doorhanger:
@@ -952,8 +934,7 @@ password_manager:
     splits:
     - functional2
   test_taobao_password_management:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056533
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_update_login_via_doorhanger:

@@ -44,11 +44,11 @@
     }
   },
   "facebook-credentials": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginWithOrigin']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Autocomplete dropdown is toggled for focused login fields on facebook page load",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
       "location": "Facebook page load"
     }
   },
@@ -86,29 +86,29 @@
     }
   },
   "generated-securely-password": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='generatedPassword']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Use a Securely Generated Password option",
+      "description": "Use a Securely Generated Password option (Firefox 154+ autocomplete-row-item; matched on originaltype)",
       "location": "The dropdown under the password field in a login page"
     }
   },
   "bsky-credentials": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='username1']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginWithOrigin']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Autocomplete dropdown is toggled for focused login fields on bsky page load",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
       "location": "bsky page load"
     }
   },
   "mozilla-github-credentials": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginWithOrigin']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Autocomplete dropdown is toggled for focused login fields on Mozilla github page load",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
       "location": "Mozilla Github page load"
     }
   },

@@ -41,7 +41,9 @@ def test_insecure_login_contextual_warning(driver: Firefox, temp_selectors):
     def _verify_insecure_warning_dropdown():
         autofill_popup.ensure_autofill_dropdown_visible()
         autofill_popup.element_visible("insecure-login-warning")
-        autofill_popup.element_visible("insecure-login-warning-text")
+        # Firefox 154 moved the warning text into the autocomplete-row-item shadow
+        # DOM, so assert on the row's label instead of the old .ac-title-text node.
+        assert autofill_popup.get_option_by_value("not secure") is not None
         autofill_popup.element_visible("manage-passwords")
 
     def _open_insecure_warning_article():
