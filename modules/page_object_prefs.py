@@ -1045,7 +1045,6 @@ class AboutPrefs(BasePage):
         """
         self.open_autoplay_modal()
         self.click_on(settings)
-        self.click_on("spacer")
         self.click_on("autoplay-save-changes")
         return self
 
