@@ -107,24 +107,6 @@
       "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
     }
   },
-  "select-form-option-by-value": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
-    "strategy": "css",
-    "groups": [],
-    "comment": {
-      "description": "An individual entry within the autofill dropdown, with a label for the \"ac-value\" attr, usually a cardholder name.",
-      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
-    }
-  },
-  "clear-form-option": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-    "strategy": "css",
-    "groups": [],
-    "comment": {
-      "description": "The \"Clear Autofill Form\" option in the dropdown that appears when interacting with an autofill-enabled input field",
-      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled."
-    }
-  },
   "select-form-option-autofill": {
     "selectorData": "#PopupAutoComplete richlistitem[originaltype='autofill']",
     "strategy": "css",
@@ -311,17 +293,6 @@
     ],
     "comment": {
       "description": "Firefox autocomplete warning item shown for login fields on insecure HTTP pages.",
-      "location": "Firefox chrome autofill popup"
-    }
-  },
-  "insecure-login-warning-text": {
-    "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning'] .ac-title-text",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ],
-    "comment": {
-      "description": "Text container for the insecure login warning message.",
       "location": "Firefox chrome autofill popup"
     }
   }

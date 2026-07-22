@@ -836,7 +836,8 @@ password_manager:
     - functional2
   test_edit_autofill_after_pp_dismissed:
     comment: uses pyautogui (headed) to answer the native Primary Password prompt;
-      not reliable on linux (Wayland) or win CI, so mac-only like the CSV-export PP tests
+      not reliable on linux (Wayland) or win CI, so mac-only like the CSV-export PP
+      tests
     result:
       linux: unstable
       mac: pass

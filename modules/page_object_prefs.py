@@ -632,12 +632,18 @@ class AboutPrefs(BasePage):
         the shadow DOM (Marionette cannot serialize a ShadowRoot, so reach the inner
         node with ``execute_script``). Falls back to the host for plain form fields.
         """
-        return self.driver.execute_script(
+        inner = self.driver.execute_script(
             "return arguments[0].shadowRoot"
             " ? arguments[0].shadowRoot.querySelector('input, select')"
             " : arguments[0];",
             host,
         )
+        if inner is None:
+            raise RuntimeError(
+                "No inner <input>/<select> found in the shadow root of "
+                f"{host.get_attribute('id') or host.tag_name!r}"
+            )
+        return inner
 
     def _set_cc_panel_field(self, field_id: str, value: str | int) -> None:
         """
