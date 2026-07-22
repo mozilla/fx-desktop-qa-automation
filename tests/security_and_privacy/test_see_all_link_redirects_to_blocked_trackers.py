@@ -24,25 +24,17 @@ def test_see_all_link_redirects_to_blocked_trackers(
     """
 
     test_page = GenericPage(driver, url=TEST_URL)
-    last_error = None
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        test_page.open()
-        trust_panel.open_panel()
-        trust_panel.wait_for_trackers()
-        trust_panel.click_see_all()
-
         try:
+            test_page.open()
+            trust_panel.open_panel()
+            trust_panel.wait_for_trackers()
+            trust_panel.click_see_all()
             trust_panel.wait_for_tracker_sections()
-            return
-        except TimeoutException as exc:
-            last_error = exc
-
+            break
+        except TimeoutException:
             if attempt == MAX_ATTEMPTS:
-                break
+                raise
 
-    pytest.fail(
-        "The blocked and detected tracker sections did not both become "
-        f"visible after {MAX_ATTEMPTS} page loads.",
-        pytrace=last_error,
-    )
+            driver.refresh()
