@@ -171,7 +171,7 @@
   "not-blocking-category": {
     "selectorData": "panelview[title='Not Blocking {}']",
     "strategy": "css",
-    "groups": [],
+    "groups": ["DoNotCache"],
     "comment": {
       "description": "Not blocking tracker category title",
       "location": "Trustpanel - Not blocking category view"
