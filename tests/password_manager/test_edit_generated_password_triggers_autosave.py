@@ -73,7 +73,6 @@ def test_edit_generated_password_triggers_autosave(driver: Firefox):
     # Go back to the password field tab and focus again the password field
     driver.switch_to.window(driver.window_handles[0])
     login_autofill.click_on("password-signup-field")
-    autofill_popup_panel.click_autofill_form_option()
 
     # Make additional edits to the initial edited password
     login_autofill.get_element("password-signup-field").send_keys(SECOND_EDIT_PASSWORD)

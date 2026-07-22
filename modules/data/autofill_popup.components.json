@@ -298,11 +298,11 @@
     "selectorData": "#PopupAutoComplete richlistitem[originaltype='generatedPassword']",
     "strategy": "css",
     "groups": [
-        "doNotCache"
+      "doNotCache"
     ],
     "comment": {
-        "description": "Firefox autocomplete option for using a securely generated password, shown when clicking on a password field.",
-        "location": "Firefox chrome autofill popup"
+      "description": "Firefox autocomplete option for using a securely generated password, shown when clicking on a password field.",
+      "location": "Firefox chrome autofill popup"
     }
   },
   "insecure-login-warning": {
