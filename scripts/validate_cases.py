@@ -9,6 +9,8 @@ tr_session = tri.testrail_init()
 print("Validating test cases...")
 test_suites = [d for d in os.listdir("./tests/") if os.path.isdir(f"./tests/{d}")]
 for test_suite in test_suites:
+    if test_suite.startswith("__"):
+        continue
     conftest = f"tests/{test_suite}/conftest.py"
     with open(conftest) as f:
         for line in f:
