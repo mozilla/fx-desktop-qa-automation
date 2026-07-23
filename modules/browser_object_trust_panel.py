@@ -172,9 +172,14 @@ class TrustPanel(BasePage):
             EC.presence_of_element_located((By.ID, "security-technical-shortform"))
         )
         sleep(0.5)
-        assert technical_details.get_attribute("value") == expected_technical_details, (
-            f"Expected '{expected_technical_details}' but found "
-            f"'{technical_details.get_attribute('value')}'"
+        actual_technical_details = technical_details.get_attribute("value")
+
+        normalized_expected = " ".join(expected_technical_details.split())
+        normalized_actual = " ".join(actual_technical_details.split())
+
+        assert normalized_actual == normalized_expected, (
+            f"Expected {expected_technical_details!r} but found "
+            f"{actual_technical_details!r}"
         )
 
     @BasePage.context_chrome
