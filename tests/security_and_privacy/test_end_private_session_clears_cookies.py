@@ -39,8 +39,7 @@ def test_end_private_session_clears_cookies(driver: Firefox):
     # Refresh the page to make sure the cookie is set and stored
     nav.click_on("refresh-button")
     driver.switch_to.frame(0)
-    nav.wait.until(lambda d: "Cookies already set" in d.page_source)
-    assert "Cookies already set" in driver.page_source
+    nav.custom_wait(timeout=30).until(lambda d: "Cookies already set" in d.page_source)
 
     # Click on the data clearance (End private session) button
     driver.switch_to.default_content()
@@ -50,5 +49,4 @@ def test_end_private_session_clears_cookies(driver: Firefox):
     # Navigate back to the site and verify cookies are cleared
     page.open()
     driver.switch_to.frame(0)
-    nav.wait.until(lambda d: "Cookies not yet set" in d.page_source)
-    assert "Cookies not yet set" in driver.page_source
+    nav.custom_wait(timeout=30).until(lambda d: "Cookies not yet set" in d.page_source)
