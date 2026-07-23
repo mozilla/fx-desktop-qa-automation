@@ -71,9 +71,7 @@ def test_copy_clean_link(driver: Firefox):
         return pasted_url == expected_url
 
     try:
-        nav.custom_wait(timeout=20, poll_frequency=1).until(
-            _clean_link_is_pasted
-        )
+        nav.custom_wait(timeout=20, poll_frequency=1).until(_clean_link_is_pasted)
     except TimeoutException as error:
         raise TimeoutException(
             f"Expected clean URL {expected_url!r}, "
