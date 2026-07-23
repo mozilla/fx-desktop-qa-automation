@@ -11,7 +11,6 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_added_open_search_engine_default:
     result: pass
     splits:
@@ -115,7 +114,6 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_search_engine_result_page_load_on_reload:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2054122
     result:
@@ -166,7 +164,6 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_search_suggestions_can_be_disabled:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
@@ -275,7 +272,6 @@ bookmarks_and_history:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_clear_recent_history_displayed:
     result: pass
     splits:
@@ -495,7 +491,6 @@ find_toolbar:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_find_toolbar_search:
     result: pass
     splits:
@@ -625,7 +620,6 @@ language_packs:
     result: pass
     splits:
     - smoke
-    - ci-extended
 menus:
   test_copy_paste_actions:
     result: pass
@@ -844,7 +838,6 @@ password_manager:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_delete_primary_password:
     result: pass
     splits:
@@ -1048,7 +1041,6 @@ pdf_viewer:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_pdf_prefilled_input_data:
     result: pass
     splits:
@@ -1126,7 +1118,6 @@ preferences:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_never_remember_history:
     result: pass
     splits:
@@ -1171,7 +1162,6 @@ reader_view:
     result: pass
     splits:
     - smoke
-    - ci-extended
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
@@ -1378,7 +1368,6 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
     result: pass
     splits:
@@ -1403,7 +1392,6 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
-    - ci-extended
   test_open_private_browsing_via_keyboard:
     result: pass
     splits:

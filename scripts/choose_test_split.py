@@ -183,12 +183,11 @@ if __name__ == "__main__":
 
     run_list = []
     check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
-    git_diff_cmd = ["git", "--no-pager", "diff", "--name-only", "origin/main"]
-    rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
-    if rev_hash:
-        git_diff_cmd.insert(-2, rev_hash)
     committed_files = (
-        check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
+        check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
+        .decode()
+        .replace("/", SLASH)
+        .splitlines()
     )
 
     # Never select tests that work in a different flow
@@ -204,8 +203,8 @@ if __name__ == "__main__":
     run_list = []
 
     if main_conftest in committed_files or base_page in committed_files:
-        # Run additional tests if main conftest or basepage changed
-        run_list.extend(manifest.gather_split("ci-extended"))
+        # Run smoke tests if main conftest or basepage changed
+        run_list.extend(manifest.gather_split("smoke"))
         run_list = dedupe(run_list)
 
     all_tests = []
