@@ -179,10 +179,17 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def verify_autocomplete_option(self, value: str) -> BasePage:
         """Wait until an autocomplete option containing `value` is displayed in the dropdown."""
-        self.wait.until(
-            lambda _: self.get_element(
-                "select-form-option-by-value", labels=[value]
-            ).is_displayed()
+        self.custom_wait(timeout=10).until(
+            lambda _: any(
+                value in (label or "")
+                for label in self.driver.execute_script(
+                    """
+                    return Array.from(
+                        document.querySelectorAll('#PopupAutoComplete richlistitem autocomplete-row-item')
+                    ).map(item => item.shadowRoot?.querySelector('span.label')?.textContent ?? '');
+                    """
+                )
+            )
         )
         return self
 
