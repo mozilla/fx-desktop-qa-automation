@@ -6,7 +6,10 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import GenericPage
 
+SENGLEHARDT_URL = "https://senglehardt.com/test/dfpi/storage_access_api.html"
 COOKIE_TEST_PAGE = "cookie_test.html"
+COOKIES_SET = "Cookies already set"
+COOKIES_NOT_SET = "Cookies not yet set"
 
 
 @pytest.fixture()
@@ -29,29 +32,41 @@ def temp_page(tmp_path):
     return loc
 
 
-def test_end_private_session_clears_cookies(driver: Firefox, temp_page):
+def test_end_private_session_clears_cookies(
+    driver: Firefox, sys_platform: str, temp_page
+):
     """
     C2359319 - Verify that via end a private session button cookies are cleared
     """
     # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
-    page = GenericPage(driver, url=f"file://{temp_page}")
+
+    # Windows renders the external DFPI page's first iframe blank in CI; use a local storage page there
+    on_windows = sys_platform == "Windows"
+    url = f"file://{temp_page}" if on_windows else SENGLEHARDT_URL
+    page = GenericPage(driver, url=url)
 
     # Open a private window and switch to it
     panel.open_and_switch_to_new_window("private")
 
-    # Open site; the first visit sets the cookie
+    # Open site; the first visit stores the data
     page.open()
 
-    # Refresh the page to make sure the cookie is set and stored
+    # Refresh the page to make sure the data is set and stored
     nav.click_on("refresh-button")
-    nav.wait.until(lambda d: "Cookies already set" in d.page_source)
+    if not on_windows:
+        driver.switch_to.frame(0)
+    nav.wait.until(lambda d: COOKIES_SET in d.page_source)
 
     # Click on the data clearance (End private session) button
+    if not on_windows:
+        driver.switch_to.default_content()
     nav.end_private_session()
     driver.switch_to.window(driver.window_handles[-1])
 
-    # Navigate back to the site and verify cookies are cleared
+    # Navigate back to the site and verify the data is cleared
     page.open()
-    nav.wait.until(lambda d: "Cookies not yet set" in d.page_source)
+    if not on_windows:
+        driver.switch_to.frame(0)
+    nav.wait.until(lambda d: COOKIES_NOT_SET in d.page_source)
