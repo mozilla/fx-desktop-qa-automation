@@ -355,3 +355,659 @@ Tagged `[A]` = automation candidate, `[M]` = manual candidate. Ordered roughly b
 
 **Protect (STARfox-unique, no FF analog):** live-site password autofill, real per-region search codes, real-server FxA, download telemetry, clipboard copy/paste web-editor suite.
 
+---
+---
+
+# Part 3 — MANUAL Test Suite (`manual_tests/`) ↔ Firefox Tree Overlap
+
+> **Different dataset from Parts 1–2.** Parts 1–2 compare the ~395 **automated** STARfox Selenium tests
+> (`tests/*/test_*.py`) to the tree. **Part 3 compares the full MANUAL TestRail corpus** exported at
+> `manual_tests/all_cases.json` — **10,736 manual cases across 103 TestRail suites** — to the automated tests
+> that live inside the [mozilla-firefox/firefox](https://github.com/mozilla-firefox/firefox) tree.
+>
+> **Generated:** 2026-07-23 — *LLM-generated analysis. Manual-side counts are exact (parsed from JSON); Firefox
+> tree file counts are point-in-time snapshots verified on searchfox.org/mozilla-central and drift release-to-
+> release. Re-validate before acting on specific numbers.*
+>
+> **Question answered (per request):** which in-tree tests overlap with the manual suite, specifically *which tree
+> tests are covered — in terms of integration / user-flow — by the manual tests*, plus a categorization of tree
+> tests by type (unit / integration / system / …).
+
+## 3.0 Method & sources (Part 3)
+
+- **Manual side:** `manual_tests/all_cases.json` parsed directly — 10,736 cases, 103 suites, mapped into 80+
+  feature areas. Suite names in quotes were confirmed against this repo's `tests/**/conftest.py` `suite_id`
+  tuples; others inferred from case titles.
+- **Tree side:** test-directory paths, real file names, and framework/manifest conventions verified live on
+  [searchfox.org/mozilla-central](https://searchfox.org/mozilla-central/) and
+  [firefox-source-docs](https://firefox-source-docs.mozilla.org/testing/automated-testing/index.html) — not recalled.
+- **Matching level:** feature / user-capability, same as Parts 1–2.
+
+## 3.1 Executive summary (Part 3)
+
+The manual suite is almost entirely **front-end / UI functional testing** — a human clicking Firefox Desktop
+chrome (toolbars, menus, `about:` pages, dialogs, panels) on real builds and real websites. In the tree,
+**exactly one automated suite is the true analog: Mochitest browser-chrome (`browser_*.js`)**, with
+**Marionette / firefox-ui functional** as a secondary out-of-process analog for restart-dependent flows.
+Everything else in the tree (xpcshell, mochitest-plain, web-platform-tests, reftests, GTest, Talos/Raptor) tests
+layers below or beside the manual suite and overlaps only weakly.
+
+Classifying every manual case by strength of overlap with the tree's tests:
+
+| Overlap with tree tests | Manual cases | Share | Meaning |
+|---|---:|---:|---|
+| **STRONG** — a browser-chrome integration suite exercises the same UI flow | 4,654 | 43.3% | Same feature, same altitude |
+| **PARTIAL** — some browser-chrome coverage, manual goes wider (locales, real sites, restart, policy matrices) | 3,742 | 34.9% | Overlap exists but incomplete on one side |
+| **WEAK** — tree covers only at unit / content / rendering level, not as a UI flow | 2,056 | 19.2% | Manual tests the chrome UX; tree tests the engine/DOM/pixels |
+| **NONE** — no live tree coverage at all | 284 | 2.6% | Removed features, 3rd-party integrations, placeholder suites |
+
+**Headline conclusions**
+
+1. **~43% of manual cases have a direct integration-test counterpart in the tree** (browser-chrome): Passwords,
+   Preferences, Bookmarks, Downloads, Form Autofill, Tabs, Firefox View, Sidebar, Screenshots, Reader View, Site
+   Identity, Onboarding, Translations, Find/PDF, Session Restore, Profiles, GenAI, urlbar core flows.
+2. **The tree's integration tests are a *subset* of the manual suite, not a superset.** Where areas map, the tree
+   tests the *core mechanic* deterministically; the manual suite re-verifies that mechanic **plus** localization,
+   real third-party sites, OS/installer permutations, screen-reader (NVDA) flows, visual/Figma design compliance,
+   and cross-restart/update sequences — dimensions the tree deliberately excludes.
+3. **The tree is dominated by unit + standards tests the manual suite never touches**, and vice versa. The suites
+   are **complementary, not redundant**; the 43% STRONG band is where they genuinely re-test the same thing.
+4. **A few manual areas map to *nothing* in the current tree:** Shopping / Review Checker (Fakespot shut down
+   2025-06-10, `browser/components/shopping/` removed), third-party antivirus compatibility, Windows Recall
+   privacy, and placeholder/junk suites.
+
+## 3.2 Firefox tree test-type taxonomy (categorization by test type)
+
+*This is the "categorize the test type" section requested. It classifies every automated framework in the
+mozilla-central tree and states which ones can overlap with a manual UI suite at all.*
+
+| # | Framework | File / manifest convention | Runtime context | **Test-type category** | Overlaps manual UI suite? |
+|---|---|---|---|---|---|
+| 1 | **xpcshell** | `test_*.js` + `xpcshell.toml`, `test/unit/` | Bare JS/XPCOM shell, parent process, chrome privileges, **no window/DOM** | **UNIT** — JS/XPCOM backend components in isolation | No — no UI |
+| 2 | **Mochitest plain** | `test_*.html` + `mochitest.toml` | Web content in a child process (real page DOM), `SpecialPowers` for privileged reach | **INTEGRATION (web-content / DOM APIs)** | Rarely — tests web pages, not chrome |
+| 3 | **Mochitest chrome** | `test_*.xhtml` + `chrome.toml` | Privileged (chrome) JS scope, no full browser harness | **INTEGRATION (privileged widgets)** | Secondary — isolated widgets, not end-user flows |
+| 4 | **Mochitest browser-chrome** | **`browser_*.js`** + **`browser.toml`** | **Inside a live Firefox window, chrome scope, full UI** (`gBrowser`, chrome document, `BrowserTestUtils`) | **INTEGRATION / partial SYSTEM (front-end)** | **YES — the primary analog to manual UI testing** |
+| 5 | **Mochitest a11y** | `test_*.html` + `a11y.toml`, under `accessible/` | Chrome scope, single-process (no Fission) | **INTEGRATION (accessibility tree/API)** | Partially — a11y API, not AT/NVDA flows |
+| 6 | **Marionette** | `test_*.py` (Python), `testing/marionette/` + per-component `tests/marionette/` | Remote protocol driving **out-of-process, full Firefox** (chrome + content) | **SYSTEM / END-TO-END (front-end capable)** | **YES — secondary analog; restart/session flows** |
+| 7 | **Firefox UI functional** | Python, `testing/firefox-ui/tests/functional/`, `./mach firefox-ui-functional` | Marionette + firefox-puppeteer POM; full browser, can restart | **SYSTEM / END-TO-END (front-end)** | **YES — closest in *kind* to this repo's WebDriver automation** |
+| 8 | **Web-platform-tests (WPT)** | `testing/web-platform/tests/` (+ `meta/`) | Content-process web execution, cross-browser | **STANDARDS-COMPLIANCE** | No — spec conformance, not chrome |
+| 9 | **Reftests / crashtests** | `reftest.list` / `crashtests.list` | 800×1000 render + pixel compare / load-without-crash | **RENDERING** / robustness | No — pixels & stability, not behavior |
+| 10 | **Talos / Raptor / mozperftest** | `testing/talos`, `testing/raptor`, `testing/mozperftest` | Launch real browser, measure timings | **PERFORMANCE** | No — measures, doesn't assert UX |
+| 11 | **GTest (C++) / rusttests** | auto-registered, `FINAL_LIBRARY='xul-gtest'`, `mach gtest` | C++ in libxul, terminal, no services | **UNIT (native code)** | No — no UI |
+| 12 | **Telemetry / Glean (FOG)** | not a runtime — `testGetValue()`/`testResetFOG()` inside the suites above | inherits host suite | assertion pattern, inherits host category | Only via its host browser-chrome test |
+
+**Only two tree suites meaningfully overlap the manual corpus:** **#4 browser-chrome** (dominant, in-process,
+granular chrome-UI assertions) and **#6/#7 Marionette / firefox-ui functional** (out-of-process, whole-application,
+restart-capable — architecturally closest to this repo's own POM design). All other tree tests sit at an altitude
+the manual suite never operates at.
+
+**How the tree's own tests distribute by type (qualitative):** largest by file count = web-platform-tests
+(*standards*, no manual overlap); most prevalent Firefox-authored = xpcshell (*unit*) + mochitest-plain (*content
+integration*), little/no manual overlap; most manual-relevant = browser-chrome under `browser/` and parts of
+`toolkit/` (thousands of files); rendering/robustness = reftests/crashtests (no overlap); native units = GTest
+(no overlap).
+
+## 3.3 Manual suite profile
+
+10,736 cases / 103 suites. By TestRail case type the corpus is overwhelmingly functional: Functional (~8,769),
+"Other" (~583), Smoke (~814), Accessibility (~272), plus small numbers of Performance/Regression/Usability/custom.
+In practice **every suite is a human-driven UI or system test — there are no unit tests on the manual side.**
+
+Top feature areas by manual case count (consolidated from the 103 suites; full index in §3.8):
+
+| Feature area | Manual cases | Representative manual suites |
+|---|---:|---|
+| Address Bar / URL bar (+ UI redesign, QR) | 1,314 | "Address Bar 138+", urlbar dropdown redesign, urlbar CSS |
+| New Tab / Pocket / customization / top sites | 862 | "Pocket New Tab", HNT customize & wallpapers, weather, frecency |
+| Backup & Restore | 828 | Restore Dialog, backup/restore from preferences/onboarding/OneDrive |
+| Settings / Preferences (+ design) | 810 | "Preferences", Passwords&Autofill page design, Home&Startup redesign |
+| Enterprise Policies (+ installer/update/GenAI policy) | 557 | search engines via `policies.json`, autoupdate policy, block GenAI |
+| Passwords / Logins | 465 | "Password manager" (about:logins), saved-credentials autofill dropdown |
+| Media / Site Compatibility | 439 | media top-sites playback, BBC/Netflix/Facebook glitch bugs |
+| Site Identity / Connection | 354 | "Security and Privacy" lock icon, mixed content |
+| UI / Visual redesign (NOVA) | 333 | NOVA chrome design, Smart Window Switcher styling |
+| Bookmarks / Places | 308 | Bookmarks Toolbar, Share Folder |
+| Onboarding (+ ToU) | 314 | Easy Setup, Terms of Service onboarding |
+| Search flows | 276 | Google urlbar/searchbar per-locale, default engine dropdown |
+| Find in page / PDF | 242 | findbar, pdf.js find/navigation |
+| Downloads | 224 | cancel/retry, drag&drop, truncation |
+| Form Autofill | 222 | address & credit-card capture/fill |
+| Experiments / Nimbus | 219 | Enroll/Rollout, about:studies |
+| Tabs (+ Tab Notes) | 203 | "Tabbed Browser", drag/reorder, rename, tab notes |
+| GenAI | 190 | AI window onboarding, chatbot sidebar, opt-in |
+| DevTools | 184 | inspector, horizontal tabs |
+| Firefox View | 180 | about:firefoxview cards/states |
+| Themes / Toolbar | 177 | default/dark/light themes, title bar/toolbars |
+| Installer / NVDA-install (Win/Linux) | 366 | Windows installer, rpm/Fedora, NVDA install |
+| Sidebar | 105 | enable/resize, panels, vertical tabs |
+| Session Restore | 67 | restore tabs/windows, pinned tabs |
+
+## 3.4 STRONG overlap (43.3%) — same feature, same altitude
+
+Tree paths & example files verified on searchfox.
+
+| Manual area (cases) | Tree test directory | Framework / type | Verified example files |
+|---|---|---|---|
+| Passwords / Logins (465) | `browser/components/aboutlogins/tests/browser/` (~32) + `toolkit/components/passwordmgr/test/browser/` (~68–81) | browser-chrome (INTEGRATION) + xpcshell unit | `browser_createLogin.js`, `browser_deleteLogin.js`, `browser_loginFilter.js`, `browser_doorhanger_save_password.js`, `browser_osAuthDialog.js` |
+| Settings / Preferences (527) | `browser/components/preferences/tests/` + ~20 pane subdirs (`privacy/`,`home/`,`search/`,`sync/`,`etp/`,…) | browser-chrome (INTEGRATION) | `browser_about_settings.js`, `browser_appearance_pane.js`, `browser_subdialogs.js`, `browser_open_migration_wizard.js` |
+| Bookmarks / Places (308) | `browser/components/places/tests/browser/` (135+) | browser-chrome (INTEGRATION) | `browser_bookmark_add_tags.js`, `browser_autoshow_bookmarks_toolbar.js`, `browser_bookmark_backup_export_import.js`, `browser_bookmark_context_menu_contents.js` |
+| Downloads (224) | `browser/components/downloads/test/browser/` (~39–48) | browser-chrome (INTEGRATION) + xpcshell unit | `browser_downloads_panel_opens.js`, `browser_downloads_pauseResume.js`, `browser_downloads_panel_context_menu.js`, `browser_downloads_keynav.js` |
+| Form Autofill (222) | `browser/extensions/formautofill/test/browser/` (~53; `address/`,`creditCard/`) | browser-chrome (INTEGRATION) | `browser_address_doorhanger_display.js`, `browser_creditCard_doorhanger_action.js`, `browser_editCreditCardDialog.js`, `browser_creditCard_osAuth.js` |
+| Tabs (203) | `browser/components/tabbrowser/test/browser/{tabs,dragdrop,…}` (200+) | browser-chrome (INTEGRATION) | `browser_pinnedTabs.js`, `browser_tab_dragdrop.js`, `browser_multiselect_tabs_reorder.js`, `browser_tab_groups.js` |
+| Firefox View (180) | `browser/components/firefoxview/tests/browser/` (28) | browser-chrome (INTEGRATION) | `browser_firefoxview.js`, `browser_opentabs_firefoxview.js`, `browser_syncedtabs_firefoxview.js`, `browser_history_firefoxview.js` |
+| Sidebar (105) | `browser/components/sidebar/tests/{browser,marionette}/` (49 + 4) | browser-chrome + marionette | `browser_vertical_tabs.js`, `browser_customize_sidebar.js`, `browser_sidebar_expand_on_hover.js`; `test_initialize_vertical_tabs.py` |
+| Screenshots (48) | `browser/components/screenshots/tests/browser/` (~35) | browser-chrome (INTEGRATION) | `browser_test_element_picker.js`, `browser_screenshots_test_full_page.js`, `browser_screenshots_drag_test.js` |
+| Reader View (8) | `toolkit/components/reader/tests/browser/` (~19) | browser-chrome (INTEGRATION) | `browser_readerMode.js`, `browser_readerMode_menu.js`, `browser_readerMode_colorSchemePref.js` |
+| Site Identity / Connection (354) | `browser/base/content/test/siteIdentity/` (~40) | browser-chrome (INTEGRATION) | `browser_check_identity_state.js`, `browser_identity_UI.js`, `browser_csp_block_all_mixedcontent.js`, `browser_identityPopup_HttpsOnlyMode.js` |
+| ETP / Privacy (13) | `browser/base/content/test/protectionsUI/` (~25) | browser-chrome (INTEGRATION) | `browser_protectionsUI.js`, `browser_protectionsUI_fingerprinters.js`, `browser_protectionsUI_cookie_banner.js` |
+| Onboarding (+ ToU) (314) | `browser/components/aboutwelcome/tests/browser/` (~24–28) + `browser/components/asrouter/tests/browser/` (30) | browser-chrome (INTEGRATION) | `browser_aboutwelcome_multistage_mr.js`, `browser_aboutwelcome_multiselect.js`, `browser_feature_callout.js`, `browser_multistage_spotlight.js` |
+| Find in page / PDF (242) | `toolkit/content/tests/browser/` (findbar, 7) + `toolkit/components/pdfjs/test/` (60+) | browser-chrome (INTEGRATION) | `browser_findbar.js`, `browser_findbar_marks.js`; `browser_pdfjs_find.js`, `browser_pdfjs_navigation.js`, `browser_pdfjs_zoom.js` |
+| Translations (40) | `browser/components/translations/tests/browser/` (150+) | browser-chrome (INTEGRATION, mocked engine) | `browser_translations_full_page_panel_basics.js`, `browser_translations_select_context_menu_*`, `browser_translations_about_preferences_manage_downloaded_languages.js` |
+| Session Restore (67) | `browser/components/sessionstore/test/` (150+) | browser-chrome (INTEGRATION) | `browser_394759_basic.js`, `browser_closed_tabs_windows.js`, `browser_firefoxView_restore.js` |
+| Profiles (56) | `browser/components/profiles/tests/browser/` (22) + `toolkit/profile/test/` | browser-chrome (INTEGRATION) + xpcshell unit | `browser_create_profile_page_test.js`, `browser_edit_profile_test.js`, `browser_test_profile_selector.js`, `browser_fxa_menu_profiles.js` |
+| Private Browsing (17) | `browser/components/privatebrowsing/test/browser/` | browser-chrome (INTEGRATION) | private-window UI tests |
+| GenAI (175) | `browser/components/genai/tests/browser/` (18) (+ `browser/components/aiwindow/`) | browser-chrome (INTEGRATION) | `browser_chat_sidebar.js`, `browser_chat_shortcuts.js`, `browser_link_preview.js`, `browser_page_assist_sidebar.js` |
+| Permissions (+ geo) (43) | `browser/base/content/test/permissions/`, `.../siteIdentity/browser_geolocation_indicator.js` | browser-chrome (INTEGRATION) | permission prompt / indicator tests |
+| Address Bar / URL bar (1,068) | `browser/components/urlbar/tests/browser*/` (hundreds) | browser-chrome (INTEGRATION) + xpcshell `unit/` (125+) | `browser-autofill/`, `browser-searchMode/`, `browser-quickactions/`; `unit/test_autofill_adaptiveHistory.js` |
+
+## 3.5 PARTIAL overlap (34.9%) — tree tests the core, manual tests wider
+
+| Manual area (cases) | Tree test directory | Why only partial |
+|---|---|---|
+| Backup & Restore (828) | `browser/components/backup/tests/browser/` (9 browser-chrome) + `xpcshell/` (46 unit) + marionette | Manual suite is enormous, dominated by restore-**dialog** UI states / OneDrive / onboarding entry points; tree has ~9 UI tests and puts its weight into per-resource archive/encryption **unit** tests |
+| New Tab / Pocket / customization (862) | `browser/extensions/newtab/test/browser/` (27) + Jest units + `browser/components/topsites/` | Tree renders newtab & top sites, but manual covers per-**locale** UI (US/GB/DE…), wallpapers, weather, sponsored tiles that tree covers via React **Jest units** or not at all |
+| Search flows (276) | `browser/components/search/test/browser/` (~47) + `toolkit/components/search/tests/xpcshell/` (~90 unit) | Tree tests search-UI mechanics + service internals; manual tests **result quality across real engines/locales** the tree can't assert |
+| Enterprise Policies (557) | `browser/components/enterprisepolicies/tests/browser/` (~70) + `xpcshell/` | Tree applies a policy then asserts effect (good per-policy overlap); manual covers a much broader **policy matrix**, MSI enterprise client install, cross-product deployment |
+| DevTools (184) | `devtools/client/**/test/` (large browser-chrome/mochitest) | Extensive tree coverage, but manual focuses on inspector UX & new horizontal-tabs layout; mapping is many-to-many, not 1:1 |
+| Experiments / Nimbus (219) | `toolkit/components/nimbus/test/`, `browser/components/asrouter/tests/` | Enrollment/targeting at unit + some browser level; manual covers real enroll/rollout, about:studies, safe-mode/PBM permutations |
+| Network / Proxy / DoH (98) | `toolkit/components/doh/test/browser/` (14) + `netwerk/**` xpcshell units | DoH doorhanger/rollout is browser-chrome; proxy/DNS config largely OS-level + unit |
+| Content blocking (49) | `toolkit/components/antitracking/test/browser/` (170+) | Overlaps on tracker-page blocking, but many tree assertions are storage/cookie-**API** level, not the manual URL-block UX |
+| Anti-fingerprinting / RFP (10) | `toolkit/components/resistfingerprinting/tests/{browser,xpcshell,gtest}/` | Some browser-chrome; WebGL/vendor-randomize verified mostly at unit/gtest level |
+| Themes / Toolbar (177) | `browser/themes/**`, `browser/components/customizableui/test/` | Customization is browser-chrome; theme visual correctness is largely manual/reftest |
+| Migration (64) | `browser/components/migration/tests/{browser,unit}/` | Wizard flow tested; **IE / legacy-profile** migration and `rust_migration` telemetry partly manual/OS-specific |
+| FxA / Sync (26) | `services/sync/tests/`, `browser/components/**/fxaccounts` | Sync engine has heavy xpcshell; real account create/recovery needs live servers → manual |
+| Software Update (17) | `toolkit/mozapps/update/tests/{browser,marionette,unit_*}/` (120+ browser) | About-dialog/doorhanger UI is browser-chrome (strong mechanic); full download→stage→restart and **language-pack** update are marionette/manual |
+| Notifications (56) | `toolkit/components/**` alerts/notifications (browser + xpcshell) | Web notifications/alerts partly covered; push + OS-native alert delivery partly manual |
+| Context menu (77) | scattered `browser_*context_menu*.js` across components | Covered piecemeal per feature; no single manual↔tree mapping |
+| Drag & Drop / File handling (42) | `browser/components/tabbrowser/test/browser/dragdrop/`, file-handler tests | Tab/link drag covered; file-hosting drag/paste-image via real web apps is manual |
+| Keyboard shortcuts (40) | scattered browser-chrome | Core shortcuts covered; customization matrix partly manual |
+| Add-ons (Linux) (8) | `toolkit/mozapps/extensions/test/` | Install/manage covered; GNOME-extension host integration is manual |
+
+## 3.6 WEAK overlap (19.2%) — tree covers only below the UI
+
+| Manual area (cases) | Nearest tree tests | Test type | Why weak |
+|---|---|---|---|
+| Media / Site Compatibility (439) | `dom/media/test/` mochitest-plain, reftests | INTEGRATION (content) / RENDERING | Manual plays **real third-party sites** (BBC/Netflix/Facebook/Discord/Jitsi); tree uses synthetic ClearKey/CENC assets — no site-compat overlap |
+| UI / Visual redesign — NOVA (333) | reftests; some `browser_appearance_*` | RENDERING / limited browser-chrome | Figma/pixel design compliance & border-radius-per-OS are manual/visual; tree asserts behavior not appearance |
+| Settings (design) (283) | `preferences/tests` (behavioral) | INTEGRATION (behavior only) | Manual verifies redesign layout/zoom/high-contrast appearance; tree asserts control behavior |
+| Address Bar UI redesign (220) | `urlbar/tests` (behavioral) | INTEGRATION (behavior only) | Dropdown redesign/positioning/zoom is visual QA |
+| Accessibility / NVDA install (145) | `accessible/tests/mochitest/` a11y | INTEGRATION (a11y API) | Tree tests the a11y **tree/API**; manual drives real **NVDA** + installer — no overlap |
+| Installer / Uninstaller (Win + Linux) (221) | `browser/installer/**`, `toolkit/mozapps/installer/**` | packaging / limited | Real install/uninstall/UAC/rpm/MSIX are OS-integration manual tests; tree mostly builds packages |
+| Text fragments (114) | `dom/base/test/` mochitest-plain (~3) + WPT | INTEGRATION (DOM API) / STANDARDS | Tree parses directives/ranges at DOM level; manual "click highlight → copy link" UX only lightly covered |
+| WebRTC / Media conferencing (87) | `dom/media/**` mochitest, WPT | INTEGRATION (content) / STANDARDS | Real Discord/Jitsi/Facebook AV sessions are manual |
+| Scrolling / Rendering (94) | reftests, APZ mochitests | RENDERING | Smoothness/APZ on real pages is manual/perf |
+| DRM / EME (72) | `dom/media/test/test_eme_*.html` | INTEGRATION (content) | ClearKey stands in; **Widevine** (real Google CDM) not exercised in-tree → manual only for real DRM |
+| Sandbox / GPU (21) | `security/sandbox/**` gtest/xpcshell | UNIT (native) | GPU-process/sandbox verified at native level |
+| Image rendering / compat (18) | reftests, image mochitests | RENDERING | jpg/gif correctness is reftest/manual-visual |
+| Crash Reporter (6) | `toolkit/crashreporter/test/` | UNIT + limited | Crash submission UX partly manual |
+| Telemetry / DBA (3) | Glean patterns inside suites | assertion pattern | Pre-release ping collection verified indirectly |
+
+## 3.7 NONE — no live tree coverage (2.6%)
+
+| Manual area (cases) | Status |
+|---|---|
+| Shopping / Review Checker (102) | **Removed from tree.** Fakespot/Review Checker shut down 2025-06-10; `browser/components/shopping/` no longer exists → zero current automated coverage. |
+| 3rd-party / Antivirus compatibility (86) | External products (AV install/interop). Inherently un-automatable in-tree. |
+| Privacy / Windows Recall (10) | Windows Recall screenshot-exclusion behavior; no in-tree suite. |
+| Placeholder / Junk (30) | Suites like "test111", "Click Me" demo, "Attention message" demo — not real product tests. |
+| Misc / Lists, UI/misc, Branding (56) | Ambiguous or non-product (branding of signed builds, unclassified). |
+
+## 3.8 Which tree tests are "covered" by the manual integration suite
+
+Reframing the core question — *are there tests in the tree the manual suite covers in terms of integration?* —
+**yes, and the relationship is consistent**: for every STRONG-overlap area in §3.4, the tree's **browser-chrome
+integration tests and the manual cases test the same user flow at the same altitude.** These tree browser-chrome
+suites are functionally re-covered (redundantly, from an external/manual perspective) by the manual corpus:
+
+- `browser/components/aboutlogins/tests/browser/` + `toolkit/components/passwordmgr/test/browser/` ⟷ Password manager manual (465)
+- `browser/components/preferences/tests/` ⟷ Preferences manual (527)
+- `browser/components/places/tests/browser/` ⟷ Bookmarks manual (308)
+- `browser/components/downloads/test/browser/` ⟷ Downloads manual (224)
+- `browser/extensions/formautofill/test/browser/` ⟷ Form Autofill manual (222)
+- `browser/components/tabbrowser/test/browser/` ⟷ Tabbed Browser + Tab Notes manual (203)
+- `browser/components/firefoxview/tests/browser/` ⟷ Firefox View manual (180)
+- `browser/components/sidebar/tests/browser/` ⟷ Sidebar manual (105)
+- `browser/components/screenshots/tests/browser/` ⟷ Screenshots manual (48)
+- `browser/base/content/test/siteIdentity/` + `.../protectionsUI/` ⟷ Security/Privacy + ETP manual (367)
+- `browser/components/translations/tests/browser/` ⟷ Translations manual (40)
+- `toolkit/content/tests/browser/` (findbar) + `toolkit/components/pdfjs/test/` ⟷ Find + PDF manual (242)
+- `browser/components/sessionstore/test/` ⟷ Session Restore manual (67)
+- `browser/components/profiles/tests/browser/` ⟷ Profiles manual (56)
+- `browser/components/aboutwelcome/tests/browser/` + `browser/components/asrouter/tests/browser/` ⟷ Onboarding manual (314)
+- `browser/components/genai/tests/browser/` ⟷ GenAI manual (190)
+- `browser/components/urlbar/tests/browser*/` ⟷ Address Bar manual core flows (within 1,068)
+
+**Direction of the overlap (important):** the tree's integration tests are the *narrower* set — they verify the
+core mechanic deterministically ("the save-password doorhanger appears and stores the login"). The manual cases
+re-verify that mechanic **plus** the dimensions browser-chrome intentionally excludes:
+
+| Dimension the manual suite adds on top of the tree's integration tests | Examples |
+|---|---|
+| **Real websites / content compatibility** | playback on BBC/Netflix, autofill on live retail forms, find on a real PDF |
+| **Localization** | New Tab UI per locale (US/GB/DE), search handoff per Google locale, language packs |
+| **OS / installer integration** | Windows UAC, MSIX, rpm/Fedora, desktop-shortcut toggle, uninstaller survey |
+| **Assistive tech** | NVDA-driven install and navigation |
+| **Visual / design compliance** | NOVA redesign, Figma border-radius per macOS version, high-contrast, zoom levels |
+| **Cross-restart / update sequences** | background update, staged update resume, language-pack update not bricking the browser |
+| **Third-party interop** | antivirus install/cert behavior, OneDrive backup restore |
+
+Marionette / firefox-ui functional tests (`testing/firefox-ui/`, plus per-component `tests/marionette/` in sidebar,
+backup, profiles, update) are the *architectural* twin of this repo's WebDriver automation and cover the
+restart/session-persistence slice — but they are a small suite, so most manual↔tree overlap is with browser-chrome.
+
+## 3.9 Gaps (both directions)
+
+**Manual-only (little/no tree coverage) — must stay manual or move to this repo's Selenium suite:** real-world
+site compatibility & media/WebRTC on live sites (526 cases); installer/uninstaller/OS packaging + NVDA installs
+(366); visual/NOVA redesign & Figma compliance (≈800 across redesign + design subsets); antivirus interop (86),
+Windows Recall (10), real DRM/Widevine (72), FxA live-account flows (26), language-pack update resilience;
+Shopping/Review Checker (102 — feature removed, retire these cases).
+
+**Tree-only (no manual counterpart, by design):** all xpcshell **unit** logic; **web-platform-tests** standards +
+**reftests/crashtests** rendering/robustness; **GTest** native units; **Talos/Raptor/mozperftest** performance.
+
+These confirm the suites are **complementary, not redundant** — the tree owns the sub-UI correctness pyramid; the
+manual suite owns real-environment, cross-cutting, and visual UX validation. The 43% STRONG band is a candidate
+list for deciding which manual cases could be *retired in favor of* (or converted into) existing in-tree
+browser-chrome automation, and which should instead be automated in this repo's own Selenium/Marionette POM suite.
+
+## 3.10 Key findings & caveats (Part 3)
+
+1. **One tree suite carries almost all the overlap: browser-chrome (`browser_*.js`).** "Is this manual case
+   already automated upstream?" → only if a matching `browser_*.js` exists.
+2. **Overlap is 43% STRONG / 35% PARTIAL / 19% WEAK / 3% NONE.** Even STRONG is *core-mechanic* overlap; the
+   manual suite's real-site/locale/OS/visual/restart dimensions remain uniquely manual.
+3. **Path drift verified (July 2026 tree):** tabs moved to `browser/components/tabbrowser/` (old
+   `browser/base/content/test/tabs/` 404s); New Tab/Activity Stream moved to `browser/extensions/newtab/`; DoH is
+   under `toolkit/components/doh/`; EME has no `test/` under `dom/media/eme/` (tests in `dom/media/test/`).
+4. **Removed feature:** Shopping / Review Checker is gone — 102 manual cases have no live counterpart.
+5. **Smart tab grouping** manual cases likely map to `browser/components/tabbrowser/`, not `browser/components/genai/`.
+6. **Counts are as-verified snapshots.** Manual counts are exact (parsed JSON); tree counts drift per release.
+
+## 3.11 Appendix — full manual suite → feature-area index (103 suites, 10,736 cases)
+
+`suite_id` = TestRail suite ID from `manual_tests/all_cases.json`. Names in quotes confirmed via this repo's
+`tests/**/conftest.py`; others inferred from case titles.
+
+| suite_id | Inferred name | Cases | Feature area | Overlap |
+|---|---|---:|---|---|
+| 65334 | "Address Bar 138+" | 1068 | Address Bar / URL bar | STRONG |
+| 5403 | "Pocket New Tab" | 529 | New Tab / Pocket | PARTIAL |
+| 2241 | "Preferences" | 527 | Settings / Preferences | STRONG |
+| 43517 | "Password manager" | 427 | Passwords / Logins | STRONG |
+| 3045 | Search engines via policy | 358 | Enterprise Policies / Search | PARTIAL |
+| 5833 | "Security and Privacy" | 354 | Site Identity / Connection | STRONG |
+| 69142 | Backup Restore Dialog | 297 | Backup & Restore | PARTIAL |
+| 1731 | Media top sites / playback | 292 | Media / Site Compatibility | WEAK |
+| 95385 | HNT customize / wallpapers | 288 | New Tab customization | PARTIAL |
+| 70197 | Search urlbar/searchbar | 231 | Search flows | PARTIAL |
+| 29219 | Downloads | 224 | Downloads | STRONG |
+| 2054 | "Form Autofill" | 222 | Form Autofill | STRONG |
+| 2525 | Bookmarks Toolbar | 222 | Bookmarks / Places | STRONG |
+| 103322 | NOVA chrome design | 221 | UI / Visual redesign | WEAK |
+| 69666 | Passwords & Autofill settings design | 205 | Settings (design) | WEAK |
+| 65 | Find in page / PDF find | 196 | Find in page / PDF | STRONG |
+| 73 | Nimbus Enroll/Rollout | 192 | Experiments / Nimbus | PARTIAL |
+| 97961 | Backup restore dialog | 192 | Backup & Restore | PARTIAL |
+| 97948 | Urlbar dropdown redesign | 181 | Address Bar UI | WEAK |
+| 42945 | about:firefoxview | 180 | Firefox View | STRONG |
+| 70279 | AI window / sidebar onboarding | 175 | GenAI | STRONG |
+| 1940 | Backup/restore preferences | 167 | Backup & Restore | PARTIAL |
+| 73807 | Backup restore dialog | 164 | Backup & Restore | PARTIAL |
+| 1997 | "Theme and Toolbar" | 162 | Themes / Toolbar | PARTIAL |
+| 2542 | DevTools inspector | 158 | DevTools | PARTIAL |
+| 23035 | Easy Setup onboarding | 155 | Onboarding | STRONG |
+| 1694 | Site compat glitches | 147 | Media / Site Compatibility | WEAK |
+| 18105 | NVDA install accessibility | 145 | Accessibility / Installer | WEAK |
+| 66659 | Text fragments | 114 | Text fragments | WEAK |
+| 2103 | "Tabbed Browser" | 113 | Tabs | STRONG |
+| 100373 | Smart Window Switcher NOVA | 112 | UI / Visual redesign | WEAK |
+| 53810 | Sidebar | 105 | Sidebar | STRONG |
+| 69469 | Firefox Enterprise client install | 103 | Enterprise / Installer | PARTIAL |
+| 43337 | Shopping sidebar | 102 | Shopping / Review Checker | NONE |
+| 102 | Scrolling | 94 | Scrolling / Rendering | WEAK |
+| 1697 | WebRTC AV conferencing | 87 | WebRTC / Media | WEAK |
+| 24370 | Antivirus compatibility | 86 | 3rd-party / AV compat | NONE |
+| 100482 | Share Folder bookmarks | 86 | Bookmarks / Places | STRONG |
+| 5252 | Windows installer | 85 | Installer | WEAK |
+| 6066 | http/proxy/DNS | 82 | Network / Proxy / DoH | PARTIAL |
+| 85 | Context menu | 77 | Context menu | PARTIAL |
+| 59371 | Terms of Service onboarding | 75 | Onboarding / ToU | STRONG |
+| 103289 | Onboarding | 75 | Onboarding | STRONG |
+| 71226 | rpm package install | 72 | Installer (Linux) | WEAK |
+| 68 | "Session Restore" | 67 | Session Restore | STRONG |
+| 70336 | DRM / Widevine CDM | 65 | DRM / EME | WEAK |
+| 71056 | Tab Notes | 60 | Tabs / Tab Notes | PARTIAL |
+| 1907 | "Notifications, Push and Alerts" | 56 | Notifications | PARTIAL |
+| 2119 | Profiles create/rename | 56 | Profiles | STRONG |
+| 6874 | Disable autoupdate policy | 54 | Enterprise / Update | PARTIAL |
+| 95392 | Threshold URL block | 49 | Content blocking | PARTIAL |
+| 943 | Screenshots | 48 | Screenshots | STRONG |
+| 2085 | "Find Toolbar" | 46 | Find in page | STRONG |
+| 73695 | Default search engine dropdown | 45 | Search flows | PARTIAL |
+| 97970 | Legacy profiles migration | 45 | Profiles / Migration | PARTIAL |
+| 76324 | Privacy & Security page | 44 | Settings (design) | WEAK |
+| 5259 | Drag/drop file hosting | 42 | Drag & Drop / File handling | PARTIAL |
+| 71443 | Block GenAI features policy | 42 | GenAI / Enterprise | PARTIAL |
+| 74 | IE data migration | 41 | Migration | PARTIAL |
+| 71394 | Translate quick action urlbar | 40 | Translations | STRONG |
+| 103666 | Keyboard shortcuts customization | 40 | Keyboard shortcuts | PARTIAL |
+| 67503 | Lists / tasks | 39 | Misc / Lists | NONE |
+| 70264 | Desktop shortcut toggle installer | 39 | Installer | WEAK |
+| 95356 | Urlbar css redesign | 39 | Address Bar UI | WEAK |
+| 100943 | Saved credentials autofill dropdown | 38 | Passwords / Logins | STRONG |
+| 69070 | Local Network Access prompt | 37 | Permissions | STRONG |
+| 1977 | PDF viewer pdf.js | 35 | PDF viewer | STRONG |
+| 69749 | Home & Startup settings redesign | 34 | Settings (design) | WEAK |
+| 70723 | Rename tabs | 30 | Tabs | STRONG |
+| 69039 | Weather widget newtab | 28 | New Tab | PARTIAL |
+| 60629 | about:studies experiments | 27 | Experiments / Nimbus | PARTIAL |
+| 2130 | Firefox Account create/recovery | 26 | FxA / Sync | PARTIAL |
+| 100742 | QR code generation | 26 | Address Bar / QR | PARTIAL |
+| 103224 | DevTools horizontal tabs | 26 | DevTools | PARTIAL |
+| 69569 | rust_migration telemetry | 23 | Migration / Telemetry | PARTIAL |
+| 69048 | GPU process sandbox | 21 | Sandbox / GPU | WEAK |
+| 2052 | Uninstaller | 20 | Installer | WEAK |
+| 69570 | placeholder junk | 20 | Placeholder / Junk | NONE |
+| 88 | Image formats | 18 | Image rendering / compat | WEAK |
+| 5260 | Update language pack | 17 | Software Update | PARTIAL |
+| 69083 | Top sites frecency sponsored | 17 | New Tab / Top sites | PARTIAL |
+| 100547 | Private Window appearance | 17 | Private Browsing | STRONG |
+| 90661 | Proxy settings | 16 | Network / Proxy / DoH | PARTIAL |
+| 1998 | Title Bar / Toolbars customize | 15 | Toolbar customization | PARTIAL |
+| 69060 | Feature opt-in EU | 15 | GenAI / opt-in | PARTIAL |
+| 73783 | Reduced Protection PBM/ETP | 13 | ETP / Privacy | STRONG |
+| 66264 | Screenshots / Recall | 10 | Privacy / Recall | NONE |
+| 100772 | WebGL fingerprinting flags | 10 | Anti-fingerprinting / RFP | PARTIAL |
+| 76427 | ToU onboarding Fedora | 9 | Onboarding / ToU | STRONG |
+| 2126 | Reader View | 8 | Reader View | STRONG |
+| 49853 | Gnome Extensions addon | 8 | Add-ons (Linux) | PARTIAL |
+| 95476 | Backup restore OneDrive | 8 | Backup & Restore | PARTIAL |
+| 68092 | DRM Widevine | 7 | DRM / EME | WEAK |
+| 67 | Crash Reporter | 6 | Crash Reporter | WEAK |
+| 498 | Geolocation share | 6 | Permissions / Geolocation | STRONG |
+| 22801 | Language packs install | 6 | Localization | PARTIAL |
+| 54271 | Feature access misc | 6 | Misc | NONE |
+| 75504 | UI as designed misc | 6 | UI / misc | NONE |
+| 187 | Branding builds | 5 | Branding | NONE |
+| 71059 | rpm install | 5 | Installer (Linux) | WEAK |
+| 100768 | Click Me demo | 5 | Placeholder / Junk | NONE |
+| 100845 | Attention message demo | 5 | Placeholder / Junk | NONE |
+| 5202 | Telemetry / Default Browser Agent | 3 | Telemetry / DBA | WEAK |
+
+---
+---
+
+# Part 4 — Exact Firefox Tree Test Locations (verified path index)
+
+> Parts 1–3 referenced many tests by directory or by filename fragment (e.g. `browser-autofill/browser_originToAdaptive.js`
+> without its `browser/components/urlbar/tests/` prefix, or `tabs/browser_pinnedTabs.js` without its component root).
+> This part gives the **complete, root-relative path** for every referenced test directory and example file, each
+> **verified to exist on searchfox against current mozilla-central** (July 2026). It covers **both** comparisons:
+> §4.2 = the automated STARfox comparison (Parts 1–2); §4.3 = the manual-suite comparison (Part 3).
+>
+> **All paths below are root-relative from the mozilla-central tree root.** To open any path in a browser, prefix it
+> with `https://searchfox.org/mozilla-central/source/` (e.g.
+> `https://searchfox.org/mozilla-central/source/browser/components/urlbar/tests/browser-autofill/browser_originToAdaptive.js`).
+> The GitHub mirror equivalent is `https://github.com/mozilla-firefox/firefox/blob/main/<path>`.
+
+## 4.0 Corrections applied during verification (read first)
+
+While resolving paths, several references in Parts 1–2 were found to be inexact. Corrected here:
+
+| As written in Parts 1–2 | Reality in current tree |
+|---|---|
+| tab tests under `browser/base/content/test/tabs/` | **Moved** — that path 404s; all tab tests are now under `browser/components/tabbrowser/test/browser/tabs/` |
+| `browser_devices_get_user_media*` (WebRTC) implied camelCase | Actual files are snake_case: `browser_devices_get_user_media*.js` |
+| `browser_permissions_*` (webextension perm prompts) | **No such prefix.** Real files use `browser_ext_*`: e.g. `browser_ext_request_permissions.js`, `browser_ext_popup_requestPermission.js` |
+| printing tests under `browser/components/printing/tests` | **Wrong root** — printing tests are in `toolkit/components/printing/tests/` |
+| page context-menu tests under `contextmenu/` | Directory is `browser/base/content/test/contextMenu/` (capital **M**) |
+| `browser_fxa_web_channel.js` under `services/...` | Actually `browser/base/content/test/sync/browser_fxa_web_channel.js` |
+| Megalist (sidebar passwords) under `aboutlogins/` | Actually `toolkit/components/satchel/megalist/content/tests/browser/` |
+| `browser_search_glean_serp_event_telemetry` (bare) | Only one file matches, with a suffix: `browser_search_glean_serp_event_telemetry_categorization_enabled_by_pref.js` |
+| `browser_sidebar_pinned_tabs.js` | **Not found**; closest existing is `browser_sidebar_pinned_tab_promo.js` |
+| `browser_autoplay_blocked.js` | **Not found** by this name; autoplay tests are `dom/media/autoplay/test/browser/browser_autoplay_policy_*.js` |
+| `browser_audioTabIcon.js` "gone" | **Exists** at `browser/components/tabbrowser/test/browser/tabs/browser_audioTabIcon.js` (it moved with the tab tests, not deleted) |
+
+## 4.1 Master directory index (both comparisons share these tree roots)
+
+Every feature area in this document maps to one or more of these **verified** test directories. Framework tags:
+BC = browser-chrome (`browser_*.js`), XP = xpcshell unit, MN = marionette, MC = mochitest-chrome, MP = mochitest-plain.
+
+| Feature area | Exact tree test directory | Framework |
+|---|---|---|
+| Address bar / urlbar | `browser/components/urlbar/tests/browser/`, `.../browser-autofill/`, `.../browser-searchMode/`, `.../browser-UrlbarInput/`, `.../browser-UrlbarView/`, `.../browser-tips/`, `.../browser-switchTab/`, `.../browser-quickactions/`, `.../browser-telemetry/`, `.../quicksuggest/browser/`, `.../unit/` | BC + XP |
+| Search UI | `browser/components/search/test/browser/` (+ `telemetry/` subdir) | BC |
+| Search service | `toolkit/components/search/tests/xpcshell/` | XP |
+| Tabs / tab bar / groups | `browser/components/tabbrowser/test/browser/tabs/`, `.../dragdrop/`, `.../tabMediaIndicator/`, `.../smarttabgrouping/`, `.../statuspanel/` | BC |
+| Session restore | `browser/components/sessionstore/test/` (+ `unit/`) | BC + XP |
+| Toolbar / customize / theme | `browser/components/customizableui/test/` | BC |
+| Firefox View | `browser/components/firefoxview/tests/browser/` (+ `tests/chrome/`) | BC + MC |
+| Sidebar / vertical tabs | `browser/components/sidebar/tests/browser/`, `.../tests/marionette/`, `.../tests/unit/` | BC + MN + XP |
+| Passwords (about:logins) | `browser/components/aboutlogins/tests/browser/` (+ `chrome/`, `unit/`) | BC + MC + XP |
+| Password mgr (doorhanger/autofill) | `toolkit/components/passwordmgr/test/browser/` (+ `mochitest/`, `unit/`) | BC + MP + XP |
+| Sidebar passwords (Megalist) | `toolkit/components/satchel/megalist/content/tests/browser/` | BC |
+| Form autofill | `browser/extensions/formautofill/test/browser/` (+ `address/`, `creditCard/`, `heuristics/`, `fathom/`) | BC |
+| Bookmarks / Places / Library | `browser/components/places/tests/browser/` (+ `interactions/`), `toolkit/components/places/tests/browser/` | BC |
+| Downloads | `browser/components/downloads/test/browser/` (+ `unit/`) | BC + XP |
+| Preferences / Settings | `browser/components/preferences/tests/` + pane subdirs (`privacy/`, `home/`, `search/`, `downloads/`, `applications/`, `languages/`, `siteData/`, `sync/`, `etp/`, `aiFeatures/`, …) | BC |
+| Migration | `browser/components/migration/tests/browser/` (+ `unit/`) | BC + XP |
+| Profiles | `browser/components/profiles/tests/browser/` (+ `unit/`), `toolkit/profile/test/` | BC + XP |
+| Backup & Restore | `browser/components/backup/tests/browser/`, `.../chrome/`, `.../marionette/`, `.../xpcshell/` | BC + MC + MN + XP |
+| New Tab / Activity Stream | `browser/extensions/newtab/test/browser/`, `.../unit/`, `.../xpcshell/` (+ Jest); `browser/components/newtab/test/browser/` | BC + XP + Jest |
+| Top sites | `browser/components/topsites/test/` | BC + XP |
+| Onboarding / about:welcome | `browser/components/aboutwelcome/tests/browser/` (+ `unit/`, `xpcshell/`) | BC + XP |
+| Messaging (CFR/spotlight/callout) | `browser/components/asrouter/tests/browser/` (+ `unit/`, `xpcshell/`) | BC + XP |
+| GenAI (chatbot/link preview) | `browser/components/genai/tests/browser/` (+ `chrome/`, `xpcshell/`); `browser/components/aiwindow/` | BC + MC + XP |
+| Site identity / connection | `browser/base/content/test/siteIdentity/` | BC |
+| ETP / protections panel | `browser/base/content/test/protectionsUI/` | BC |
+| Anti-tracking behavior | `toolkit/components/antitracking/test/browser/` (+ `xpcshell/`, `marionette/`, `gtest/`) | BC + XP + MN + GTest |
+| Anti-fingerprinting (RFP) | `toolkit/components/resistfingerprinting/tests/browser/`, `.../chrome/`, `.../xpcshell/`, `.../gtest/` | BC + XP + GTest |
+| Private browsing | `browser/components/privatebrowsing/test/browser/` | BC |
+| WebRTC device prompts | `browser/base/content/test/webrtc/` | BC |
+| Permissions | `browser/base/content/test/permissions/` | BC |
+| WebExtension perm prompts | `browser/components/extensions/test/browser/` | BC |
+| Popup blocker | `browser/base/content/test/popups/` | BC |
+| DoH | `toolkit/components/doh/test/browser/` | BC |
+| Cookie banners | `toolkit/components/cookiebanners/test/browser/` | BC |
+| Bounce tracking | `toolkit/components/bouncetrackingprotection/test/browser/` | BC |
+| Translations | `browser/components/translations/tests/browser/` | BC |
+| Reader View | `toolkit/components/reader/tests/browser/` (+ `chrome/`) | BC + MC |
+| Screenshots | `browser/components/screenshots/tests/browser/` | BC |
+| Find in page (findbar) | `toolkit/content/tests/browser/` (findbar files), `toolkit/content/tests/chrome/` | BC + MC |
+| PDF viewer (pdf.js) | `toolkit/components/pdfjs/test/` (+ `unit/`) | BC + XP |
+| Printing | `toolkit/components/printing/tests/` | BC |
+| Zoom | `browser/base/content/test/zoom/` | BC |
+| Page context menu | `browser/base/content/test/contextMenu/` | BC |
+| Autoplay / media policy | `dom/media/autoplay/test/browser/`; `toolkit/content/tests/browser/browser_delay_autoplay_media.js` | BC + MP |
+| EME / DRM (ClearKey) | `dom/media/test/` (`test_eme_*.html`) | MP |
+| Text fragments | `dom/base/test/` (`test_text-fragments-*.html`) + WPT | MP + WPT |
+| Enterprise policies | `browser/components/enterprisepolicies/tests/browser/` (+ `xpcshell/`) | BC + XP |
+| Software update | `toolkit/mozapps/update/tests/browser/`, `.../marionette/`, `.../unit_aus_update/`, `.../unit_background_update/`, `.../gtest/` | BC + MN + XP + GTest |
+| FxA web channel / sign-in | `browser/base/content/test/sync/` | BC |
+| Sync engine | `services/sync/tests/` | XP |
+| Crash reporter | `toolkit/crashreporter/test/` | XP + limited BC |
+| Accessibility (a11y API) | `accessible/tests/mochitest/` (+ `browser/`) | MC/a11y + BC |
+| Installer / packaging | `browser/installer/`, `toolkit/mozapps/installer/` | build/packaging |
+| Firefox UI functional (E2E, restart) | `testing/firefox-ui/tests/functional/` | MN (firefox-ui) |
+| Shopping / Review Checker | **removed from tree** (was `browser/components/shopping/`) | — |
+
+## 4.2 Automated STARfox comparison (Parts 1–2) — exact file paths
+
+Full verified paths for every example file referenced in Part 1, grouped by directory.
+
+### Address bar & search (§1.1)
+
+`browser/components/urlbar/tests/browser/`
+- `browser_inputHistory_autofill.js`, `browser_remove_match.js`, `browser_inputHistory.js`, `browser_add_search_engine.js`,
+  `browser_contextualsearch_install.js`, `browser_keyword.js`, `browser_tokenAlias.js`, `browser_action_searchengine_alias.js`,
+  `browser_clipboard.js`, `browser_copying.js`, `browser_canonizeURL.js`, `browser_placeholder.js`, `browser_searchSettings.js`,
+  `browser_top_sites.js`, `browser_urlbar_contextmenu.js`, `browser_pasteAndGo.js`, `browser_oneOffs.js`, `browser_tabToSearch.js`,
+  `browser_searchSuggestions.js`, `browser_redirect_error.js`, `browser_tabMatchesInAwesomebar.js`
+
+`browser/components/urlbar/tests/browser-autofill/`
+- `browser_originToAdaptive.js`, `browser_canonize.js`, `browser_trimURLs.js`
+
+`browser/components/urlbar/tests/browser-searchMode/`
+- `browser_indicator.js`, `browser_no_results.js`, `browser_searchModeSwitcher_searchMode.js`, `browser_switchTabs.js`,
+  `browser_engineRemoval.js`, `browser_searchModeSwitcher_basic.js`, `browser_alias_replacement.js`
+
+`browser/components/urlbar/tests/browser-UrlbarInput/`
+- `browser_searchTerms.js`, `browser_searchTerms_switch_tab.js`
+
+`browser/components/urlbar/tests/browser-tips/` — `browser_updateRefresh.js`
+`browser/components/urlbar/tests/quicksuggest/browser/` — `browser_quicksuggest_addons.js`, `browser_quicksuggest.js`
+
+`browser/components/search/test/browser/`
+- `browser_addSearchEngineFromForm.js`, `browser_searchbar_default.js`, `browser_private_search_perwindowpb.js`,
+  `browser_searchbar_enter.js`, `browser_contentSearch.js`, `browser_contextmenu.js`
+
+`browser/components/search/test/browser/telemetry/`
+- `browser_search_telemetry_sources.js`, `browser_search_telemetry_adImpression_component.js`,
+  `browser_search_telemetry_sources_ads_clicks.js`, `browser_search_telemetry_abandonment.js`,
+  `browser_search_glean_serp_event_telemetry_categorization_enabled_by_pref.js`
+
+> Duplicate-name cautions (correct urlbar/search copy chosen above): `browser_inputHistory.js` also exists in `browser-switchTab/`;
+> `browser_trimURLs.js` also in `browser-UrlbarInput/`; `browser_placeholder.js` also in `browser-autofill/`; `browser_clipboard.js`
+> also under `browser/base/` and `toolkit/`; `browser_contextmenu.js` has 4 copies tree-wide.
+
+### Tabs / session / toolbar / theme (§1.2)
+
+`browser/components/tabbrowser/test/browser/tabs/`
+- `browser_addAdjacentNewTab.js`, `browser_new_tab_url.js`, `browser_tabkeynavigation.js`,
+  `browser_contextmenu_openlink_after_tabnavigated.js`, `browser_openURI_background.js`, `browser_window_open_modifiers.js`,
+  `browser_tabfocus.js`, `browser_tabswitch_select.js`, `browser_list_all_tabs_menu_items.js`, `browser_overflowScroll.js`,
+  `browser_pinnedTabs.js`, `browser_multiselect_tabs_pin_unpin.js`, `browser_tabReorder.js`, `browser_pinnedTabs_closeByKeyboard.js`,
+  `browser_close_tab_by_dblclick.js`, `browser_undo_close_tabs.js`, `browser_tab_label_during_reload.js`, `browser_audioTabIcon.js`,
+  `browser_multiselect_tabs_mute_unmute.js`, `browser_removeTabsToTheEnd.js`, `browser_removeAllTabsBut.js`,
+  `browser_multiselect_tabs_move.js`, `browser_tab_groups.js`, `browser_tab_group_menu.js`, `browser_tab_groups_tabContextMenu.js`,
+  `browser_tab_preview.js`, `browser_tab_dragdrop.js`
+
+`browser/components/tabbrowser/test/browser/tabMediaIndicator/` — `browser_mute.js`
+`browser/components/tabbrowser/test/browser/dragdrop/` — `browser_drag_to_pin.js`
+
+`browser/components/sessionstore/test/`
+- `browser_undoCloseById.js`, `browser_restoreLastClosedTabOrWindowOrSession.js`, `browser_tab_groups_save_on_window_close.js`,
+  `browser_tab_groups_restore_to_group.js`, `browser_restoreLastActionCorrectOrder.js`,
+  `browser_closed_objects_changed_notifications_tabs.js`
+
+`browser/components/customizableui/test/`
+- `browser_history_recently_closed.js`, `browser_reload_tab.js`, `browser_switch_to_customize_mode.js`, `browser_customizemode_lwthemes.js`
+
+`browser/components/firefoxview/tests/browser/` — `browser_recentlyclosed_firefoxview.js`
+`browser/components/profiles/tests/browser/` — `browser_test_current_theme_from_amo.js`
+
+### Security / privacy / networking / notifications / geo (§1.3)
+
+`browser/base/content/test/protectionsUI/`
+- `browser_protectionsUI.js`, `browser_protectionsUI_fingerprinters.js`, `browser_protectionsUI_cookie_banner.js`,
+  `browser_protectionsUI_cryptominers.js`, `browser_protectionsUI_categories.js`
+
+`browser/base/content/test/siteIdentity/`
+- `browser_identityPopup_clearSiteData.js`, `browser_identity_UI.js`, `browser_check_identity_state.js`,
+  `browser_mixed_passive_content_indicator.js`, `browser_csp_block_all_mixedcontent.js`, `browser_identityPopup_HttpsOnlyMode.js`,
+  `browser_geolocation_indicator.js`
+
+`browser/base/content/test/webrtc/` — `browser_devices_get_user_media.js`, `browser_devices_get_user_media_screen.js`, `browser_devices_get_user_media_in_frame.js`, `browser_devices_get_user_media_default_permissions.js`
+`browser/base/content/test/permissions/` — `browser_permission_delegate_geo.js`
+`browser/base/content/test/popups/` — `browser_popup_blocker.js`, `browser_popup_blocker_frames.js`, `browser_popup_blocker_identity_block.js`, `browser_popup_blocker_iframes.js`
+`browser/components/privatebrowsing/test/browser/` — `browser_privatebrowsing_ui.js`, `browser_privatebrowsing_indicator.js`, `browser_privatebrowsing_permissions.js` (+ ~43 more)
+`browser/components/extensions/test/browser/` — `browser_ext_request_permissions.js`, `browser_ext_popup_requestPermission.js`, `browser_ext_persistent_storage_permission_indication.js`
+`toolkit/components/doh/test/browser/` — `browser_remoteSettings_rollout.js`, `browser_providerSteering.js`, `browser_throttle_heuristics.js`, `browser_trrSelect.js`
+`toolkit/components/antitracking/test/browser/` — `browser_blockingCookies.js`, `browser_partitionedCookies.js`, `browser_hasStorageAccess.js`, `browser_urlQueryStringStripping.js`, `browser_contentBlockingTelemetry.js`
+
+### Password manager & form autofill (§1.4)
+
+`browser/components/aboutlogins/tests/browser/` — `browser_createLogin.js`, `browser_updateLogin.js`, `browser_deleteLogin.js`, `browser_copyToClipboardButton.js`, `browser_loginFilter.js`, `browser_openSite.js`, `browser_primaryPassword.js`, `browser_osAuthDialog.js`, `browser_openExport.js`
+`toolkit/components/passwordmgr/test/browser/` — `browser_doorhanger_save_password.js`, `browser_exceptions_dialog.js`, `browser_autocomplete_insecure_warning.js`, `browser_openPasswordManager.js`, `browser_autocomplete_primary_password.js`, `browser_context_menu_generated_password.js`, `browser_doorhanger_generated_password.js`, `browser_preselect_login.js`, `browser_context_menu.js`, `browser_autofill_after_paint.js`
+`toolkit/components/satchel/megalist/content/tests/browser/` — `browser_passwords_export_success_notification.js`
+`browser/extensions/formautofill/test/browser/` — `browser_manageAddressesDialog.js`, `browser_clearPopulatedForm.js`, `browser_privacyPreferences.js`, `browser_submission_in_private_mode.js`
+`browser/extensions/formautofill/test/browser/creditCard/` — `browser_manageCreditCardsDialog.js`, `browser_editCreditCardDialog.js`
+
+### Bookmarks / history / downloads / preferences / profiles (§1.5)
+
+`browser/components/places/tests/browser/` — `browser_bookmark_popup.js`, `browser_remove_bookmarks.js`, `browser_click_bookmarks_on_toolbar.js`, `browser_library_open_all.js`, `browser_bookmark_context_menu_contents.js`, `browser_autoshow_bookmarks_toolbar.js`, `browser_forgetthissite.js`
+`browser/components/places/tests/browser/interactions/` — `browser_interactions_clearHistory.js`
+`toolkit/components/places/tests/browser/` — `browser_visituri.js`
+`browser/components/downloads/test/browser/` — `browser_basic_functionality.js`, `browser_downloads_context_menu_delete_file.js`, `browser_blocked_and_deleted_status.js`, `browser_downloads_panel_opens.js`
+`browser/components/preferences/tests/` — `browser_advanced_update.js`; `downloads/browser_downloads.js`; `applications/browser_filetype_dialog.js`; `siteData/browser_clearSiteData_v2.js`; `privacy/browser_privacypane_3.js`; `home/browser_homepage_firefox_home.js`; `languages/browser_languages_pane.js`
+`browser/components/migration/tests/browser/` — `browser_do_migration.js`, `browser_edge_bookmarks_success_strings.js`
+
+### PDF / print / reader / find / media / zoom (§1.6)
+
+`toolkit/components/pdfjs/test/` — `browser_pdfjs_main.js`, `browser_pdfjs_download_button.js`, `browser_pdfjs_navigation.js`, `browser_pdfjs_zoom.js`, `browser_pdfjs_form.js`, `browser_pdfjs_editing_contextmenu.js`, `browser_pdfjs_find.js`
+`toolkit/components/printing/tests/` — `browser_modal_print.js`, `browser_preview_navigation.js`, `browser_print_stream.js`
+`toolkit/components/reader/tests/browser/` — `browser_readerMode.js`, `browser_readerMode_textLayoutPref.js`, `browser_readerMode_colorSchemePref.js`
+`toolkit/content/tests/browser/` — `browser_findbar.js`, `browser_findbar_marks.js`, `browser_delay_autoplay_media.js`
+`browser/base/content/test/zoom/` — `browser_zoom_commands.js`, `browser_mousewheel_zoom.js`, `browser_default_zoom.js` (family: `_fission.js`, `_multitab.js`, `_sitespecific.js`)
+> `browser_autoplay_blocked.js` as written does not exist — autoplay policy tests are `dom/media/autoplay/test/browser/browser_autoplay_policy_*.js`.
+
+### Sidebar / AI / menus / sync (§1.7)
+
+`browser/components/sidebar/tests/browser/` — `browser_toolbar_sidebar_button.js`, `browser_hide_sidebar.js`, `browser_vertical_tabs.js`, `browser_sidebar_expand_on_hover.js`, `browser_extensions_sidebar.js` (note: `browser_sidebar_pinned_tabs.js` not found; closest is `browser_sidebar_pinned_tab_promo.js`)
+`browser/components/genai/tests/browser/` — `browser_chat_contextmenu.js`, `browser_chat_sidebar.js`, `browser_chat_page.js`, `browser_genai_init.js`
+`browser/base/content/test/contextMenu/` — `browser_contextmenu.js`
+`browser/base/content/test/sync/` — `browser_fxa_web_channel.js`
+
+## 4.3 Manual-suite comparison (Part 3) — exact directories per feature area
+
+The manual suite maps to whole tree test directories (not individual files). These are the exact, verified roots for the
+STRONG/PARTIAL manual areas from §3.4–§3.5 (files inside them are illustrative — see §3.4 for verified examples):
+
+| Manual feature area (§3.3) | Exact tree test directory(ies) |
+|---|---|
+| Passwords / Logins | `browser/components/aboutlogins/tests/browser/` + `toolkit/components/passwordmgr/test/browser/` (+ Megalist `toolkit/components/satchel/megalist/content/tests/browser/`) |
+| Settings / Preferences | `browser/components/preferences/tests/` + pane subdirs (`privacy/`, `home/`, `search/`, `downloads/`, `applications/`, `languages/`, `siteData/`, `sync/`, `etp/`, `aiFeatures/`) |
+| Bookmarks / Places | `browser/components/places/tests/browser/` (+ `interactions/`); `toolkit/components/places/tests/browser/` |
+| Downloads | `browser/components/downloads/test/browser/` |
+| Form Autofill | `browser/extensions/formautofill/test/browser/` (+ `address/`, `creditCard/`) |
+| Tabs (+ Tab Notes) | `browser/components/tabbrowser/test/browser/tabs/` (+ `dragdrop/`, `tabMediaIndicator/`) |
+| Firefox View | `browser/components/firefoxview/tests/browser/` |
+| Sidebar | `browser/components/sidebar/tests/browser/` (+ `tests/marionette/`) |
+| Screenshots | `browser/components/screenshots/tests/browser/` |
+| Reader View | `toolkit/components/reader/tests/browser/` |
+| Site Identity / Connection | `browser/base/content/test/siteIdentity/` |
+| ETP / Privacy | `browser/base/content/test/protectionsUI/` |
+| Onboarding (+ ToU) | `browser/components/aboutwelcome/tests/browser/` + `browser/components/asrouter/tests/browser/` |
+| Find in page / PDF | `toolkit/content/tests/browser/` (findbar) + `toolkit/components/pdfjs/test/` |
+| Translations | `browser/components/translations/tests/browser/` |
+| Session Restore | `browser/components/sessionstore/test/` |
+| Profiles | `browser/components/profiles/tests/browser/` + `toolkit/profile/test/` |
+| Private Browsing | `browser/components/privatebrowsing/test/browser/` |
+| GenAI | `browser/components/genai/tests/browser/` (+ `browser/components/aiwindow/`) |
+| Permissions (+ geo) | `browser/base/content/test/permissions/` + `.../siteIdentity/browser_geolocation_indicator.js` |
+| Address Bar / URL bar | `browser/components/urlbar/tests/browser*/` (see §4.1 for full subdir list) |
+| Backup & Restore | `browser/components/backup/tests/browser/` (+ `chrome/`, `marionette/`, `xpcshell/`) |
+| New Tab / Pocket / customization | `browser/extensions/newtab/test/browser/` (+ Jest `test/unit`); `browser/components/newtab/test/browser/`; `browser/components/topsites/test/` |
+| Search flows | `browser/components/search/test/browser/` + `toolkit/components/search/tests/xpcshell/` |
+| Enterprise Policies | `browser/components/enterprisepolicies/tests/browser/` (+ `xpcshell/`) |
+| DevTools | `devtools/client/**/test/` (per-tool `test/browser/` and `test/` dirs) |
+| Experiments / Nimbus | `toolkit/components/nimbus/test/` + `browser/components/asrouter/tests/` |
+| Network / Proxy / DoH | `toolkit/components/doh/test/browser/` + `netwerk/**/test/` |
+| Content blocking | `toolkit/components/antitracking/test/browser/` |
+| Anti-fingerprinting / RFP | `toolkit/components/resistfingerprinting/tests/{browser,chrome,xpcshell,gtest}/` |
+| Themes / Toolbar | `browser/themes/**` + `browser/components/customizableui/test/` |
+| Migration | `browser/components/migration/tests/{browser,unit}/` |
+| FxA / Sync | `browser/base/content/test/sync/` (web channel) + `services/sync/tests/` |
+| Software Update | `toolkit/mozapps/update/tests/{browser,marionette,unit_aus_update,unit_background_update}/` + `testing/firefox-ui/tests/functional/` |
+| Notifications | `toolkit/components/**` (alerts/notifications) + web-notification mochitests |
+| Context menu | `browser/base/content/test/contextMenu/` (+ per-feature `*context_menu*.js`) |
+| Drag & Drop / File handling | `browser/components/tabbrowser/test/browser/dragdrop/` + file-handler tests |
+| Media / Site Compatibility | `dom/media/test/` (mochitest); no site-compat analog |
+| DRM / EME | `dom/media/test/` (`test_eme_*.html`, ClearKey) |
+| Text fragments | `dom/base/test/` (`test_text-fragments-*.html`) + `testing/web-platform/tests/` |
+| Accessibility / NVDA | `accessible/tests/mochitest/` (a11y API only; no NVDA analog) |
+| Installer / Uninstaller | `browser/installer/`, `toolkit/mozapps/installer/` (packaging; largely no test analog) |
+| Crash Reporter | `toolkit/crashreporter/test/` |
+| Shopping / Review Checker | **removed** — no directory in current tree |
+
