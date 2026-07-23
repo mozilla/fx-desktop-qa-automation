@@ -27,10 +27,7 @@ def test_hover_email_and_phone_autofill_preview(
     # scroll to first form field
     address_autofill.scroll_to_form_field()
 
-    # created fake data
-    autofill_data = fill_and_save_address
-
     # Hover over each field and check data preview
     fields_to_test = ["email", "telephone"]
     for field in fields_to_test:
-        address_autofill.check_autofill_preview_for_field(field, autofill_data, region)
+        address_autofill.check_autofill_preview_for_field(field, region)

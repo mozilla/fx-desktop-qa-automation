@@ -48,24 +48,6 @@ base_address_fields = [
     "tel",
 ]
 
-# Preview field mappings
-base_preview_address_mapping = {
-    "family_name": "family-name",
-    "given_name": "given-name",
-    "street_address": "street-address",
-    "address_level_2": "address-level2",
-    "address_level_1": "address-level1",
-    "postal_code": "postal-code",
-    "country_code": "country",
-    "telephone": "tel",
-}
-base_preview_cc_mapping = {
-    "name": "cc-name",
-    "card_number": "cc-number",
-    "expiration_month": "cc-exp-month",
-    "expiration_year": "cc-exp-year",
-}
-
 
 class Autofill(BasePage):
     """
@@ -76,7 +58,6 @@ class Autofill(BasePage):
     # Default; subclasses will override
     field_mapping = {}
     fields = {}
-    preview_fields = {}
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/"
 
@@ -486,15 +467,6 @@ class Autofill(BasePage):
             )
         return self
 
-    def sanitize_preview_data(self, field, value, region):
-        if field == "cc-number":
-            value = value[-4:]
-        elif field == "cc-exp-year":
-            value = value[-2:]
-        elif field == "tel" or value[0] == "+":
-            value = self.util.normalize_regional_phone_numbers(value, region)
-        return value
-
     def select_autofill_option(self, field):
         """
         Presses the autofill panel that pops up after you double-click an input field
@@ -555,7 +527,6 @@ class Autofill(BasePage):
     def check_autofill_preview_for_field(
         self,
         field_label: str,
-        sample_data: CreditCardBase | AutofillAddressBase,
         region: str = None,
     ):
         """
@@ -563,8 +534,7 @@ class Autofill(BasePage):
 
         Arguments:
             field_label: field name.
-            sample_data: autofill sample data.
-            region: region being tested.
+            region: region being tested (used to skip address-level1 outside US/CA).
         """
         if (
             self.__class__ == AddressFill
@@ -707,12 +677,6 @@ class AddressFill(Autofill):
             field_mapping if field_mapping else base_address_field_mapping
         )
         self.fields = fields if fields else base_address_fields
-        self.preview_fields = set(
-            map(
-                lambda field: base_preview_address_mapping.get(field, field),
-                self.field_mapping.keys(),
-            )
-        )
         self.URL_TEMPLATE = url_template if url_template else BASE_ADDRESS_URL_TEMPLATE
 
 
@@ -733,15 +697,6 @@ class CreditCardFill(Autofill):
         super().__init__(driver, **kwargs)
         self.field_mapping = field_mapping if field_mapping else base_cc_field_mapping
         self.fields = fields if fields else base_cc_fields
-        self.preview_fields = set(
-            map(
-                lambda field: base_preview_cc_mapping.get(field),
-                self.field_mapping.keys(),
-            )
-        )
-        self.preview_fields = {
-            field for field in self.preview_fields if field is not None
-        }
         self.URL_TEMPLATE = url_template if url_template else BASE_CC_URL_TEMPLATE
 
 
