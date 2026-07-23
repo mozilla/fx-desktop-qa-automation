@@ -27,6 +27,7 @@ def add_to_prefs_list():
     return [("signon.rememberSignons", True)]
 
 
+@pytest.mark.headed
 def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     """
     C2244618 - [PP] Verify that editing autofilled entries after PP was dismissed is possible
@@ -56,25 +57,25 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # Dismiss the primary password prompt without entering the password
     about_logins.dismiss_pp_if_appears()
 
-    # Go to the test website
+    # Go to the test website. Because the prompt was dismissed, the still-locked
+    # login store re-prompts (natively) when the page tries to autofill; enter the
+    # correct Primary Password to unlock it so the fields become editable.
     tabs.open_and_switch_to_new_tab()
     login_autofill.open()
-    about_logins.dismiss_pp_if_appears()
+    about_logins.enter_primary_password_native(PRIMARY_PASSWORD)
 
-    # Fill in both the username and password with new credentials and dismiss pp if appears
+    # Clear any autofilled values, then fill in new credentials and submit.
     login_form = LoginAutofill.LoginForm(login_autofill)
+    login_autofill.get_element("username-login-field").clear()
     login_form.fill_username(SECOND_USERNAME)
-    about_logins.dismiss_pp_if_appears()
+    login_autofill.get_element("password-login-field").clear()
     login_form.fill_password(SECOND_PASSWORD)
-    about_logins.dismiss_pp_if_appears()
 
     # Submit the form
     login_form.submit()
 
-    # Fill in the correct primary password
-    about_logins.enter_primary_password(PRIMARY_PASSWORD)
-
-    # Click on the grey key icon, choose to save the credentials and reload the form
+    # Click on the key icon, choose to save the credentials and reload the form
+    nav.element_visible("password-notification-key")
     nav.click_on("password-notification-key")
     autofill_popup_panel.verify_username_value(SECOND_USERNAME)
     autofill_popup_panel.click_doorhanger_button("save")
