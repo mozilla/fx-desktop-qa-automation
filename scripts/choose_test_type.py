@@ -14,13 +14,9 @@ file_subsets = {
 }
 
 l10n_module_patterns = [
-    r"modules/page_object_prefs\.py",
-    r"modules/data/about_prefs\.components\.json",
     r"modules/page_object_autofill\.py",
     r"modules/data/address_fill\.components\.json",
-    r"modules/data/credit_card_fill\.components\.json",
     r"modules/browser_object_autofill_popup\.py",
-    r"modules/data/autofill_popup\.components\.json",
 ]
 
 l10n_module_patterns = set(
