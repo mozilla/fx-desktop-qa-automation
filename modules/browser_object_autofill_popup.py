@@ -179,9 +179,9 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def verify_autocomplete_option(self, value: str) -> BasePage:
         """Wait until an autocomplete option containing `value` is displayed in the dropdown."""
-        self.custom_wait(timeout=10).until(
+        self.wait.until(
             lambda _: any(
-                value in (label or "")
+                value in label
                 for label in self.driver.execute_script(
                     """
                     return Array.from(
