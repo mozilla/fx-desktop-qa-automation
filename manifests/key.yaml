@@ -819,7 +819,10 @@ password_manager:
     splits:
     - functional2
   test_changes_made_in_edit_mode_are_saved:
-    result: pass
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_confirm_or_edit_generated_password_shows_previously_edited_and_generated_password_options:
@@ -861,7 +864,11 @@ password_manager:
     splits:
     - functional1
   test_multiple_saved_logins:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
@@ -903,7 +910,10 @@ password_manager:
   test_password_manager_on_google_US:
     comment: external site; mac was historically unstable for unknown reasons before
       bug 2056524, keep in mind if it re-flakes
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional1
   test_password_manager_on_reddit:
