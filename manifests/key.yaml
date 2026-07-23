@@ -1266,7 +1266,8 @@ security_and_privacy:
     splits:
     - functional2
   test_cryptominers_subpanel_display_when_not_blocked:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
+    result: fx-change
     splits:
     - functional2
   test_custom_block_suspected_fingerprinters_in_all_windows:
@@ -1338,7 +1339,8 @@ security_and_privacy:
     splits:
     - functional2
   test_fingerprinters_subpanel_display_when_not_blocked:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
+    result: fx-change
     splits:
     - functional2
   test_http_lock_icon_connection_state:
@@ -1442,7 +1444,8 @@ security_and_privacy:
     splits:
     - smoke
   test_tracking_content_custom_mode:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
+    result: fx-change
     splits:
     - functional2
   test_tracking_content_subpanel_display_when_not_blocked:
