@@ -53,17 +53,20 @@ def test_demo_ad_email_phone_captured_in_doorhanger_and_stored(
         about_prefs_privacy.open()
         about_prefs_privacy.open_and_switch_to_saved_addresses_popup()
 
-        # Get the first saved address profile
-        saved_address_profiles = about_prefs_privacy.get_all_saved_address_profiles()
-        assert saved_address_profiles, "No saved address profiles found"
+        # The Fx 154 saved-address tile only shows a name + address summary, so read
+        # the stored email/telephone fields from the address edit view.
+        stored = about_prefs_privacy.get_stored_address_values()
+        assert stored.get("name"), "No saved address profile found"
 
-        saved_address_profile = saved_address_profiles[0].text
-
-        # Verify each field is present in the saved profile
-        missing_fields = []
-        for field_name, field_value in expected_fields.items():
-            if field_value not in saved_address_profile:
-                missing_fields.append(f"{field_name}: {field_value}")
+        expected_stored = {
+            "email": address_autofill_data.email,
+            "tel": address_autofill_data.telephone,
+        }
+        missing_fields = [
+            f"{field_id}: {value}"
+            for field_id, value in expected_stored.items()
+            if value not in (stored.get(field_id) or "")
+        ]
 
         assert not missing_fields, (
             f"The following fields were not found in the saved address: {', '.join(missing_fields)}"
