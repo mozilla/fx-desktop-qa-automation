@@ -535,8 +535,7 @@ form_autofill:
     splits:
     - functional1
   test_create_profile_autofill:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_delete_cc_profile:
