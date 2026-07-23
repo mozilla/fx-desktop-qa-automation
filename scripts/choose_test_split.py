@@ -183,10 +183,11 @@ if __name__ == "__main__":
 
     run_list = []
     check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
-    git_diff_cmd = ["git", "--no-pager", "diff", "--name-only", "origin/main"]
+    git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
     rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
     if rev_hash:
-        git_diff_cmd.insert(-2, rev_hash)
+        git_diff_cmd.append(rev_hash)
+    git_diff_cmd.append("origin/main")
     committed_files = (
         check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
     )
