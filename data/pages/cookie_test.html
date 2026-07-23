@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cookie test</title>
+  </head>
+  <body>
+    <div id="cookie-status"></div>
+    <script>
+      const COOKIE_NAME = "starfox_cookie";
+      const hasCookie = document.cookie
+        .split("; ")
+        .some((entry) => entry.startsWith(COOKIE_NAME + "="));
+      const status = document.getElementById("cookie-status");
+      if (hasCookie) {
+        status.textContent = "Cookies already set";
+      } else {
+        status.textContent = "Cookies not yet set";
+        document.cookie = COOKIE_NAME + "=1; path=/";
+      }
+    </script>
+  </body>
+</html>
