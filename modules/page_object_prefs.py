@@ -623,6 +623,40 @@ class AboutPrefs(BasePage):
         self.driver.switch_to.frame(saved_payments_iframe)
         return self
 
+    def _moz_field_inner(self, host: WebElement) -> WebElement:
+        """
+        Return the editable inner node of an about:preferences form field.
+
+        Firefox 154 wraps the Saved Payment Methods dialog fields in ``moz-input-text``
+        and ``moz-select`` custom elements whose real ``<input>``/``<select>`` lives in
+        the shadow DOM (Marionette cannot serialize a ShadowRoot, so reach the inner
+        node with ``execute_script``). Falls back to the host for plain form fields.
+        """
+        inner = self.driver.execute_script(
+            "return arguments[0].shadowRoot"
+            " ? arguments[0].shadowRoot.querySelector('input, select')"
+            " : arguments[0];",
+            host,
+        )
+        if inner is None:
+            raise RuntimeError(
+                "No inner <input>/<select> found in the shadow root of "
+                f"{host.get_attribute('id') or host.tag_name!r}"
+            )
+        return inner
+
+    def _set_cc_panel_field(self, field_id: str, value: str | int) -> None:
+        """
+        Set a single field in the Saved Payment Methods dialog by element id,
+        handling both ``moz-input-text`` (inner input) and ``moz-select`` (inner select).
+        """
+        inner = self._moz_field_inner(self.find_element(By.ID, field_id))
+        if inner.tag_name.lower() == "select":
+            Select(inner).select_by_value(str(value))
+        else:
+            inner.clear()
+            inner.send_keys(str(value))
+
     def fill_and_save_cc_panel_information(
         self, credit_card_fill_information: CreditCardBase
     ):
@@ -633,21 +667,15 @@ class AboutPrefs(BasePage):
         Arguments:
             credit_card_fill_information: The object containing all the sample data
         """
-        fields = {
-            "card_number": credit_card_fill_information.card_number,
-            "expiration_month": credit_card_fill_information.expiration_month,
-            "expiration_year": f"20{credit_card_fill_information.expiration_year}",
-            "name": credit_card_fill_information.name,
-        }
-
-        for field in fields:
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
-
-        # Press tab again to navigate to the next field (this accounts for the second tab
-        # after the name field)
-        self.actions.send_keys(Keys.TAB).perform()
-        # Finally, press enter
-        self.actions.send_keys(Keys.ENTER).perform()
+        self._set_cc_panel_field("cc-number", credit_card_fill_information.card_number)
+        self._set_cc_panel_field("cc-name", credit_card_fill_information.name)
+        self._set_cc_panel_field(
+            "cc-exp-month", int(credit_card_fill_information.expiration_month)
+        )
+        self._set_cc_panel_field(
+            "cc-exp-year", f"20{credit_card_fill_information.expiration_year}"
+        )
+        self.get_element("save-button").click()
 
     def add_entry_to_saved_payments(self, cc_data: CreditCardBase):
         """
@@ -692,25 +720,21 @@ class AboutPrefs(BasePage):
             raise ValueError(
                 f"{field_name} is not a valid field name for the cc dialog form."
             )
-        value_field = self.find_element(By.ID, fields[field_name])
-        if value.isdigit():
-            value = int(value)
-        if field_name == "expiration_year":
-            if int(value) < 100:  # new exp years are all 4-digit
-                value = int(value) + 2000
-            value_field.click()
-            option = next(
-                el
-                for el in value_field.find_elements(By.TAG_NAME, "option")
-                if el.text == str(value)
-            )
-            option.click()
-
-        elif value_field.tag_name == "select":
-            Select(value_field).select_by_index(value)
+        # Firefox 154 turned these fields into moz-input-text / moz-select custom
+        # elements; operate on the inner input/select node in the shadow DOM.
+        inner = self._moz_field_inner(self.find_element(By.ID, fields[field_name]))
+        if inner.tag_name.lower() == "select":
+            select = Select(inner)
+            if field_name == "expiration_year":
+                year = int(value)
+                if year < 100:  # new exp years are all 4-digit
+                    year += 2000
+                select.select_by_value(str(year))
+            else:  # expiration_month, option values are "1".."12"
+                select.select_by_value(str(int(value)))
         else:
-            value_field.clear()
-            value_field.send_keys(value)
+            inner.clear()
+            inner.send_keys(str(value))
         self.get_element("save-button").click()
         return self
 
@@ -1057,7 +1081,6 @@ class AboutPrefs(BasePage):
         """
         self.open_autoplay_modal()
         self.click_on(settings)
-        self.click_on("spacer")
         self.click_on("autoplay-save-changes")
         return self
 

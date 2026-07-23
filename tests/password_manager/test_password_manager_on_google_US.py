@@ -67,14 +67,8 @@ def test_google_login_saved_credentials_dropdown(driver: Firefox, temp_selectors
     autofill_popup.ensure_autofill_dropdown_visible()
 
     for expected_username in [USERNAME, USERNAME2, USERNAME3]:
-        autofill_popup.element_visible(
-            "select-form-option-by-value", labels=[expected_username]
-        )
+        autofill_popup.verify_autocomplete_option(expected_username)
 
-    autofill_popup.element_visible(
-        "select-form-option-by-value", labels=["Use a passkey"]
-    )
+    autofill_popup.verify_autocomplete_option("Use a passkey")
 
-    autofill_popup.element_visible(
-        "select-form-option-by-value", labels=["Manage Passwords"]
-    )
+    autofill_popup.verify_autocomplete_option("Manage Passwords")
