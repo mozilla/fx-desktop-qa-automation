@@ -608,14 +608,15 @@ def mark_results(testrail_session: TestRail, test_results):
                     status=category,
                     elapsed=durations,
                 )
-            except Exception as e:
-                # One run's failure (e.g. a raced/invalid case batch) must not abort
-                # marking the remaining runs and categories.
+            except APIError as e:
+                # A TestRail rejection of this run's batch (e.g. a raced or invalid
+                # set of case IDs) must not abort marking the remaining runs and
+                # categories. Anything other than an API error is unexpected and is
+                # allowed to propagate.
                 logging.error(
                     f"Failed to mark {category} results for run {run_id}: {e}",
                     exc_info=True,
                 )
-                continue
 
 
 def organize_l10n_entries(
@@ -748,18 +749,17 @@ def organize_l10n_entries(
 
 
 def _matching_suite_entries(testrail_session, milestone_id, plan_title, suite_id):
-    """Re-fetch the plan and return (plan, [entries matching suite_id])."""
+    """Re-fetch the plan and return the entries matching suite_id."""
     plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
     )
     if not plan:
-        return None, []
-    entries = [
+        return []
+    return [
         entry
         for entry in plan.get("entries", []) or []
         if entry.get("suite_id") == suite_id
     ]
-    return plan, entries
 
 
 def _refetch_suite_entries_with_retry(
@@ -773,17 +773,17 @@ def _refetch_suite_entries_with_retry(
     entry the other platform is concurrently creating. Retrying a few times turns a
     transient miss into a hit instead of an IndexError that aborts the whole report.
     """
-    plan, entries = _matching_suite_entries(
+    entries = _matching_suite_entries(
         testrail_session, milestone_id, plan_title, suite_id
     )
     attempt = 0
     while not entries and attempt < retries:
         time.sleep(delay)
-        plan, entries = _matching_suite_entries(
+        entries = _matching_suite_entries(
             testrail_session, milestone_id, plan_title, suite_id
         )
         attempt += 1
-    return plan, entries
+    return entries
 
 
 def _select_suite_entry(entries, config):
@@ -880,7 +880,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             case_ids=cases_in_suite,
             config_ids=[config_id],
         )
-        _, suite_entries = _refetch_suite_entries_with_retry(
+        suite_entries = _refetch_suite_entries_with_retry(
             testrail_session, milestone_id, plan_title, suite_id
         )
 
@@ -917,7 +917,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             logging.warning(
                 f"Could not repair description for entry {entry.get('id')}: {e}"
             )
-        _, suite_entries = _refetch_suite_entries_with_retry(
+        suite_entries = _refetch_suite_entries_with_retry(
             testrail_session, milestone_id, plan_title, suite_id
         )
         entry = _select_suite_entry(suite_entries, config)
@@ -942,7 +942,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             description=f"Auto test plan entry: {suite_description}",
             case_ids=cases_in_suite,
         )
-        _, suite_entries = _refetch_suite_entries_with_retry(
+        suite_entries = _refetch_suite_entries_with_retry(
             testrail_session, milestone_id, plan_title, suite_id
         )
         entry = _select_suite_entry(suite_entries, config) or entry
