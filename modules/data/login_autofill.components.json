@@ -48,7 +48,7 @@
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item). Matches the FIRST loginWithOrigin row and is NOT site-specific — the ac-value attribute was removed, so all such rows share this selector. Fine when the store holds a single login or the caller only needs any saved row; a caller that needs a particular credential must confirm the label via get_primary_value.",
       "location": "Facebook page load"
     }
   },
@@ -99,7 +99,7 @@
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item). Matches the FIRST loginWithOrigin row and is NOT site-specific — the ac-value attribute was removed, so all such rows share this selector. Fine when the store holds a single login or the caller only needs any saved row; a caller that needs a particular credential must confirm the label via get_primary_value.",
       "location": "bsky page load"
     }
   },
@@ -108,7 +108,7 @@
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item; ac-value removed, read the label via get_primary_value)",
+      "description": "Saved-login autocomplete row (Firefox 154+ autocomplete-row-item). Matches the FIRST loginWithOrigin row and is NOT site-specific — the ac-value attribute was removed, so all such rows share this selector. Fine when the store holds a single login or the caller only needs any saved row; a caller that needs a particular credential must confirm the label via get_primary_value.",
       "location": "Mozilla Github page load"
     }
   },

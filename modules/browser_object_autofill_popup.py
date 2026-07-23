@@ -1,6 +1,7 @@
 import time
 from typing import Union
 
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -186,11 +187,18 @@ class AutofillPopup(BasePage):
         already holds a chrome context (see :meth:`click_clear_form_option`,
         :meth:`verify_autocomplete_option`) without a nested context switch on
         every tick.
+
+        If the dropdown re-renders mid-iteration the rows go stale; return None
+        so a ``wait.until`` caller simply retries on the next tick (self.wait does
+        not ignore StaleElementReferenceException, so it must be caught here).
         """
-        for option in self.get_elements("select-form-option"):
-            primary = self._get_primary_value(option)
-            if primary and value in primary and option.is_displayed():
-                return option
+        try:
+            for option in self.get_elements("select-form-option"):
+                primary = self._get_primary_value(option)
+                if primary and value in primary and option.is_displayed():
+                    return option
+        except StaleElementReferenceException:
+            return None
         return None
 
     @BasePage.context_chrome
