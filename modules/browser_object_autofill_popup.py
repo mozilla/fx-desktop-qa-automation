@@ -85,7 +85,7 @@ class AutofillPopup(BasePage):
         ``ac-value`` attribute, so the row is matched by its shadow-DOM label.
         """
         option = self.wait.until(
-            lambda _: self.get_option_by_value("Clear Autofill Form")
+            lambda _: self._get_option_by_value("Clear Autofill Form")
         )
         option.click()
         return self
@@ -149,6 +149,15 @@ class AutofillPopup(BasePage):
         Parameters: element (WebElement): The autocomplete row element.
         Returns: str: The primary value (e.g. username, cardholder name, or footer label).
         """
+        return self._get_primary_value(element)
+
+    def _get_primary_value(self, element: WebElement) -> str:
+        """Chrome-context body of :meth:`get_primary_value`.
+
+        Intentionally undecorated so it can be called from code already inside a
+        chrome context (e.g. ``get_option_by_value`` iterating rows) without
+        re-entering ``driver.context`` on every access.
+        """
         ac_value = element.get_attribute("ac-value")
         if ac_value:
             return ac_value
@@ -168,8 +177,18 @@ class AutofillPopup(BasePage):
         Return the first visible autocomplete row whose primary value contains
         `value`, or None if no such row is present.
         """
+        return self._get_option_by_value(value)
+
+    def _get_option_by_value(self, value: str) -> WebElement | None:
+        """Chrome-context body of :meth:`get_option_by_value`.
+
+        Undecorated so it can be polled inside a ``wait.until`` from a method that
+        already holds a chrome context (see :meth:`click_clear_form_option`,
+        :meth:`verify_autocomplete_option`) without a nested context switch on
+        every tick.
+        """
         for option in self.get_elements("select-form-option"):
-            primary = self.get_primary_value(option)
+            primary = self._get_primary_value(option)
             if primary and value in primary and option.is_displayed():
                 return option
         return None
@@ -218,7 +237,7 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def verify_autocomplete_option(self, value: str) -> BasePage:
         """Wait until an autocomplete option whose label contains `value` is displayed."""
-        self.wait.until(lambda _: self.get_option_by_value(value) is not None)
+        self.wait.until(lambda _: self._get_option_by_value(value) is not None)
         return self
 
     def _get_doorhanger_username_input(self):

@@ -151,6 +151,10 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
+    # Settle interval to let a native (non-DOM) prompt take keyboard focus before
+    # typing OS-level keystrokes; its readiness cannot be polled directly.
+    _NATIVE_PROMPT_SETTLE_S = 0.5
+
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.ba = BrowserActions(self.driver)
@@ -290,7 +294,7 @@ class AboutLogins(BasePage):
                 return self
             # Brief settle so the native prompt has keyboard focus before typing;
             # it is not in the DOM, so its readiness cannot be polled directly.
-            sleep(0.5)
+            sleep(self._NATIVE_PROMPT_SETTLE_S)
             self.gui.write(primary_password, interval=0.05)
             self.gui.press("enter")
             # Condition-based wait for the prompt to dismiss (instead of a fixed
@@ -501,7 +505,7 @@ class AboutLogins(BasePage):
         WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
         # Brief settle so the native prompt has keyboard focus before typing; it is
         # not in the DOM, so its readiness cannot be polled directly.
-        sleep(0.5)
+        sleep(self._NATIVE_PROMPT_SETTLE_S)
         self.gui.write(primary_password, interval=0.05)
         self.gui.press("enter")
         WebDriverWait(self.driver, timeout).until_not(EC.alert_is_present())

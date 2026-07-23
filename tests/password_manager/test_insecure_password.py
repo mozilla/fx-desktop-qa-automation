@@ -40,10 +40,14 @@ def test_insecure_login_contextual_warning(driver: Firefox, temp_selectors):
 
     def _verify_insecure_warning_dropdown():
         autofill_popup.ensure_autofill_dropdown_visible()
+        # Locale-stable presence check: the warning row is matched by
+        # originaltype='insecureWarning', independent of its wording.
         autofill_popup.element_visible("insecure-login-warning")
         # Firefox 154 moved the warning text into the autocomplete-row-item shadow
-        # DOM, so assert on the row's label instead of the old .ac-title-text node.
-        assert autofill_popup.get_option_by_value("not secure") is not None
+        # DOM, so also assert the visible label populated there. This is a
+        # case-sensitive substring of the en-US string ("This connection is not
+        # secure...") — the suite runs en-US builds; revisit if run under l10n.
+        autofill_popup.verify_autocomplete_option("not secure")
         autofill_popup.element_visible("manage-passwords")
 
     def _open_insecure_warning_article():
