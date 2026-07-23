@@ -104,7 +104,7 @@
     }
   },
   "mozilla-github-credentials": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='testUser']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginWithOrigin']",
     "strategy": "css",
     "groups": [],
     "comment": {
