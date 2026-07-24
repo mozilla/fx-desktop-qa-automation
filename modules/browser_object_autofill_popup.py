@@ -1,6 +1,7 @@
 import time
 from typing import Union
 
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -76,9 +77,18 @@ class AutofillPopup(BasePage):
         self.get_element("select-form-option").click()
         return self
 
+    @BasePage.context_chrome
     def click_clear_form_option(self) -> BasePage:
-        """Clicks to clear the saved form option (address or credit card)"""
-        self.click_on("clear-form-option")
+        """Clicks to clear the saved form option (address or credit card).
+
+        Firefox 154+ renders the footer rows ("Clear Autofill Form",
+        "Manage payment methods") with the same ``originaltype='action'`` and no
+        ``ac-value`` attribute, so the row is matched by its shadow-DOM label.
+        """
+        option = self.wait.until(
+            lambda _: self._get_option_by_value("Clear Autofill Form")
+        )
+        option.click()
         return self
 
     def get_doorhanger_cc_number(self) -> str:
@@ -129,11 +139,67 @@ class AutofillPopup(BasePage):
     @BasePage.context_chrome
     def get_primary_value(self, element: WebElement) -> str:
         """
-        Get the primary value from the autocomplete element
-        Parameters: element (WebElement): The autocomplete element from which to retrieve the primary value
-        Returns: str: The primary value extracted from the element's attribute
+        Get the primary (label) value from an autocomplete row element.
+
+        Firefox 154 replaced the classic ``richlistitem[ac-value]`` rows with the
+        ``autocomplete-row-item`` custom element, moving the visible text into its
+        shadow DOM (``.labels-container .label``) and dropping the ``ac-value``
+        attribute. Prefer ``ac-value`` when present (older builds) and otherwise
+        read the shadow label.
+
+        Parameters: element (WebElement): The autocomplete row element.
+        Returns: str: The primary value (e.g. username, cardholder name, or footer label).
         """
-        return element.get_attribute("ac-value")
+        return self._get_primary_value(element)
+
+    def _get_primary_value(self, element: WebElement) -> str:
+        """Chrome-context body of :meth:`get_primary_value`.
+
+        Intentionally undecorated so it can be called from code already inside a
+        chrome context (e.g. ``get_option_by_value`` iterating rows) without
+        re-entering ``driver.context`` on every access.
+        """
+        ac_value = element.get_attribute("ac-value")
+        if ac_value:
+            return ac_value
+        return self.driver.execute_script(
+            """
+            const row = arguments[0].querySelector('autocomplete-row-item');
+            if (!row || !row.shadowRoot) return null;
+            const label = row.shadowRoot.querySelector('.labels-container .label, .label');
+            return label ? label.textContent.trim() : null;
+            """,
+            element,
+        )
+
+    @BasePage.context_chrome
+    def get_option_by_value(self, value: str) -> WebElement | None:
+        """
+        Return the first visible autocomplete row whose primary value contains
+        `value`, or None if no such row is present.
+        """
+        return self._get_option_by_value(value)
+
+    def _get_option_by_value(self, value: str) -> WebElement | None:
+        """Chrome-context body of :meth:`get_option_by_value`.
+
+        Undecorated so it can be polled inside a ``wait.until`` from a method that
+        already holds a chrome context (see :meth:`click_clear_form_option`,
+        :meth:`verify_autocomplete_option`) without a nested context switch on
+        every tick.
+
+        If the dropdown re-renders mid-iteration the rows go stale; return None
+        so a ``wait.until`` caller simply retries on the next tick (self.wait does
+        not ignore StaleElementReferenceException, so it must be caught here).
+        """
+        try:
+            for option in self.get_elements("select-form-option"):
+                primary = self._get_primary_value(option)
+                if primary and value in primary and option.is_displayed():
+                    return option
+        except StaleElementReferenceException:
+            return None
+        return None
 
     @BasePage.context_chrome
     def verify_update_password_doorhanger(self, nav, expected_text):
@@ -178,19 +244,8 @@ class AutofillPopup(BasePage):
 
     @BasePage.context_chrome
     def verify_autocomplete_option(self, value: str) -> BasePage:
-        """Wait until an autocomplete option containing `value` is displayed in the dropdown."""
-        self.wait.until(
-            lambda _: any(
-                value in label
-                for label in self.driver.execute_script(
-                    """
-                    return Array.from(
-                        document.querySelectorAll('#PopupAutoComplete richlistitem autocomplete-row-item')
-                    ).map(item => item.shadowRoot?.querySelector('span.label')?.textContent ?? '');
-                    """
-                )
-            )
-        )
+        """Wait until an autocomplete option whose label contains `value` is displayed."""
+        self.wait.until(lambda _: self._get_option_by_value(value) is not None)
         return self
 
     def _get_doorhanger_username_input(self):

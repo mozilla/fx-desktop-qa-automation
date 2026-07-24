@@ -56,20 +56,21 @@ def test_demo_cc_data_captured_in_doorhanger_and_stored(
         about_prefs_privacy.open()
         about_prefs_privacy.open_and_switch_to_saved_payments_popup()
 
-        # Get stored values
-        saved_cc_profiles = about_prefs_privacy.get_all_saved_cc_profiles()
-        assert saved_cc_profiles, "No saved cc profiles found"
-
-        saved_cc_profile = [x.strip() for x in saved_cc_profiles[0].text.split(",")]
+        # The Fx 154 saved-payment tile only shows a masked number + expiry (no
+        # cardholder name), so read the stored values from the payment edit view.
+        stored = about_prefs_privacy.get_stored_payment_values()
+        assert stored.get("cc-number"), "No saved cc profiles found"
 
         # Validate stored values match expected values
-        assert saved_cc_profile[0].endswith(credit_card_sample_data.card_number[-4:]), (
-            f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{saved_cc_profile[0]}'"
+        assert stored["cc-number"].endswith(credit_card_sample_data.card_number[-4:]), (
+            f"Expected last 4 digits '{credit_card_sample_data.card_number[-4:]}' but got '{stored['cc-number']}'"
         )
-        assert saved_cc_profile[1] == credit_card_sample_data.name, (
-            f"Expected name '{credit_card_sample_data.name}' but got '{saved_cc_profile[1]}'"
+        assert stored["cc-name"] == credit_card_sample_data.name, (
+            f"Expected name '{credit_card_sample_data.name}' but got '{stored['cc-name']}'"
         )
-        assert credit_card_sample_data.cvv not in saved_cc_profile, (
+        assert not any(
+            credit_card_sample_data.cvv in (value or "") for value in stored.values()
+        ), (
             f"CVV '{credit_card_sample_data.cvv}' should not be saved, but found in stored values."
         )
     else:

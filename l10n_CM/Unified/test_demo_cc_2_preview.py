@@ -35,9 +35,6 @@ def test_cc_preview(
     # scroll to first form field
     credit_card_autofill.scroll_to_form_field()
 
-    # fake data
-    credit_card_sample_data = fill_and_save_payments
-
     # Hover over each field and check data preview
     fields_to_test = [
         "name",
@@ -49,8 +46,6 @@ def test_cc_preview(
         "expiration_date",
     ]
     for field in fields_to_test:
-        credit_card_autofill.check_autofill_preview_for_field(
-            field, credit_card_sample_data
-        )
+        credit_card_autofill.check_autofill_preview_for_field(field)
 
     credit_card_autofill.verify_no_dropdown_on_field_interaction("cvv")

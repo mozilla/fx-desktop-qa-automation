@@ -2,6 +2,7 @@ import json
 from time import sleep
 from typing import List, Literal
 
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -617,11 +618,79 @@ class AboutPrefs(BasePage):
 
     def open_and_switch_to_saved_payments_popup(self) -> BasePage:
         """
-        Open and Switch to saved payments popup frame.
+        Reveal the Saved Payment Methods management list.
+
+        Firefox 154 renders this list inline in about:preferences#privacy (default
+        frame) instead of in a dialog iframe, so click its moz-box-button to expand
+        the list and stay in the default frame — there is no frame to switch into.
+        The button's interactable target is a <button> in its shadow DOM whose host
+        has no clickable rect, so use a JS click.
         """
-        saved_payments_iframe = self.get_saved_payments_popup_iframe()
-        self.driver.switch_to.frame(saved_payments_iframe)
+        self.js_click_on("saved-payments-button")
         return self
+
+    def _moz_field_inner(self, host: WebElement) -> WebElement:
+        """
+        Return the editable inner node of an about:preferences form field.
+
+        Firefox 154 wraps the Saved Payment Methods and Saved Addresses dialog fields
+        in ``moz-input-text``, ``moz-textarea`` and ``moz-select`` custom elements whose
+        real ``<input>``/``<textarea>``/``<select>`` lives in the shadow DOM (Marionette
+        cannot serialize a ShadowRoot, so reach the inner node with ``execute_script``).
+        Falls back to the host for plain form fields.
+        """
+        inner = self.driver.execute_script(
+            "return arguments[0].shadowRoot"
+            " ? arguments[0].shadowRoot.querySelector('input, select, textarea')"
+            " : arguments[0];",
+            host,
+        )
+        if inner is None:
+            raise RuntimeError(
+                "No inner <input>/<select>/<textarea> found in the shadow root of "
+                f"{host.get_attribute('id') or host.tag_name!r}"
+            )
+        return inner
+
+    def _select_moz_option(self, select_el: WebElement, value: str) -> None:
+        """Select an ``<option>`` inside a ``moz-select`` shadow DOM by value, or by
+        normalized visible text as a fallback.
+
+        The moz-select option values are region codes (e.g. ``WV``) while sample data
+        may carry the full name (``West Virginia``). ``Select.select_by_visible_text``
+        can't be used here because it queries by XPath, which does not descend into the
+        shadow ``<select>``.
+
+        Match in a single pass over the options and re-select by the matched value.
+        Do NOT probe with ``select_by_value(value)`` first: when the value is absent
+        (the usual full-name-vs-code case) its underlying ``find_elements`` blocks for
+        the entire implicit-wait timeout (10s locally, 30s in CI) before returning
+        empty. Iterating ``select.options`` returns a non-empty list immediately, so
+        the only ``select_by_value`` we issue is one we know will hit.
+        """
+        select = Select(select_el)
+        target = value.strip().casefold()
+        for option in select.options:
+            opt_value = option.get_attribute("value")
+            opt_text = (option.get_attribute("textContent") or "").strip()
+            if opt_value == value or opt_text.casefold() == target:
+                select.select_by_value(opt_value)
+                return
+        raise NoSuchElementException(
+            f"No <option> matching value or visible text {value!r}"
+        )
+
+    def _set_cc_panel_field(self, field_id: str, value: str | int) -> None:
+        """
+        Set a single field in the Saved Payment Methods dialog by element id,
+        handling both ``moz-input-text`` (inner input) and ``moz-select`` (inner select).
+        """
+        inner = self._moz_field_inner(self.find_element(By.ID, field_id))
+        if inner.tag_name.lower() == "select":
+            Select(inner).select_by_value(str(value))
+        else:
+            inner.clear()
+            inner.send_keys(str(value))
 
     def fill_and_save_cc_panel_information(
         self, credit_card_fill_information: CreditCardBase
@@ -633,21 +702,15 @@ class AboutPrefs(BasePage):
         Arguments:
             credit_card_fill_information: The object containing all the sample data
         """
-        fields = {
-            "card_number": credit_card_fill_information.card_number,
-            "expiration_month": credit_card_fill_information.expiration_month,
-            "expiration_year": f"20{credit_card_fill_information.expiration_year}",
-            "name": credit_card_fill_information.name,
-        }
-
-        for field in fields:
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
-
-        # Press tab again to navigate to the next field (this accounts for the second tab
-        # after the name field)
-        self.actions.send_keys(Keys.TAB).perform()
-        # Finally, press enter
-        self.actions.send_keys(Keys.ENTER).perform()
+        self._set_cc_panel_field("cc-number", credit_card_fill_information.card_number)
+        self._set_cc_panel_field("cc-name", credit_card_fill_information.name)
+        self._set_cc_panel_field(
+            "cc-exp-month", int(credit_card_fill_information.expiration_month)
+        )
+        self._set_cc_panel_field(
+            "cc-exp-year", f"20{credit_card_fill_information.expiration_year}"
+        )
+        self.get_element("save-button").click()
 
     def add_entry_to_saved_payments(self, cc_data: CreditCardBase):
         """
@@ -692,34 +755,35 @@ class AboutPrefs(BasePage):
             raise ValueError(
                 f"{field_name} is not a valid field name for the cc dialog form."
             )
-        value_field = self.find_element(By.ID, fields[field_name])
-        if value.isdigit():
-            value = int(value)
-        if field_name == "expiration_year":
-            if int(value) < 100:  # new exp years are all 4-digit
-                value = int(value) + 2000
-            value_field.click()
-            option = next(
-                el
-                for el in value_field.find_elements(By.TAG_NAME, "option")
-                if el.text == str(value)
-            )
-            option.click()
-
-        elif value_field.tag_name == "select":
-            Select(value_field).select_by_index(value)
+        # Firefox 154 turned these fields into moz-input-text / moz-select custom
+        # elements; operate on the inner input/select node in the shadow DOM.
+        inner = self._moz_field_inner(self.find_element(By.ID, fields[field_name]))
+        if inner.tag_name.lower() == "select":
+            select = Select(inner)
+            if field_name == "expiration_year":
+                year = int(value)
+                if year < 100:  # new exp years are all 4-digit
+                    year += 2000
+                select.select_by_value(str(year))
+            else:  # expiration_month, option values are "1".."12"
+                select.select_by_value(str(int(value)))
         else:
-            value_field.clear()
-            value_field.send_keys(value)
+            inner.clear()
+            inner.send_keys(str(value))
         self.get_element("save-button").click()
         return self
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
-        Open and Switch to saved addresses popup frame.
+        Reveal the Saved Addresses management list.
+
+        Firefox 154 renders this list inline in about:preferences#privacy (default
+        frame) instead of in a dialog iframe, so click its moz-box-button to expand
+        the list and stay in the default frame — there is no frame to switch into.
+        The button's interactable target is a <button> in its shadow DOM whose host
+        has no clickable rect, so use a JS click.
         """
-        saved_address_iframe = self.get_saved_addresses_popup_iframe()
-        self.driver.switch_to.frame(saved_address_iframe)
+        self.js_click_on("saved-addresses-button")
         return self
 
     def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
@@ -758,6 +822,87 @@ class AboutPrefs(BasePage):
         json_out = {"name": tile.get_attribute("label")}
         json_out["address"] = tile.get_attribute("description")
         return json_out
+
+    # Field ids of the Saved Addresses add/edit dialog form.
+    _ADDRESS_EDIT_FIELD_IDS = (
+        "name",
+        "organization",
+        "street-address",
+        "address-level2",
+        "address-level1",
+        "postal-code",
+        "tel",
+        "email",
+    )
+
+    def _read_saved_entry_edit_fields(
+        self, edit_ref: str, field_ids, idx: int = 0
+    ) -> dict:
+        """Open a saved entry's edit dialog and read its form field values.
+
+        Firefox 154 renders these edit forms in an about:preferences subdialog iframe
+        that appears a beat after the (moz-button, no clickable rect) edit control is
+        JS-clicked; several ``dialogFrame`` iframes coexist, so switch by locating the
+        one that actually contains the form (identified by the first field id) rather
+        than by a fixed index. Returns the moz-input/moz-select/moz-textarea values
+        keyed by field id.
+        """
+        probe_field_id = field_ids[0]
+        edit_buttons = self.get_elements(edit_ref)
+        self.driver.execute_script("arguments[0].click();", edit_buttons[idx])
+
+        def _entered_edit_frame(_):
+            self.switch_to_default_frame()
+            for frame in self.get_elements("browser-popup"):
+                try:
+                    self.driver.switch_to.frame(frame)
+                except WebDriverException:
+                    self.switch_to_default_frame()
+                    continue
+                if self.driver.execute_script(
+                    "return !!document.getElementById(arguments[0]);", probe_field_id
+                ):
+                    return True
+                self.switch_to_default_frame()
+            return False
+
+        self.wait.until(_entered_edit_frame)
+        values = {}
+        for field_id in field_ids:
+            try:
+                inner = self._moz_field_inner(self.find_element(By.ID, field_id))
+                values[field_id] = inner.get_attribute("value")
+            except (NoSuchElementException, RuntimeError):
+                values[field_id] = None
+        self.switch_to_default_frame()
+        return values
+
+    def get_stored_address_values(self, idx=0) -> dict:
+        """Read a saved address's field values from its edit dialog.
+
+        Firefox 154's saved-address tile shows only a name + address summary, so
+        fields such as organization, tel and email are not on the tile and must be
+        read from the edit view. Assumes the Saved Addresses management list is
+        already revealed (see :meth:`open_and_switch_to_saved_addresses_popup`).
+        """
+        return self._read_saved_entry_edit_fields(
+            "edit-address", self._ADDRESS_EDIT_FIELD_IDS, idx
+        )
+
+    # Field ids of the Saved Payment Methods add/edit dialog form.
+    _PAYMENT_EDIT_FIELD_IDS = ("cc-number", "cc-name", "cc-exp-month", "cc-exp-year")
+
+    def get_stored_payment_values(self, idx=0) -> dict:
+        """Read a saved payment's field values from its edit dialog.
+
+        Firefox 154's saved-payment tile shows only a masked card number and expiry
+        (no cardholder name), so the name and the full card number must be read from
+        the edit view. Assumes the Saved Payment Methods management list is already
+        revealed (see :meth:`open_and_switch_to_saved_payments_popup`).
+        """
+        return self._read_saved_entry_edit_fields(
+            "edit-payment", self._PAYMENT_EDIT_FIELD_IDS, idx
+        )
 
     def get_data_from_saved_payment(self, idx=0) -> dict:
         """Get data-l10n-args from the saved payment card"""
@@ -853,14 +998,6 @@ class AboutPrefs(BasePage):
         )
 
     # UI Navigation and Iframe Handling
-    def get_saved_payments_popup_iframe(self) -> WebElement:
-        """
-        Returns the iframe object for the dialog panel in the popup
-        """
-        self.click_on("saved-payments-button")
-        iframe = self.get_element("browser-popup")
-        return iframe
-
     def switch_to_edit_saved_payments_popup_iframe(self) -> BasePage:
         """
         Switch to form iframe to edit saved payments.
@@ -889,14 +1026,6 @@ class AboutPrefs(BasePage):
         self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
         return self.get_element("browser-popup")
-
-    def get_saved_addresses_popup_iframe(self) -> WebElement:
-        """
-        Returns the iframe object for the dialog panel in the popup
-        """
-        self.click_on("saved-addresses-button")
-        iframe = self.get_element("browser-popup")
-        return iframe
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
@@ -949,9 +1078,13 @@ class AboutPrefs(BasePage):
 
     # Data Extraction and Processing
     def set_country_autofill_panel(self, country: str) -> BasePage:
-        """Sets the country value in the autofill view"""
-        select_country = Select(self.driver.find_element(By.ID, "country"))
-        select_country.select_by_value(country)
+        """Sets the country value in the autofill view.
+
+        Firefox 154 turned the country field into a ``moz-select`` custom element,
+        so operate on the inner ``<select>`` in its shadow DOM.
+        """
+        inner = self._moz_field_inner(self.find_element(By.ID, "country"))
+        Select(inner).select_by_value(country)
         return self
 
     def fill_and_save_address_panel_information(
@@ -983,9 +1116,17 @@ class AboutPrefs(BasePage):
             for x in form_element.find_elements(By.CSS_SELECTOR, "*")
         ]
 
+        # Firefox 154 wraps these fields in moz-input-text / moz-textarea / moz-select
+        # custom elements; write to the inner node in the shadow DOM (falls back to the
+        # host for plain inputs). address-level1 (state) is now a moz-select, handled by
+        # _select_moz_option (value or visible-text match).
         for key, val in fields.items():
             if key in children:
-                form_element.find_element(By.ID, key).send_keys(val)
+                inner = self._moz_field_inner(form_element.find_element(By.ID, key))
+                if inner.tag_name.lower() == "select":
+                    self._select_moz_option(inner, str(val))
+                else:
+                    inner.send_keys(val)
         self.get_element("save-button").click()
         return self
 
