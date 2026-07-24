@@ -506,8 +506,7 @@ form_autofill:
     splits:
     - functional1
   test_autofill_credit_card:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055591
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_autofill_credit_card_doorhanger:
@@ -804,8 +803,7 @@ password_manager:
     splits:
     - functional2
   test_auto_saved_generated_password_context_menu:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2055595
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
