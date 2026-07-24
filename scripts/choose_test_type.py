@@ -32,18 +32,17 @@ if len(sys.argv) > 1:
 
 check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
 
-committed_files = (
-    check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
-    .decode()
-    .replace("/", SLASH)
-    .splitlines()
-)
-main_conftest = "conftest.py"
+git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
+rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
+if rev_hash:
+    git_diff_cmd.append(rev_hash)
+git_diff_cmd.append("origin/main")
+committed_files = check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
 base_page = os.path.join("modules", "page_base.py")
 
 test_types = set()
 
-if main_conftest in committed_files or base_page in committed_files:
+if base_page in committed_files:
     print(ALL_TEST_TYPES)
     sys.exit()
 
