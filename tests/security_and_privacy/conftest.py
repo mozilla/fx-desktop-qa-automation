@@ -1,4 +1,8 @@
 import pytest
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver.common.by import By
 
 from modules.browser_object import MenuBar, Navigation, PanelUi, TabBar, TrustPanel
@@ -17,7 +21,7 @@ def suite_id():
 
 @pytest.fixture()
 def prefs_list(add_to_prefs_list: dict):
-    """List of prefs to send to main conftest.py driver fixture"""
+    """List of prefs to send to main conftest.py driver fixture."""
     prefs = [
         ("browser.urlbar.scotchBonnet.enableOverride", True),
     ]
@@ -82,10 +86,13 @@ def websites():
 
 @pytest.fixture()
 def check_tracker_test_field(driver):
+    """Validate tracker results after the test opens the tracker page."""
     its_a_tracker = GenericPage(
-        driver, url="https://www.itisatrap.org/firefox/its-a-tracker.html"
+        driver,
+        url="https://www.itisatrap.org/firefox/its-a-tracker.html",
     )
     field_order = ["third-party", "first-party", "dnt"]
+
     its_a_tracker.elements |= {
         "test-list-item": {
             "selectorData": "#tests .trackers li",
@@ -95,14 +102,29 @@ def check_tracker_test_field(driver):
     }
 
     def _check_tracker_test_field(field, correct=True):
-        li_to_check = its_a_tracker.get_elements("test-list-item")[
-            field_order.index(field)
-        ]
-        span_to_check = li_to_check.find_element(
-            By.CLASS_NAME, "correct" if correct else "incorrect"
-        )
-        its_a_tracker.expect(
-            lambda _: "hidden" not in span_to_check.get_attribute("class")
-        )
+        field_index = field_order.index(field)
+        result_class = "correct" if correct else "incorrect"
+
+        def _result_is_visible(_):
+            try:
+                test_items = its_a_tracker.get_elements("test-list-item")
+
+                if len(test_items) <= field_index:
+                    return False
+
+                result_element = test_items[field_index].find_element(
+                    By.CLASS_NAME,
+                    result_class,
+                )
+                element_classes = result_element.get_attribute("class") or ""
+
+                return "hidden" not in element_classes
+            except (
+                NoSuchElementException,
+                StaleElementReferenceException,
+            ):
+                return False
+
+        its_a_tracker.expect(_result_is_visible)
 
     return _check_tracker_test_field
