@@ -1,15 +1,14 @@
-from shutil import copyfile
+import logging
 
 import pytest
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
 
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import GenericPage
 
-SENGLEHARDT_URL = "https://senglehardt.com/test/dfpi/storage_access_api.html"
-COOKIE_TEST_PAGE = "cookie_test.html"
-COOKIES_SET = "Cookies already set"
-COOKIES_NOT_SET = "Cookies not yet set"
+URL = "https://senglehardt.com/test/dfpi/storage_access_api.html"
 
 
 @pytest.fixture()
@@ -25,48 +24,74 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.fixture()
-def temp_page(tmp_path):
-    loc = tmp_path / COOKIE_TEST_PAGE
-    copyfile(f"data/pages/{COOKIE_TEST_PAGE}", loc)
-    return loc
+def _log_frame_state(driver: Firefox, expected: str) -> None:
+    """DIAGNOSTIC: on timeout, dump every top-level iframe's size/content so CI reveals why frame(0) is blank."""
+    try:
+        driver.switch_to.default_content()
+        frames = driver.find_elements(By.TAG_NAME, "iframe")
+        summary = []
+        for i in range(len(frames)):
+            try:
+                driver.switch_to.default_content()
+                driver.switch_to.frame(i)
+                src = driver.page_source
+                summary.append(
+                    f"frame[{i}] len={len(src)} "
+                    f"has_expected={expected in src} has_cookie_text={'Cookies' in src}"
+                )
+            except WebDriverException as exc:
+                summary.append(f"frame[{i}] error={type(exc).__name__}")
+        driver.switch_to.default_content()
+        logging.warning(
+            "DIAG timed out for %r | url=%s | top_iframes=%d | handles=%s | %s",
+            expected,
+            driver.current_url,
+            len(frames),
+            driver.window_handles,
+            " || ".join(summary),
+        )
+    except WebDriverException as exc:
+        logging.warning("DIAG dump failed: %s", exc)
 
 
-def test_end_private_session_clears_cookies(
-    driver: Firefox, sys_platform: str, temp_page
-):
+def test_end_private_session_clears_cookies(driver: Firefox):
     """
     C2359319 - Verify that via end a private session button cookies are cleared
     """
     # Instantiate objects
     nav = Navigation(driver)
     panel = PanelUi(driver)
-
-    # Windows renders the external DFPI page's first iframe blank in CI; use a local storage page there
-    on_windows = sys_platform == "Windows"
-    url = f"file://{temp_page}" if on_windows else SENGLEHARDT_URL
-    page = GenericPage(driver, url=url)
+    page = GenericPage(driver, url=URL)
 
     # Open a private window and switch to it
     panel.open_and_switch_to_new_window("private")
 
-    # Open site; the first visit stores the data
+    # Open site
     page.open()
 
-    # Refresh the page to make sure the data is set and stored
+    # Refresh the page to make sure the cookie is set and stored
     nav.click_on("refresh-button")
-    if not on_windows:
-        driver.switch_to.frame(0)
-    nav.wait.until(lambda d: COOKIES_SET in d.page_source)
+    driver.switch_to.frame(0)
+    try:
+        nav.custom_wait(timeout=30).until(
+            lambda d: "Cookies already set" in d.page_source
+        )
+    except TimeoutException:
+        _log_frame_state(driver, "Cookies already set")
+        raise
 
     # Click on the data clearance (End private session) button
-    if not on_windows:
-        driver.switch_to.default_content()
+    driver.switch_to.default_content()
     nav.end_private_session()
     driver.switch_to.window(driver.window_handles[-1])
 
-    # Navigate back to the site and verify the data is cleared
+    # Navigate back to the site and verify cookies are cleared
     page.open()
-    if not on_windows:
-        driver.switch_to.frame(0)
-    nav.wait.until(lambda d: COOKIES_NOT_SET in d.page_source)
+    driver.switch_to.frame(0)
+    try:
+        nav.custom_wait(timeout=30).until(
+            lambda d: "Cookies not yet set" in d.page_source
+        )
+    except TimeoutException:
+        _log_frame_state(driver, "Cookies not yet set")
+        raise
