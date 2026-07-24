@@ -1,0 +1,956 @@
+name: Full Functional and Glean Tests
+
+run-name: Full functional and Glean tests triggered by ${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      win_installer_link:
+        description: Windows Firefox installer URL
+        required: true
+        type: string
+
+      mac_installer_link:
+        description: macOS Firefox installer URL
+        required: true
+        type: string
+
+      linux_tarball_link:
+        description: Linux Firefox tarball URL
+        required: true
+        type: string
+
+      dry_run:
+        description: Select tests without downloading Firefox or running tests
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+env:
+  MANUAL: "true"
+  TESTRAIL_REPORT: "false"
+
+jobs:
+  test-windows:
+    name: Windows - Functional and Glean
+    runs-on: windows-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          New-Item `
+            -ItemType Directory `
+            -Path "artifacts" `
+            -Force | Out-Null
+
+          python -m pip install "uv==0.11.18"
+
+          uv sync
+          uv run python scripts/switch_config.py ci
+          uv sync
+
+      - name: Select all functional tests
+        id: select-functional
+        shell: pwsh
+        run: |
+          $manifestPath = "manifests/key.yaml"
+
+          if (-not (Test-Path $manifestPath)) {
+            throw "Manifest file not found: $manifestPath"
+          }
+
+          $functionalSplits = @(
+            Select-String `
+              -Path $manifestPath `
+              -Pattern "functional[0-9]+" `
+              -AllMatches |
+              ForEach-Object {
+                $_.Matches.Value
+              } |
+              Sort-Object `
+                -Property {
+                  [int]($_ -replace "functional", "")
+                } `
+                -Unique
+          )
+
+          if ($functionalSplits.Count -eq 0) {
+            throw "No functional splits were found in $manifestPath."
+          }
+
+          Write-Host "Functional splits discovered:"
+          $functionalSplits | ForEach-Object {
+            Write-Host "  $_"
+          }
+
+          Remove-Item `
+            "all_functional_tests" `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+          foreach ($split in $functionalSplits) {
+            Write-Host "::group::Selecting $split"
+
+            $env:STARFOX_SPLIT = $split
+
+            Remove-Item `
+              "selected_tests" `
+              -Force `
+              -ErrorAction SilentlyContinue
+
+            uv run python -m scripts.choose_test_split
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Test selection failed for split $split."
+            }
+
+            if (-not (Test-Path "selected_tests")) {
+              throw "selected_tests was not created for split $split."
+            }
+
+            Get-Content "selected_tests" |
+              Where-Object {
+                $_.Trim() -ne ""
+              } |
+              Add-Content "all_functional_tests"
+
+            Write-Host "::endgroup::"
+          }
+
+          $allTests = @(
+            Get-Content "all_functional_tests" |
+              Where-Object {
+                $_.Trim() -ne ""
+              } |
+              Sort-Object -Unique
+          )
+
+          if ($allTests.Count -eq 0) {
+            throw "No functional tests were selected."
+          }
+
+          $allTests |
+            Set-Content `
+              -Path "selected_functional_tests" `
+              -Encoding utf8
+
+          Write-Host "Total unique functional test files: $($allTests.Count)"
+          Write-Host "Selected functional tests:"
+
+          $allTests | ForEach-Object {
+            Write-Host $_
+          }
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry_run == true }}
+        shell: pwsh
+        run: |
+          $testCount = @(
+            Get-Content "selected_functional_tests" |
+              Where-Object {
+                $_.Trim() -ne ""
+              }
+          ).Count
+
+          Write-Host "DRY_RUN enabled."
+          Write-Host "Functional test files selected: $testCount"
+          Write-Host "Glean suite: tests/glean"
+          Write-Host "Firefox download, installation and test execution skipped."
+
+      - name: Download and install Firefox
+        if: ${{ inputs.dry_run != true }}
+        shell: pwsh
+        env:
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+        run: |
+          if (-not $env:WIN_INSTALLER_LINK) {
+            throw "win_installer_link is required."
+          }
+
+          $installerPath = Join-Path `
+            $env:GITHUB_WORKSPACE `
+            "setup.exe"
+
+          $installPath = "C:\Program Files\Custom Firefox"
+
+          Invoke-WebRequest `
+            -Uri $env:WIN_INSTALLER_LINK `
+            -OutFile $installerPath
+
+          New-Item `
+            -ItemType Directory `
+            -Path $installPath `
+            -Force | Out-Null
+
+          $process = Start-Process `
+            -FilePath $installerPath `
+            -ArgumentList "/S", "/D=$installPath" `
+            -Wait `
+            -NoNewWindow `
+            -PassThru
+
+          if ($process.ExitCode -ne 0) {
+            throw "Firefox installation failed with exit code $($process.ExitCode)."
+          }
+
+          $firefoxExecutable = Join-Path `
+            $installPath `
+            "firefox.exe"
+
+          if (-not (Test-Path $firefoxExecutable)) {
+            throw "Firefox executable not found at $firefoxExecutable."
+          }
+
+          "FX_EXECUTABLE=$firefoxExecutable" |
+            Out-File `
+              -FilePath $env:GITHUB_ENV `
+              -Encoding utf8 `
+              -Append
+
+          & $firefoxExecutable --version
+
+      - name: Download Geckodriver
+        if: ${{ inputs.dry_run != true }}
+        shell: pwsh
+        run: |
+          $geckodriverUrl = (
+            uv run python -m scripts.collect_executables -g
+          ) -join ""
+
+          if (-not $geckodriverUrl) {
+            throw "collect_executables returned an empty Geckodriver URL."
+          }
+
+          Invoke-WebRequest `
+            -Uri $geckodriverUrl `
+            -OutFile "geckodriver.zip"
+
+          Expand-Archive `
+            -Path "geckodriver.zip" `
+            -DestinationPath "." `
+            -Force
+
+          if (-not (Test-Path "geckodriver.exe")) {
+            throw "geckodriver.exe was not extracted."
+          }
+
+          $env:GITHUB_WORKSPACE |
+            Out-File `
+              -FilePath $env:GITHUB_PATH `
+              -Encoding utf8 `
+              -Append
+
+      - name: Verify Firefox version
+        if: ${{ inputs.dry_run != true }}
+        shell: pwsh
+        env:
+          TESTRAIL_REPORT: "false"
+        run: |
+          & $env:FX_EXECUTABLE --version
+
+          uv run pytest `
+            ".\tests\meta\test_version.py" `
+            --geckodriver=geckodriver.exe
+
+      - name: Run functional tests
+        id: functional-headless
+        if: ${{ inputs.dry_run != true }}
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $tests = @(
+            Get-Content "selected_functional_tests" |
+              Where-Object {
+                $_.Trim() -ne ""
+              }
+          )
+
+          uv run pytest `
+            $tests `
+            --geckodriver=geckodriver.exe
+
+          $exitCode = $LASTEXITCODE
+
+          New-Item `
+            -ItemType Directory `
+            -Path "test-artifacts\functional-headless" `
+            -Force | Out-Null
+
+          if (Test-Path "artifacts") {
+            Copy-Item `
+              -Path "artifacts\*" `
+              -Destination "test-artifacts\functional-headless" `
+              -Recurse `
+              -Force `
+              -ErrorAction SilentlyContinue
+          }
+
+          exit $exitCode
+
+      - name: Reset artifacts before Glean
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: pwsh
+        run: |
+          Remove-Item `
+            "artifacts" `
+            -Recurse `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+          New-Item `
+            -ItemType Directory `
+            -Path "artifacts" `
+            -Force | Out-Null
+
+      - name: Run Glean tests
+        id: glean
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          uv run pytest `
+            "tests/glean" `
+            --geckodriver=geckodriver.exe
+
+          $exitCode = $LASTEXITCODE
+
+          New-Item `
+            -ItemType Directory `
+            -Path "test-artifacts\glean" `
+            -Force | Out-Null
+
+          if (Test-Path "artifacts") {
+            Copy-Item `
+              -Path "artifacts\*" `
+              -Destination "test-artifacts\glean" `
+              -Recurse `
+              -Force `
+              -ErrorAction SilentlyContinue
+          }
+
+          exit $exitCode
+
+      - name: Reset artifacts before headed tests
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: pwsh
+        run: |
+          Remove-Item `
+            "artifacts" `
+            -Recurse `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+          New-Item `
+            -ItemType Directory `
+            -Path "artifacts" `
+            -Force | Out-Null
+
+      - name: Run headed functional tests
+        id: functional-headed
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          uv run python scripts/switch_config.py ci_headed
+          uv sync
+
+          $tests = @(
+            Get-Content "selected_functional_tests" |
+              Where-Object {
+                $_.Trim() -ne ""
+              }
+          )
+
+          uv run pytest `
+            $tests `
+            --geckodriver=geckodriver.exe
+
+          $exitCode = $LASTEXITCODE
+
+          New-Item `
+            -ItemType Directory `
+            -Path "test-artifacts\functional-headed" `
+            -Force | Out-Null
+
+          if (Test-Path "artifacts") {
+            Copy-Item `
+              -Path "artifacts\*" `
+              -Destination "test-artifacts\functional-headed" `
+              -Recurse `
+              -Force `
+              -ErrorAction SilentlyContinue
+          }
+
+          exit $exitCode
+
+      - name: Upload Windows artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: full-functional-glean-windows-${{ github.run_id }}
+          path: test-artifacts
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Set Windows job result
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: pwsh
+        env:
+          FUNCTIONAL_RESULT: ${{ steps.functional-headless.outcome }}
+          GLEAN_RESULT: ${{ steps.glean.outcome }}
+          HEADED_RESULT: ${{ steps.functional-headed.outcome }}
+        run: |
+          Write-Host "Functional headless result: $env:FUNCTIONAL_RESULT"
+          Write-Host "Glean result: $env:GLEAN_RESULT"
+          Write-Host "Functional headed result: $env:HEADED_RESULT"
+
+          if (
+            $env:FUNCTIONAL_RESULT -ne "success" -or
+            $env:GLEAN_RESULT -ne "success" -or
+            $env:HEADED_RESULT -ne "success"
+          ) {
+            throw "One or more Windows test phases failed."
+          }
+
+  test-macos:
+    name: macOS - Functional and Glean
+    runs-on: macos-26
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          mkdir -p artifacts
+
+          python -m pip install "uv==0.11.18"
+
+          uv sync
+          uv run python scripts/switch_config.py ci
+          uv sync
+
+      - name: Check test case numbers
+        run: |
+          uv run python scripts/check_test_cases.py
+
+      - name: Select all functional tests
+        id: select-functional
+        run: |
+          manifest_path="manifests/key.yaml"
+
+          if [[ ! -f "$manifest_path" ]]; then
+            echo "::error::Manifest file not found: $manifest_path"
+            exit 1
+          fi
+
+          mapfile -t functional_splits < <(
+            grep -oE 'functional[0-9]+' "$manifest_path" |
+              sort -Vu
+          )
+
+          if [[ "${#functional_splits[@]}" -eq 0 ]]; then
+            echo "::error::No functional splits were found."
+            exit 1
+          fi
+
+          echo "Functional splits discovered:"
+
+          printf '  %s\n' "${functional_splits[@]}"
+
+          rm -f all_functional_tests selected_functional_tests
+
+          for split in "${functional_splits[@]}"; do
+            echo "::group::Selecting $split"
+
+            export STARFOX_SPLIT="$split"
+
+            rm -f selected_tests
+
+            uv run python -m scripts.choose_test_split
+
+            if [[ ! -f selected_tests ]]; then
+              echo "::error::selected_tests was not created for $split."
+              exit 1
+            fi
+
+            grep -vE '^[[:space:]]*$' selected_tests \
+              >> all_functional_tests
+
+            echo "::endgroup::"
+          done
+
+          sort -u all_functional_tests \
+            > selected_functional_tests
+
+          if [[ ! -s selected_functional_tests ]]; then
+            echo "::error::No functional tests were selected."
+            exit 1
+          fi
+
+          test_count="$(
+            grep -cve '^[[:space:]]*$' selected_functional_tests
+          )"
+
+          echo "Total unique functional test files: $test_count"
+          echo "Selected functional tests:"
+
+          cat selected_functional_tests
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          test_count="$(
+            grep -cve '^[[:space:]]*$' selected_functional_tests
+          )"
+
+          echo "DRY_RUN enabled."
+          echo "Functional test files selected: $test_count"
+          echo "Glean suite: tests/glean"
+          echo "Firefox download, installation and test execution skipped."
+
+      - name: Download and install Firefox
+        id: install-firefox
+        if: ${{ inputs.dry_run != true }}
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
+        run: |
+          if [[ -z "$MANUAL_DOWNLOAD_LINK" ]]; then
+            echo "::error::mac_installer_link is required."
+            exit 1
+          fi
+
+          app_name="$(
+            bash ./scripts/collect_executables.sh |
+              xargs -0 ./scripts/parse_executables.sh
+          )"
+
+          if [[ -z "$app_name" ]]; then
+            echo "::error::Unable to determine the mounted Firefox application name."
+            exit 1
+          fi
+
+          firefox_executable="/Volumes/$app_name/$app_name.app/Contents/MacOS/firefox"
+
+          if [[ ! -x "$firefox_executable" ]]; then
+            echo "::error::Firefox executable not found: $firefox_executable"
+            exit 1
+          fi
+
+          echo "app_name=$app_name" >> "$GITHUB_OUTPUT"
+          echo "FX_EXECUTABLE=$firefox_executable" >> "$GITHUB_ENV"
+
+          "$firefox_executable" --version
+
+      - name: Verify Firefox version
+        if: ${{ inputs.dry_run != true }}
+        env:
+          TESTRAIL_REPORT: "false"
+        run: |
+          "$FX_EXECUTABLE" --version
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            tests/meta/test_version.py
+
+      - name: Run functional tests
+        id: functional-headless
+        if: ${{ inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            $(cat selected_functional_tests) ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/functional-headless
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/functional-headless/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Reset artifacts before Glean
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+
+      - name: Run Glean tests
+        id: glean
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            tests/glean ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/glean
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/glean/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Reset artifacts before headed tests
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+
+      - name: Run headed functional tests
+        id: functional-headed
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          uv run python scripts/switch_config.py ci_headed
+          uv sync
+
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            $(cat selected_functional_tests) ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/functional-headed
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/functional-headed/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Upload macOS artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: full-functional-glean-macos-${{ github.run_id }}
+          path: test-artifacts
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Set macOS job result
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          FUNCTIONAL_RESULT: ${{ steps.functional-headless.outcome }}
+          GLEAN_RESULT: ${{ steps.glean.outcome }}
+          HEADED_RESULT: ${{ steps.functional-headed.outcome }}
+        run: |
+          echo "Functional headless result: $FUNCTIONAL_RESULT"
+          echo "Glean result: $GLEAN_RESULT"
+          echo "Functional headed result: $HEADED_RESULT"
+
+          if [[ "$FUNCTIONAL_RESULT" != "success" ||
+                "$GLEAN_RESULT" != "success" ||
+                "$HEADED_RESULT" != "success" ]]; then
+            echo "::error::One or more macOS test phases failed."
+            exit 1
+          fi
+
+  test-linux:
+    name: Linux - Functional and Glean
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+
+          sudo apt-get install \
+            --yes \
+            gnome-screenshot \
+            xvfb
+
+      - name: Install Python dependencies
+        run: |
+          mkdir -p artifacts
+
+          python -m pip install "uv==0.11.18"
+
+          uv sync
+          uv run python scripts/switch_config.py ci_xvfb
+          uv sync
+
+      - name: Check test case numbers
+        run: |
+          uv run python scripts/check_test_cases.py
+
+      - name: Select all functional tests
+        id: select-functional
+        run: |
+          manifest_path="manifests/key.yaml"
+
+          if [[ ! -f "$manifest_path" ]]; then
+            echo "::error::Manifest file not found: $manifest_path"
+            exit 1
+          fi
+
+          mapfile -t functional_splits < <(
+            grep -oE 'functional[0-9]+' "$manifest_path" |
+              sort -Vu
+          )
+
+          if [[ "${#functional_splits[@]}" -eq 0 ]]; then
+            echo "::error::No functional splits were found."
+            exit 1
+          fi
+
+          echo "Functional splits discovered:"
+
+          printf '  %s\n' "${functional_splits[@]}"
+
+          rm -f all_functional_tests selected_functional_tests
+
+          for split in "${functional_splits[@]}"; do
+            echo "::group::Selecting $split"
+
+            export STARFOX_SPLIT="$split"
+
+            rm -f selected_tests
+
+            uv run python -m scripts.choose_test_split
+
+            if [[ ! -f selected_tests ]]; then
+              echo "::error::selected_tests was not created for $split."
+              exit 1
+            fi
+
+            grep -vE '^[[:space:]]*$' selected_tests \
+              >> all_functional_tests
+
+            echo "::endgroup::"
+          done
+
+          sort -u all_functional_tests \
+            > selected_functional_tests
+
+          if [[ ! -s selected_functional_tests ]]; then
+            echo "::error::No functional tests were selected."
+            exit 1
+          fi
+
+          test_count="$(
+            grep -cve '^[[:space:]]*$' selected_functional_tests
+          )"
+
+          echo "Total unique functional test files: $test_count"
+          echo "Selected functional tests:"
+
+          cat selected_functional_tests
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          test_count="$(
+            grep -cve '^[[:space:]]*$' selected_functional_tests
+          )"
+
+          echo "DRY_RUN enabled."
+          echo "Functional test files selected: $test_count"
+          echo "Glean suite: tests/glean"
+          echo "Firefox download, installation and test execution skipped."
+
+      - name: Download and install Firefox
+        if: ${{ inputs.dry_run != true }}
+        env:
+          MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
+          if [[ -z "$MANUAL_DOWNLOAD_LINK" ]]; then
+            echo "::error::linux_tarball_link is required."
+            exit 1
+          fi
+
+          ./scripts/collect_executables.sh
+
+          if [[ ! -x ./firefox/firefox ]]; then
+            echo "::error::Firefox executable not found at ./firefox/firefox."
+            exit 1
+          fi
+
+          echo "FX_EXECUTABLE=./firefox/firefox" >> "$GITHUB_ENV"
+
+          ./firefox/firefox --version
+
+      - name: Start Xvfb
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          Xvfb :99 \
+            -screen 0 1600x1200x24 \
+            > artifacts/xvfb.log 2>&1 &
+
+          xvfb_pid=$!
+
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+          echo "XVFB_PID=$xvfb_pid" >> "$GITHUB_ENV"
+
+          sleep 2
+
+          if ! kill -0 "$xvfb_pid" 2>/dev/null; then
+            echo "::error::Xvfb did not start successfully."
+            cat artifacts/xvfb.log
+            exit 1
+          fi
+
+      - name: Verify Firefox version
+        if: ${{ inputs.dry_run != true }}
+        env:
+          TESTRAIL_REPORT: "false"
+        run: |
+          "$FX_EXECUTABLE" --version
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            tests/meta/test_version.py
+
+      - name: Run functional tests
+        id: functional-headless
+        if: ${{ inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            $(cat selected_functional_tests) ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/functional-headless
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/functional-headless/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Reset artifacts before Glean
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+
+      - name: Run Glean tests
+        id: glean
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            tests/glean ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/glean
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/glean/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Reset artifacts before headed tests
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+
+      - name: Run headed functional tests
+        id: functional-headed
+        if: ${{ always() && inputs.dry_run != true }}
+        continue-on-error: true
+        run: |
+          uv run python scripts/switch_config.py ci_xvfb_headed
+          uv sync
+
+          exit_code=0
+
+          uv run pytest \
+            --fx-executable="$FX_EXECUTABLE" \
+            $(cat selected_functional_tests) ||
+            exit_code=$?
+
+          mkdir -p test-artifacts/functional-headed
+
+          if [[ -d artifacts ]]; then
+            cp -R artifacts/. \
+              test-artifacts/functional-headed/ || true
+          fi
+
+          exit "$exit_code"
+
+      - name: Upload Linux artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: full-functional-glean-linux-${{ github.run_id }}
+          path: test-artifacts
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Set Linux job result
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          FUNCTIONAL_RESULT: ${{ steps.functional-headless.outcome }}
+          GLEAN_RESULT: ${{ steps.glean.outcome }}
+          HEADED_RESULT: ${{ steps.functional-headed.outcome }}
+        run: |
+          echo "Functional headless result: $FUNCTIONAL_RESULT"
+          echo "Glean result: $GLEAN_RESULT"
+          echo "Functional headed result: $HEADED_RESULT"
+
+          if [[ "$FUNCTIONAL_RESULT" != "success" ||
+                "$GLEAN_RESULT" != "success" ||
+                "$HEADED_RESULT" != "success" ]]; then
+            echo "::error::One or more Linux test phases failed."
+            exit 1
+          fi
