@@ -65,6 +65,10 @@ jobs:
           uv run python scripts/switch_config.py ci
           uv sync
 
+      - name: Check test case numbers
+        run: |
+          uv run python scripts/check_test_cases.py
+
       - name: Select all functional tests
         id: select-functional
         shell: pwsh
@@ -927,6 +931,13 @@ jobs:
           fi
 
           exit "$exit_code"
+
+      - name: Stop Xvfb
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          if [[ -n "${XVFB_PID:-}" ]]; then
+            kill "$XVFB_PID" 2>/dev/null || true
+          fi
 
       - name: Upload Linux artifacts
         if: ${{ always() && inputs.dry_run != true }}
