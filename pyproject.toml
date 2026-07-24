@@ -136,7 +136,7 @@ dependencies = [
   "rubicon-objc==0.5.4 ; sys_platform == 'darwin'",
   "ruff==0.9.6 ; python_full_version >= '3.7'",
   "selenium==4.23.1 ; python_full_version >= '3.8'",
-  "setuptools==82.0.1 ; python_full_version >= '3.9'",
+  "setuptools==83.0.0 ; python_full_version >= '3.9'",
   "shellingham==1.5.4 ; python_full_version >= '3.7'",
   "six==1.17.0 ; python_full_version >= '2.7'",
   "slack-sdk==3.31.0 ; python_full_version >= '3.6'",
