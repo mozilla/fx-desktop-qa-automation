@@ -32,11 +32,11 @@ def add_to_prefs_list():
 
 @pytest.fixture()
 def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
-    """Move test Bookmarks file to correct location, fake Chrome instead of installing"""
+    """Move test Bookmarks file to correct location, fake Chrome instead of installing."""
     bookmarks_source = os.path.join("data", "Chrome_Bookmarks")
     local_state_source = os.path.join("data", "Chrome_Local_State")
 
-    # Get locations for GChrome profile data
+    # Get locations for Google Chrome profile data.
     if sys_platform.lower().startswith("win"):
         user_data_root = os.path.join(home_folder, "AppData", "Local")
         chrome_root = os.path.join(user_data_root, "Google", "Chrome", "User Data")
@@ -55,51 +55,84 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
     defaults_folder = os.path.join(chrome_root, "Default")
     bookmarks_target = os.path.join(defaults_folder, "Bookmarks")
     local_state_target = os.path.join(chrome_root, "Local State")
+    bookmarks_backup = tmp_path / "Bookmarks"
+
+    fake_install = False
+    bookmarks_backed_up = False
+    local_state_created = False
+    created_fake_files = []
 
     try:
-        fake_install = False
         if not os.path.exists(bookmarks_target):
             logging.warning("Faking install...")
             os.makedirs(defaults_folder, exist_ok=True)
             logging.warning("Directory made!")
+
             for fakefile in ["History", "Cookies"]:
-                with open(os.path.join(defaults_folder, fakefile), "w") as fh:
-                    fh.write("")
+                fakefile_path = os.path.join(defaults_folder, fakefile)
+
+                if not os.path.exists(fakefile_path):
+                    with open(fakefile_path, "w") as fh:
+                        fh.write("")
+
+                    created_fake_files.append(fakefile_path)
+
             logging.warning("History and Cookies made!")
-            logging.warning("Faking local state...")
-            copyfile(local_state_source, local_state_target)
+
+            if not os.path.exists(local_state_target):
+                logging.warning("Faking local state...")
+                copyfile(local_state_source, local_state_target)
+                local_state_created = True
 
             fake_install = True
         else:
             logging.warning("Install folder exists...")
-            os.rename(bookmarks_target, tmp_path / "Bookmarks")
+            os.rename(bookmarks_target, bookmarks_backup)
+            bookmarks_backed_up = True
+
         copyfile(bookmarks_source, bookmarks_target)
         logging.warning("Bookmarks copied!")
+
         yield bookmarks_target
 
-    except (FileNotFoundError, NotADirectoryError, PermissionError) as e:
-        logging.warning(e)
-        yield None
+    except (FileNotFoundError, NotADirectoryError, PermissionError) as error:
+        logging.warning(error)
+        pytest.skip("Google Chrome not installed or directory could not be created")
 
-    # Teardown: We don't want to destroy the Chrome setup of local users
-    if os.path.exists(bookmarks_target):
-        os.remove(bookmarks_target)
-    if fake_install:
-        for fakefile in ["History", "Cookies"]:
-            fake_fullpath = os.path.join(defaults_folder, fakefile)
-            if os.path.exists(fake_fullpath):
-                os.remove(fake_fullpath)
-        os.remove(local_state_target)
-        os.removedirs(defaults_folder)
-    elif os.path.exists(tmp_path / "Bookmarks"):
-        os.rename(tmp_path / "Bookmarks", bookmarks_target)
+    finally:
+        # Teardown: We don't want to destroy the Chrome setup of local users.
+        if os.path.exists(bookmarks_target):
+            os.remove(bookmarks_target)
+
+        if bookmarks_backed_up and os.path.exists(bookmarks_backup):
+            os.rename(bookmarks_backup, bookmarks_target)
+
+        for fakefile_path in created_fake_files:
+            if os.path.exists(fakefile_path):
+                os.remove(fakefile_path)
+
+        if local_state_created and os.path.exists(local_state_target):
+            os.remove(local_state_target)
+
+        if fake_install:
+            try:
+                os.removedirs(defaults_folder)
+            except OSError:
+                # Keep directories containing pre-existing Chrome profile data.
+                pass
 
 
-def test_chrome_bookmarks_imported(chrome_bookmarks, driver: Firefox, sys_platform):
+def test_chrome_bookmarks_imported(
+    chrome_bookmarks,
+    driver: Firefox,
+    sys_platform,
+):
     if not chrome_bookmarks:
         pytest.skip("Google Chrome not installed or directory could not be created")
+
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.import_bookmarks("Chrome", sys_platform)
+
     toolbar = Navigation(driver)
     toolbar.confirm_bookmark_exists(TEST_PAGE_TITLE)
