@@ -8,7 +8,7 @@ from datetime import datetime
 from os import remove
 from random import shuffle
 from time import sleep
-from typing import List, Literal, Union, Any
+from typing import Any, List, Literal, Union
 from urllib.parse import urlparse, urlunparse
 
 from faker import Faker
