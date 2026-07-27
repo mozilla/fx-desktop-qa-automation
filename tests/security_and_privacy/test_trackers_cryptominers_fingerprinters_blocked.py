@@ -30,7 +30,7 @@ def test_trackers_cryptominers_fingerprinters_blocked(
     # wait for the shield icon
     tracker_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # The Tracking Content is NOT blocked
     trust_panel.trackers_detected("tracking-content")

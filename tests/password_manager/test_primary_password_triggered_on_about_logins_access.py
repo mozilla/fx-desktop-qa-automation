@@ -1,5 +1,5 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
+from selenium.webdriver import Firefox
 
 from modules.browser_object import PanelUi, TabBar
 from modules.page_object import AboutLogins, AboutPrefs

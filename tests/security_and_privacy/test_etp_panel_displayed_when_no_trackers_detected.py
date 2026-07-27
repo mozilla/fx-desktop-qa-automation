@@ -12,7 +12,10 @@ def test_case():
     return "3054904"
 
 
-def test_etp_panel_displayed_when_no_trackers_detected(driver: Firefox):
+def test_etp_panel_displayed_when_no_trackers_detected(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054904 - The ETP panel is correctly displayed when no trackers are detected
     """
@@ -20,7 +23,6 @@ def test_etp_panel_displayed_when_no_trackers_detected(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     test_page = GenericPage(driver, url=YOUTUBE_URL)
-    trust_panel = TrustPanel(driver)
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()

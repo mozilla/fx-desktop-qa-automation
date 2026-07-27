@@ -17,7 +17,10 @@ def test_case():
     return "3054915"
 
 
-def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
+def test_cryptominers_subpanel_display_when_not_blocked(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054915 - Cryptominers are correctly displayed in the sub panel when they are not blocked
     """
@@ -25,7 +28,6 @@ def test_cryptominers_subpanel_display_when_not_blocked(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=CRYPTOMINERS_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy deselect only the option "Cryptominers" in the Cookies section
     about_prefs.open()

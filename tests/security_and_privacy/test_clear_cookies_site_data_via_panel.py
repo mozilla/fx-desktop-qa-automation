@@ -12,14 +12,16 @@ def test_case():
     return "3054035"
 
 
-def test_clear_cookies_site_data_via_panel(driver: Firefox):
+def test_clear_cookies_site_data_via_panel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054035 - “Clear cookies and site data” action works as expected
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=TEST_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()

@@ -19,7 +19,10 @@ def test_case():
     return "3054917"
 
 
-def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
+def test_tracking_content_subpanel_display_when_not_blocked(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054917 - Tracking content is correctly displayed in the sub panel when they are not blocked
     """
@@ -27,7 +30,6 @@ def test_tracking_content_subpanel_display_when_not_blocked(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=TRACKING_CONTENT_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy deselect only the option "Tracking Content" in the Custom section
     about_prefs.open()
