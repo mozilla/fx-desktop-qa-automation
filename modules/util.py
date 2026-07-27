@@ -4,6 +4,7 @@ import logging
 import os
 import platform
 import re
+from datetime import datetime
 from os import remove
 from random import shuffle
 from time import sleep
@@ -967,3 +968,205 @@ class PomUtils:
             if not matches:
                 logging.info("No matches found.")
             return matches
+
+
+def run_chrome_async_script(driver: Firefox, body: str, *args) -> any:
+    """
+    Run an async chrome-context script and unwrap its result envelope.
+
+    The body is wrapped in a promise with error trapping, so a JS-side failure
+    surfaces as a WebDriverException carrying the JS stack rather than as a
+    bare `None`.
+
+    Parameters
+    ----------
+    driver : selenium.webdriver.Firefox
+        The instance of WebDriver under test.
+    body : str
+        JS statements that call `resolve(value)` exactly once.
+    """
+    script = f"""
+        const done = arguments[arguments.length - 1];
+        (async () => {{
+            try {{
+                const resolve = (value) => done({{ok: true, value}});
+                {body}
+            }} catch (error) {{
+                done({{
+                    ok: false,
+                    error: String(error),
+                    stack: error?.stack || "",
+                }});
+            }}
+        }})();
+    """
+    with driver.context(driver.CONTEXT_CHROME):
+        result = driver.execute_async_script(script, *args)
+
+    if not isinstance(result, dict):
+        raise WebDriverException(
+            f"Chrome-context helper returned an unexpected result: {result!r}"
+        )
+    if not result.get("ok"):
+        raise WebDriverException(
+            f"{result.get('error', 'Unknown chrome-context error')}\n"
+            f"{result.get('stack', '')}"
+        )
+    return result.get("value")
+
+
+class PlacesHistory:
+    """
+    Read and write Firefox browsing history directly, via privileged JS.
+
+    Going through Places rather than the UI lets a test arrange visits at
+    explicit timestamps, which is impossible to do by browsing to pages.
+
+    Attributes
+    ----------
+    driver : selenium.webdriver.Firefox
+        The instance of WebDriver under test.
+    """
+
+    PLACES_IMPORT = """
+        const { PlacesUtils } = ChromeUtils.importESModule(
+            "resource://gre/modules/PlacesUtils.sys.mjs"
+        );
+    """
+
+    def __init__(self, driver: Firefox):
+        self.driver = driver
+
+    @staticmethod
+    def to_epoch_ms(value: datetime) -> int:
+        """
+        Convert a timezone-aware datetime to epoch milliseconds for JS `Date`.
+
+        Parameters
+        ----------
+        value : datetime.datetime
+            Must be timezone-aware, so the timestamp is unambiguous regardless
+            of the timezone the test machine runs in.
+        """
+        if value.tzinfo is None:
+            raise ValueError("Datetime must be timezone-aware")
+        return int(value.timestamp() * 1000)
+
+    def _run(self, body: str, *args) -> any:
+        """Run `body` in the chrome context with PlacesUtils already imported."""
+        return run_chrome_async_script(
+            self.driver, f"{self.PLACES_IMPORT}\n{body}", *args
+        )
+
+    def clear(self):
+        """Remove all browsing history."""
+        self._run("await PlacesUtils.history.clear(); resolve(null);")
+
+    def insert_visits(self, visits: List[dict]):
+        """
+        Insert history visits at explicit timestamps.
+
+        Parameters
+        ----------
+        visits : List[dict]
+            Each entry needs `url`, `title`, and `timestamp_ms` (epoch
+            milliseconds, as produced by `to_epoch_ms`).
+        """
+        inserted = self._run(
+            """
+            const visits = arguments[0];
+            for (const visit of visits) {
+                await PlacesUtils.history.insert({
+                    url: visit.url,
+                    title: visit.title,
+                    visits: [{
+                        date: new Date(visit.timestamp_ms),
+                        transition: PlacesUtils.history.TRANSITIONS.LINK,
+                    }],
+                });
+            }
+            resolve(visits.length);
+            """,
+            visits,
+        )
+        assert inserted == len(visits), (
+            f"Expected to insert {len(visits)} visits, Firefox reported {inserted}"
+        )
+
+    def get_visit_presence(self, urls: List[str]) -> dict:
+        """
+        Return `{url: bool}` for whether each URL still has any visit.
+
+        Parameters
+        ----------
+        urls : List[str]
+            The URLs to look up.
+        """
+        presence = self._run(
+            """
+            const urls = arguments[0];
+            const result = {};
+            for (const url of urls) {
+                result[url] = Boolean(await PlacesUtils.history.hasVisits(url));
+            }
+            resolve(result);
+            """,
+            urls,
+        )
+        if not isinstance(presence, dict):
+            raise WebDriverException(f"Expected a url->bool mapping, got {presence!r}")
+        return presence
+
+
+class Sanitizer:
+    """
+    Drive Firefox's Clear Recent History sanitizer from privileged JS.
+
+    This is the same code path the Clear Recent History dialog runs on accept,
+    entered below the UI so a test can pin the timespan and the exact set of
+    categories being cleared.
+
+    Attributes
+    ----------
+    driver : selenium.webdriver.Firefox
+        The instance of WebDriver under test.
+    """
+
+    def __init__(self, driver: Firefox):
+        self.driver = driver
+
+    def sanitize(self, items: List[str], timespan: str = "TIMESPAN_HOUR") -> dict:
+        """
+        Clear the given categories over the given timespan.
+
+        Parameters
+        ----------
+        items : List[str]
+            Sanitizer category keys, e.g. `["history"]`. Categories not listed
+            are left untouched.
+        timespan : str, optional
+            A `Sanitizer.TIMESPAN_*` constant name (default `TIMESPAN_HOUR`).
+
+        Returns
+        -------
+        dict
+            `{"start": int, "end": int}`, the cleared range in epoch
+            microseconds, so a caller can assert the range was well formed.
+        """
+        return run_chrome_async_script(
+            self.driver,
+            """
+            const [items, timespan] = arguments;
+            const { Sanitizer } = ChromeUtils.importESModule(
+                "resource:///modules/Sanitizer.sys.mjs"
+            );
+            if (!(timespan in Sanitizer)) {
+                throw new Error(`Unknown Sanitizer timespan: ${timespan}`);
+            }
+            const range = Sanitizer.getClearRange(Sanitizer[timespan]);
+            await Sanitizer.sanitize(items, { range });
+            resolve({ start: range[0], end: range[1] });
+            """,
+            items,
+            timespan,
+        )
