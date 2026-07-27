@@ -8,7 +8,7 @@ from datetime import datetime
 from os import remove
 from random import shuffle
 from time import sleep
-from typing import List, Literal, Union
+from typing import List, Literal, Union, Any
 from urllib.parse import urlparse, urlunparse
 
 from faker import Faker
@@ -970,7 +970,7 @@ class PomUtils:
             return matches
 
 
-def run_chrome_async_script(driver: Firefox, body: str, *args) -> any:
+def run_chrome_async_script(driver: Firefox, body: str, *args) -> Any:
     """
     Run an async chrome-context script and unwrap its result envelope.
 
@@ -1052,7 +1052,7 @@ class PlacesHistory:
             raise ValueError("Datetime must be timezone-aware")
         return int(value.timestamp() * 1000)
 
-    def _run(self, body: str, *args) -> any:
+    def _run(self, body: str, *args) -> Any:
         """Run `body` in the chrome context with PlacesUtils already imported."""
         return run_chrome_async_script(
             self.driver, f"{self.PLACES_IMPORT}\n{body}", *args
@@ -1097,6 +1097,11 @@ class PlacesHistory:
         """
         Return `{url: bool}` for whether each URL still has any visit.
 
+        Presence is keyed on visits rather than on the page existing in Places.
+        `fetch` without `includeVisits` resolves a page info object for any
+        known page, so a bookmarked-but-never-visited URL would read as
+        present; asking for the visits and testing their count does not.
+
         Parameters
         ----------
         urls : List[str]
@@ -1107,7 +1112,10 @@ class PlacesHistory:
             const urls = arguments[0];
             const result = {};
             for (const url of urls) {
-                result[url] = Boolean(await PlacesUtils.history.hasVisits(url));
+                const info = await PlacesUtils.history.fetch(url, {
+                    includeVisits: true,
+                });
+                result[url] = Boolean(info?.visits?.length);
             }
             resolve(result);
             """,
