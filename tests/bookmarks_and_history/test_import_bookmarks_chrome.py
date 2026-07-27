@@ -132,7 +132,7 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
             try:
                 os.rmdir(directory)
             except OSError:
-                # Keep directories that contain pre-existing user data.
+                # Keep directories that contain pre-existing user data
                 pass
 
 
