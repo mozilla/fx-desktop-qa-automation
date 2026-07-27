@@ -1,6 +1,7 @@
 import logging
 import os
-from shutil import copyfile
+from shutil import copy2, copyfile, copyfileobj
+from uuid import uuid4
 
 import pytest
 from selenium.webdriver import Firefox
@@ -31,17 +32,29 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
-    """Move test Bookmarks file to correct location, fake Chrome instead of installing."""
+def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
+    """Move test Bookmarks file and fake Chrome instead of installing it."""
     bookmarks_source = os.path.join("data", "Chrome_Bookmarks")
     local_state_source = os.path.join("data", "Chrome_Local_State")
+
+    if not os.path.isfile(bookmarks_source):
+        pytest.fail(f"Test bookmarks file does not exist: {bookmarks_source}")
 
     # Get locations for Google Chrome profile data.
     if sys_platform.lower().startswith("win"):
         user_data_root = os.path.join(home_folder, "AppData", "Local")
-        chrome_root = os.path.join(user_data_root, "Google", "Chrome", "User Data")
+        chrome_root = os.path.join(
+            user_data_root,
+            "Google",
+            "Chrome",
+            "User Data",
+        )
     elif sys_platform == "Darwin":
-        user_data_root = os.path.join(home_folder, "Library", "Application Support")
+        user_data_root = os.path.join(
+            home_folder,
+            "Library",
+            "Application Support",
+        )
         chrome_root = os.path.join(user_data_root, "Google", "Chrome")
     else:
         user_data_root = os.path.join(home_folder, ".config")
@@ -55,22 +68,45 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
     defaults_folder = os.path.join(chrome_root, "Default")
     bookmarks_target = os.path.join(defaults_folder, "Bookmarks")
     local_state_target = os.path.join(chrome_root, "Local State")
-    bookmarks_backup = tmp_path / "Bookmarks"
 
+    bookmarks_backup = None
     bookmarks_backed_up = False
+    remove_test_bookmarks = False
     local_state_created = False
     created_fake_files = []
     created_directories = []
+    cleanup_errors = []
+
+    def _remove_created_file(path, description):
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+        except OSError as error:
+            logging.warning(f"Could not remove {description}: {error}")
+            cleanup_errors.append(error)
 
     try:
-        if not os.path.exists(bookmarks_target):
+        if os.path.exists(bookmarks_target):
+            logging.warning("Install folder exists...")
+
+            bookmarks_backup = os.path.join(
+                defaults_folder,
+                f"Bookmarks.{uuid4().hex}.backup",
+            )
+            copy2(bookmarks_target, bookmarks_backup)
+            bookmarks_backed_up = True
+
+            copyfile(bookmarks_source, bookmarks_target)
+        else:
             logging.warning("Faking install...")
 
             current_directory = defaults_folder
+
             while not os.path.exists(current_directory):
                 created_directories.append(current_directory)
-
                 parent_directory = os.path.dirname(current_directory)
+
                 if parent_directory == current_directory:
                     break
 
@@ -83,57 +119,95 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder, tmp_path):
                 fakefile_path = os.path.join(defaults_folder, fakefile)
 
                 if not os.path.exists(fakefile_path):
+                    try:
+                        fh = open(fakefile_path, "x")
+                    except FileExistsError:
+                        continue
+
                     created_fake_files.append(fakefile_path)
 
-                    with open(fakefile_path, "w") as fh:
+                    with fh:
                         fh.write("")
 
             logging.warning("History and Cookies made!")
 
             if not os.path.exists(local_state_target):
-                logging.warning("Faking local state...")
-                local_state_created = True
-                copyfile(local_state_source, local_state_target)
-        else:
-            logging.warning("Install folder exists...")
-            os.rename(bookmarks_target, bookmarks_backup)
-            bookmarks_backed_up = True
+                if not os.path.isfile(local_state_source):
+                    pytest.fail(
+                        f"Test local state file does not exist: {local_state_source}"
+                    )
 
-        copyfile(bookmarks_source, bookmarks_target)
+                logging.warning("Faking local state...")
+
+                with open(local_state_source, "rb") as source_fh:
+                    try:
+                        target_fh = open(local_state_target, "xb")
+                    except FileExistsError:
+                        pass
+                    else:
+                        local_state_created = True
+
+                        with target_fh:
+                            copyfileobj(source_fh, target_fh)
+
+            with open(bookmarks_source, "rb") as source_fh:
+                target_fh = open(bookmarks_target, "xb")
+                remove_test_bookmarks = True
+
+                with target_fh:
+                    copyfileobj(source_fh, target_fh)
+
         logging.warning("Bookmarks copied!")
 
         yield bookmarks_target
 
-    except (
-        FileNotFoundError,
-        IsADirectoryError,
-        NotADirectoryError,
-        PermissionError,
-    ) as error:
+    except OSError as error:
         logging.warning(error)
         pytest.skip("Google Chrome not installed or directory could not be created")
 
     finally:
-        # Teardown: We don't want to destroy the Chrome setup of local users.
-        if os.path.exists(bookmarks_target):
-            os.remove(bookmarks_target)
+        # Restore existing bookmarks or remove the test bookmarks.
+        if bookmarks_backed_up and bookmarks_backup:
+            try:
+                os.replace(bookmarks_backup, bookmarks_target)
+            except OSError as error:
+                logging.warning(f"Could not restore original bookmarks: {error}")
+                cleanup_errors.append(error)
+        elif remove_test_bookmarks:
+            _remove_created_file(
+                bookmarks_target,
+                "test bookmarks",
+            )
 
-        if bookmarks_backed_up and os.path.exists(bookmarks_backup):
-            os.rename(bookmarks_backup, bookmarks_target)
+        # Remove only an incomplete backup. A valid backup is preserved if
+        # restoring it failed.
+        if bookmarks_backup and not bookmarks_backed_up:
+            _remove_created_file(
+                bookmarks_backup,
+                "incomplete bookmarks backup",
+            )
 
         for fakefile_path in created_fake_files:
-            if os.path.exists(fakefile_path):
-                os.remove(fakefile_path)
+            _remove_created_file(
+                fakefile_path,
+                "fake Chrome file",
+            )
 
-        if local_state_created and os.path.exists(local_state_target):
-            os.remove(local_state_target)
+        if local_state_created:
+            _remove_created_file(
+                local_state_target,
+                "fake local state",
+            )
 
         for directory in created_directories:
             try:
                 os.rmdir(directory)
             except OSError:
-                # Keep directories that contain pre-existing user data
+                # Keep directories that contain pre-existing user data.
                 pass
+
+        if cleanup_errors:
+            raise cleanup_errors[0]
 
 
 def test_chrome_bookmarks_imported(
