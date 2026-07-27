@@ -11,6 +11,7 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_added_open_search_engine_default:
     result: pass
     splits:
@@ -114,6 +115,7 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_search_engine_result_page_load_on_reload:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2054122
     result:
@@ -164,6 +166,7 @@ address_bar_and_search:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_search_suggestions_can_be_disabled:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
     result: unstable
@@ -272,6 +275,7 @@ bookmarks_and_history:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_clear_recent_history_displayed:
     result: pass
     splits:
@@ -491,6 +495,7 @@ find_toolbar:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_find_toolbar_search:
     result: pass
     splits:
@@ -581,11 +586,11 @@ geolocation:
   test_geolocation_shared_via_html5:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_shared_via_w3c_api:
     result: pass
     splits:
-    - functional1
+    - functional2
 glean:
   serp_abandonment:
     test_serp_abandonment:
@@ -606,11 +611,12 @@ language_packs:
   test_language_pack_install_addons:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_language_pack_install_preferences:
     result: pass
     splits:
     - smoke
+    - ci-extended
 menus:
   test_copy_paste_actions:
     result: pass
@@ -620,7 +626,7 @@ menus:
   test_frequently_used_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_hyperlink_context_menu:
     result: pass
     splits:
@@ -632,19 +638,19 @@ menus:
       mac: pass
       win: unstable
     splits:
-    - functional1
+    - functional2
   test_new_tab_label:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_tab_context_menu_actions:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional1
+    - functional2
 meta:
   test_selectors:
     comment: Not part of feature functional test suites
@@ -657,11 +663,11 @@ networking:
   test_cloudflare_as_default_doh_provider:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_custom_doh_provider:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_default_dns_protection:
     result: pass
     splits:
@@ -669,57 +675,57 @@ networking:
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_http_site:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_nextdns_as_doh_provider:
     result: pass
     splits:
-    - functional1
+    - functional2
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
     result: pass
     splits:
-    - functional1
+    - functional2
   test_camera_permissions_notification:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_cancel_webextension:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_geolocation:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_deny_screen_capture:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_downloads_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_downloads_finished_button_is_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_allow_browserleaks:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_geolocation_prompt_presence:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_microphone_permissions_notification:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_notifications_displayed:
     result: pass
     splits:
@@ -732,64 +738,64 @@ notifications:
   test_webextension_completed_installation_successfully_displayed:
     result: pass
     splits:
-    - functional1
+    - functional2
 password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_direct_navigation:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_edit_prompts_primary_password:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_about_preferences:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_about_protections:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_navigation_from_hamburger_menu:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_password_copy_button:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_password_show_hide_button:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_search_passwords:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_search_username:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_search_website:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_about_logins_username_copy_button:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_add_password_non_ascii_chars:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_add_password_save_valid_data:
     result: pass
     splits:
@@ -797,7 +803,7 @@ password_manager:
   test_add_primary_password:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_add_username_via_doorhanger:
     result: pass
     splits:
@@ -829,6 +835,7 @@ password_manager:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_delete_primary_password:
     result: pass
     splits:
@@ -854,11 +861,11 @@ password_manager:
   test_facebook_login_autofill_dropdown:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_insecure_password:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_multiple_saved_logins:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308
     result:
@@ -911,11 +918,11 @@ password_manager:
       mac: unstable
       win: pass
     splits:
-    - functional1
+    - functional2
   test_password_manager_on_reddit:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
@@ -1013,7 +1020,7 @@ pdf_viewer:
   test_pdf_drawing_area_actions:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_dropdown_functionality:
     result: pass
     splits:
@@ -1025,23 +1032,24 @@ pdf_viewer:
   test_pdf_modify_text_number_data:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_navigation:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_pdf_prefilled_input_data:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_pdf_zoom_in_text_fields:
     result: pass
     splits:
@@ -1049,7 +1057,7 @@ pdf_viewer:
   test_pdf_zoom_radio_buttons:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_zoom_pdf_viewer:
     result: pass
     splits:
@@ -1107,6 +1115,7 @@ preferences:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_never_remember_history:
     result: pass
     splits:
@@ -1151,6 +1160,7 @@ reader_view:
     result: pass
     splits:
     - smoke
+    - ci-extended
 scrolling_panning_zooming:
   test_default_zoom_persists:
     result: pass
@@ -1182,7 +1192,7 @@ security_and_privacy:
   test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_blocking_cryptominers:
     result: deprecated
     splits:
@@ -1190,43 +1200,43 @@ security_and_privacy:
   test_blocking_fingerprinters:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_blocking_social_media_trackers:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_bookmarks_removed_via_private_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_bookmarks_toolbar_present_in_private_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_cache_is_cleared_via_end_private_session_button:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_certificate_expired_displayed_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_clear_cookies_site_data_via_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_connection_not_secured_panel_for_http_sites:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_connection_secure_second_level_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_cookies_not_saved_private_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_copy_clean_link:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052850
     result:
@@ -1234,197 +1244,199 @@ security_and_privacy:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional3
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
-    - functional2
+    - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_cryptominers_displayed_subpanel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_cryptominers_subpanel_display_when_not_blocked:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
     result: fx-change
     splits:
-    - functional2
+    - functional3
   test_custom_block_suspected_fingerprinters_in_all_windows:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_custom_block_suspected_fingerprinters_only_in_private_windows:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_data_clearance_from_private_window_can_be_canceled:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_detected_blocked_trackers_found:
     result: deprecated
     splits:
-    - functional2
+    - functional3
   test_download_list_cleared_by_end_private_session:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_downloads_from_private_not_leaked:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_end_private_session_clears_cookies:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_ensure_panel_renders_on_first_run:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_etp_panel_displayed_when_all_protections_disabled_custom:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_etp_panel_displayed_when_no_trackers_detected:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_etp_panel_displayed_when_protection_off:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_etp_toggle_on_off_behavior:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_etp_toggle_on_off_behavior_private_window:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_extended_certificate_messaging_displayed_in_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_fingerprinters_blocked_and_shown_in_panel_and_preferences:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_fingerprinters_displayed_subpanel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_fingerprinters_subpanel_display_when_not_blocked:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
     result: fx-change
     splits:
-    - functional2
+    - functional3
   test_http_lock_icon_connection_state:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_https_enabled_private_browsing:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_mixed_content_warning_displayed_in_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_never_remember_browsing_history:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_no_cached_file_in_private_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_no_trackers_detected:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_open_link_in_private_window:
     result: pass
     splits:
     - smoke
+    - ci-extended
   test_open_private_browsing_via_keyboard:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_passwords_appear_in_firefox_lockwise:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_phishing_and_malware_warnings:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_privacy_settings_footer_link_opens_correct_page:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_private_browser_password_doorhanger:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_private_session_awesome_bar_exclusion:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_private_session_history_exclusion:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_private_window_from_panelui:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_protection_level_redirect_about_preferences:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_see_all_link_redirects_to_blocked_trackers:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_removed_on_end_private_session:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_social_media_trackers_displayed_subpanel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_tls_v1_2_protocol:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_trackers_counted_correctly_in_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_trackers_cryptominers_fingerprinters_blocked:
     result: pass
     splits:
@@ -1433,15 +1445,15 @@ security_and_privacy:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
     result: fx-change
     splits:
-    - functional2
+    - functional3
   test_tracking_content_subpanel_display_when_not_blocked:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_tracking_elements_not_blocked_with_etp_disabled:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_undo_close_tab_private_browsing:
     result: pass
     splits:
@@ -1450,90 +1462,90 @@ session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_restore_multiple_closed_tabs_at_once:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_restored_closed_tabs_removed_from_all_history_entries:
     result: pass
     splits:
-    - functional2
+    - functional3
 sidebar:
   test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu:
     result: pass
     splits:
-    - functional1
+    - functional3
   test_choose_ai_chatbot_via_page_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_close_button_present_on_hovering_or_selecting_a_vertical_tab:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_hide_sidebar_behaviour:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
     result: unstable
     splits:
-    - functional2
+    - functional3
   test_open_ai_chat_via_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_button_always_displayed_on_fresh_profile:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_duplicate_vertical_tab:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_enabled_in_private_window:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
     result: unstable
     splits:
-    - functional2
+    - functional3
   test_sidebar_multiple_vertical_tabs_selection:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tab_can_be_reloaded:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tabs_bookmarked:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tabs_closing_options:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tabs_move_options:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tabs_multiselect_close_options:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_sidebar_vertical_tabs_mute_unmute:
     comment: CI limitation - audio playback not supported on Windows CI runners
     result:
@@ -1541,54 +1553,54 @@ sidebar:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional3
   test_summarize_page_via_ai_chat_panel:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_summarize_page_via_sidebar_ai_chat_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_summarize_page_via_tab_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_switch_between_horizontal_vertical_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_switching_to_horizontal_tabs_disables_expand_on_hover:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_toggle_sidebar_via_toolbar_button:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_user_can_manage_pinned_extensions_on_the_sidebar:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
-    - functional2
+    - functional3
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
     result: unstable
     splits:
-    - functional2
+    - functional3
   test_new_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938363
     result: unstable
     splits:
-    - functional2
+    - functional3
 tabs:
   test_active_tab:
     result: pass
@@ -1598,7 +1610,7 @@ tabs:
   test_change_position_of_pinned_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_close_pinned_tab_via_mouse:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
     result:
@@ -1612,36 +1624,36 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
     result: unstable
     splits:
-    - functional2
     - ci
+    - functional3
   test_display_customize_button:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_edit_tab_groups:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_group_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_hover_tab_preview:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_list_all_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_move_multi_selected_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_move_single_tab_via_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_mute_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
@@ -1649,11 +1661,11 @@ tabs:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional3
   test_navigation_multiple_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_open_bookmark_in_new_tab:
     result: pass
     splits:
@@ -1662,7 +1674,7 @@ tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
     result: unstable
     splits:
-    - functional2
+    - functional3
   test_open_new_tab:
     result: pass
     splits:
@@ -1670,11 +1682,11 @@ tabs:
   test_open_new_tab_keys:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_open_new_tab_via_hyperlink:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_pin_tab:
     result: pass
     splits:
@@ -1682,7 +1694,7 @@ tabs:
   test_pin_unpin_selected_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_play_mute_unmute_tabs_via_toggle:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056387
     result:
@@ -1690,47 +1702,47 @@ tabs:
       mac: pass
       win: unstable
     splits:
-    - functional2
+    - functional3
   test_reload_overiding_cache_keys:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_reload_tab_via_keyboard:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_remove_tab_from_a_group:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_reopen_tab_through_context_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_reopen_tab_through_history_menu:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_reopen_tabs_through_keys:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_restore_closed_tabs_previous_groups:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_save_and_close_a_tab_group:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_tab_hover_different_content_type:
     result: pass
     splits:
-    - functional2
+    - functional3
   test_ungroup_tabs:
     result: pass
     splits:
-    - functional2
+    - functional3
 theme_and_toolbar:
   test_customize_themes_and_redirect:
     result: pass
@@ -1740,4 +1752,4 @@ theme_and_toolbar:
   test_installed_theme_enabled:
     result: pass
     splits:
-    - functional2
+    - functional3
