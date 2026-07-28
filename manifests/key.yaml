@@ -1492,8 +1492,7 @@ sidebar:
     splits:
     - functional3
   test_hide_sidebar_behaviour:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_open_ai_chat_via_context_menu:
@@ -1513,8 +1512,7 @@ sidebar:
     splits:
     - functional3
   test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047908
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_sidebar_multiple_vertical_tabs_selection:
