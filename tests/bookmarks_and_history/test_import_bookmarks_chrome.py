@@ -1,6 +1,7 @@
+import errno
 import logging
 import os
-from shutil import copy2, copyfile, copyfileobj
+from shutil import copyfileobj
 from uuid import uuid4
 
 import pytest
@@ -32,8 +33,8 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
-    """Move test Bookmarks file and fake Chrome instead of installing it."""
+def chrome_bookmarks(sys_platform, home_folder):
+    """Prepare temporary Chrome profile data and restore existing data afterward."""
     bookmarks_source = os.path.join("data", "Chrome_Bookmarks")
     local_state_source = os.path.join("data", "Chrome_Local_State")
 
@@ -71,11 +72,10 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
 
     bookmarks_backup = None
     bookmarks_backed_up = False
-    remove_test_bookmarks = False
+    test_bookmarks_created = False
     local_state_created = False
     created_fake_files = []
     created_directories = []
-    cleanup_errors = []
 
     def _remove_created_file(path, description):
         try:
@@ -84,23 +84,10 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
             pass
         except OSError as error:
             logging.warning(f"Could not remove {description}: {error}")
-            cleanup_errors.append(error)
 
     try:
-        if os.path.exists(bookmarks_target):
-            logging.warning("Install folder exists...")
-
-            bookmarks_backup = os.path.join(
-                defaults_folder,
-                f"Bookmarks.{uuid4().hex}.backup",
-            )
-            copy2(bookmarks_target, bookmarks_backup)
-            bookmarks_backed_up = True
-
-            copyfile(bookmarks_source, bookmarks_target)
-        else:
-            logging.warning("Faking install...")
-
+        # Setup errors are handled here, separately from errors raised by the test.
+        try:
             current_directory = defaults_folder
 
             while not os.path.exists(current_directory):
@@ -113,108 +100,122 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
                 current_directory = parent_directory
 
             os.makedirs(defaults_folder, exist_ok=True)
-            logging.warning("Directory made!")
 
-            for fakefile in ["History", "Cookies"]:
-                fakefile_path = os.path.join(defaults_folder, fakefile)
+            if os.path.exists(bookmarks_target):
+                if not os.path.isfile(bookmarks_target):
+                    raise IsADirectoryError(
+                        f"Chrome Bookmarks path is not a file: {bookmarks_target}"
+                    )
 
-                if not os.path.exists(fakefile_path):
+                logging.warning("Install folder exists...")
+
+                bookmarks_backup = os.path.join(
+                    defaults_folder,
+                    f"Bookmarks.{uuid4().hex}.backup",
+                )
+                os.replace(bookmarks_target, bookmarks_backup)
+                bookmarks_backed_up = True
+
+            else:
+                logging.warning("Faking install...")
+                logging.warning("Directory made!")
+
+                for fakefile in ["History", "Cookies"]:
+                    fakefile_path = os.path.join(defaults_folder, fakefile)
+
+                    if os.path.exists(fakefile_path):
+                        continue
+
                     try:
-                        fh = open(fakefile_path, "x")
+                        with open(fakefile_path, "x"):
+                            pass
                     except FileExistsError:
                         continue
 
                     created_fake_files.append(fakefile_path)
 
-                    with fh:
-                        fh.write("")
+                logging.warning("History and Cookies made!")
 
-            logging.warning("History and Cookies made!")
+                if os.path.exists(local_state_target):
+                    if not os.path.isfile(local_state_target):
+                        raise IsADirectoryError(
+                            f"Chrome Local State path is not a file: "
+                            f"{local_state_target}"
+                        )
+                else:
+                    if not os.path.isfile(local_state_source):
+                        pytest.fail(
+                            f"Test local state file does not exist: "
+                            f"{local_state_source}"
+                        )
 
-            if not os.path.exists(local_state_target):
-                if not os.path.isfile(local_state_source):
-                    pytest.fail(
-                        f"Test local state file does not exist: {local_state_source}"
-                    )
+                    logging.warning("Faking local state...")
 
-                logging.warning("Faking local state...")
-
-                with open(local_state_source, "rb") as source_fh:
                     try:
-                        target_fh = open(local_state_target, "xb")
+                        with open(local_state_source, "rb") as source_file:
+                            with open(local_state_target, "xb") as target_file:
+                                local_state_created = True
+                                copyfileobj(source_file, target_file)
                     except FileExistsError:
-                        pass
-                    else:
-                        local_state_created = True
+                        local_state_created = False
 
-                        with target_fh:
-                            copyfileobj(source_fh, target_fh)
+                        if not os.path.isfile(local_state_target):
+                            raise IsADirectoryError(
+                                f"Chrome Local State path is not a file: "
+                                f"{local_state_target}"
+                            )
 
-            with open(bookmarks_source, "rb") as source_fh:
-                target_fh = open(bookmarks_target, "xb")
-                remove_test_bookmarks = True
+            try:
+                with open(bookmarks_source, "rb") as source_file:
+                    with open(bookmarks_target, "xb") as target_file:
+                        test_bookmarks_created = True
+                        copyfileobj(source_file, target_file)
+            except FileExistsError as error:
+                raise FileExistsError(
+                    f"Chrome Bookmarks file appeared during setup: {bookmarks_target}"
+                ) from error
 
-                with target_fh:
-                    copyfileobj(source_fh, target_fh)
+            logging.warning("Bookmarks copied!")
 
-        logging.warning("Bookmarks copied!")
+        except OSError as error:
+            logging.warning(error)
+            pytest.skip("Google Chrome not installed or directory could not be created")
 
-        yield bookmarks_target
-
-    except OSError as error:
-        logging.warning(error)
-        pytest.skip("Google Chrome not installed or directory could not be created")
+        yield
 
     finally:
-        # Restore existing bookmarks or remove the test bookmarks.
+        # Restore existing bookmarks or remove the bookmarks created by the test.
         if bookmarks_backed_up and bookmarks_backup:
             try:
                 os.replace(bookmarks_backup, bookmarks_target)
             except OSError as error:
-                logging.warning(f"Could not restore original bookmarks: {error}")
-                cleanup_errors.append(error)
-        elif remove_test_bookmarks:
-            _remove_created_file(
-                bookmarks_target,
-                "test bookmarks",
-            )
-
-        # Remove only an incomplete backup. A valid backup is preserved if
-        # restoring it failed.
-        if bookmarks_backup and not bookmarks_backed_up:
-            _remove_created_file(
-                bookmarks_backup,
-                "incomplete bookmarks backup",
-            )
+                logging.warning(
+                    "Could not restore original bookmarks. "
+                    f"The backup remains at {bookmarks_backup}: {error}"
+                )
+        elif test_bookmarks_created:
+            _remove_created_file(bookmarks_target, "test bookmarks")
 
         for fakefile_path in created_fake_files:
-            _remove_created_file(
-                fakefile_path,
-                "fake Chrome file",
-            )
+            _remove_created_file(fakefile_path, "fake Chrome file")
 
         if local_state_created:
-            _remove_created_file(
-                local_state_target,
-                "fake local state",
-            )
+            _remove_created_file(local_state_target, "fake local state")
 
         for directory in created_directories:
             try:
                 os.rmdir(directory)
-            except OSError:
-                # Keep directories that contain pre-existing user data.
+            except FileNotFoundError:
                 pass
+            except OSError as error:
+                if error.errno not in (errno.ENOTEMPTY, errno.EEXIST):
+                    logging.warning(
+                        f"Could not remove created directory {directory}: {error}"
+                    )
 
-        if cleanup_errors:
-            logging.warning(f"Cleanup error(s): {cleanup_errors}")
 
-
-def test_chrome_bookmarks_imported(
-    chrome_bookmarks,
-    driver: Firefox,
-    sys_platform,
-):
+@pytest.mark.usefixtures("chrome_bookmarks")
+def test_chrome_bookmarks_imported(driver: Firefox, sys_platform):
     about_prefs = AboutPrefs(driver, category="General")
     about_prefs.open()
     about_prefs.import_bookmarks("Chrome", sys_platform)
