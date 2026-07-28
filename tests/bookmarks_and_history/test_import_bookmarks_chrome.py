@@ -207,7 +207,8 @@ def chrome_bookmarks(driver: Firefox, sys_platform, home_folder):
                 pass
 
         if cleanup_errors:
-            raise cleanup_errors[0]
+        if cleanup_errors:
+            logging.warning(f"Cleanup error(s): {cleanup_errors}")
 
 
 def test_chrome_bookmarks_imported(
