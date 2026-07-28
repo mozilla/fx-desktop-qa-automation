@@ -867,7 +867,6 @@ password_manager:
     splits:
     - functional2
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308
     result:
       result: pass
     splits:
