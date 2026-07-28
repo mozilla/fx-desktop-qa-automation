@@ -501,8 +501,7 @@ find_toolbar:
     - functional1
 form_autofill:
   test_address_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_autofill_cc_cvv:
@@ -554,13 +553,11 @@ form_autofill:
     splits:
     - functional1
   test_form_autofill_suggestions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2026652
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_name_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
   test_private_mode_info_not_saved:
@@ -568,8 +565,7 @@ form_autofill:
     splits:
     - functional1
   test_telephone_autofill_attribute:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047884
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci
@@ -802,7 +798,7 @@ password_manager:
   test_add_primary_password:
     result: pass
     splits:
-    - functional2
+    - smoke
   test_add_username_via_doorhanger:
     result: pass
     splits:
@@ -833,8 +829,7 @@ password_manager:
   test_delete_login:
     result: pass
     splits:
-    - smoke
-    - ci-extended
+    - functional2
   test_delete_primary_password:
     result: pass
     splits:
@@ -876,7 +871,7 @@ password_manager:
   test_never_save_login_via_doorhanger:
     result: pass
     splits:
-    - smoke
+    - functional2
   test_no_generated_password_options_with_pp_and_no_credentials:
     result: pass
     splits:
@@ -1181,8 +1176,7 @@ scrolling_panning_zooming:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2022011
     result: unstable
     splits:
-    - smoke
-    - ci
+    - functional2
 security_and_privacy:
   test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
     result: pass
@@ -1191,7 +1185,7 @@ security_and_privacy:
   test_blocking_cryptominers:
     result: deprecated
     splits:
-    - smoke
+    - functional3
   test_blocking_fingerprinters:
     result: pass
     splits:
@@ -1337,7 +1331,7 @@ security_and_privacy:
   test_http_lock_icon_connection_state:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_https_enabled_private_browsing:
     result: pass
     splits:
@@ -1379,7 +1373,7 @@ security_and_privacy:
   test_phishing_and_malware_warnings:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_privacy_settings_footer_link_opens_correct_page:
     result: pass
     splits:
@@ -1395,7 +1389,7 @@ security_and_privacy:
   test_private_session_history_exclusion:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_private_window_from_panelui:
     result: pass
     splits:
@@ -1427,7 +1421,7 @@ security_and_privacy:
   test_tls_v1_2_protocol:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_trackers_counted_correctly_in_panel:
     result: pass
     splits:
@@ -1469,7 +1463,7 @@ session_restore:
   test_restore_last_closed_tabs_shortcut:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_restore_multiple_closed_tabs_at_once:
     result: pass
     splits:
@@ -1584,7 +1578,7 @@ sidebar:
   test_vertical_tabs_reopen_closed_tab:
     result: pass
     splits:
-    - functional3
+    - smoke
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
@@ -1632,7 +1626,7 @@ tabs:
   test_group_tabs:
     result: pass
     splits:
-    - functional3
+    - smoke
   test_hover_tab_preview:
     result: pass
     splits:
