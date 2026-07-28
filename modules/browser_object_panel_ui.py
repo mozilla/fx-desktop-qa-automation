@@ -21,6 +21,15 @@ class PanelUi(BasePage):
     ENABLE_ADD_TAG = (
         """PlacesUtils.tagging.tagURI(makeURI("https://www.github.com"), ["tag1"]);"""
     )
+    # Data category checkboxes in the Clear browsing data and cookies dialog,
+    # in the order Firefox lists them.
+    CLEAR_HISTORY_CATEGORIES = [
+        "browsingHistoryAndDownloads",
+        "cookiesAndStorage",
+        "cache",
+        "formdata",
+        "siteSettings",
+    ]
 
     class Menu(Region):
         """
@@ -207,7 +216,86 @@ class PanelUi(BasePage):
         """
         dropdown_root = self.get_element("clear-history-dropdown")
         dropdown = Dropdown(page=self, root=dropdown_root, require_shadow=False)
-        dropdown.select_option(option)
+        # select_option returns False rather than raising when nothing matched.
+        # Left unchecked that is invisible: the dialog keeps its default range
+        # (Last hour) and the clear still happens, just over the wrong span.
+        if not dropdown.select_option(option):
+            raise NoSuchElementException(
+                f"No '{option}' option in the clear-history time range dropdown"
+            )
+        return self
+
+    @BasePage.context_content
+    def get_clear_history_time_range(self) -> str:
+        """
+        Return the label showing in the dialog's time range menulist (assumes
+        already in iframe context).
+        """
+        return self.driver.execute_script(
+            "return arguments[0].label;",
+            self.get_element("clear-history-duration-choice"),
+        )
+
+    @BasePage.context_content
+    def get_clear_history_categories_checked(self) -> List[str]:
+        """
+        Return the ids of the currently ticked data categories, in dialog order
+        (assumes already in iframe context).
+        """
+        checked = []
+        for category in self.CLEAR_HISTORY_CATEGORIES:
+            boxes = self.get_elements("clear-history-category", labels=[category])
+            if boxes and self.driver.execute_script(
+                "return arguments[0].checked;", boxes[0]
+            ):
+                checked.append(category)
+        return checked
+
+    @BasePage.context_content
+    def set_clear_history_categories(self, checked: List[str]) -> BasePage:
+        """
+        Tick exactly the given data categories in the Clear browsing data and
+        cookies dialog, unticking every other one (assumes already in iframe
+        context).
+
+        Firefox ships this dialog with several categories already ticked, so a
+        test that wants to clear history alone has to untick the rest rather
+        than accept the defaults.
+
+        Argument:
+            checked (List[str]): Category element ids to leave ticked, from
+                CLEAR_HISTORY_CATEGORIES.
+        """
+        unknown = set(checked) - set(self.CLEAR_HISTORY_CATEGORIES)
+        if unknown:
+            raise ValueError(f"Unknown clear-history categories: {sorted(unknown)}")
+
+        for category in self.CLEAR_HISTORY_CATEGORIES:
+            boxes = self.get_elements("clear-history-category", labels=[category])
+            if not boxes:
+                # The category set varies by Firefox version. A missing category
+                # only matters when the caller asked for it to be ticked.
+                if category in checked:
+                    raise NoSuchElementException(
+                        f"Clear-history category '{category}' is not in this dialog"
+                    )
+                logging.info("Clear-history category '%s' not present", category)
+                continue
+
+            box = boxes[0]
+            wanted = category in checked
+            if (
+                self.driver.execute_script("return arguments[0].checked;", box)
+                != wanted
+            ):
+                box.click()
+                self.custom_wait(timeout=10).until(
+                    lambda _, el=box, want=wanted: self.driver.execute_script(
+                        "return arguments[0].checked;", el
+                    )
+                    == want,
+                    message=f"'{category}' did not toggle to checked={wanted}",
+                )
         return self
 
     def get_all_history(self) -> List[WebElement]:

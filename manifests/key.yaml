@@ -34,13 +34,23 @@ address_bar_and_search:
     splits:
     - functional1
   test_clear_last_hour_history:
-    result: pass
-    splits:
-    - functional1
+    test_clear_last_hour_history:
+      result: pass
+      splits:
+      - functional1
+    test_clear_last_hour_history_ui:
+      result: pass
+      splits:
+      - functional1
   test_clear_last_hour_history_when_empty:
-    result: pass
-    splits:
-    - functional1
+    test_clear_last_hour_history_when_empty:
+      result: pass
+      splits:
+      - functional1
+    test_clear_last_hour_history_when_empty_ui:
+      result: pass
+      splits:
+      - functional1
   test_clipboard_pref_flip:
     result: pass
     splits:

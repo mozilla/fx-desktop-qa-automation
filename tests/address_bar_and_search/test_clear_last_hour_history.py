@@ -3,19 +3,13 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from selenium.webdriver import Firefox
 
+from modules.browser_object import PanelUi
+from modules.page_object import GenericPage
 from modules.util import PlacesHistory, Sanitizer
 
-
-@pytest.fixture()
-def test_case():
-    return "2058317"
-
-
-@pytest.fixture()
-def add_to_prefs_list():
-    return [("places.history.enabled", True)]
-
-
+# Offsets are kept 5 minutes clear of the one-hour boundary on both sides, so
+# the seconds that elapse between arranging the visits and clearing cannot
+# drift a visit across the cutoff.
 RECENT_URLS = {
     "https://example.com/history-test/recent-10-minutes": timedelta(minutes=10),
     "https://example.com/history-test/recent-55-minutes": timedelta(minutes=55),
@@ -26,19 +20,24 @@ OLD_URLS = {
 }
 
 
-def test_clear_last_hour_history(driver: Firefox):
-    """
-    Clearing the last hour of history removes visits from within that
-    hour and preserves older ones.
-    """
-    # Instantiate objects
-    history = PlacesHistory(driver)
-    sanitizer = Sanitizer(driver)
+@pytest.fixture()
+def test_case():
+    return "4245709"
 
-    # Start from a known-empty history so nothing from browser startup counts
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("places.history.enabled", True)]
+
+
+def arrange_visits_across_the_boundary(history: PlacesHistory) -> list:
+    """
+    Reset history and seed visits on both sides of the one-hour boundary.
+
+    Visits are written through Places because no automated route can browse an
+    hour ago. Returns the arranged visit dicts.
+    """
     history.clear()
-
-    # Arrange visits on both sides of the one-hour boundary
     now = datetime.now(timezone.utc)
     visits = [
         {
@@ -55,14 +54,11 @@ def test_clear_last_hour_history(driver: Firefox):
     assert all(presence_before.values()), (
         f"Not all test visits were recorded: {presence_before}"
     )
+    return visits
 
-    # Clear only browsing history, only for the last hour
-    cleared_range = sanitizer.sanitize(["history"], timespan="TIMESPAN_HOUR")
-    assert cleared_range["start"] < cleared_range["end"], (
-        f"Sanitizer reported a malformed clear range: {cleared_range}"
-    )
 
-    # Verify visits inside the last hour are gone and older ones survived
+def assert_only_the_last_hour_was_cleared(history: PlacesHistory, visits: list):
+    """Recent visits must be gone, older ones must remain."""
     presence_after = history.get_visit_presence([visit["url"] for visit in visits])
     for url in RECENT_URLS:
         assert presence_after[url] is False, (
@@ -72,3 +68,60 @@ def test_clear_last_hour_history(driver: Firefox):
         assert presence_after[url] is True, (
             f"Visit from before the last hour was incorrectly removed: {url}"
         )
+
+
+def test_clear_last_hour_history(driver: Firefox):
+    """
+    Clearing the last hour of history removes visits from within that
+    hour and preserves older ones.
+    """
+    # Instantiate objects
+    history = PlacesHistory(driver)
+    sanitizer = Sanitizer(driver)
+
+    visits = arrange_visits_across_the_boundary(history)
+
+    # Clear only browsing history, only for the last hour
+    cleared_range = sanitizer.sanitize(["history"], timespan="TIMESPAN_HOUR")
+    assert cleared_range["start"] < cleared_range["end"], (
+        f"Sanitizer reported a malformed clear range: {cleared_range}"
+    )
+
+    assert_only_the_last_hour_was_cleared(history, visits)
+
+
+def test_clear_last_hour_history_ui(driver: Firefox):
+    """
+    Clearing Last hour from the Clear browsing data and cookies dialog removes
+    visits from within that hour and preserves older ones.
+    """
+    # Instantiate objects
+    history = PlacesHistory(driver)
+    panel = PanelUi(driver)
+    page = GenericPage(driver)
+
+    visits = arrange_visits_across_the_boundary(history)
+
+    # Open Clear browsing data and cookies from the hamburger menu
+    panel.open_history_menu()
+    panel.open_clear_history_dialog()
+
+    # Choose the one-hour range and clear browsing history alone. Last hour is
+    # already the dialog default, so the range is asserted rather than assumed
+    # to have been set by the click.
+    panel.select_history_time_range_option("Last hour")
+    assert panel.get_clear_history_time_range() == "Last hour", (
+        "Time range dropdown does not show Last hour"
+    )
+
+    panel.set_clear_history_categories(["browsingHistoryAndDownloads"])
+    assert panel.get_clear_history_categories_checked() == [
+        "browsingHistoryAndDownloads"
+    ], (
+        "Expected browsing history to be the only ticked category, got "
+        f"{panel.get_clear_history_categories_checked()}"
+    )
+
+    page.click_on("clear-history-button")
+
+    assert_only_the_last_hour_was_cleared(history, visits)

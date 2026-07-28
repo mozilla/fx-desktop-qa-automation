@@ -295,6 +295,24 @@
       "location": "On the hamburger menu > History > Clear recent history"
     }
   },
+  "clear-history-duration-choice": {
+    "selectorData": "sanitizeDurationChoice",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The time range menulist in the Clear browsing data and cookies dialog. Defaults to Last hour.",
+      "location": "On the hamburger menu > History > Clear recent history"
+    }
+  },
+  "clear-history-category": {
+    "selectorData": "checkbox#{category}",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A data category checkbox in the Clear browsing data and cookies dialog, keyed by element id: browsingHistoryAndDownloads, cookiesAndStorage, cache, formdata, siteSettings",
+      "location": "On the hamburger menu > History > Clear recent history"
+    }
+  },
   "all-history-warning": {
     "selectorData": "sanitizeEverythingWarningBox",
     "strategy": "id",
