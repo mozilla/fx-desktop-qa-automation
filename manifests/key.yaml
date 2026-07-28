@@ -866,11 +866,7 @@ password_manager:
     splits:
     - functional2
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052308
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
