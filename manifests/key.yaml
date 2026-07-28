@@ -867,8 +867,7 @@ password_manager:
     splits:
     - functional2
   test_multiple_saved_logins:
-    result:
-      result: pass
+    result: pass
     splits:
     - functional2
   test_navigation_to_about_logins_from_autocomplete:
