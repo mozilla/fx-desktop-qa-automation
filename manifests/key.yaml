@@ -1696,11 +1696,7 @@ tabs:
     splits:
     - functional3
   test_play_mute_unmute_tabs_via_toggle:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2056387
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
   test_reload_overiding_cache_keys:
