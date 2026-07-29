@@ -106,10 +106,6 @@ jobs:
         id: install-fx
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
-          # Raises the GitHub API rate limit from 60/hr per shared runner IP to
-          # 5000/hr, so the geckodriver lookup does not silently fall back to a
-          # pinned version and fail test_gecko_version.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ inputs.dry_run != true }}
         shell: pwsh
         run: |
@@ -318,8 +314,6 @@ jobs:
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
-          # Avoids GitHub API rate limiting on the geckodriver lookup below.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p artifacts;
           pip install 'uv==0.11.18';
@@ -472,8 +466,6 @@ jobs:
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
-          # Avoids GitHub API rate limiting on the geckodriver lookup below.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sudo apt install gnome-screenshot
           uname -m;
