@@ -993,7 +993,6 @@ def run_chrome_async_script(driver: Firefox, body: str, *args) -> Any:
     """
     script = f"""
         const done = arguments[arguments.length - 1];
-        const scriptArgs = Array.from(arguments).slice(0, -1);
 
         (async () => {{
             let settled = false;
@@ -1171,27 +1170,36 @@ class PlacesHistory:
             raise WebDriverException(f"Expected a url->bool mapping, got {presence!r}")
         return presence
 
-    def count_visits(self) -> int:
+    def is_history_empty(self) -> bool:
         """
-        Return the total number of visits recorded in Places.
+        Whether Places holds no visits at all.
 
-        Checking a specific URL is absent cannot show that history is empty,
-        since any URL that was never visited is trivially absent. This counts
-        the visit rows instead, so "empty" is an assertion rather than an
-        assumption.
+        Checking that a specific URL is absent cannot show history is empty,
+        since a URL that was never visited is trivially absent. This asks about
+        the whole store instead, so "empty" is an assertion, not an assumption.
+
+        Uses the nsINavHistoryService query interface rather than counting rows
+        in moz_historyvisits: that table is Places' internal storage and carries
+        no public contract, so a schema change could silently break the check.
+        maxResults stops the query at the first row, since only emptiness is
+        being asked about.
         """
-        count = self._run(
+        empty = self._run(
             """
-            const db = await PlacesUtils.promiseDBConnection();
-            const rows = await db.execute(
-                "SELECT COUNT(*) AS visit_count FROM moz_historyvisits"
-            );
-            resolve(rows[0].getResultByName("visit_count"));
+            const query = PlacesUtils.history.getNewQuery();
+            const options = PlacesUtils.history.getNewQueryOptions();
+            options.resultType = Ci.nsINavHistoryQueryOptions.RESULTS_AS_VISIT;
+            options.maxResults = 1;
+            const root = PlacesUtils.history.executeQuery(query, options).root;
+            root.containerOpen = true;
+            const isEmpty = root.childCount === 0;
+            root.containerOpen = false;
+            resolve(isEmpty);
             """
         )
-        if not isinstance(count, int):
-            raise WebDriverException(f"Expected a visit count, got {count!r}")
-        return count
+        if not isinstance(empty, bool):
+            raise WebDriverException(f"Expected a boolean, got {empty!r}")
+        return empty
 
 
 class Sanitizer:
