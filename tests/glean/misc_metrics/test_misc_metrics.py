@@ -63,7 +63,7 @@ def test_misc_metrics(driver: Firefox, case: dict):
     run_action(driver, case.get("action"), params)
 
     if metric in LABELED_COUNTER_METRICS:
-        ((label, count),) = expected.items()
-        glean.poll_glean_labeled_counter(metric, label, count)
+        for label, count in expected.items():
+            glean.poll_glean_labeled_counter(metric, label, count)
     else:
         glean.poll_glean_metric(metric, expected)
