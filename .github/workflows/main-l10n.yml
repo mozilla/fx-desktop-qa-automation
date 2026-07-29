@@ -85,6 +85,8 @@ jobs:
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
+          # Avoids GitHub API rate limiting on the geckodriver lookup below.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p artifacts;
           pip3 install 'uv==0.11.18';
@@ -183,6 +185,8 @@ jobs:
         id: setup
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.linux_tarball_link }}
+          # Avoids GitHub API rate limiting on the geckodriver lookup below.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sudo apt install gnome-screenshot;
           uname -m;
