@@ -978,25 +978,45 @@ def run_chrome_async_script(driver: Firefox, body: str, *args) -> Any:
     surfaces as a WebDriverException carrying the JS stack rather than as a
     bare `None`.
 
+    A body that finishes without calling `resolve` is reported as such. Without
+    that guard the script would simply never call back and the test would fail
+    on the WebDriver async script timeout (30 seconds by default) with no
+    indication of which script stalled or why. The guard runs in a `finally`,
+    so it still fires when the body exits through an early `return`.
+
     Parameters
     ----------
     driver : selenium.webdriver.Firefox
         The instance of WebDriver under test.
     body : str
-        JS statements that call `resolve(value)` exactly once.
+        JS statements that call `resolve(value)` exactly once, on every branch.
     """
     script = f"""
         const done = arguments[arguments.length - 1];
         (async () => {{
+            let settled = false;
+            const resolve = (value) => {{
+                settled = true;
+                done({{ok: true, value}});
+            }};
             try {{
-                const resolve = (value) => done({{ok: true, value}});
                 {body}
             }} catch (error) {{
+                settled = true;
                 done({{
                     ok: false,
                     error: String(error),
                     stack: error?.stack || "",
                 }});
+            }} finally {{
+                if (!settled) {{
+                    done({{
+                        ok: false,
+                        error: "Script body finished without calling resolve(); "
+                            + "every branch must call resolve() exactly once.",
+                        stack: "",
+                    }});
+                }}
             }}
         }})();
     """
@@ -1089,9 +1109,10 @@ class PlacesHistory:
             """,
             visits,
         )
-        assert inserted == len(visits), (
-            f"Expected to insert {len(visits)} visits, Firefox reported {inserted}"
-        )
+        if inserted != len(visits):
+            raise WebDriverException(
+                f"Expected to insert {len(visits)} visits, Firefox reported {inserted}"
+            )
 
     def get_visit_presence(self, urls: List[str]) -> dict:
         """
@@ -1124,6 +1145,28 @@ class PlacesHistory:
         if not isinstance(presence, dict):
             raise WebDriverException(f"Expected a url->bool mapping, got {presence!r}")
         return presence
+
+    def count_visits(self) -> int:
+        """
+        Return the total number of visits recorded in Places.
+
+        Checking a specific URL is absent cannot show that history is empty,
+        since any URL that was never visited is trivially absent. This counts
+        the visit rows instead, so "empty" is an assertion rather than an
+        assumption.
+        """
+        count = self._run(
+            """
+            const db = await PlacesUtils.promiseDBConnection();
+            const rows = await db.execute(
+                "SELECT COUNT(*) AS visit_count FROM moz_historyvisits"
+            );
+            resolve(rows[0].getResultByName("visit_count"));
+            """
+        )
+        if not isinstance(count, int):
+            raise WebDriverException(f"Expected a visit count, got {count!r}")
+        return count
 
 
 class Sanitizer:
