@@ -124,16 +124,12 @@ def test_play_mute_unmute_tabs_via_toggle(
 
     # Locate and open the first 2 audio links in new tabs.
     video_links = wait.until(
-        EC.visibility_of_all_elements_located(
-            (By.CSS_SELECTOR, ".audiolink")
-        )
+        EC.visibility_of_all_elements_located((By.CSS_SELECTOR, ".audiolink"))
     )
 
     for link_index in range(2):
         playlist_page.context_click(video_links[link_index])
-        context_menu.click_and_hide_menu(
-            "context-menu-open-link-in-tab"
-        )
+        context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
 
     tabs.wait_for_num_tabs(3)
 
@@ -178,7 +174,6 @@ def test_play_mute_unmute_tabs_via_toggle(
             tabs,
             required_attributes=("muted",),
             description=(
-                "both audio tabs to become muted "
-                f"during iteration {iteration + 1}"
+                f"both audio tabs to become muted during iteration {iteration + 1}"
             ),
         )
