@@ -993,45 +993,68 @@ def run_chrome_async_script(driver: Firefox, body: str, *args) -> Any:
     """
     script = f"""
         const done = arguments[arguments.length - 1];
+        const scriptArgs = Array.from(arguments).slice(0, -1);
+
         (async () => {{
             let settled = false;
-            const resolve = (value) => {{
+
+            const finish = (result) => {{
+                if (settled) {{
+                    return;
+                }}
+
                 settled = true;
-                done({{ok: true, value}});
+                done(result);
             }};
+
+            const resolve = (value) => {{
+                finish({{
+                    ok: true,
+                    value: value,
+                }});
+            }};
+
             try {{
                 {body}
             }} catch (error) {{
-                settled = true;
-                done({{
+                finish({{
                     ok: false,
                     error: String(error),
                     stack: error?.stack || "",
                 }});
             }} finally {{
                 if (!settled) {{
-                    done({{
+                    finish({{
                         ok: false,
-                        error: "Script body finished without calling resolve(); "
-                            + "every branch must call resolve() exactly once.",
+                        error:
+                            "Script body finished without calling resolve(); "
+                            + "every successful branch must call resolve().",
                         stack: "",
                     }});
                 }}
             }}
         }})();
     """
+
     with driver.context(driver.CONTEXT_CHROME):
         result = driver.execute_async_script(script, *args)
 
     if not isinstance(result, dict):
         raise WebDriverException(
-            f"Chrome-context helper returned an unexpected result: {result!r}"
+            "Chrome-context helper returned an unexpected result: "
+            f"{result!r}"
         )
+
     if not result.get("ok"):
-        raise WebDriverException(
-            f"{result.get('error', 'Unknown chrome-context error')}\n"
-            f"{result.get('stack', '')}"
-        )
+        error = result.get("error", "Unknown chrome-context error")
+        stack = result.get("stack", "")
+
+        message = error
+        if stack:
+            message = f"{error}\n{stack}"
+
+        raise WebDriverException(message)
+
     return result.get("value")
 
 
