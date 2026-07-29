@@ -1041,8 +1041,7 @@ def run_chrome_async_script(driver: Firefox, body: str, *args) -> Any:
 
     if not isinstance(result, dict):
         raise WebDriverException(
-            "Chrome-context helper returned an unexpected result: "
-            f"{result!r}"
+            f"Chrome-context helper returned an unexpected result: {result!r}"
         )
 
     if not result.get("ok"):
