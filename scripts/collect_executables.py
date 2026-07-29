@@ -21,19 +21,6 @@ BACKSTOP = "146.0b9"
 GECKO_FALLBACK_VERSION = "0.37.1"
 
 
-def github_headers() -> dict:
-    """
-    Authorization header for the GitHub API, when a token is available.
-
-    Unauthenticated calls are capped at 60/hour per IP, which CI runners share
-    and routinely exhaust. A rate-limited reply is a populated JSON object with
-    no "assets" key, so without a token the geckodriver lookup quietly drops to
-    GECKO_FALLBACK_VERSION instead of failing.
-    """
-    token = environ.get("GITHUB_TOKEN") or environ.get("GH_TOKEN")
-    return {"Authorization": f"Bearer {token}"} if token else {}
-
-
 def get_fx_platform():
     u = uname()
     _system = environ.get("FX_PLATFORM") or u.system
@@ -92,7 +79,7 @@ def main(args):
         if location_in_env:
             return location_in_env
 
-        gecko_rs_obj = requests.get(GECKO_API_URL, headers=github_headers()).json()
+        gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
         # Retry on a missing "assets" key rather than on a falsy object. A
         # rate-limited reply is a populated dict carrying only "message", so the
@@ -102,7 +89,7 @@ def main(args):
             if gecko_rs_obj.get("assets"):
                 break
             sleep(2)
-            gecko_rs_obj = requests.get(GECKO_API_URL, headers=github_headers()).json()
+            gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
         # Still nothing, so fall back to the pinned release. Warn loudly: the
         # download otherwise looks successful and the mismatch only surfaces
@@ -111,9 +98,10 @@ def main(args):
             gd_platform = get_gd_platform()
             ext = "zip" if "win" in gd_platform else "tar.gz"
             logging.warning(
-                "GitHub API returned no geckodriver assets (%s). Falling back to "
-                "pinned v%s; test_gecko_version will fail if that is not the "
-                "latest release. Set GITHUB_TOKEN to avoid rate limiting.",
+                "GitHub API returned no geckodriver assets (%s). This is usually "
+                "rate limiting: the API allows 60 calls/hour per IP and CI "
+                "runners share addresses. Falling back to pinned v%s; "
+                "test_gecko_version will fail if that is not the latest release.",
                 gecko_rs_obj.get("message", "no message in response"),
                 GECKO_FALLBACK_VERSION,
             )
