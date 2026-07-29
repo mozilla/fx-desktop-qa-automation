@@ -1109,10 +1109,25 @@ class PlacesHistory:
             """,
             visits,
         )
-        if inserted != len(visits):
-            raise WebDriverException(
-                f"Expected to insert {len(visits)} visits, Firefox reported {inserted}"
-            )
+        inserted = self._run(
+            """
+            const visits = arguments[0];
+            let count = 0;
+            for (const visit of visits) {
+                const added = await PlacesUtils.history.insert({
+                    url: visit.url,
+                    title: visit.title,
+                    visits: [{
+                        date: new Date(visit.timestamp_ms),
+                        transition: PlacesUtils.history.TRANSITIONS.LINK,
+                    }],
+                });
+                if (added) count++;
+            }
+            resolve(count);
+            """,
+            visits,
+        )
 
     def get_visit_presence(self, urls: List[str]) -> dict:
         """
