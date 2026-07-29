@@ -592,6 +592,11 @@ geolocation:
     splits:
     - functional2
 glean:
+  misc_metrics:
+    test_misc_metrics:
+      result: pass
+      splits:
+      - glean
   serp_abandonment:
     test_serp_abandonment:
       result: pass

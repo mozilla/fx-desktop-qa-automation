@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {"id": "3255543", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [], "metric": "browserEngagementNavigation.searchbar", "expected": {"search_enter": 1}},
+    {"id": "3255542", "entry": "searchbar_suggestion", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserEngagementNavigation.searchbar", "expected": {"search_suggestion": 1}},
+
+    {"id": "3255550", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-1-d": 1}},
+    {"id": "3255551", "entry": "searchbar", "action": null, "params": {"engine": "Google"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"google:tagged:firefox-b-d": 1}},
+    {"id": "3255552", "entry": "searchbar", "action": null, "params": {"engine": "Bing"}, "prefs": [], "metric": "browserSearchContent.searchbar", "expected": {"bing:tagged:MOZI": 1}},
+    {"id": "3255553", "entry": "searchbar", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [], "metric": "browserSearchContent.searchbar", "expected": {"duckduckgo:tagged:ffab": 1}},
+    {"id": "3255554", "entry": "searchbar", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "metric": "browserSearchContent.searchbar", "expected": {"ecosia:tagged:mzl": 1}},
+
+    {"id": "3255555", "entry": "searchbar_search_form", "action": null, "params": {"engine": "Bing"}, "prefs": [], "metric": "sap.searchFormCounts", "expected": {"provider_id": "bing", "source": "searchbar"}}
+  ]
+}

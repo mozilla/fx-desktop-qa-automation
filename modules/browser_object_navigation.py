@@ -263,6 +263,36 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def search_bar_select_suggestion(self, term: str) -> BasePage:
+        """Type in the search bar and submit an actual search suggestion.
+
+        Row 0 is the heuristic ("search for <term>"), which submits as search_enter;
+        selecting a lower row is what records search_suggestion.
+        """
+        self.search_bar = self.get_element("searchbar-input")
+        self.search_bar.click()
+        self.search_bar.send_keys(term)
+        # Longer wait: remote suggestions arrive slower under parallel (xdist) runs.
+        self.custom_wait(timeout=30).until(
+            lambda _: len(self.get_elements("searchbar-suggestions")) > 1
+        )
+        self.get_elements("searchbar-suggestions")[1].click()
+        return self
+
+    @BasePage.context_chrome
+    def search_bar_open_engine_search_form(self, engine: str) -> BasePage:
+        """Open the search bar engine switcher (USB) and Shift+click an engine to load its search form.
+
+        The search bar stays empty so Shift+click loads the engine's homepage (search form)
+        rather than running a search.
+        """
+        self.click_on("legacy-searchmode-switcher")
+        self.element_visible("search-mode-switcher-option", labels=[engine])
+        option = self.get_element("search-mode-switcher-option", labels=[engine])
+        self.actions.key_down(Keys.SHIFT).click(option).key_up(Keys.SHIFT).perform()
+        return self
+
+    @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
         Type in search bar without hitting enter
