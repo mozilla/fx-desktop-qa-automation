@@ -110,16 +110,17 @@ def test_clear_last_hour_history_ui(driver: Firefox):
     # already the dialog default, so the range is asserted rather than assumed
     # to have been set by the click.
     panel.select_history_time_range_option("Last hour")
-    assert panel.get_clear_history_time_range() == "Last hour", (
-        "Time range dropdown does not show Last hour"
+    # Each of these is read once and held, so the failure message reports the
+    # state that actually failed rather than whatever a second read returns.
+    time_range = panel.get_clear_history_time_range()
+    assert time_range == "Last hour", (
+        f"Expected the time range dropdown to show Last hour, got {time_range!r}"
     )
 
     panel.set_clear_history_categories(["browsingHistoryAndDownloads"])
-    assert panel.get_clear_history_categories_checked() == [
-        "browsingHistoryAndDownloads"
-    ], (
-        "Expected browsing history to be the only ticked category, got "
-        f"{panel.get_clear_history_categories_checked()}"
+    checked = panel.get_clear_history_categories_checked()
+    assert checked == ["browsingHistoryAndDownloads"], (
+        f"Expected browsing history to be the only ticked category, got {checked}"
     )
 
     page.click_on("clear-history-button")
