@@ -209,6 +209,22 @@ class PanelUi(BasePage):
         BrowserActions(self.driver).switch_to_iframe_context(iframe)
         return self
 
+    @BasePage.context_chrome
+    def wait_for_clear_history_dialog_closed(self) -> BasePage:
+        """
+        Wait for the Clear browsing data and cookies dialog to dismiss.
+
+        Clicking Clear starts an asynchronous sanitize and the dialog is torn
+        down once it finishes, so the dialog going away is the signal that the
+        clear is complete. Reading history before that races the sanitize.
+
+        Also leaves the dialog's iframe, which stops being a valid frame to sit
+        in the moment the dialog closes.
+        """
+        BrowserActions(self.driver).switch_to_content_context()
+        self.element_not_visible("iframe")
+        return self
+
     @BasePage.context_content
     def select_history_time_range_option(self, option: str) -> BasePage:
         """

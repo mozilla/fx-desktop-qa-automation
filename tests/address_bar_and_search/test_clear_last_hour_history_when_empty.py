@@ -77,6 +77,7 @@ def test_clear_last_hour_history_when_empty_ui(driver: Firefox):
 
     # Clearing nothing should be a no-op rather than an error
     page.click_on("clear-history-button")
+    panel.wait_for_clear_history_dialog_closed()
 
     # The point of the test is that the dialog flow above completed without
     # raising. This confirms it left history empty rather than adding entries.

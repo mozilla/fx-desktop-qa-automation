@@ -1095,23 +1095,6 @@ class PlacesHistory:
         inserted = self._run(
             """
             const visits = arguments[0];
-            for (const visit of visits) {
-                await PlacesUtils.history.insert({
-                    url: visit.url,
-                    title: visit.title,
-                    visits: [{
-                        date: new Date(visit.timestamp_ms),
-                        transition: PlacesUtils.history.TRANSITIONS.LINK,
-                    }],
-                });
-            }
-            resolve(visits.length);
-            """,
-            visits,
-        )
-        inserted = self._run(
-            """
-            const visits = arguments[0];
             let count = 0;
             for (const visit of visits) {
                 const added = await PlacesUtils.history.insert({
@@ -1128,6 +1111,11 @@ class PlacesHistory:
             """,
             visits,
         )
+        if inserted != len(visits):
+            raise WebDriverException(
+                f"Expected {len(visits)} visits to be inserted, "
+                f"Places accepted {inserted}"
+            )
 
     def get_visit_presence(self, urls: List[str]) -> dict:
         """

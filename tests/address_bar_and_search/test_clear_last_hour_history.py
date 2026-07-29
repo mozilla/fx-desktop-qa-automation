@@ -124,5 +124,6 @@ def test_clear_last_hour_history_ui(driver: Firefox):
     )
 
     page.click_on("clear-history-button")
+    panel.wait_for_clear_history_dialog_closed()
 
     assert_only_the_last_hour_was_cleared(history, visits)
