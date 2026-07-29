@@ -5,9 +5,11 @@ import pytest
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
+    TimeoutException,
 )
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import ContextMenu, TabBar
@@ -40,61 +42,60 @@ def add_to_prefs_list():
     return [("network.cookie.cookieBehavior", "2")]
 
 
-def _visible_audio_links(driver):
-    try:
-        video_links = driver.find_elements(By.CSS_SELECTOR, ".audiolink")
-
-        if len(video_links) < 2:
-            return False
-
-        return (
-            video_links
-            if all(video_link.is_displayed() for video_link in video_links[:2])
-            else False
-        )
-    except StaleElementReferenceException:
-        return False
-
-
-def _wait_for_audio_tab_state(
-    driver,
-    tabs,
-    required_attributes,
-    absent_attributes=(),
+def _wait_for_tab_attributes(
+    driver: Firefox,
+    tabs: TabBar,
+    required_attributes: tuple[str, ...],
+    description: str,
 ):
-    def _state_matches(_):
+    last_state = {}
+
+    def _attributes_match(_):
+        nonlocal last_state
+
         try:
+            current_state = {}
+
             with driver.context(driver.CONTEXT_CHROME):
                 for tab_index in AUDIO_TAB_INDICES:
-                    tab = tabs.get_element(
-                        "tab-by-index",
-                        labels=[str(tab_index)],
-                    )
+                    tab = tabs.get_tab(tab_index)
 
-                    if any(
-                        tab.get_attribute(attribute) is None
-                        for attribute in required_attributes
-                    ):
-                        return False
+                    current_state[tab_index] = {
+                        attribute: tab.get_attribute(attribute)
+                        for attribute in (
+                            "multiselected",
+                            "activemedia-blocked",
+                            "soundplaying",
+                            "muted",
+                        )
+                    }
 
-                    if any(
-                        tab.get_attribute(attribute) is not None
-                        for attribute in absent_attributes
-                    ):
-                        return False
+            last_state = current_state
 
-                return True
+            return all(
+                all(
+                    current_state[tab_index][attribute] is not None
+                    for attribute in required_attributes
+                )
+                for tab_index in AUDIO_TAB_INDICES
+            )
+
         except (
             NoSuchElementException,
             StaleElementReferenceException,
         ):
             return False
 
-    WebDriverWait(driver, WAIT_TIMEOUT).until(_state_matches)
+    try:
+        WebDriverWait(driver, WAIT_TIMEOUT).until(_attributes_match)
+    except TimeoutException as error:
+        raise AssertionError(
+            f"Timed out waiting for {description}. "
+            f"Last observed tab state: {last_state}"
+        ) from error
 
 
-def _click_audio_toggle(tabs):
-    tabs.hover("tab-by-index", labels=["2"])
+def _click_audio_toggle(tabs: TabBar):
     tabs.element_clickable(
         "any-media-button-by-tab-index",
         labels=["2"],
@@ -105,6 +106,7 @@ def _click_audio_toggle(tabs):
     )
 
 
+# This test is unstable in Windows GHA for now
 @pytest.mark.audio
 def test_play_mute_unmute_tabs_via_toggle(
     driver: Firefox,
@@ -121,51 +123,62 @@ def test_play_mute_unmute_tabs_via_toggle(
     playlist_page.open()
 
     # Locate and open the first 2 audio links in new tabs.
+    video_links = wait.until(
+        EC.visibility_of_all_elements_located(
+            (By.CSS_SELECTOR, ".audiolink")
+        )
+    )
+
     for link_index in range(2):
-        video_links = wait.until(_visible_audio_links)
         playlist_page.context_click(video_links[link_index])
         context_menu.click_and_hide_menu(
-            "context-menu-open-link-in-tab",
+            "context-menu-open-link-in-tab"
         )
 
-    # Wait for both audio tabs to open and reach the autoplay-blocked state.
     tabs.wait_for_num_tabs(3)
-    _wait_for_audio_tab_state(
+
+    # Replace the Windows-specific sleep with an explicit state wait.
+    _wait_for_tab_attributes(
         driver,
         tabs,
         required_attributes=("activemedia-blocked",),
+        description="both audio tabs to reach the autoplay-blocked state",
     )
 
     # Select both audio tabs while staying on the first tab.
     for tab_index in AUDIO_TAB_INDICES:
-        tabs.control_click(
-            "tab-by-index",
-            labels=[str(tab_index)],
-        )
+        tabs.control_click(tabs.get_tab(tab_index))
 
-    _wait_for_audio_tab_state(
+    _wait_for_tab_attributes(
         driver,
         tabs,
-        required_attributes=(
-            "multiselected",
-            "activemedia-blocked",
-        ),
+        required_attributes=("multiselected",),
+        description="both audio tabs to become multiselected",
     )
 
-    for _ in range(2):
+    for iteration in range(2):
         # Play or unmute both selected tabs.
         _click_audio_toggle(tabs)
-        _wait_for_audio_tab_state(
+
+        _wait_for_tab_attributes(
             driver,
             tabs,
             required_attributes=("soundplaying",),
-            absent_attributes=("muted",),
+            description=(
+                "both audio tabs to report sound playing "
+                f"during iteration {iteration + 1}"
+            ),
         )
 
         # Mute both selected tabs.
         _click_audio_toggle(tabs)
-        _wait_for_audio_tab_state(
+
+        _wait_for_tab_attributes(
             driver,
             tabs,
             required_attributes=("muted",),
+            description=(
+                "both audio tabs to become muted "
+                f"during iteration {iteration + 1}"
+            ),
         )
