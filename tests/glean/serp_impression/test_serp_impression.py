@@ -15,6 +15,14 @@ from tests.glean.utils import load_cases
 data = load_cases(__file__)
 METRIC = data["metric"]
 
+# Cases whose on-page SERP interaction never reaches a real SERP because the engine serves a bot
+# challenge to CI IPs instead. Keyed by platform, since the challenged set differs per platform.
+BOT_CHALLENGE_SKIPS = {
+    "Linux": ("3255447", "3255452", "3255477", "3255482"),
+    "Darwin": ("3255477", "3255482"),
+    "Windows": ("3255477", "3255482"),
+}
+
 
 @pytest.fixture(
     params=data["cases"],
@@ -43,14 +51,8 @@ def add_to_prefs_list(case):
 
 def test_serp_impression(driver: Firefox, case: dict, sys_platform: str):
     """Verify serp.impression Glean event payload after a SERP is opened."""
-    # Bing serves a bot-detection captcha on Linux CI for this flow's double-request pattern,
-    # so the refinement never reaches a real SERP.
-    if (
-        sys_platform == "Linux"
-        and case["entry"] == "follow_on_from_refine_on_incontent_search"
-        and case.get("params", {}).get("engine") == "Bing"
-    ):
-        pytest.skip("Bing follow_on hits a bot-detection captcha on Linux CI")
+    if case["id"] in BOT_CHALLENGE_SKIPS.get(sys_platform, ()):
+        pytest.skip("Engine serves a bot challenge instead of a SERP on CI")
 
     prefs = AboutPrefs(driver, category="search")
     glean = Glean(driver)
