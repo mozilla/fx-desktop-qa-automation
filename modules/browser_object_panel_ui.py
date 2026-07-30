@@ -5,8 +5,8 @@ from typing import List, Optional, Tuple
 from pypom import Region
 from selenium.common.exceptions import (
     NoSuchElementException,
-    TimeoutException,
     StaleElementReferenceException,
+    TimeoutException,
 )
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
