@@ -310,7 +310,8 @@
     "groups": [],
     "comment": {
       "description": "A data category checkbox in the Clear browsing data and cookies dialog, keyed by element id: browsingHistoryAndDownloads, cookiesAndStorage, cache, formdata, siteSettings",
-      "location": "On the hamburger menu > History > Clear recent history"
+      "location": "On the hamburger menu > History > Clear recent history",
+      "note": "The checkbox tag is XUL-specific. Firefox has been progressively migrating chrome dialogs to HTML, and if the Clear History dialog is migrated the selector here would need to change to input[type=\"checkbox\"]#{category}."
     }
   },
   "all-history-warning": {
