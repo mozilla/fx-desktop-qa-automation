@@ -3,7 +3,11 @@ from time import sleep
 from typing import List, Optional, Tuple
 
 from pypom import Region
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -12,7 +16,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
-from selenium.common.exceptions import StaleElementReferenceException
 
 
 class PanelUi(BasePage):
