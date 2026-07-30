@@ -211,7 +211,7 @@ class AboutPrefs(BasePage):
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(
-        self, lang_code: str, wait_for_ui: bool = False
+            self, lang_code: str, wait_for_ui: bool = False
     ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
@@ -223,9 +223,10 @@ class AboutPrefs(BasePage):
 
         Args:
             lang_code: The language code to set (e.g. 'pt-BR', 'it')
-            wait_for_ui: If True, waits for the document language to update
-                         before returning. Use when chrome UI elements need
-                         to reflect the new language immediately.
+            wait_for_ui: If True, waits for the page title to change before
+                         returning, confirming the locale has been applied.
+                         Use when chrome UI elements need to reflect the new
+                         language immediately.
         """
         self.wait.until(
             lambda _: any(
@@ -235,6 +236,10 @@ class AboutPrefs(BasePage):
                 ).find_elements(By.TAG_NAME, "option")
             )
         )
+
+        # Capture title before language change
+        current_title = self.driver.title if wait_for_ui else None
+
         Select(self.get_element("browser-language-preferred-select")).select_by_value(
             lang_code
         )
@@ -242,8 +247,7 @@ class AboutPrefs(BasePage):
 
         if wait_for_ui:
             self.wait.until(
-                lambda _: "pt"
-                in self.driver.execute_script("return document.documentElement.lang")
+                lambda _: self.driver.title != current_title
             )
         return self
 
