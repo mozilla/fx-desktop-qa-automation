@@ -210,7 +210,9 @@ class AboutPrefs(BasePage):
         is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
-    def set_alternative_language(self, lang_code: str, wait_for_ui: bool = False) -> BasePage:
+    def set_alternative_language(
+        self, lang_code: str, wait_for_ui: bool = False
+    ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
         The available-languages list is hydrated asynchronously — Firefox
@@ -240,9 +242,8 @@ class AboutPrefs(BasePage):
 
         if wait_for_ui:
             self.wait.until(
-                lambda _: "pt" in self.driver.execute_script(
-                    "return document.documentElement.lang"
-                )
+                lambda _: "pt"
+                in self.driver.execute_script("return document.documentElement.lang")
             )
         return self
 
