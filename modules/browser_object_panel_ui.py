@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import BrowserActions, PomUtils
+from selenium.common.exceptions import StaleElementReferenceException
 
 
 class PanelUi(BasePage):
@@ -300,7 +301,9 @@ class PanelUi(BasePage):
                 != wanted
             ):
                 box.click()
-                self.custom_wait(timeout=10).until(
+                self.custom_wait(
+                    timeout=10, ignored_exceptions=[StaleElementReferenceException]
+                ).until(
                     lambda _, el=box, want=wanted: self.driver.execute_script(
                         "return arguments[0].checked;", el
                     )
