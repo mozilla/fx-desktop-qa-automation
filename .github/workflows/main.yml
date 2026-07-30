@@ -225,6 +225,8 @@ jobs:
         run: |
           $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
           if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
+          # Set after the guard: routes results to the dedicated Glean plan
+          $env:STARFOX_SPLIT = "glean"
           uv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -404,7 +406,8 @@ jobs:
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
           if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
-          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          # Prefixed, not exported: routes results to the dedicated Glean plan
+          STARFOX_SPLIT=glean uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 

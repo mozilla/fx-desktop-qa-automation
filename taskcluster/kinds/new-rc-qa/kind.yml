@@ -53,7 +53,7 @@ tasks:
         uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=${?};
         export REPORTABLE=1;
-        uv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
+        STARFOX_SPLIT=glean uv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
         export FAILURE=$((FAILURE | ${?}));
         uv run python scripts/switch_config.py ci_headed;
         uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
