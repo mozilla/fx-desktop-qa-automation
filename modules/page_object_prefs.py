@@ -210,7 +210,7 @@ class AboutPrefs(BasePage):
         is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
-    def set_alternative_language(self, lang_code: str) -> BasePage:
+    def set_alternative_language(self, lang_code: str, wait_for_ui: bool = False) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
         The available-languages list is hydrated asynchronously — Firefox
@@ -218,6 +218,12 @@ class AboutPrefs(BasePage):
         pane opens — so the target option may be missing the instant we look.
         Wait for it before selecting. Firefox applies the locale live once the
         dropdown value changes.
+
+        Args:
+            lang_code: The language code to set (e.g. 'pt-BR', 'it')
+            wait_for_ui: If True, waits for the document language to update
+                         before returning. Use when chrome UI elements need
+                         to reflect the new language immediately.
         """
         self.wait.until(
             lambda _: any(
@@ -231,6 +237,13 @@ class AboutPrefs(BasePage):
             lang_code
         )
         self.element_attribute_is("browser-language-preferred", "value", lang_code)
+
+        if wait_for_ui:
+            self.wait.until(
+                lambda _: "pt" in self.driver.execute_script(
+                    "return document.documentElement.lang"
+                )
+            )
         return self
 
     def open_doh_advanced(self) -> BasePage:
