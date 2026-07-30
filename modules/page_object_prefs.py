@@ -211,7 +211,7 @@ class AboutPrefs(BasePage):
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(
-            self, lang_code: str, wait_for_ui: bool = False
+        self, lang_code: str, wait_for_ui: bool = False
     ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
@@ -246,9 +246,7 @@ class AboutPrefs(BasePage):
         self.element_attribute_is("browser-language-preferred", "value", lang_code)
 
         if wait_for_ui:
-            self.wait.until(
-                lambda _: self.driver.title != current_title
-            )
+            self.wait.until(lambda _: self.driver.title != current_title)
         return self
 
     def open_doh_advanced(self) -> BasePage:
