@@ -27,7 +27,7 @@ def test_detected_blocked_trackers_found(
 
     generic_page.driver.get(url)
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # verify the types of trackers
     trust_panel.trackers_detected("tracking-content")

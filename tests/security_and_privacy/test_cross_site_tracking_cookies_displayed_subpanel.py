@@ -17,7 +17,10 @@ def test_case():
     return "3054909"
 
 
-def test_cross_site_tracking_cookies_displayed_subpanel(driver: Firefox):
+def test_cross_site_tracking_cookies_displayed_subpanel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054909 - Cross-site tracking cookies are correctly displayed in the sub panel
     """
@@ -25,7 +28,6 @@ def test_cross_site_tracking_cookies_displayed_subpanel(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=COOKIES_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy select only the option "Cross-site tracking cookies" in the Cookies section
     about_prefs.open()

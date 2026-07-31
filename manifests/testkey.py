@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import yaml
 
-NUM_FUNCTIONAL_SPLITS = 2
+NUM_FUNCTIONAL_SPLITS = 3
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
 DEFAULT_FUNCTIONAL_SPLIT = "functional1"

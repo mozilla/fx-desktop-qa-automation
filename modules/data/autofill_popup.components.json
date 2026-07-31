@@ -97,7 +97,7 @@
     "groups": []
   },
   "select-form-option": {
-    "selectorData": "#PopupAutoComplete .autocomplete-richlistitem",
+    "selectorData": "#PopupAutoComplete richlistbox richlistitem",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -107,26 +107,8 @@
       "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
     }
   },
-  "select-form-option-by-value": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value*='{value}']",
-    "strategy": "css",
-    "groups": [],
-    "comment": {
-      "description": "An individual entry within the autofill dropdown, with a label for the \"ac-value\" attr, usually a cardholder name.",
-      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field when suggestions are available."
-    }
-  },
-  "clear-form-option": {
-    "selectorData": ".autocomplete-richlistbox .autocomplete-richlistitem[ac-value='Clear Autofill Form']",
-    "strategy": "css",
-    "groups": [],
-    "comment": {
-      "description": "The \"Clear Autofill Form\" option in the dropdown that appears when interacting with an autofill-enabled input field",
-      "location": "Appears as part of the dropdown under the autofill panel, within any eligible form field after a field was autofilled."
-    }
-  },
   "select-form-option-autofill": {
-    "selectorData": ".autocomplete-richlistitem[originaltype='autofill']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='autofill']",
     "strategy": "css",
     "groups": [
       "doNotCache"
@@ -275,11 +257,11 @@
     }
   },
   "manage-passwords": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Manage Passwords']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='loginsFooter']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Login autofill manage passwords button",
+      "description": "Login autofill 'Manage Passwords' footer row (Firefox 154+ autocomplete-row-item; the ac-value attribute was removed so match on originaltype)",
       "location": "Login autofill"
     }
   },
@@ -293,9 +275,15 @@
     }
   },
   "generated-securely-password": {
-    "selectorData": "richlistitem.autocomplete-richlistitem[ac-value='Use a Securely Generated Password']",
+    "selectorData": "#PopupAutoComplete richlistitem[originaltype='generatedPassword']",
     "strategy": "css",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox autocomplete option for using a securely generated password, shown when clicking on a password field.",
+      "location": "Firefox chrome autofill popup"
+    }
   },
   "insecure-login-warning": {
     "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning']",
@@ -305,17 +293,6 @@
     ],
     "comment": {
       "description": "Firefox autocomplete warning item shown for login fields on insecure HTTP pages.",
-      "location": "Firefox chrome autofill popup"
-    }
-  },
-  "insecure-login-warning-text": {
-    "selectorData": "#PopupAutoComplete richlistitem[originaltype='insecureWarning'] .ac-title-text",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ],
-    "comment": {
-      "description": "Text container for the insecure login warning message.",
       "location": "Firefox chrome autofill popup"
     }
   }

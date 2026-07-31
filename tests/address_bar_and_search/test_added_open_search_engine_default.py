@@ -38,7 +38,7 @@ def test_added_open_search_engine_default(driver: Firefox, engine):
     # "Add + name_of_search_engine"
     nav.add_search_mode(engine)
 
-    # Open in a new tab about:preferences#search
+    # Open about:preferences#search in a new tab
     prefs.open()
 
     # Set the newly added engine as a default engine.

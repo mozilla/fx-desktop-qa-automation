@@ -151,6 +151,10 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
+    # Settle interval to let a native (non-DOM) prompt take keyboard focus before
+    # typing OS-level keystrokes; its readiness cannot be polled directly.
+    _NATIVE_PROMPT_SETTLE_S = 0.5
+
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.ba = BrowserActions(self.driver)
@@ -290,7 +294,7 @@ class AboutLogins(BasePage):
                 return self
             # Brief settle so the native prompt has keyboard focus before typing;
             # it is not in the DOM, so its readiness cannot be polled directly.
-            sleep(0.5)
+            sleep(self._NATIVE_PROMPT_SETTLE_S)
             self.gui.write(primary_password, interval=0.05)
             self.gui.press("enter")
             # Condition-based wait for the prompt to dismiss (instead of a fixed
@@ -483,6 +487,28 @@ class AboutLogins(BasePage):
             self.driver.switch_to.alert.dismiss()
         except Exception:
             pass
+        return self
+
+    def enter_primary_password_native(self, primary_password, timeout=10) -> BasePage:
+        """
+        Unlock the login store by answering Firefox's native Primary Password prompt.
+
+        Firefox 154 presents the Primary Password request for login-form autofill as
+        a native tab-modal ``promptPassword`` dialog (not the older in-content page
+        handled by :meth:`enter_primary_password`). Marionette rejects
+        ``Alert.send_keys`` on it, so type via OS keystrokes and accept — the same
+        approach used for the CSV-export re-auth prompt. Entering the correct
+        password unlocks the store for the session, which stops it re-prompting on
+        later reads (a cancel instead leaves it re-prompting persistently). Waits for
+        the prompt, types, and waits for it to clear.
+        """
+        WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+        # Brief settle so the native prompt has keyboard focus before typing; it is
+        # not in the DOM, so its readiness cannot be polled directly.
+        sleep(self._NATIVE_PROMPT_SETTLE_S)
+        self.gui.write(primary_password, interval=0.05)
+        self.gui.press("enter")
+        WebDriverWait(self.driver, timeout).until_not(EC.alert_is_present())
         return self
 
     def assert_username_present(self, username: str) -> BasePage:

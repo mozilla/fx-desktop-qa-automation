@@ -13,14 +13,16 @@ def test_case():
     return "3054036"
 
 
-def test_privacy_settings_footer_link_opens_correct_page(driver: Firefox):
+def test_privacy_settings_footer_link_opens_correct_page(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054036 - “Privacy settings” footer link opens the correct page
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=YOUTUBE_URL)
-    trust_panel = TrustPanel(driver)
     tabs = TabBar(driver)
     nav = Navigation(driver)
 

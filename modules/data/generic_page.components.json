@@ -67,12 +67,16 @@
   "simulated-third-party-tracker-block-status": {
     "selectorData": "blacklisted-blocked",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "simulated-third-party-tracker-load-status": {
     "selectorData": "blacklisted-loaded",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "The third-party tracker loaded status",
       "location": "Tracker test website"
@@ -81,7 +85,9 @@
   "simulated-first-party-tracker-load-status": {
     "selectorData": "whitelisted-loaded",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "The first-party tracker allowed status",
       "location": "Tracker test website"

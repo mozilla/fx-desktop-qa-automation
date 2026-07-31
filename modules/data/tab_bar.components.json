@@ -316,6 +316,17 @@
       "location": "All tabs from the tabs bar"
     }
   },
+  "any-media-button-by-tab-index": {
+    "selectorData": "tab[linkedpanel$='-{index}'] moz-button.tab-audio-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Any given media control button in tab",
+      "location": "Any tab playing supported media"
+    }
+  },
   "play-tab-button": {
     "selectorData": "moz-button.tab-audio-button[activemedia-blocked='{state}']",
     "strategy": "css",

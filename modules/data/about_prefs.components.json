@@ -1087,11 +1087,11 @@
     }
   },
   "permission-dialog": {
-    "selectorData": "[data-l10n-id='permission-dialog']",
+    "selectorData": "dialog",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Permission dialog",
+      "description": "Permission subdialog; shadow host for the accept/cancel buttons",
       "location": "about:preferences#privacy -> Permissions"
     }
   },
@@ -1102,16 +1102,6 @@
     "groups": [],
     "comment": {
       "description": "Autoplay save changes",
-      "location": "Settings Autoplay popup"
-    }
-  },
-  "spacer": {
-    "selectorData": "button-spacer",
-    "strategy": "class",
-    "shadowParent": "permission-dialog",
-    "groups": [],
-    "comment": {
-      "description": "Spacer to dismiss autoplay options menu",
       "location": "Settings Autoplay popup"
     }
   },
