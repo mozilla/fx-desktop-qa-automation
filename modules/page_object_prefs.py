@@ -211,7 +211,7 @@ class AboutPrefs(BasePage):
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
     def set_alternative_language(
-            self, lang_code: str, wait_for_ui: bool = False
+        self, lang_code: str, wait_for_ui: bool = False
     ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
