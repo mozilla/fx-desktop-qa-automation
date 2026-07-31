@@ -1607,11 +1607,7 @@ tabs:
     splits:
     - functional3
   test_close_pinned_tab_via_mouse:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
     - ci
@@ -1666,8 +1662,7 @@ tabs:
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_open_new_tab:
