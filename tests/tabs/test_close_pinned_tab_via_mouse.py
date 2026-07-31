@@ -11,30 +11,38 @@ def test_case():
 
 
 @pytest.mark.headed
-def test_close_pinned_tab_via_middle_click(driver: Firefox):
+def test_close_pinned_tab_via_mouse(driver: Firefox):
     """
     C134726 - Verify middle-clicking pinned tab will close it
     """
-
-    # Instantiate objects
     example = ExamplePage(driver)
     tabs = TabBar(driver)
     tab_menu = ContextMenu(driver)
 
-    # Open 2 new tabs
+    # Open 2 new tabs and preserve the handle of the tab to be pinned.
     example.open()
+    pinned_tab_handle = driver.current_window_handle
+
     for _ in range(2):
         tabs.new_tab_by_button()
+
     tabs.wait_for_num_tabs(3)
 
-    # Pin the first tab
-    first_tab = tabs.get_tab(1)
-    tabs.context_click(first_tab)
+    # Pin the first tab and wait for the pinned state.
+    tabs.context_click("tab-by-index", labels=["1"])
     tab_menu.click_and_hide_menu("context-menu-pin-tab")
-    assert tabs.is_pinned(first_tab), "Expected the first tab to be pinned"
+    tabs.element_attribute_is(
+        "tab-by-index",
+        "pinned",
+        "true",
+        labels=["1"],
+    )
 
-    # Middle-click the pinned tab to close it
-    tabs.middle_click(first_tab)
+    # Middle-click the freshly located pinned tab.
+    tabs.close_tab_by_middle_click(1)
 
-    # Verify pinned tab was closed and 2 tabs remain
+    # Verify that the pinned tab specifically was closed.
     tabs.wait_for_num_tabs(2)
+    assert pinned_tab_handle not in driver.window_handles, (
+        "Expected the pinned tab to be closed"
+    )
