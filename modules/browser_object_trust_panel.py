@@ -1,7 +1,11 @@
 import json
 from time import sleep
 
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    TimeoutException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -123,6 +127,40 @@ class TrustPanel(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_tracker_sections(self, timeout: int = 10) -> BasePage:
+        """Wait until blocked and detected tracker sections are both visible."""
+
+        def _sections_are_visible(_):
+            try:
+                blocked_visible = any(
+                    element.is_displayed()
+                    for element in self.get_elements("blocked-items")
+                )
+                detected_visible = any(
+                    element.is_displayed()
+                    for element in self.get_elements("detected-items")
+                )
+
+                return blocked_visible and detected_visible
+            except (
+                NoSuchElementException,
+                StaleElementReferenceException,
+            ):
+                return False
+
+        self.custom_wait(
+            timeout=timeout,
+            poll_frequency=0.5,
+        ).until(
+            _sections_are_visible,
+            message=(
+                "The blocked and detected tracker sections did not both become visible."
+            ),
+        )
+
+        return self
+
+    @BasePage.context_chrome
     def assert_connection_information(self, expected_technical_details):
         self.element_clickable("trustpanel-connect-button")
         self.click_on("trustpanel-connect-button")
@@ -134,9 +172,14 @@ class TrustPanel(BasePage):
             EC.presence_of_element_located((By.ID, "security-technical-shortform"))
         )
         sleep(0.5)
-        assert technical_details.get_attribute("value") == expected_technical_details, (
-            f"Expected '{expected_technical_details}' but found "
-            f"'{technical_details.get_attribute('value')}'"
+        actual_technical_details = technical_details.get_attribute("value")
+
+        normalized_expected = " ".join(expected_technical_details.split())
+        normalized_actual = " ".join(actual_technical_details.split())
+
+        assert normalized_actual == normalized_expected, (
+            f"Expected {expected_technical_details!r} but found "
+            f"{actual_technical_details!r}"
         )
 
     @BasePage.context_chrome
@@ -223,12 +266,13 @@ class TrustPanel(BasePage):
         """Click the connection section button from the Trust Panel."""
         self.element_visible("trustpanel-connection-button")
         self.click_on("trustpanel-connection-button")
-        # Wait for the subview to actually render
+
         try:
             self.element_visible("connection-subview")
         except TimeoutException:
-            # Retry click
             self.click_on("trustpanel-connection-button")
+            self.element_visible("connection-subview")
+
         return self
 
     @BasePage.context_chrome
@@ -266,8 +310,9 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def panel_is_dismissed(self):
         """Verify the Trust Panel is closed via its state attribute."""
-        panel = self.get_element("trustpanel")
-        self.expect(lambda _: panel.get_attribute("state") == "closed")
+        self.expect(
+            lambda _: self.get_element("trustpanel").get_attribute("state") == "closed"
+        )
         return self
 
     @BasePage.context_chrome

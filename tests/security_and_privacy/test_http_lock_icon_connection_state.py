@@ -12,14 +12,16 @@ def test_case():
     return "3054027"
 
 
-def test_http_lock_icon_connection_state(driver: Firefox):
+def test_http_lock_icon_connection_state(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054027 - Lock icon and text correctly reflects the connection state (HTTP)
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=HTTP_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()

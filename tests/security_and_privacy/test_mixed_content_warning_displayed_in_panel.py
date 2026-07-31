@@ -12,14 +12,16 @@ def test_case():
     return "3054043"
 
 
-def test_mixed_content_warning_displayed_in_panel(driver: Firefox):
+def test_mixed_content_warning_displayed_in_panel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054043 - Mixed-content warning is correctly displayed inside the panel
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=MIXED_CONTENT_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()

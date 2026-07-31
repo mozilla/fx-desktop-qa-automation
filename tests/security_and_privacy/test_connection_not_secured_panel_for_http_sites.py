@@ -21,14 +21,16 @@ def add_to_prefs_list():
     ]
 
 
-def test_connection_not_secured_panel_for_http_sites(driver: Firefox):
+def test_connection_not_secured_panel_for_http_sites(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054044 - Connection not secure is correctly displayed for plain HTTP site
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=HTTP_SITE)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()

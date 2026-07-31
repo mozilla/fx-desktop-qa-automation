@@ -16,7 +16,10 @@ def test_case():
     return "3054916"
 
 
-def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
+def test_fingerprinters_subpanel_display_when_not_blocked(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054916 - Fingerprinters are correctly displayed in the sub panel when they are not blocked
     """
@@ -24,7 +27,6 @@ def test_fingerprinters_subpanel_display_when_not_blocked(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=FINGERPRINTERS_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy deselect the options "Known fingerprinters" and "Suspected fingerprinters"
     about_prefs.open()

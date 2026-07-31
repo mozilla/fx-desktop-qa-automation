@@ -15,7 +15,10 @@ def test_case():
     return "3054910"
 
 
-def test_cryptominers_displayed_subpanel(driver: Firefox):
+def test_cryptominers_displayed_subpanel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054910 - Cryptominers are correctly displayed in the sub panel
     """
@@ -23,7 +26,6 @@ def test_cryptominers_displayed_subpanel(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     tracking_page = GenericPage(driver, url=CRYPTOMINERS_URL)
-    trust_panel = TrustPanel(driver)
 
     # In about:preferences#privacy select only the option "Cryptominers"
     about_prefs.open()

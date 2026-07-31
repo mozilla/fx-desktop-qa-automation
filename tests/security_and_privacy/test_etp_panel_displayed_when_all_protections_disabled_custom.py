@@ -12,7 +12,10 @@ def test_case():
     return "3054908"
 
 
-def test_etp_panel_displayed_when_all_protections_disabled_custom(driver: Firefox):
+def test_etp_panel_displayed_when_all_protections_disabled_custom(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054908 - The panel is correctly displayed when all protections are disabled through custom
     """
@@ -20,7 +23,6 @@ def test_etp_panel_displayed_when_all_protections_disabled_custom(driver: Firefo
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     test_page = GenericPage(driver, url=GOOGLE_URL)
-    trust_panel = TrustPanel(driver)
 
     # Go to about:preferences#privacy and select the "Custom" options from the ETP section and deselect everything
     about_prefs.open()

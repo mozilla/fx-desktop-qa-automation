@@ -336,6 +336,17 @@ def test_case():
     return None
 
 
+def pytest_collection_modifyitems(
+    items: list[pytest.Item],
+) -> None:
+    """Serialize Security & Privacy tests on all platforms."""
+    for item in items:
+        nodeid = item.nodeid.replace("\\", "/")
+
+        if nodeid.startswith("tests/security_and_privacy/"):
+            item.add_marker(pytest.mark.xdist_group(name="security-and-privacy"))
+
+
 def pytest_configure(config):
     logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
         logging.CRITICAL
