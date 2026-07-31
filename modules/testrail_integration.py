@@ -1086,8 +1086,8 @@ def collect_changes(testrail_session: TestRail, report):
         )
 
     # Find plan to attach runs to, create if doesn't exist
-    # Warn-level: CI runs at log_cli_level=warn, so info would not surface
-    logging.warning(f"Plan title: {plan_title}")
+    # Informational, but logged at warn: CI runs at log_cli_level=warn
+    logging.warning(f"[INFO] Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
