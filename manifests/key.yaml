@@ -1604,8 +1604,7 @@ tabs:
     - smoke
     - ci
   test_close_tab_through_middle_mouse_click:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result: unstable
+    result: pass
     splits:
     - ci
     - functional3
