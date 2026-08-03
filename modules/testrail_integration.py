@@ -167,11 +167,13 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
-    if os.environ.get("STARFOX_SPLIT") and os.environ.get("STARFOX_SPLIT").startswith(
-        "functional"
-    ):
-        functional_split = os.environ["STARFOX_SPLIT"].split("functional")[-1]
+    split = os.environ.get("STARFOX_SPLIT") or ""
+    if split.startswith("functional"):
+        functional_split = split.split("functional")[-1]
         plan_title = f"{plan_title} - Functional (Split {functional_split})"
+    elif split == "glean":
+        # Glean reports to its own plan; it is not part of the smoke run
+        plan_title = f"{plan_title} - Glean Telemetry"
     return plan_title
 
 
@@ -1084,7 +1086,8 @@ def collect_changes(testrail_session: TestRail, report):
         )
 
     # Find plan to attach runs to, create if doesn't exist
-    logging.info(f"Plan title: {plan_title}")
+    # Informational, but logged at warn: CI runs at log_cli_level=warn
+    logging.warning(f"[INFO] Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
