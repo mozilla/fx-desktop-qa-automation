@@ -69,31 +69,45 @@ def get_execution_link(os_name: str = None) -> str:
     return ""
 
 
-def replace_link_in_description(description, os_name) -> str:
-    """Add or replace a test execution link in the test run description"""
+def replace_link_in_description(description: str, os_name: str) -> str:
+    """
+    Leave exactly one execution link for os_name in the description.
+
+    Every link for this OS is dropped, however many copies there are and
+    wherever they sit, then the current one is re-inserted where the first copy
+    was, so platform order stays stable and unrelated text is kept.
+    """
 
     link = get_execution_link(os_name)
     if not link:
         return description
 
     new_line = f"[{os_name} execution link]({link})"
-    lines = description.splitlines()
     pat = re.compile(
-        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
+        rf"\[\s*{re.escape(os_name)}\s+execution\s+link\]\([^)]*\)",
         re.IGNORECASE,
     )
 
-    # Look for existing line to replace
-    for i, line in enumerate(lines):
-        if pat.match(line):
-            if line.strip() == new_line:
-                return description
-            lines[i] = new_line
-            return "\n".join(lines)
+    lines = []
+    insert_at = None
+    for line in description.splitlines():
+        if not pat.search(line):
+            lines.append(line)
+            continue
+        # Keep anything that shares the line with the link(s), but not leftover
+        # punctuation (a list marker, a stray bracket) from an older format
+        remainder = pat.sub("", line).strip()
+        if re.search(r"\w", remainder):
+            lines.append(remainder)
+        if insert_at is None:
+            insert_at = len(lines)
 
-    # No existing line found, append new one
-    lines.append(new_line)
-    return "\n".join(lines)
+    if insert_at is None:
+        insert_at = len(lines)
+    lines.insert(insert_at, new_line)
+
+    updated = "\n".join(lines)
+    return description if updated == description else updated
 
 
 def determine_current_os() -> str:
