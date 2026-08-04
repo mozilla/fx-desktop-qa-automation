@@ -50,11 +50,12 @@ tasks:
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
         uv run python -m scripts.choose_test_split;
-        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        export FAILURE=${?};
-        export REPORTABLE=1;
+        # Glean first, and unforced: a retry is decided by smoke coverage, so glean must not run last
         STARFOX_SPLIT=glean uv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
+        export FAILURE=${?};
+        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         export FAILURE=$((FAILURE | ${?}));
+        export REPORTABLE=1;
         uv run python scripts/switch_config.py ci_headed;
         uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
         exit $((${?} | ${FAILURE}))
