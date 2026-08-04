@@ -64,6 +64,7 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     tabs.new_tab_by_button()
     driver.switch_to.window(driver.window_handles[1])
     tabs.close_first_tab_by_icon()
+    nav.wait_for_suggestions_present()
     nav.type_in_awesome_bar(TYPED_TEXT)
     # Fx Suggest elements always exist and are populated based on search,
     # so we need to check that element has "" in the title attr
