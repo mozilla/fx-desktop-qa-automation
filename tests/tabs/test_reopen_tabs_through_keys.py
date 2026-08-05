@@ -69,7 +69,7 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
     for expected_tab_count in range(2, len(URLS) + 2):
         handles_before = set(driver.window_handles)
 
-        tabs.reopen_tabs_with_shortcut(sys_platform, count=1)
+        tabs.reopen_tabs_with_shortcut(count=1)
         tabs.wait_for_num_tabs(expected_tab_count)
 
         new_handles = set(driver.window_handles) - handles_before
