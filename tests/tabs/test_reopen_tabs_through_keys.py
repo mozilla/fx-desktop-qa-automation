@@ -83,7 +83,7 @@ def test_reopen_tabs_through_keys(driver: Firefox, sys_platform: str):
 
     for handle in reopened_handles:
         driver.switch_to.window(handle)
-        tabs.expect_in_content(lambda _: driver.current_url in URLS)
+        tabs.expect_in_content(lambda d: d.current_url in URLS)
         reopened_urls.add(driver.current_url)
 
     assert reopened_urls == set(URLS), (
