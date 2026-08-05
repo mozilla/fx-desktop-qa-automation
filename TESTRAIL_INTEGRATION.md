@@ -161,6 +161,8 @@ Dry-run never opens a TestRail session and never modifies any state.
 - a TaskCluster log (for Linux runs that set `TASKCLUSTER_PROXY_URL`), or
 - a GitHub Actions run (Windows / Mac via `GITHUB_REPOSITORY` + `GITHUB_RUN_ID`).
 
+Written as plain text (`Windows execution link: <url>`) because TestRail auto-links bare URLs but does not render markdown in the plan overview.
+
 A plan keeps at most one link per OS. Every existing link for the reporting OS is
 dropped before the current one is re-inserted in its place, so a plan that several
 jobs report to (matrix splits per platform, headless + headed re-runs, one TC task

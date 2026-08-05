@@ -82,9 +82,10 @@ def replace_link_in_description(description: str, os_name: str) -> str:
     if not link:
         return description
 
-    new_line = f"[{os_name} execution link]({link})"
+    # TestRail does not render markdown here, but it does auto-link a bare URL
+    new_line = f"{os_name} execution link: {link}"
     pat = re.compile(
-        rf"\[\s*{re.escape(os_name)}\s+execution\s+link\]\([^)]*\)",
+        rf"{re.escape(os_name)}\s+execution\s+link\s*:\s*\S+",
         re.IGNORECASE,
     )
 
