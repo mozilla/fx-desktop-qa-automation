@@ -1,9 +1,10 @@
 import pytest
-from selenium.webdriver import Firefox
+from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object_navigation import Navigation
 
-TEXT = "@bing mozilla"
+ENGINE_KEYWORD = "@bing"
+SEARCH_TERM = "mozilla"
 SEARCH_ENGINE = "Bing"
 
 
@@ -18,14 +19,24 @@ def test_addressbar_search_engine_keywords(driver: Firefox):
     with search engine keywords
     """
 
-    # Instantiate objects
     nav = Navigation(driver)
 
-    # TODO: Add a keyword for one search engine (e.g. for Bing add "bn" keyword)
-    # and search for (e.g. "bn mozilla")
+    # Wait until Firefox has loaded the installed search engines.
+    nav.click_search_mode_switcher()
+    nav.element_visible(
+        "search-mode-switcher-option",
+        labels=[SEARCH_ENGINE],
+    )
+    nav.perform_key_combo_chrome(Keys.ESCAPE)
+    nav.element_not_visible("legacy-searchbar-switcher-popup")
 
-    # In the address bar type the default search engine keyword and a search term (e.g. "@bing mozilla")
-    nav.type_in_awesome_bar(TEXT)
+    nav.clear_awesome_bar()
+    nav.type_in_awesome_bar(ENGINE_KEYWORD)
 
-    # Results from URL bar state that the search will be performed with "Bing" (e.g. "mozilla - Search with Bing")
+    # Give Firefox time to process the alias before entering the search term.
+    nav.perform_key_combo_chrome(Keys.SPACE)
+    nav.verify_search_mode_is_visible(SEARCH_ENGINE)
+
+    nav.type_in_awesome_bar(SEARCH_TERM, reset=False)
+    nav.verify_plain_text_in_input_awesome_bar(SEARCH_TERM)
     nav.verify_search_mode_is_visible(SEARCH_ENGINE)
