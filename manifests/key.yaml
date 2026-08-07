@@ -210,7 +210,36 @@ address_bar_and_search:
     splits:
     - functional1
 ai_controls:
+  test_c3276002_ai_features_keyboard_accessible:
+    test_ai_controls_toggle_visible:
+      result: pass
+      splits:
+      - functional1
+    test_chatbot_select_visible:
+      result: pass
+      splits:
+      - functional1
+    test_translations_select_visible:
+      result: pass
+      splits:
+      - functional1
+  test_c3298824_block_all_persists:
+    result: pass
+    splits:
+    - functional1
   test_c3308998_unblock_restores_state:
+    result: pass
+    splits:
+    - functional1
+  test_c3310314_features_remain_after_unblock:
+    result: pass
+    splits:
+    - functional1
+  test_c3340562_cancel_blocking:
+    result: pass
+    splits:
+    - functional1
+  test_c3341331_extensions_api_disabled:
     result: pass
     splits:
     - functional1
