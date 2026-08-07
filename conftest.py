@@ -572,6 +572,14 @@ def driver(
 
 
 @pytest.fixture()
+def browser_name(driver: Firefox) -> str:
+    """
+    Is it 'Firefox' or 'Nightly'?
+    """
+    return "Nightly" if "a" in driver.capabilities.get("browserVersion") else "Firefox"
+
+
+@pytest.fixture()
 def screenshot(driver: Firefox, opt_ci: bool) -> Callable:
     """
     Factory fixture that returns a screenshot function.
