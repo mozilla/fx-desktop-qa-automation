@@ -474,7 +474,7 @@ jobs:
           echo "STARFOX_SPLIT=$TEST_SET" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable"
         env:
-          TEST_SET = ${{ inputs.split }}
+          TEST_SET: ${{ inputs.split }}
 
       - name: Install dependencies
         id: setup
