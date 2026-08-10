@@ -331,7 +331,6 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
-    - nightly
   test_delete_other_bookmarks:
     result: pass
     splits:
@@ -485,7 +484,6 @@ downloads:
     result: pass
     splits:
     - functional1
-    - nightly
   test_download_pdf:
     result: pass
     splits:
@@ -544,22 +542,24 @@ drag_and_drop:
     result: pass
     splits:
     - functional1
-    - nightly
   test_copy_hyperlink_table:
     result: pass
     splits:
     - functional1
     - nightly
+    - no_xvfb
   test_copy_table_header:
     result: pass
     splits:
     - functional1
     - nightly
+    - no_xvfb
   test_paste_image_text:
     result: pass
     splits:
     - functional1
     - nightly
+    - no_xvfb
 find_toolbar:
   test_find_in_pdf:
     result: pass
@@ -721,6 +721,7 @@ menus:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_hyperlink_context_menu:
     result: pass
     splits:
@@ -998,6 +999,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_insecure_password:
     result: pass
     splits:
@@ -1008,6 +1010,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
@@ -1065,6 +1068,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
@@ -1099,6 +1103,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1431,7 +1436,6 @@ security_and_privacy:
       win: unstable
     splits:
     - functional3
-    - nightly
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
@@ -1785,6 +1789,7 @@ sidebar:
     splits:
     - functional3
     - nightly
+    - no_xvfb
   test_summarize_page_via_ai_chat_panel:
     result: pass
     splits:
@@ -1862,6 +1867,7 @@ tabs:
     - ci
     - functional3
     - nightly
+    - no_xvfb
   test_display_customize_button:
     result: pass
     splits:
@@ -1905,6 +1911,7 @@ tabs:
     splits:
     - functional3
     - nightly
+    - no_xvfb
   test_navigation_multiple_tabs:
     result: pass
     splits:
@@ -1919,6 +1926,7 @@ tabs:
     splits:
     - functional3
     - nightly
+    - no_xvfb
   test_open_new_tab:
     result: pass
     splits:
@@ -1951,6 +1959,7 @@ tabs:
     splits:
     - functional3
     - nightly
+    - no_xvfb
   test_reload_overiding_cache_keys:
     result: pass
     splits:
