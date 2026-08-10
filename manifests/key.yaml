@@ -1493,7 +1493,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
-    - nightly
   test_ensure_panel_renders_on_first_run:
     result: pass
     splits:
