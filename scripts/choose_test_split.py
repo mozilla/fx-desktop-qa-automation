@@ -166,7 +166,7 @@ if __name__ == "__main__":
 
         if os.environ.get("STARFOX_EXCLUDE"):
             print(f"Excluding tests from split: {os.environ['STARFOX_EXCLUDE']}...")
-            for exclude in manifest.gather_split(os.environ["STARFOX_EXCLUDE"]):
+            for exclude in dedupe(manifest.gather_split(os.environ["STARFOX_EXCLUDE"])):
                 if exclude in run_list:
                     del run_list[run_list.index(exclude)]
 
