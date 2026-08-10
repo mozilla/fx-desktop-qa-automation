@@ -506,6 +506,8 @@ jobs:
         id: select
         run: |
           uv run python -m scripts.choose_test_split
+        env:
+          STARFOX_EXCLUDE: no_xvfb
 
       - name: Run Smoke Tests in Ubuntu
         if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}
@@ -514,7 +516,7 @@ jobs:
         run: |
           "$FX_EXECUTABLE" --version;
           Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
@@ -526,7 +528,7 @@ jobs:
           uv sync;
           uv run python scripts/switch_config.py ci_xvfb_headed;
           uv sync;
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
