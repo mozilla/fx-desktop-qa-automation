@@ -161,27 +161,13 @@ Dry-run never opens a TestRail session and never modifies any state.
 - a TaskCluster log (for Linux runs that set `TASKCLUSTER_PROXY_URL`), or
 - a GitHub Actions run (Windows / Mac via `GITHUB_REPOSITORY` + `GITHUB_RUN_ID`).
 
-Written as a line break plus an anchor tag
-(`<br><a href="<url>" target="_blank" ...>Windows execution link</a>`), matching how the
-hand-authored plans in this project store their links. The `<br>` is load-bearing: TestRail
-folds the whole description into a single paragraph and drops any `</p>` sent to it, so an
-anchor without one is pulled onto the end of the preceding text, and an anchor wrapped in
-its own `<p>` produces invalid nesting.
+Written as `<br><a href="<url>" target="_blank" ...><OS> execution link</a>`. The field
+is HTML, so markdown and bare URLs are shown literally. The `<br>` puts the link on its own
+line: TestRail folds the description into one paragraph and drops any `</p>` sent to it.
 
-Markdown (`[Windows execution link](<url>)`) worked here for a year, until TestRail moved
-this field to its Froala rich-text editor between 2026-07-27 and 2026-07-29. Plans up to
-154.0b3 are stored as plain text; 154.0b4 onward are HTML-wrapped by TestRail itself, which
-is how the change is datable — this repo has never written a `<p>` tag.
-
-`update_plan` has no editor in the path: it stores the literal string it is sent, wrapping
-it in `<p>` and turning newlines into paragraph breaks. So the API never linkified anything.
-What changed is that the renderer stopped parsing markdown, which left a year of `[...](...)`
-showing literally. Only the UI editor linkifies a URL as you type it — so editing a
-description by hand is not a valid test of what CI produces, and it silently converts that
-plan's stored description to HTML.
-
-All three formats this repo has written (anchor, markdown, bare URL) are recognized when
-replacing, so plans from before the switch upgrade in place as each platform reports.
+TestRail's UI editor creates the anchor itself, so hand-editing a description does not
+test what CI produces. Markdown and bare-URL entries are still recognized when replacing,
+so older plans upgrade in place.
 
 A plan keeps at most one link per OS. Every existing link for the reporting OS is
 dropped before the current one is re-inserted in its place, so a plan that several
