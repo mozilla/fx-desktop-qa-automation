@@ -161,7 +161,13 @@ Dry-run never opens a TestRail session and never modifies any state.
 - a TaskCluster log (for Linux runs that set `TASKCLUSTER_PROXY_URL`), or
 - a GitHub Actions run (Windows / Mac via `GITHUB_REPOSITORY` + `GITHUB_RUN_ID`).
 
-Written as plain text (`Windows execution link: <url>`) because TestRail auto-links bare URLs but does not render markdown in the plan overview.
+Written as `<br><a href="<url>" target="_blank" ...><OS> execution link</a>`. The field
+is HTML, so markdown and bare URLs are shown literally. The `<br>` puts the link on its own
+line: TestRail folds the description into one paragraph and drops any `</p>` sent to it.
+
+TestRail's UI editor creates the anchor itself, so hand-editing a description does not
+test what CI produces. Markdown and bare-URL entries are still recognized when replacing,
+so older plans upgrade in place.
 
 A plan keeps at most one link per OS. Every existing link for the reporting OS is
 dropped before the current one is re-inserted in its place, so a plan that several

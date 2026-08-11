@@ -69,45 +69,54 @@ def get_execution_link(os_name: str = None) -> str:
     return ""
 
 
+def _execution_link_pattern(os_name: str) -> re.Pattern:
+    """Match an execution link in any format this repo has written: anchor,
+    markdown, or bare URL, with the <br>/<p> tags around it."""
+
+    label = rf"{re.escape(os_name)}\s+execution\s+link"
+    body = "|".join(
+        [
+            rf"<a\b[^>]*>\s*{label}\s*</a>",
+            rf"\[\s*{label}\s*\]\([^)]*\)",
+            # stops at "<" because the description is stored as a single line
+            rf"{label}\s*:\s*[^\s<]+",
+        ]
+    )
+    edge = r"(?:<br\s*/?>|<p>)\s*"
+    return re.compile(rf"(?:{edge})?(?:{body})(?:\s*</p>)?", re.IGNORECASE)
+
+
 def replace_link_in_description(description: str, os_name: str) -> str:
     """
     Leave exactly one execution link for os_name in the description.
 
-    Every link for this OS is dropped, however many copies there are and
-    wherever they sit, then the current one is re-inserted where the first copy
-    was, so platform order stays stable and unrelated text is kept.
+    Every copy for this OS is dropped and the current one re-inserted where the
+    first sat, so platform order stays stable and unrelated text is kept.
     """
 
     link = get_execution_link(os_name)
     if not link:
         return description
 
-    # TestRail does not render markdown here, but it does auto-link a bare URL
-    new_line = f"{os_name} execution link: {link}"
-    pat = re.compile(
-        rf"{re.escape(os_name)}\s+execution\s+link\s*:\s*\S+",
-        re.IGNORECASE,
+    # The field is HTML and TestRail only linkifies in its UI editor; the <br>
+    # is what puts the link on its own line
+    new_entry = (
+        f'<br><a href="{link}" target="_blank" rel="noopener noreferrer">'
+        f"{os_name} execution link</a>"
     )
 
-    lines = []
-    insert_at = None
-    for line in description.splitlines():
-        if not pat.search(line):
-            lines.append(line)
-            continue
-        # Keep anything that shares the line with the link(s), but not leftover
-        # punctuation (a list marker, a stray bracket) from an older format
-        remainder = pat.sub("", line).strip()
-        if re.search(r"\w", remainder):
-            lines.append(remainder)
-        if insert_at is None:
-            insert_at = len(lines)
+    # Whole string, not lines: TestRail collapses the description onto one line
+    matches = list(_execution_link_pattern(os_name).finditer(description))
+    if matches:
+        insert_at = matches[0].start()
+        updated = description
+        # Back to front so the earlier offsets stay valid
+        for match in reversed(matches):
+            updated = updated[: match.start()] + updated[match.end() :]
+        updated = updated[:insert_at] + new_entry + updated[insert_at:]
+    else:
+        updated = description + new_entry
 
-    if insert_at is None:
-        insert_at = len(lines)
-    lines.insert(insert_at, new_line)
-
-    updated = "\n".join(lines)
     return description if updated == description else updated
 
 
