@@ -461,6 +461,9 @@ class Navigation(BasePage):
             text (str): Text to search for in the suggestions.
             search_mode(str): Search mode to use. Can be 'awesome' or 'search'. Defaults to 'awesome'.
             min_suggestions (int): Minimum number of suggestions to collect.
+
+        Raises:
+            TimeoutException: If the required number of suggestions does not appear.
         """
         if search_mode == "awesome":
             self.clear_awesome_bar()
@@ -477,11 +480,9 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def awesome_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
-        """Wait until the awesome bar has enough external search suggestions."""
+        """Wait for enough external suggestions or raise TimeoutException."""
         self.wait.until(
-            lambda _: self._visible_suggestion_count(
-                "search-engine-suggestion-row"
-            )
+            lambda _: self._visible_suggestion_count("search-engine-suggestion-row")
             >= min_suggestions
         )
         return True
@@ -511,8 +512,8 @@ class Navigation(BasePage):
         return True
 
     @BasePage.context_chrome
-    def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
-        """Wait until the legacy search bar has enough external suggestions."""
+    def search_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
+        """Wait for enough external suggestions or raise TimeoutException."""
         self.wait.until(
             lambda _: self._visible_suggestion_count(
                 "searchbar-external-suggestion-row"

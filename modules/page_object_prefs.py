@@ -94,16 +94,14 @@ class AboutPrefs(BasePage):
         # Firefox builds expose the separate Address Bar checkbox under
         # different element IDs; the manifest supports both variants.
         if value:
-            awesome_bar_checkbox = self.get_element(
-                "show-suggestions-awesomebar"
-            )
+            awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
             if not awesome_bar_checkbox.get_attribute("checked"):
                 awesome_bar_checkbox.click()
             self.expect(
                 lambda _: bool(
-                    self.get_element(
-                        "show-suggestions-awesomebar"
-                    ).get_attribute("checked")
+                    self.get_element("show-suggestions-awesomebar").get_attribute(
+                        "checked"
+                    )
                 )
             )
         return self
