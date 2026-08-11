@@ -26,6 +26,8 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
+# Glean Telemetry suite: report skips as Blocked instead of leaving them Untested.
+GLEAN_SUITE_ID = 70197
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
     "%TASK_ID%/runs/%RUN_ID%/logs/live/public/logs/live.log"
@@ -1004,19 +1006,21 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         return {}
     run_id = run.get("id")
 
-    # Gather the test results by category of result
+    # Gather the test results by category of result. mark_results never posts
+    # "skipped", so that category stays Untested in TestRail.
+    skip_category = "blocked" if suite_id == GLEAN_SUITE_ID else "skipped"
     passkey = {
         "passed": ["passed", "xpassed", "warnings"],
         "failed": ["failed", "error"],
         "xfailed": ["xfailed"],
-        "skipped": ["skipped", "deselected"],
+        skip_category: ["skipped", "deselected"],
     }
     test_results = {
         "project_id": TESTRAIL_FX_DESK_PRJ,
         "passed": {},
         "failed": {},
         "xfailed": {},
-        "skipped": {},
+        skip_category: {},
     }
 
     for test_case in results.keys():

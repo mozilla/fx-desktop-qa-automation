@@ -3,7 +3,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
-from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_action, run_entry
+from tests.glean.flows import (
+    ENTRY_PREFS,
+    SEARCH_TERM,
+    block_on_external_challenge,
+    run_action,
+    run_entry,
+)
 from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
@@ -59,11 +65,12 @@ def test_misc_metrics(driver: Firefox, case: dict):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    run_entry(driver, case["entry"], SEARCH_TERM, params)
-    run_action(driver, case.get("action"), params)
+    with block_on_external_challenge(driver):
+        run_entry(driver, case["entry"], SEARCH_TERM, params)
+        run_action(driver, case.get("action"), params)
 
-    if metric in LABELED_COUNTER_METRICS:
-        for label, count in expected.items():
-            glean.poll_glean_labeled_counter(metric, label, count)
-    else:
-        glean.poll_glean_metric(metric, expected)
+        if metric in LABELED_COUNTER_METRICS:
+            for label, count in expected.items():
+                glean.poll_glean_labeled_counter(metric, label, count)
+        else:
+            glean.poll_glean_metric(metric, expected)

@@ -5,7 +5,12 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
-from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_abandonment
+from tests.glean.flows import (
+    ENTRY_PREFS,
+    SEARCH_TERM,
+    block_on_external_challenge,
+    run_abandonment,
+)
 from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
@@ -51,9 +56,10 @@ def test_serp_abandonment(driver: Firefox, case: dict):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    run_abandonment(driver, case["action"], SEARCH_TERM, params)
+    with block_on_external_challenge(driver):
+        run_abandonment(driver, case["action"], SEARCH_TERM, params)
 
-    events = glean.poll_glean_metric(METRIC, case["expected"])
+        events = glean.poll_glean_metric(METRIC, case["expected"])
 
     # The matched abandonment must carry a well-formed UUID impression_id
     impression_ids = [

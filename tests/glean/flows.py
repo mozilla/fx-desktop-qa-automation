@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+
+import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
@@ -506,6 +509,32 @@ def _action_click_non_ads_link(driver: Firefox, params: dict = None):
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
+
+@contextmanager
+def block_on_external_challenge(driver: Firefox):
+    """
+    Report a failure as Blocked when an anti-bot interstitial caused it.
+
+    On failure only, so a case that passes through a challenge stays Passed. Without a
+    recognized challenge the original failure is re-raised.
+    """
+    try:
+        yield
+    except Exception:
+        reason = _bot_challenge_reason(driver)
+        if reason:
+            pytest.skip(f"Blocked by an external bot challenge: {reason}")
+        raise
+
+
+def _bot_challenge_reason(driver: Firefox) -> str | None:
+    """Describe the interstitial on the page, or None if it looks normal or can't be read."""
+    try:
+        return GenericPage(driver).bot_challenge_reason()
+    except Exception:
+        # A broken diagnostic must not replace the failure it was inspecting.
+        return None
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
