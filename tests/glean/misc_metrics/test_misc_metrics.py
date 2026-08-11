@@ -6,7 +6,7 @@ from modules.page_object import AboutPrefs
 from tests.glean.flows import (
     ENTRY_PREFS,
     SEARCH_TERM,
-    block_on_external_challenge,
+    block_if_bot_challenge,
     run_action,
     run_entry,
 )
@@ -65,7 +65,7 @@ def test_misc_metrics(driver: Firefox, case: dict):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    with block_on_external_challenge(driver):
+    try:
         run_entry(driver, case["entry"], SEARCH_TERM, params)
         run_action(driver, case.get("action"), params)
 
@@ -74,3 +74,6 @@ def test_misc_metrics(driver: Firefox, case: dict):
                 glean.poll_glean_labeled_counter(metric, label, count)
         else:
             glean.poll_glean_metric(metric, expected)
+    except Exception:
+        block_if_bot_challenge(driver)
+        raise

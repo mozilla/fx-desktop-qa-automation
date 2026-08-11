@@ -6,7 +6,7 @@ from modules.page_object import AboutPrefs
 from tests.glean.flows import (
     ENTRY_PREFS,
     SEARCH_TERM,
-    block_on_external_challenge,
+    block_if_bot_challenge,
     run_action,
     run_entry,
 )
@@ -50,8 +50,11 @@ def test_serp_engagement(driver: Firefox, case: dict):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    with block_on_external_challenge(driver):
+    try:
         run_entry(driver, case["entry"], SEARCH_TERM, params)
         run_action(driver, case["action"], params)
 
         glean.poll_glean_metric(METRIC, case["expected"])
+    except Exception:
+        block_if_bot_challenge(driver)
+        raise

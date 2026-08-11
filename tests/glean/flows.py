@@ -1,5 +1,3 @@
-from contextlib import contextmanager
-
 import pytest
 from selenium.webdriver import Firefox, Keys
 
@@ -511,30 +509,20 @@ def _action_click_non_ads_link(driver: Firefox, params: dict = None):
 # ---------------------------------------------------------------------------
 
 
-@contextmanager
-def block_on_external_challenge(driver: Firefox):
+def block_if_bot_challenge(driver: Firefox) -> None:
     """
-    Report a failure as Blocked when an anti-bot interstitial caused it.
+    Skip as Blocked when an anti-bot interstitial caused the failure.
 
-    On failure only, so a case that passes through a challenge stays Passed. Without a
-    recognized challenge the original failure is re-raised.
+    Call from a test's except block. No recognized challenge leaves the original failure
+    to propagate, so a case that passes through a challenge stays Passed.
     """
     try:
-        yield
-    except Exception:
-        reason = _bot_challenge_reason(driver)
-        if reason:
-            pytest.skip(f"Blocked by an external bot challenge: {reason}")
-        raise
-
-
-def _bot_challenge_reason(driver: Firefox) -> str | None:
-    """Describe the interstitial on the page, or None if it looks normal or can't be read."""
-    try:
-        return GenericPage(driver).bot_challenge_reason()
+        reason = GenericPage(driver).bot_challenge_reason()
     except Exception:
         # A broken diagnostic must not replace the failure it was inspecting.
-        return None
+        return
+    if reason:
+        pytest.skip(f"Blocked by an external bot challenge: {reason}")
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
