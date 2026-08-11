@@ -80,12 +80,32 @@ class AboutPrefs(BasePage):
         Selects the search suggestions in the Address Bar checkbox according to the value given.
         """
         checkbox = self.get_element("show-suggestions")
-        awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
         checked = bool(checkbox.get_attribute("checked"))
         if value != checked:
             checkbox.click()
-        if value and not awesome_bar_checkbox.get_attribute("checked"):
-            awesome_bar_checkbox.click()
+
+        self.expect(
+            lambda _: bool(
+                self.get_element("show-suggestions").get_attribute("checked")
+            )
+            == value
+        )
+
+        # Firefox builds expose the separate Address Bar checkbox under
+        # different element IDs; the manifest supports both variants.
+        if value:
+            awesome_bar_checkbox = self.get_element(
+                "show-suggestions-awesomebar"
+            )
+            if not awesome_bar_checkbox.get_attribute("checked"):
+                awesome_bar_checkbox.click()
+            self.expect(
+                lambda _: bool(
+                    self.get_element(
+                        "show-suggestions-awesomebar"
+                    ).get_attribute("checked")
+                )
+            )
         return self
 
     def search_engine_dropdown(self) -> Dropdown:

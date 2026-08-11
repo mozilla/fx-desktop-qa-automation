@@ -17,8 +17,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_addon_suggestion:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_addressbar_bookmarks_when_history_disabled:
@@ -168,8 +167,7 @@ address_bar_and_search:
     - smoke
     - ci-extended
   test_search_suggestions_can_be_disabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_term_persists:
