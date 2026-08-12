@@ -1155,3 +1155,226 @@ order of volume:
   are identical. A manual case may still catch a regression its in-tree counterpart misses.
 - De-prioritising is not deleting. The recommendation is *skip during crunch time*, not retire -
   except for the explicitly-flagged sections in sec. 5.5.
+
+---
+
+# Part 6 - Critical, not-yet-automated manual cases with STRONG in-tree coverage
+
+Round 4. Where Part 5 swept the whole manual corpus at every priority, this round answers a
+narrower and more actionable question:
+
+> Of the manual cases that are **Priority = Critical** and whose **Automation status is not
+> Completed**, which ones are already covered by an automated test inside
+> [mozilla-firefox/firefox](https://github.com/mozilla-firefox/firefox)?
+
+Those are the cases most likely to be scheduled for manual execution *and* queued for STARfox
+automation - so a duplicate here costs twice.
+
+**Deliverable:** `manual_tests/CRITICAL_NOT_AUTOMATED_STRONG.csv`, plus
+`manual_tests/analysis/crit_strong_case_numbers.md` for the bare TestRail case numbers grouped by
+suite. Cases are named the way TestRail names them - `C` followed by the case id, e.g. **C3163606**.
+
+## 6.1 Population
+
+Selected from `manual_tests/all_cases.json` on `priority_id == 4` (Critical) and
+`custom_automation_status != 4` (anything other than Completed):
+
+| | Cases |
+|---|---:|
+| Unique cases in the export | 10,727 |
+| Priority = Critical | 1,870 |
+| ... of which Automation status is not Completed | **1,551** |
+| Spread over | 57 suites |
+
+Their current automation status:
+
+| Automation status | Cases |
+|---|---:|
+| Suitable for automation | 846 |
+| Untriaged | 388 |
+| In progress | 313 |
+| Not suitable | 4 |
+
+## 6.2 Result
+
+**737 of the 1,551 (48%) have a STRONG in-tree counterpart.** The remaining 814 were reviewed and
+kept.
+
+Every one of the 1,551 carries an explicit verdict - unlike Part 5, which recorded only the
+positives - so the "kept" column here is a reviewed decision rather than an absence of review.
+
+The 737 break down by their TestRail automation status as follows, and this is the headline:
+
+| Automation status of the STRONG cases | Cases | What it means |
+|---|---:|---|
+| Suitable for automation | 287 | Queued for STARfox work the tree already does |
+| **In progress** | **211** | **Being automated right now, in parallel with an existing in-tree test** |
+| Untriaged | 238 | Not yet triaged; the triage can be skipped |
+| Not suitable | 1 | - |
+
+The 211 in-progress cases are the most immediately useful output: automation effort currently being
+spent duplicating `mozilla-firefox/firefox`. They concentrate in Easy Setup onboarding (32),
+Preferences (29), Security and Privacy (17), Tabbed Browser (15), Bookmarks Toolbar (14), Form
+Autofill (13), Context menus (12) and about:firefoxview (11).
+
+## 6.3 Results by suite
+
+| Suite | TestRail suite | Critical & not automated | STRONG overlap | % | Reviewed-but-kept |
+|---|---|---:|---:|---:|---:|
+| 23035 | Easy Setup onboarding | 155 | **121** | 78% | 34 |
+| 65334 | Address Bar 138+ | 74 | **53** | 72% | 21 |
+| 2241 | Preferences | 47 | **46** | 98% | 1 |
+| 69142 | Backup and Restore | 67 | **40** | 60% | 27 |
+| 97961 | Backup and Restore (3rd suite) | 48 | **29** | 60% | 19 |
+| 73807 | Backup and Restore (2nd suite) | 47 | **27** | 57% | 20 |
+| 74 | Migration from other browsers | 32 | **26** | 81% | 6 |
+| 1940 | OS integration (taskbar, default browser, shell) | 53 | **25** | 47% | 28 |
+| 42945 | about:firefoxview | 37 | **22** | 59% | 15 |
+| 5833 | Security and Privacy | 75 | **21** | 28% | 54 |
+| 1731 | Media playback | 48 | **20** | 42% | 28 |
+| 68 | Session Restore | 39 | **19** | 49% | 20 |
+| 73 | Printing | 36 | **19** | 53% | 17 |
+| 43517 | Password manager | 29 | **18** | 62% | 11 |
+| 2103 | Tabbed Browser | 34 | **17** | 50% | 17 |
+| 65 | Find in page / PDF viewer | 94 | **17** | 18% | 77 |
+| 2119 | Profiles | 41 | **17** | 41% | 24 |
+| 85 | Context menus | 29 | **16** | 55% | 13 |
+| 2525 | Bookmarks Toolbar (+ History/Library) | 17 | **16** | 94% | 1 |
+| 67503 | New Tab Lists widget | 16 | **14** | 88% | 2 |
+| 2054 | Form Autofill | 15 | **13** | 87% | 2 |
+| 29219 | Downloads | 21 | **12** | 57% | 9 |
+| 95385 | New Tab widgets (timer, checklist) | 13 | **11** | 85% | 2 |
+| 5403 | New Tab page and preferences | 26 | **11** | 42% | 15 |
+| 943 | Screenshots | 15 | **11** | 73% | 4 |
+| 71226 | Release smoke / regression matrix | 48 | **11** | 23% | 37 |
+| 53810 | Sidebar | 24 | **9** | 38% | 15 |
+| 69749 | about:settings#home | 9 | **9** | 100% | 0 |
+| 1997 | Themes and appearance | 16 | **8** | 50% | 8 |
+| 88 | Image formats | 9 | **7** | 78% | 2 |
+| 102 | Scrolling and zoom | 34 | **7** | 21% | 27 |
+| 103666 | about:keyboard shortcut customization | 7 | **7** | 100% | 0 |
+| 2085 | Find Toolbar | 8 | **6** | 75% | 2 |
+| 6066 | DNS over HTTPS / enterprise policies | 14 | **6** | 43% | 8 |
+| 1907 | WebRTC camera / microphone / screen sharing | 7 | **6** | 86% | 1 |
+| 66659 | Copy Link to Highlight (text fragments) | 7 | **5** | 71% | 2 |
+| 5260 | Background Update Agent | 8 | **4** | 50% | 4 |
+| 2542 | DevTools eager evaluation (DevEd) | 4 | **3** | 75% | 1 |
+| 54271 | Translate selection panel | 6 | **3** | 50% | 3 |
+| 70723 | Rename tabs (Tab Notes) | 7 | **2** | 29% | 5 |
+| 2126 | Reader View | 3 | **2** | 67% | 1 |
+| 498 | Geolocation | 2 | **1** | 50% | 1 |
+| 5252 | Installers (Windows / Mac / Linux) | 47 | **0** | 0% | 47 |
+| 2052 | Uninstall and Refresh Firefox | 10 | **0** | 0% | 10 |
+| 5259 | Drag and drop / clipboard | 11 | **0** | 0% | 11 |
+| 22801 | Language pack updates | 4 | **0** | 0% | 4 |
+| 1694 | Top sites / real-world web compat | 55 | **0** | 0% | 55 |
+| 1697 | Web compat / screen sharing overlay | 2 | **0** | 0% | 2 |
+| 24370 | Third-party software interop | 13 | **0** | 0% | 13 |
+| 69048 | Graphics rendering (WebRender) | 10 | **0** | 0% | 10 |
+| 1977 | Graphics and hardware acceleration | 16 | **0** | 0% | 16 |
+| 18105 | Accessibility (screen readers) | 27 | **0** | 0% | 27 |
+| 49853 | Third-party add-ons interop | 7 | **0** | 0% | 7 |
+| 67 | Crash reporter | 5 | **0** | 0% | 5 |
+| 1998 | Full screen | 6 | **0** | 0% | 6 |
+| 2130 | Firefox Accounts and Sync | 14 | **0** | 0% | 14 |
+| 5202 | Default Browser Agent (Windows) | 3 | **0** | 0% | 3 |
+| | **Total (57 suites)** | **1551** | **737** | **48%** | **814** |
+
+## 6.4 Where the overlap is strongest
+
+- **Easy Setup onboarding (121 of 155)** - `browser/components/aboutwelcome/tests/browser/` tracks
+  this feature slide for slide: a test per screen (language switcher, mobile downloads, add-ons
+  picker, gratitude, import, theme picker) plus `browser_aboutwelcome_glean.js` and
+  `browser_aboutwelcome_impression_action.js` for the impression and click pings. The suite is 155
+  critical cases but only 47 distinct flows - it restates the same slides per platform and entry
+  point. The consistent exception is the "UI - Light Theme" rows, which enumerate layout, imagery
+  and exact copy; those stay manual.
+- **Backup and Restore (96 of 162 across suites 69142 / 73807 / 97961)** - the load-bearing test is
+  `browser/components/backup/tests/marionette/test_backup.py`, which creates a real backup, recovers
+  it into a fresh profile, then asserts resource by resource that cookies, logins, certificates,
+  addresses, payment methods, form history, bookmarks, history, preferences, permissions,
+  sessionstore and the newtab wallpaper survived. That single test subsumes most of the
+  "verify &lt;data category&gt; is properly restored" matrix. `browser_settings_*.js` covers the
+  about:settings pane, encryption, the about:welcome restore screen and the enterprise policies.
+- **Profile migration (26 of 32)** - `browser/components/migration/tests/` has a per-source xpcshell
+  test for every data type across Chrome, Chromium, Edge, Safari and 360se, plus browser-chrome
+  tests for the wizard and its entry points. `test_MigrationUtils_timedRetry.js` even covers reading
+  a source database locked by a *running* source browser, which is the variable half of this suite's
+  matrix.
+- **about:settings#home (9 of 9)** - `browser/components/preferences/tests/home/` carries 48 tests
+  and matches this suite essentially one-for-one.
+- **about:keyboard (7 of 7)** - `browser/components/customkeys/tests/browser/browser_CustomKeys.js`
+  covers change / clear / clear-all / reset / reset-all, and `browser_aboutKeyboard.js` asserts the
+  Glean metrics the five telemetry rows check.
+- **New Tab widgets (25 of 29 across 67503 / 95385)** - the Lists and Focus Timer React components
+  have thorough jsx unit tests that drive the real interactions and assert the dispatched actions.
+
+## 6.5 Suites where nothing carried over
+
+Fourteen suites returned zero STRONG cases. Each has one reason, and none of them is "nobody
+looked":
+
+- **Runs outside the browser** - Installers (47), Uninstall and Refresh (10), Default Browser Agent
+  (3), Language pack updates (4). Stub and full installer UI, UAC elevation, MSIX, .dmg / .pkg, code
+  signing, the uninstaller and the Task Scheduler agent have no test harness in the tree.
+- **Needs the live web** - Top sites / real-world web compat (55), web compat / sharing overlay (2).
+  The tree does not test against live sites, by design.
+- **Needs third-party software** - Third-party software interop (13), third-party add-ons interop
+  (7). Antivirus products, GNOME Shell extensions, KeePassXC.
+- **Needs a real screen reader** - Accessibility (27). Every row drives NVDA, VoiceOver or ORCA.
+  `accessible/tests/` is a large corpus but queries the a11y tree through the API; it does not run a
+  screen reader, which is the thing under test.
+- **Visual rendering judgement** - Graphics and hardware acceleration (16), WebRender (10), Full
+  screen (6). "No rendering artifacts on popular sites" and window-decoration checks; the reftest
+  corpus compares synthetic references, which is a different question.
+- **Crosses the application boundary** - Drag and drop / clipboard (11). Dragging out to File
+  Explorer or Preview, pasting into desktop applications, copying tables out of other browsers.
+- **Needs live credentials and a second device** - Firefox Accounts and Sync (14).
+- **Needs a real crash and a live endpoint** - Crash reporter (5).
+
+## 6.6 Suite labels corrected
+
+Five suites were misnamed in the working notes and are fixed in
+`manual_tests/analysis/crit_pop.py`. Worth knowing if you filter TestRail by these ids:
+
+| Suite | Was assumed | Actually |
+|---|---|---|
+| 71226 | Session Restore (2nd suite) | Release smoke / regression matrix - live sites, themes, printing, PDF, scrolling, crash reports, Sync |
+| 54271 | Picture-in-Picture | Translate selection panel |
+| 2542 | Search engines | DevTools eager ("instant") evaluation, DevEdition |
+| 5202 | Keyboard shortcuts | Default Browser Agent, Windows |
+| 22801 | Notifications | Language pack updates |
+
+## 6.7 Method
+
+Same tiering as Part 5, run against a **freshly rebuilt tree inventory**:
+
+- `manual_tests/analysis/fetch_tree.py` rebuilds `.fxtree/` from the GitHub git-trees API. This
+  round is against `main` @ `5069177` (2026-08-12), where Part 5 was against `7d438b9` (2026-07-30).
+  The `gfx` and `layout` subtrees were added to the inventory during this round.
+- `c_01_*.py` ... `c_11_*.py` hold the verdicts as data, same shape as the `d_*.py` ledger.
+  `c_util.py` adds `CT()` (cluster by case title) and `CREST()` (cluster the suite remainder) for the
+  repetition-matrix suites, where listing ids by hand invites transcription errors.
+- `c_10_prior_rounds.py` replays the verdicts rounds 1-3 already reached for the 482 population
+  cases they had assessed, rather than re-deriving them and risking a needless disagreement with the
+  published `LOW_PRIORITY_CANDIDATES.csv`. Where this round examined a suite in more detail, this
+  round's verdict wins.
+- `build_crit_report.py` writes the CSV, the summary table and the case-number listing. It fails
+  loudly on a case claimed by two clusters or on an id outside the population; both are currently
+  zero.
+- `validate_crit_paths.py` checks every tree path cited in the ledger against the inventory.
+  **1,084 distinct cited paths, 0 unverified.**
+
+## 6.8 Caveats
+
+- Point-in-time snapshot of `main` @ `5069177` (2026-08-12). Re-run `fetch_tree.py`,
+  `validate_crit_paths.py` and `build_crit_report.py` before acting on this in a later cycle.
+- "STRONG" means *the same user flow is asserted somewhere in the tree*, not that the assertions are
+  identical. A manual case can still catch a regression its in-tree counterpart misses.
+- pdf.js is the one place where "not in the tree" is misleading: the page-organize, merge, signature,
+  image and alt-text editors are tested upstream in mozilla/pdf.js.
+  `toolkit/components/pdfjs/test/` only covers the integration layer, so those rows are kept here.
+  If the comparison is widened to include upstream pdf.js, suite 65 would move substantially.
+- De-prioritising is not deleting, and this is a stronger claim than Part 5's, because these are
+  Critical cases. The recommendation is to **stop queueing them for STARfox automation** and to skip
+  them during crunch - not to retire them.
