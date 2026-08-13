@@ -168,7 +168,8 @@ if __name__ == "__main__":
         if os.environ.get("STARFOX_EXCLUDE"):
             print(f"Excluding tests from split: {os.environ['STARFOX_EXCLUDE']}...")
             for exclude in dedupe(manifest.gather_split(os.environ["STARFOX_EXCLUDE"])):
-                run_list.remove(exclude)
+                if exclude in run_list:
+                    run_list.remove(exclude)
 
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
