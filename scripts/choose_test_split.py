@@ -164,11 +164,11 @@ if __name__ == "__main__":
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
 
+        # Assign a split name to STARFOX_EXCLUDE to remove tests in that split from run
         if os.environ.get("STARFOX_EXCLUDE"):
             print(f"Excluding tests from split: {os.environ['STARFOX_EXCLUDE']}...")
             for exclude in dedupe(manifest.gather_split(os.environ["STARFOX_EXCLUDE"])):
-                if exclude in run_list:
-                    del run_list[run_list.index(exclude)]
+                run_list.remove(exclude)
 
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))

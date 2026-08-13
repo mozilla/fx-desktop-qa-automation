@@ -576,7 +576,9 @@ def browser_name(driver: Firefox) -> str:
     """
     Is it 'Firefox' or 'Nightly'?
     """
-    return "Nightly" if "a" in driver.capabilities.get("browserVersion") else "Firefox"
+    return (
+        "Nightly" if "a" in driver.capabilities.get("browserVersion", "") else "Firefox"
+    )
 
 
 @pytest.fixture()
