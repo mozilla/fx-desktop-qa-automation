@@ -515,8 +515,7 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           "$FX_EXECUTABLE" --version;
-          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 '1600x1200x24'" > artifacts/xvfb.log &
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?
+          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 '1600x1200x24'" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
@@ -528,8 +527,7 @@ jobs:
           uv sync;
           uv run python scripts/switch_config.py ci_xvfb_headed;
           uv sync;
-          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 '1600x1200x24'" > artifacts/xvfb.log &
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?
+          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 '1600x1200x24'" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:
