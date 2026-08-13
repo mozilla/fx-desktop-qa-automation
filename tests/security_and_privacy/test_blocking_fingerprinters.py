@@ -10,7 +10,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "446404"
+    return "387364"
 
 
 FINGERPRINTERS_URL = (
@@ -37,7 +37,7 @@ def test_blocking_fingerprinter(
 
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # Open the tracker panel and verify fingerprinters are visible
     trust_panel.trackers_blocked("fingerprinter")

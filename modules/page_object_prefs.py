@@ -2,6 +2,7 @@ import json
 from time import sleep
 from typing import List, Literal
 
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -79,12 +80,30 @@ class AboutPrefs(BasePage):
         Selects the search suggestions in the Address Bar checkbox according to the value given.
         """
         checkbox = self.get_element("show-suggestions")
-        awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
         checked = bool(checkbox.get_attribute("checked"))
         if value != checked:
             checkbox.click()
-        if value and not awesome_bar_checkbox.get_attribute("checked"):
-            awesome_bar_checkbox.click()
+
+        self.expect(
+            lambda _: bool(
+                self.get_element("show-suggestions").get_attribute("checked")
+            )
+            == value
+        )
+
+        # Firefox builds expose the separate Address Bar checkbox under
+        # different element IDs; the manifest supports both variants.
+        if value:
+            awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
+            if not awesome_bar_checkbox.get_attribute("checked"):
+                awesome_bar_checkbox.click()
+            self.expect(
+                lambda _: bool(
+                    self.get_element("show-suggestions-awesomebar").get_attribute(
+                        "checked"
+                    )
+                )
+            )
         return self
 
     def search_engine_dropdown(self) -> Dropdown:
@@ -98,10 +117,22 @@ class AboutPrefs(BasePage):
             for _ in range(i):
                 self.actions.send_keys(Keys.DOWN)
             self.actions.send_keys(Keys.ENTER).perform()
-            if self.get_element("select-wrapper-button").text == option:
+            if self._selected_default_engine() == option:
                 break
-        assert self.get_element("select-wrapper-button").text == option
+        assert self._selected_default_engine() == option, (
+            f"Could not select default search engine {option!r}"
+        )
         return self
+
+    def _selected_default_engine(self) -> str:
+        """Return the selected default-engine label.
+
+        The label lives in a shadow root that can lag behind the ENTER keypress
+        on slower platforms, so wait for the button to exist before reading it
+        rather than dereferencing a possibly-None element.
+        """
+        button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
+        return button.text
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
@@ -197,15 +228,51 @@ class AboutPrefs(BasePage):
         is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
-    def set_alternative_language(self, lang_code: str) -> BasePage:
+    def set_alternative_language(
+        self, lang_code: str, wait_for_ui: bool = False
+    ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
-        Firefox applies the locale live once the dropdown value changes.
+        The available-languages list is hydrated asynchronously — Firefox
+        appends the installable locales fetched from a remote source after the
+        pane opens — so the target option may be missing the instant we look.
+        Wait for it before selecting. Firefox applies the locale live once the
+        dropdown value changes.
+
+        Args:
+            lang_code: The language code to set (e.g. 'pt-BR', 'it')
+            wait_for_ui: If True, waits for the about:preferences page title
+                         to change before returning. The title change is used
+                         as a proxy signal that Firefox has fully applied the
+                         new locale to the chrome UI. This relies on the target
+                         language having a different preferences page title than
+                         the current one — if two languages share the same title,
+                         this wait will time out with a generic TimeoutException.
         """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "browser-language-preferred-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+
+        # Capture title before language change to detect when locale is applied
+        current_title = self.driver.title if wait_for_ui else None
+
         Select(self.get_element("browser-language-preferred-select")).select_by_value(
             lang_code
         )
         self.element_attribute_is("browser-language-preferred", "value", lang_code)
+
+        if wait_for_ui:
+            # Wait for the page title to change as a signal that the locale
+            # has been fully applied to the chrome UI. Uses custom_wait with
+            # a longer timeout to give Firefox time to apply the locale change.
+            self.custom_wait(timeout=15).until(
+                lambda _: self.driver.title != current_title
+            )
         return self
 
     def open_doh_advanced(self) -> BasePage:
@@ -308,80 +375,198 @@ class AboutPrefs(BasePage):
         Select(inner_select).select_by_value(str(zoom_percentage))
         return self
 
+    @BasePage.context_content
     def select_content_and_action(self, content_type: str, action: str) -> BasePage:
         """
-        From the applications list that handles how downloaded media is used,
-        select a content type and action
+        From the Applications file-handlers list, set the action for a content type.
         """
         menu = self.get_element("actions-menu", labels=[content_type])
-        items = menu.find_elements(By.TAG_NAME, "menuitem")
-        target_index = next(
+        target = next(
             (
-                i
-                for i, item in enumerate(items)
-                if item.get_attribute("label") == action
+                option
+                for option in self.get_element(
+                    "menu-option", multiple=True, parent_element=menu
+                )
+                if option.get_attribute("label") == action
             ),
             None,
         )
-        if target_index is None:
+        if target is None:
             raise ValueError(
                 f"Option '{action}' not found in actions menu for {content_type}"
             )
-        self.click_on("actions-menu", labels=[content_type])
-        self.wait.until(
-            lambda _: menu.get_attribute("open") is not None
-        )  # wait for popup
-        menu.send_keys(Keys.HOME)
-        for _ in range(target_index):
-            menu.send_keys(Keys.DOWN)
-        menu.send_keys(Keys.ENTER)
-        self.wait.until(
-            lambda _: menu.get_attribute("label") == action
-        )  # verify selection
+        target_value = target.get_attribute("value")
+        if target_value is None:
+            raise ValueError(
+                f"Option '{action}' has no value attribute in actions menu for {content_type}"
+            )
+        # The moz-select opens a NATIVE OS dropdown, not a DOM popup: its
+        # moz-option children are zero-size data nodes (not the rendered list),
+        # so Selenium cannot click an option (ElementNotInteractableException).
+        self.driver.execute_script(
+            "arguments[0].value = arguments[1];"
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            menu,
+            target_value,
+        )
+        # Verify the selection with Selenium: the moz-select reflects the value.
+        self.wait.until(lambda _: menu.get_attribute("value") == target_value)
         return self
 
-    def select_trackers_to_block(self, *options):
-        """Select the trackers to block in the about:preferences page. Unchecks all first."""
-        self.elements |= {
-            "checkbox-by-label": {
-                "selectorData": "checkbox[label='{}']",
-                "strategy": "css",
-                "groups": ["doNotCache"],
-            }
-        }
-        self.click_on("custom-radio")
-        checkboxes = self.get_element("custom-tracker-options-parent").find_elements(
-            By.TAG_NAME, "checkbox"
+    # ---- Enhanced Tracking Protection (Settings redesign, about:preferences#etp) -----------------
+
+    # Per-category toggles on the ETP Customize page (moz-toggle elements)
+    ETP_TOGGLE_OPTIONS = {
+        "tracking-checkbox": "etp-custom-tracking-toggle",
+        "cookies-checkbox": "etp-custom-cookies-toggle",
+        "cryptominers-checkbox": "etp-custom-cryptomining-toggle",
+        "known-fingerprints-checkbox": "etp-custom-known-fingerprinting-toggle",
+        "suspected-fingerprints-checkbox": "etp-custom-suspect-fingerprinting-toggle",
+    }
+    # Context dropdowns: option keyword -> (inner <select> element name, value)
+    ETP_CONTEXT_OPTIONS = {
+        "tracking-in-all-windows": ("etp-custom-tracking-context-select", "all"),
+        "suspected-fingerprints-in-all-windows": (
+            "etp-custom-suspect-fingerprinting-context-select",
+            "all",
+        ),
+        "suspected-fingerprints-only-in-private-windows": (
+            "etp-custom-suspect-fingerprinting-context-select",
+            "pbmOnly",
+        ),
+    }
+    # Cookie behavior dropdown: option keyword -> (inner <select> element name, value)
+    ETP_COOKIE_OPTIONS = {
+        "cookies-isolate-social-media-option": (
+            "etp-custom-cookie-behavior-select",
+            "5",
+        ),
+    }
+
+    ETP_LEVEL_RADIOS = {
+        "standard": "etp-level-standard",
+        "strict": "etp-level-strict",
+        "custom": "etp-level-custom",
+    }
+
+    def open_etp_settings(self) -> BasePage:
+        """
+        From about:preferences#privacy, open the ETP settings subpage
+        (about:preferences#etp) via the "Advanced" button.
+        """
+        self.click_on("etp-advanced-button")
+        self.element_visible("etp-level-custom")
+        return self
+
+    def set_etp_level(self, level: str) -> BasePage:
+        """
+        Select an Enhanced Tracking Protection level on about:preferences#etp.
+
+        level: one of "standard", "strict", "custom".
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        return self
+
+    def select_etp_level(self, level: str) -> BasePage:
+        """
+        From about:preferences#privacy, open the ETP settings subpage and select
+        an Enhanced Tracking Protection level. level: standard|strict|custom.
+        """
+        self.open_etp_settings()
+        self.set_etp_level(level)
+        return self
+
+    def open_etp_customize(self) -> BasePage:
+        """
+        From the Custom ETP level on about:preferences#etp, open the Customize
+        subpage (about:preferences#etpCustomize) where the per-category controls live.
+        """
+        self.click_on("etp-customize-button")
+        self.element_visible("etp-custom-tracking-toggle")
+        return self
+
+    def _set_etp_toggle(self, element_name: str, enabled: bool) -> None:
+        """Set a moz-toggle on the ETP Customize page to the desired on/off state."""
+        toggle = self.get_element(element_name)
+        is_on = bool(
+            self.driver.execute_script("return !!arguments[0].pressed;", toggle)
         )
-        for checkbox in checkboxes:
-            if checkbox.is_selected():
-                checkbox.click()
+        if is_on != enabled:
+            self.driver.execute_script(
+                "arguments[0].shadowRoot.querySelector('button, input').click();",
+                toggle,
+            )
+            self.wait.until(
+                lambda _: (
+                    bool(
+                        self.driver.execute_script(
+                            "return !!arguments[0].pressed;", toggle
+                        )
+                    )
+                    == enabled
+                )
+            )
+
+    def select_trackers_to_block(self, *options):
+        """
+        Configure Custom ETP blocking on about:preferences (Settings redesign).
+
+        Navigates Privacy -> Advanced -> Custom -> Customize, turns every category
+        toggle off, then enables only the requested options. The option keywords are
+        kept stable across the old/new UI:
+          toggles:  tracking-checkbox, cookies-checkbox, cryptominers-checkbox,
+                    known-fingerprints-checkbox, suspected-fingerprints-checkbox
+          contexts: tracking-in-all-windows, suspected-fingerprints-in-all-windows,
+                    suspected-fingerprints-only-in-private-windows
+          cookies:  cookies-isolate-social-media-option
+        """
+        self.select_etp_level("custom")
+        self.open_etp_customize()
+
+        # Reset: turn every category toggle off before enabling the requested ones.
+        for element_name in self.ETP_TOGGLE_OPTIONS.values():
+            self._set_etp_toggle(element_name, False)
+
         for option in options:
-            self.click_on(option)
-            tag = self.get_element(option).tag_name
-            if tag == "checkbox":
-                self.element_has_attribute(option, "checked")
-            elif tag == "menuitem":
-                self.element_attribute_is(option, "selected", "true")
+            if option in self.ETP_TOGGLE_OPTIONS:
+                self._set_etp_toggle(self.ETP_TOGGLE_OPTIONS[option], True)
+            elif option in self.ETP_CONTEXT_OPTIONS:
+                element_name, value = self.ETP_CONTEXT_OPTIONS[option]
+                Select(self.get_element(element_name)).select_by_value(value)
+            elif option in self.ETP_COOKIE_OPTIONS:
+                element_name, value = self.ETP_COOKIE_OPTIONS[option]
+                # The cookie-behavior dropdown is disabled until cookie blocking
+                # is enabled, so turn the toggle on before setting the value.
+                self._set_etp_toggle("etp-custom-cookies-toggle", True)
+                Select(self.get_element(element_name)).select_by_value(value)
+            else:
+                raise ValueError(f"Unknown tracker option: {option!r}")
 
         sleep(0.25)
         return self
 
-    def get_history_menulist(self) -> WebElement:
-        """
-        Gets the web element for the list of history items that appear in about:preferences
-        """
-        return self.get_element("history_menulist")
-
     def set_history_option(self, option: str):
         """
         Set the history option in about:preferences.
+
+        Firefox now renders the history setting as a moz-radio-group rather than
+        a menulist. The legacy option keys are now mapped to the matching
+        moz-radio data-l10n-id and selected by click.
         """
-        history_menulist = self.get_history_menulist()
-        self.driver.execute_script("arguments[0].scrollIntoView();", history_menulist)
-        sleep(1)
-        menulist_popup = Select(self.get_element("history-option-select"))
-        menulist_popup.select_by_value(option)
+        history_option_l10n_ids = {
+            "remember": "history-remember-option-all2",
+            "dontremember": "history-remember-option-never2",
+            "custom": "history-remember-option-custom2",
+        }
+        if option not in history_option_l10n_ids:
+            raise ValueError(f"Unknown history option: {option!r}")
+        history_radio = self.get_element(
+            "history-option-radio", labels=[history_option_l10n_ids[option]]
+        )
+        history_radio.click()
         return self
 
     # ---- Payment and Address Management ---------------------------------------------------------
@@ -475,11 +660,79 @@ class AboutPrefs(BasePage):
 
     def open_and_switch_to_saved_payments_popup(self) -> BasePage:
         """
-        Open and Switch to saved payments popup frame.
+        Reveal the Saved Payment Methods management list.
+
+        Firefox 154 renders this list inline in about:preferences#privacy (default
+        frame) instead of in a dialog iframe, so click its moz-box-button to expand
+        the list and stay in the default frame — there is no frame to switch into.
+        The button's interactable target is a <button> in its shadow DOM whose host
+        has no clickable rect, so use a JS click.
         """
-        saved_payments_iframe = self.get_saved_payments_popup_iframe()
-        self.driver.switch_to.frame(saved_payments_iframe)
+        self.js_click_on("saved-payments-button")
         return self
+
+    def _moz_field_inner(self, host: WebElement) -> WebElement:
+        """
+        Return the editable inner node of an about:preferences form field.
+
+        Firefox 154 wraps the Saved Payment Methods and Saved Addresses dialog fields
+        in ``moz-input-text``, ``moz-textarea`` and ``moz-select`` custom elements whose
+        real ``<input>``/``<textarea>``/``<select>`` lives in the shadow DOM (Marionette
+        cannot serialize a ShadowRoot, so reach the inner node with ``execute_script``).
+        Falls back to the host for plain form fields.
+        """
+        inner = self.driver.execute_script(
+            "return arguments[0].shadowRoot"
+            " ? arguments[0].shadowRoot.querySelector('input, select, textarea')"
+            " : arguments[0];",
+            host,
+        )
+        if inner is None:
+            raise RuntimeError(
+                "No inner <input>/<select>/<textarea> found in the shadow root of "
+                f"{host.get_attribute('id') or host.tag_name!r}"
+            )
+        return inner
+
+    def _select_moz_option(self, select_el: WebElement, value: str) -> None:
+        """Select an ``<option>`` inside a ``moz-select`` shadow DOM by value, or by
+        normalized visible text as a fallback.
+
+        The moz-select option values are region codes (e.g. ``WV``) while sample data
+        may carry the full name (``West Virginia``). ``Select.select_by_visible_text``
+        can't be used here because it queries by XPath, which does not descend into the
+        shadow ``<select>``.
+
+        Match in a single pass over the options and re-select by the matched value.
+        Do NOT probe with ``select_by_value(value)`` first: when the value is absent
+        (the usual full-name-vs-code case) its underlying ``find_elements`` blocks for
+        the entire implicit-wait timeout (10s locally, 30s in CI) before returning
+        empty. Iterating ``select.options`` returns a non-empty list immediately, so
+        the only ``select_by_value`` we issue is one we know will hit.
+        """
+        select = Select(select_el)
+        target = value.strip().casefold()
+        for option in select.options:
+            opt_value = option.get_attribute("value")
+            opt_text = (option.get_attribute("textContent") or "").strip()
+            if opt_value == value or opt_text.casefold() == target:
+                select.select_by_value(opt_value)
+                return
+        raise NoSuchElementException(
+            f"No <option> matching value or visible text {value!r}"
+        )
+
+    def _set_cc_panel_field(self, field_id: str, value: str | int) -> None:
+        """
+        Set a single field in the Saved Payment Methods dialog by element id,
+        handling both ``moz-input-text`` (inner input) and ``moz-select`` (inner select).
+        """
+        inner = self._moz_field_inner(self.find_element(By.ID, field_id))
+        if inner.tag_name.lower() == "select":
+            Select(inner).select_by_value(str(value))
+        else:
+            inner.clear()
+            inner.send_keys(str(value))
 
     def fill_and_save_cc_panel_information(
         self, credit_card_fill_information: CreditCardBase
@@ -491,21 +744,15 @@ class AboutPrefs(BasePage):
         Arguments:
             credit_card_fill_information: The object containing all the sample data
         """
-        fields = {
-            "card_number": credit_card_fill_information.card_number,
-            "expiration_month": credit_card_fill_information.expiration_month,
-            "expiration_year": f"20{credit_card_fill_information.expiration_year}",
-            "name": credit_card_fill_information.name,
-        }
-
-        for field in fields:
-            self.actions.send_keys(fields[field] + Keys.TAB).perform()
-
-        # Press tab again to navigate to the next field (this accounts for the second tab
-        # after the name field)
-        self.actions.send_keys(Keys.TAB).perform()
-        # Finally, press enter
-        self.actions.send_keys(Keys.ENTER).perform()
+        self._set_cc_panel_field("cc-number", credit_card_fill_information.card_number)
+        self._set_cc_panel_field("cc-name", credit_card_fill_information.name)
+        self._set_cc_panel_field(
+            "cc-exp-month", int(credit_card_fill_information.expiration_month)
+        )
+        self._set_cc_panel_field(
+            "cc-exp-year", f"20{credit_card_fill_information.expiration_year}"
+        )
+        self.get_element("save-button").click()
 
     def add_entry_to_saved_payments(self, cc_data: CreditCardBase):
         """
@@ -550,34 +797,35 @@ class AboutPrefs(BasePage):
             raise ValueError(
                 f"{field_name} is not a valid field name for the cc dialog form."
             )
-        value_field = self.find_element(By.ID, fields[field_name])
-        if value.isdigit():
-            value = int(value)
-        if field_name == "expiration_year":
-            if int(value) < 100:  # new exp years are all 4-digit
-                value = int(value) + 2000
-            value_field.click()
-            option = next(
-                el
-                for el in value_field.find_elements(By.TAG_NAME, "option")
-                if el.text == str(value)
-            )
-            option.click()
-
-        elif value_field.tag_name == "select":
-            Select(value_field).select_by_index(value)
+        # Firefox 154 turned these fields into moz-input-text / moz-select custom
+        # elements; operate on the inner input/select node in the shadow DOM.
+        inner = self._moz_field_inner(self.find_element(By.ID, fields[field_name]))
+        if inner.tag_name.lower() == "select":
+            select = Select(inner)
+            if field_name == "expiration_year":
+                year = int(value)
+                if year < 100:  # new exp years are all 4-digit
+                    year += 2000
+                select.select_by_value(str(year))
+            else:  # expiration_month, option values are "1".."12"
+                select.select_by_value(str(int(value)))
         else:
-            value_field.clear()
-            value_field.send_keys(value)
+            inner.clear()
+            inner.send_keys(str(value))
         self.get_element("save-button").click()
         return self
 
     def open_and_switch_to_saved_addresses_popup(self) -> BasePage:
         """
-        Open and Switch to saved addresses popup frame.
+        Reveal the Saved Addresses management list.
+
+        Firefox 154 renders this list inline in about:preferences#privacy (default
+        frame) instead of in a dialog iframe, so click its moz-box-button to expand
+        the list and stay in the default frame — there is no frame to switch into.
+        The button's interactable target is a <button> in its shadow DOM whose host
+        has no clickable rect, so use a JS click.
         """
-        saved_address_iframe = self.get_saved_addresses_popup_iframe()
-        self.driver.switch_to.frame(saved_address_iframe)
+        self.js_click_on("saved-addresses-button")
         return self
 
     def add_entry_to_saved_addresses(self, address_data: AutofillAddressBase):
@@ -616,6 +864,87 @@ class AboutPrefs(BasePage):
         json_out = {"name": tile.get_attribute("label")}
         json_out["address"] = tile.get_attribute("description")
         return json_out
+
+    # Field ids of the Saved Addresses add/edit dialog form.
+    _ADDRESS_EDIT_FIELD_IDS = (
+        "name",
+        "organization",
+        "street-address",
+        "address-level2",
+        "address-level1",
+        "postal-code",
+        "tel",
+        "email",
+    )
+
+    def _read_saved_entry_edit_fields(
+        self, edit_ref: str, field_ids, idx: int = 0
+    ) -> dict:
+        """Open a saved entry's edit dialog and read its form field values.
+
+        Firefox 154 renders these edit forms in an about:preferences subdialog iframe
+        that appears a beat after the (moz-button, no clickable rect) edit control is
+        JS-clicked; several ``dialogFrame`` iframes coexist, so switch by locating the
+        one that actually contains the form (identified by the first field id) rather
+        than by a fixed index. Returns the moz-input/moz-select/moz-textarea values
+        keyed by field id.
+        """
+        probe_field_id = field_ids[0]
+        edit_buttons = self.get_elements(edit_ref)
+        self.driver.execute_script("arguments[0].click();", edit_buttons[idx])
+
+        def _entered_edit_frame(_):
+            self.switch_to_default_frame()
+            for frame in self.get_elements("browser-popup"):
+                try:
+                    self.driver.switch_to.frame(frame)
+                except WebDriverException:
+                    self.switch_to_default_frame()
+                    continue
+                if self.driver.execute_script(
+                    "return !!document.getElementById(arguments[0]);", probe_field_id
+                ):
+                    return True
+                self.switch_to_default_frame()
+            return False
+
+        self.wait.until(_entered_edit_frame)
+        values = {}
+        for field_id in field_ids:
+            try:
+                inner = self._moz_field_inner(self.find_element(By.ID, field_id))
+                values[field_id] = inner.get_attribute("value")
+            except (NoSuchElementException, RuntimeError):
+                values[field_id] = None
+        self.switch_to_default_frame()
+        return values
+
+    def get_stored_address_values(self, idx=0) -> dict:
+        """Read a saved address's field values from its edit dialog.
+
+        Firefox 154's saved-address tile shows only a name + address summary, so
+        fields such as organization, tel and email are not on the tile and must be
+        read from the edit view. Assumes the Saved Addresses management list is
+        already revealed (see :meth:`open_and_switch_to_saved_addresses_popup`).
+        """
+        return self._read_saved_entry_edit_fields(
+            "edit-address", self._ADDRESS_EDIT_FIELD_IDS, idx
+        )
+
+    # Field ids of the Saved Payment Methods add/edit dialog form.
+    _PAYMENT_EDIT_FIELD_IDS = ("cc-number", "cc-name", "cc-exp-month", "cc-exp-year")
+
+    def get_stored_payment_values(self, idx=0) -> dict:
+        """Read a saved payment's field values from its edit dialog.
+
+        Firefox 154's saved-payment tile shows only a masked card number and expiry
+        (no cardholder name), so the name and the full card number must be read from
+        the edit view. Assumes the Saved Payment Methods management list is already
+        revealed (see :meth:`open_and_switch_to_saved_payments_popup`).
+        """
+        return self._read_saved_entry_edit_fields(
+            "edit-payment", self._PAYMENT_EDIT_FIELD_IDS, idx
+        )
 
     def get_data_from_saved_payment(self, idx=0) -> dict:
         """Get data-l10n-args from the saved payment card"""
@@ -711,14 +1040,6 @@ class AboutPrefs(BasePage):
         )
 
     # UI Navigation and Iframe Handling
-    def get_saved_payments_popup_iframe(self) -> WebElement:
-        """
-        Returns the iframe object for the dialog panel in the popup
-        """
-        self.click_on("saved-payments-button")
-        iframe = self.get_element("browser-popup")
-        return iframe
-
     def switch_to_edit_saved_payments_popup_iframe(self) -> BasePage:
         """
         Switch to form iframe to edit saved payments.
@@ -747,14 +1068,6 @@ class AboutPrefs(BasePage):
         self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
         return self.get_element("browser-popup")
-
-    def get_saved_addresses_popup_iframe(self) -> WebElement:
-        """
-        Returns the iframe object for the dialog panel in the popup
-        """
-        self.click_on("saved-addresses-button")
-        iframe = self.get_element("browser-popup")
-        return iframe
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
@@ -807,9 +1120,13 @@ class AboutPrefs(BasePage):
 
     # Data Extraction and Processing
     def set_country_autofill_panel(self, country: str) -> BasePage:
-        """Sets the country value in the autofill view"""
-        select_country = Select(self.driver.find_element(By.ID, "country"))
-        select_country.select_by_value(country)
+        """Sets the country value in the autofill view.
+
+        Firefox 154 turned the country field into a ``moz-select`` custom element,
+        so operate on the inner ``<select>`` in its shadow DOM.
+        """
+        inner = self._moz_field_inner(self.find_element(By.ID, "country"))
+        Select(inner).select_by_value(country)
         return self
 
     def fill_and_save_address_panel_information(
@@ -841,9 +1158,17 @@ class AboutPrefs(BasePage):
             for x in form_element.find_elements(By.CSS_SELECTOR, "*")
         ]
 
+        # Firefox 154 wraps these fields in moz-input-text / moz-textarea / moz-select
+        # custom elements; write to the inner node in the shadow DOM (falls back to the
+        # host for plain inputs). address-level1 (state) is now a moz-select, handled by
+        # _select_moz_option (value or visible-text match).
         for key, val in fields.items():
             if key in children:
-                form_element.find_element(By.ID, key).send_keys(val)
+                inner = self._moz_field_inner(form_element.find_element(By.ID, key))
+                if inner.tag_name.lower() == "select":
+                    self._select_moz_option(inner, str(val))
+                else:
+                    inner.send_keys(val)
         self.get_element("save-button").click()
         return self
 
@@ -915,7 +1240,6 @@ class AboutPrefs(BasePage):
         """
         self.open_autoplay_modal()
         self.click_on(settings)
-        self.click_on("spacer")
         self.click_on("autoplay-save-changes")
         return self
 
@@ -949,7 +1273,7 @@ class AboutPrefs(BasePage):
 
         # On Windows, Tab to and use the Skip button
         if platform.lower().startswith("win"):
-            for _ in range(3):
+            for _ in range(2):
                 self.actions.send_keys(Keys.TAB).perform()
             self.actions.send_keys(Keys.RETURN).perform()
 
@@ -991,15 +1315,41 @@ class AboutPrefs(BasePage):
         mime_type_data = json.loads(action_description.get_attribute("data-l10n-args"))
         return mime_type_data["app-name"]
 
+    @BasePage.context_content
     def set_pdf_handling_to_always_ask(self) -> BasePage:
         """
-        Set PDF content type handling to "Always ask" in Applications settings.
+        Set PDF content type handling to "Always ask" in the Applications list.
+
+        Since the Firefox Settings redesign (bug 2043378, ~152/153) the
+        Applications handlers moved to about:preferences#downloads and each row's
+        action control is a moz-select with moz-option children (no native
+        <select>, so Selenium's Select() does not apply). Select the "Always ask"
+        option by its stable l10n id and fire change so preferences persists it.
         """
-        self.click_on("pdf-content-type")
-        self.click_on("pdf-actions-menu")
-        menu = self.get_element("pdf-actions-menu")
-        menu.send_keys(Keys.DOWN)
-        menu.send_keys(Keys.ENTER)
+        menu = self.wait.until(lambda _: self.get_element("pdf-actions-menu"))
+        self.driver.execute_script(
+            """
+            const sel = arguments[0];
+            const opt = [...sel.querySelectorAll('moz-option')].find(
+                o => o.getAttribute('data-l10n-id') === 'applications-always-ask'
+            );
+            if (!opt) throw new Error('"Always ask" moz-option not found');
+            sel.value = opt.getAttribute('value');
+            sel.dispatchEvent(new Event('input', { bubbles: true }));
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            menu,
+        )
+        # Confirm the control settled on the "Always ask" value before leaving.
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "const s = arguments[0];"
+                "const o = [...s.querySelectorAll('moz-option')].find("
+                "  e => e.getAttribute('data-l10n-id') === 'applications-always-ask');"
+                "return o && s.value === o.getAttribute('value');",
+                self.get_element("pdf-actions-menu"),
+            )
+        )
         return self
 
     @BasePage.context_chrome
@@ -1143,6 +1493,12 @@ class AboutPrefs(BasePage):
         self.click_on("change-primary-password")
         popup = self.get_element("browser-popup")
         browser_actions.switch_to_iframe_context(popup)
+        return self
+
+    def select_new_tabs_firefox_home(self) -> BasePage:
+        """Selects Firefox Home from the new tabs homepage dropdown"""
+        self.js_click_on("homepage-new-tabs-dropdown")
+        self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
     # ── AI Controls ──────────────────────────────────────────────────────

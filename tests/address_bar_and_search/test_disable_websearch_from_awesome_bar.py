@@ -1,5 +1,4 @@
 import pytest
-from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.browser_object import Navigation
 from modules.browser_object_tabbar import TabBar

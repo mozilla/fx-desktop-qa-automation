@@ -315,3 +315,135 @@ class GenericPdf(BasePage):
         self.element_visible("added-text")
         self.element_has_text("added-text", text)
         return self
+
+    def get_element_rect(self, element: WebElement) -> dict[str, float]:
+        """Return the element bounding client rect."""
+        return self.driver.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            return {
+                x: rect.x,
+                y: rect.y,
+                width: rect.width,
+                height: rect.height,
+            };
+            """,
+            element,
+        )
+
+    def get_drawing_area(self) -> WebElement:
+        """Return the SVG container for the added drawing."""
+        drawing = self.get_element("added-drawing")
+        drawing_area = self.driver.execute_script(
+            "return arguments[0].closest('svg.draw');",
+            drawing,
+        )
+
+        assert drawing_area is not None, "Expected drawing SVG area to exist."
+        return drawing_area
+
+    def select_drawing_area(self) -> WebElement:
+        """Dismiss drawing mode, select, and return the existing drawing area."""
+        self.actions.send_keys(Keys.ESCAPE).perform()
+
+        drawing_area = self.get_drawing_area()
+        self.actions.move_to_element(drawing_area).click().perform()
+
+        return drawing_area
+
+    def get_drawing_resize_handle(self, drawing_area: WebElement) -> WebElement:
+        """
+        Return the resize handle for the selected drawing area.
+
+        The script searches inside the PDF viewer for visible resize handle candidates
+        and returns the one closest to the drawing area's bottom-right corner.
+        """
+        resize_handle = self.driver.execute_script(
+            """
+            const drawingArea = arguments[0];
+            const drawingRect = drawingArea.getBoundingClientRect();
+            const viewer = drawingArea.closest("#viewer") || document;
+
+            const selectors = [
+                ".resizer.bottomRight",
+                ".resizer[data-resizer-name='bottomRight']",
+                "[data-resizer-name='bottomRight']",
+                "[class*='bottomRight']",
+                "[class*='resize']",
+                "[class*='resizer']",
+                "[class*='handle']"
+            ];
+
+            const candidates = selectors
+                .flatMap(selector => [...viewer.querySelectorAll(selector)])
+                .filter(element => {
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && rect.height > 0;
+                });
+
+            const unique = [...new Set(candidates)];
+
+            if (!unique.length) {
+                return null;
+            }
+
+            const drawingBottomRight = {
+                x: drawingRect.right,
+                y: drawingRect.bottom,
+            };
+
+            return unique.sort((first, second) => {
+                const firstRect = first.getBoundingClientRect();
+                const secondRect = second.getBoundingClientRect();
+
+                const firstDistance = Math.hypot(
+                    firstRect.left - drawingBottomRight.x,
+                    firstRect.top - drawingBottomRight.y
+                );
+                const secondDistance = Math.hypot(
+                    secondRect.left - drawingBottomRight.x,
+                    secondRect.top - drawingBottomRight.y
+                );
+
+                return firstDistance - secondDistance;
+            })[0];
+            """,
+            drawing_area,
+        )
+
+        assert resize_handle is not None, "Expected drawing resize handle to exist."
+        return resize_handle
+
+    def move_drawing_area(self, drawing_area: WebElement) -> BasePage:
+        """Move the selected drawing area and verify its position changed."""
+        initial_rect = self.get_element_rect(drawing_area)
+
+        self.actions.drag_and_drop_by_offset(drawing_area, 80, 50).perform()
+
+        def drawing_moved(_):
+            rect = self.get_element_rect(drawing_area)
+            return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
+
+        self.expect(drawing_moved)
+        return self
+
+    def resize_drawing_area(self, drawing_area: WebElement) -> BasePage:
+        """Resize the selected drawing area and verify its size changed."""
+        initial_rect = self.get_element_rect(drawing_area)
+        resize_handle = self.get_drawing_resize_handle(drawing_area)
+
+        self.actions.move_to_element(resize_handle)
+        self.actions.click_and_hold()
+        self.actions.move_by_offset(40, 40)
+        self.actions.release()
+        self.actions.perform()
+
+        def drawing_resized(_):
+            rect = self.get_element_rect(drawing_area)
+            return (
+                rect["width"] != initial_rect["width"]
+                or rect["height"] != initial_rect["height"]
+            )
+
+        self.expect(drawing_resized)
+        return self

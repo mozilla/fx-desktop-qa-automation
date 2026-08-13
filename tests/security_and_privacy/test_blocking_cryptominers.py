@@ -7,7 +7,7 @@ from modules.page_object import AboutPrefs, GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "446403"
+    return "450233"
 
 
 CRYPTOMINERS_URL = (

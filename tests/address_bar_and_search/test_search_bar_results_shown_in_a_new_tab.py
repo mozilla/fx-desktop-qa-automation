@@ -46,5 +46,10 @@ def test_search_bar_results_shown_in_a_new_tab(driver: Firefox):
     # Searchbar must have focus to receive key combo
     nav.click_on("searchbar-input")
     nav.perform_key_combo_chrome(Keys.ALT, Keys.ENTER)
+    # The SERP opens in a new tab; wait for it to exist before switching so we
+    # don't race onto the original tab.
+    tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
+    # Gate on real SERP content rendering before asserting the result URL.
+    page.element_visible("duckduckgo-search-result")
     nav.url_contains(SEARCH_TERM)

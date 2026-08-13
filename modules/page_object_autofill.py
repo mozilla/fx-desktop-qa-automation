@@ -1,8 +1,8 @@
-import json
 import logging
 from typing import List, Optional
 
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 
 from modules.browser_object_autofill_popup import AutofillPopup
@@ -48,24 +48,6 @@ base_address_fields = [
     "tel",
 ]
 
-# Preview field mappings
-base_preview_address_mapping = {
-    "family_name": "family-name",
-    "given_name": "given-name",
-    "street_address": "street-address",
-    "address_level_2": "address-level2",
-    "address_level_1": "address-level1",
-    "postal_code": "postal-code",
-    "country_code": "country",
-    "telephone": "tel",
-}
-base_preview_cc_mapping = {
-    "name": "cc-name",
-    "card_number": "cc-number",
-    "expiration_month": "cc-exp-month",
-    "expiration_year": "cc-exp-year",
-}
-
 
 class Autofill(BasePage):
     """
@@ -76,7 +58,6 @@ class Autofill(BasePage):
     # Default; subclasses will override
     field_mapping = {}
     fields = {}
-    preview_fields = {}
 
     URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/"
 
@@ -464,65 +445,27 @@ class Autofill(BasePage):
             if field_element.tag_name.lower() != "select":
                 assert not value, f"Field '{field_name}' is not empty: Found '{value}'"
 
-    @BasePage.context_chrome
-    def verify_autofill_data_on_hover(
-        self, autofill_data: CreditCardBase | AutofillAddressBase, region: str
-    ):
+    def verify_autofill_data_on_hover(self):
         """
-        Verifies that the autofill preview data matches the expected values when hovering
+        Verify that hovering an autocomplete entry previews the fill on the form.
 
-        Arguments:
-            autofill_data: CreditCardBase | AutofillAddressBase object containing expected fake data.
+        Firefox 154 removed the ``ac-comment`` JSON attribute that exposed the
+        previewed profile, and the previewed values are not readable from the content
+        fields either (``value`` stays empty during preview). The observable signal
+        is that hovering an entry puts the *other* form fields into the ``:autofill``
+        preview state while they are still empty, so assert at least one field is in
+        that state. ``:autofill`` matching has no Selenium API, so it is evaluated
+        with ``matches()`` via ``execute_script`` in the content context (the
+        preceding hover leaves Marionette in the chrome context).
         """
-        # Get preview data from hovering through the chrome context
-        try:
-            # Attempt to parse the string as JSON
-            container = json.loads(
-                self.autofill_popup.get_element("preview-form-container").get_attribute(
-                    "ac-comment"
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.wait.until(
+                lambda _: self.driver.execute_script(
+                    "return [...document.querySelectorAll('input, textarea')]"
+                    ".some(e => e.matches(':autofill') && !e.value);"
                 )
             )
-        except json.JSONDecodeError:
-            # If parsing fails, raise ValueError.
-            raise ValueError("Given preview data is incomplete.")
-        container_data = container.get("fillMessageData", {}).get("profile", {})
-        assert container_data, "No preview data available."
-        assert all(field in container_data.keys() for field in self.preview_fields), (
-            "Not all fields present in preview data."
-        )
-
-        # sanitize data
-        if autofill_data.__class__ == CreditCardBase:
-            autofill_data.card_number = autofill_data.card_number[-4:]
-        else:
-            if autofill_data.country_code in {"US", "CA"} and (
-                len(container_data["address-level1"]) == 2
-                and len(autofill_data.address_level_1) > 2
-            ):
-                autofill_data.address_level_1 = (
-                    self.util.get_state_province_abbreviation(
-                        autofill_data.address_level_1
-                    )
-                )
-        for field, value in container_data.items():
-            if field in self.preview_fields:
-                value = self.sanitize_preview_data(field, str(value), region)
-                # Check if this value exists in our CreditCardBase | AutofillAddressBase object
-                is_present = any(
-                    [value in val for val in autofill_data.__dict__.values()]
-                )
-                assert is_present, (
-                    f"Mismatched data: {(field, value)} not in {autofill_data.__dict__.values()}."
-                )
-
-    def sanitize_preview_data(self, field, value, region):
-        if field == "cc-number":
-            value = value[-4:]
-        elif field == "cc-exp-year":
-            value = value[-2:]
-        elif field == "tel" or value[0] == "+":
-            value = self.util.normalize_regional_phone_numbers(value, region)
-        return value
+        return self
 
     def select_autofill_option(self, field):
         """
@@ -584,7 +527,6 @@ class Autofill(BasePage):
     def check_autofill_preview_for_field(
         self,
         field_label: str,
-        sample_data: CreditCardBase | AutofillAddressBase,
         region: str = None,
     ):
         """
@@ -592,8 +534,7 @@ class Autofill(BasePage):
 
         Arguments:
             field_label: field name.
-            sample_data: autofill sample data.
-            region: region being tested.
+            region: region being tested (used to skip address-level1 outside US/CA).
         """
         if (
             self.__class__ == AddressFill
@@ -609,8 +550,11 @@ class Autofill(BasePage):
                 self.double_click("form-field", labels=[field])
                 self.autofill_popup.ensure_autofill_dropdown_visible()
                 self.autofill_popup.hover_over_autofill_panel()
-                self.verify_autofill_data_on_hover(sample_data, region)
-                self.click_on("form-field", labels=[field])
+                self.verify_autofill_data_on_hover()
+                # Dismiss the dropdown WITHOUT committing the fill: once a form is
+                # autofilled, Firefox 154 suppresses further previews, which would
+                # break the preview check for the remaining fields.
+                autofill_field.send_keys(Keys.ESCAPE)
             else:
                 logging.info(
                     f"Field: {field_label} is a select element. No autofill option."
@@ -733,12 +677,6 @@ class AddressFill(Autofill):
             field_mapping if field_mapping else base_address_field_mapping
         )
         self.fields = fields if fields else base_address_fields
-        self.preview_fields = set(
-            map(
-                lambda field: base_preview_address_mapping.get(field, field),
-                self.field_mapping.keys(),
-            )
-        )
         self.URL_TEMPLATE = url_template if url_template else BASE_ADDRESS_URL_TEMPLATE
 
 
@@ -759,15 +697,6 @@ class CreditCardFill(Autofill):
         super().__init__(driver, **kwargs)
         self.field_mapping = field_mapping if field_mapping else base_cc_field_mapping
         self.fields = fields if fields else base_cc_fields
-        self.preview_fields = set(
-            map(
-                lambda field: base_preview_cc_mapping.get(field),
-                self.field_mapping.keys(),
-            )
-        )
-        self.preview_fields = {
-            field for field in self.preview_fields if field is not None
-        }
         self.URL_TEMPLATE = url_template if url_template else BASE_CC_URL_TEMPLATE
 
 
@@ -880,10 +809,12 @@ class LoginAutofill(Autofill):
             """Select credentials from the autocomplete dropdown."""
 
             # Clear any auto-filled value so the dropdown appears when focused
-            self.parent.get_element(field_reference).clear()
+            field = self.parent.get_element(field_reference)
+            field.clear()
 
-            # Open the autocomplete dropdown
+            # Focus the field; ARROW_DOWN reliably opens the dropdown
             self.parent.click_on(field_reference)
+            field.send_keys(Keys.ARROW_DOWN)
 
             # Click the credential entry from the Firefox chrome autocomplete popup
             with self.parent.driver.context(self.parent.driver.CONTEXT_CHROME):

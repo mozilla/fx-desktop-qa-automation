@@ -119,6 +119,28 @@ def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     nav.search_bar_search(search_term)
 
 
+@_entry("searchbar_suggestion")
+def _entry_searchbar_suggestion(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar, then submit a search by selecting one of its suggestions."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar to the toolbar and submit via a suggestion
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_select_suggestion(search_term)
+
+
+@_entry("searchbar_search_form")
+def _entry_searchbar_search_form(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar and Shift+click an engine one-off button to load its search form."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar and open the engine's search form via its one-off button
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_open_engine_search_form(params["engine"])
+
+
 @_entry("urlbar_handoff")
 def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
     """Simulate a urlbar_handoff search: the newtab in-content search box is a fake input that,
@@ -222,7 +244,6 @@ def _entry_follow_on_from_refine_on_incontent_search(
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
     glean = Glean(driver)
-    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
 
     # Open a new tab and perform the initial search
     page.open()
@@ -236,6 +257,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # Refine the search via the in-content search bar and verify both the original term
     # and the refinement remain in the URL (guards against the engine auto-selecting and
     # replacing the existing query on focus)
+    search_bar_name = f"{params['engine'].lower()}-incontent-search-bar"
     page.element_visible(search_bar_name)
     search_bar = page.get_element(search_bar_name)
     search_bar.click()
@@ -275,7 +297,6 @@ def _action_open_in_new_tab(driver: Firefox, params: dict = None):
     page = GenericPage(driver)
     glean = Glean(driver)
     tabs = TabBar(driver)
-    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
 
     # Wait for the first SERP impression to be recorded so Firefox has wired up the SERP telemetry
     # context before we open the refinement; otherwise the new tab is attributed as source='unknown'
@@ -283,6 +304,7 @@ def _action_open_in_new_tab(driver: Firefox, params: dict = None):
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
 
     # Ctrl/Cmd+click the related-search shortcut to open the refined SERP in a new background tab
+    shortcut = f"{params['engine'].lower()}-related-search-shortcut"
     page.element_visible(shortcut)
     page.control_click(shortcut)
 
@@ -351,6 +373,134 @@ def _abandonment_tab_close(driver: Firefox, search_term: str, params: dict = Non
     tabs.close_tab_shortcut(page.sys_platform())
     tabs.wait_for_num_tabs(original_tab_count)
     page.switch_to_new_tab()
+
+
+@_abandonment("navigation")
+def _abandonment_navigation(driver: Firefox, search_term: str, params: dict = None):
+    """Open a SERP and navigate away in the same tab by loading another page from the address
+    bar, so Firefox records a serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so it starts from the new-tab page, then navigate away in that tab
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; navigating
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Navigate away from the SERP in the same tab via the address bar -> serp.abandonment
+    # reason='navigation'
+    nav.type_in_awesome_bar(ExamplePage.URL_TEMPLATE + Keys.ENTER)
+    page.url_contains("example.com")
+
+
+@_abandonment("back_navigation")
+def _abandonment_back_navigation(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Open a SERP in a new tab and leave it via the back button, returning to the new-tab page,
+    so Firefox records a serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so the back button returns to the new-tab page, not a prior SERP
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; leaving
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Leave the SERP via the back button -> serp.abandonment reason='navigation'
+    nav.click_back_button()
+    page.url_contains("about:newtab")
+
+
+@_abandonment("refresh_navigation")
+def _abandonment_refresh_navigation(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Open a SERP and refresh it in the same tab via the refresh button, so Firefox records a
+    serp.abandonment with reason='navigation'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+    tabs = TabBar(driver)
+
+    # Open the search in a new tab so it starts from the new-tab page, then refresh in that tab
+    tabs.open_and_switch_to_new_tab()
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; refreshing
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Refresh the SERP in the same tab -> serp.abandonment reason='navigation'
+    nav.refresh_page()
+    page.url_contains(search_term)
+
+
+@_abandonment("window_close")
+def _abandonment_window_close(driver: Firefox, search_term: str, params: dict = None):
+    """Open a SERP in a new window and close that window without engaging, so Firefox records a
+    serp.abandonment with reason='window_close'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    nav = Navigation(driver)
+    glean = Glean(driver)
+
+    # Open the search in a new window so closing it leaves the original window (and session) alive
+    original_window_count = len(driver.window_handles)
+    nav.open_and_switch_to_new_window("window")
+    nav.search(search_term)
+
+    # Wait for the SERP impression so the abandonment has an impression to reference; closing
+    # before Firefox categorizes the SERP records no abandonment
+    page.url_contains(search_term)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Close the window without engaging
+    driver.close()
+    page.wait_for_num_tabs(original_window_count)
+    page.switch_to_new_window()
+
+
+# ===========================================================================
+# serp.engagement
+# ===========================================================================
+
+
+@_action("click_non_ads_link")
+def _action_click_non_ads_link(driver: Firefox, params: dict = None):
+    """Click a non-sponsored (organic) result link on the SERP so Firefox records a
+    serp.engagement with action='clicked', target='non_ads_link'."""
+    # Instantiate objects
+    page = GenericPage(driver)
+    glean = Glean(driver)
+
+    # Wait for the SERP impression so Firefox has wired up the SERP telemetry context before we
+    # click; otherwise the engagement is not attributed to this SERP
+    page.url_contains(SEARCH_TERM)
+    glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+
+    # Click an organic result link -> serp.engagement action='clicked', target='non_ads_link'.
+    # JS click: Firefox's SERP telemetry listens for the click event, and this bypasses the
+    # hover/preview overlays some engines lay over the result title (native click is intercepted).
+    result = f"{params['engine'].lower()}-search-result"
+    page.element_visible(result)
+    page.js_click_on(result)
 
 
 # ---------------------------------------------------------------------------

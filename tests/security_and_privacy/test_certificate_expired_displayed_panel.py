@@ -12,14 +12,16 @@ def test_case():
     return "3054045"
 
 
-def test_certificate_expired_displayed_panel(driver: Firefox):
+def test_certificate_expired_displayed_panel(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054045 - “Certificate expired” is correctly displayed in the panel
     """
 
     # Instantiate objects
     test_page = GenericPage(driver, url=CERTIFICATE_EXPIRED_URL)
-    trust_panel = TrustPanel(driver)
 
     # Open test page and click on the shield icon
     test_page.open()

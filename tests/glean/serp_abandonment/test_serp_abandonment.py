@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -8,6 +10,11 @@ from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
 METRIC = data["metric"]
+
+# Each SERP event carries a UUID impression_id, e.g. "c85ccabf-7481-402e-b28d-22b4dc85561e"
+IMPRESSION_ID_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+)
 
 
 @pytest.fixture(
@@ -46,4 +53,17 @@ def test_serp_abandonment(driver: Firefox, case: dict):
 
     run_abandonment(driver, case["action"], SEARCH_TERM, params)
 
-    glean.poll_glean_metric(METRIC, case["expected"])
+    events = glean.poll_glean_metric(METRIC, case["expected"])
+
+    # The matched abandonment must carry a well-formed UUID impression_id
+    impression_ids = [
+        event.get("extra", {}).get("impression_id", "")
+        for event in events
+        if all(
+            event.get("extra", {}).get(key) == value
+            for key, value in case["expected"].items()
+        )
+    ]
+    assert any(IMPRESSION_ID_RE.match(i) for i in impression_ids), (
+        f"Expected a UUID impression_id in {METRIC}, got {impression_ids!r}"
+    )

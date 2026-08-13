@@ -4,6 +4,12 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation, TabBar
 from modules.page_object import GenericPage
 
+# Mock the network geolocation provider so coordinates resolve deterministically,
+# independent of OS location services or a build-substituted Google API key.
+MOCK_GEOLOCATION_URL = (
+    'data:application/json,{"location": {"lat": 48.0, "lng": 17.0}, "accuracy": 100.0}'
+)
+
 
 @pytest.fixture()
 def test_case():
@@ -14,11 +20,8 @@ def test_case():
 def add_to_prefs_list():
     """Add to list of prefs to set"""
     return [
-        (
-            "geo.provider.network.url",
-            "https://www.googleapis.com/geolocation/v1/geolocate?key"
-            "=%GOOGLE_LOCATION_SERVICE_API_KEY%",
-        )
+        ("geo.provider.testing", True),
+        ("geo.provider.network.url", MOCK_GEOLOCATION_URL),
     ]
 
 
@@ -38,7 +41,6 @@ def temp_selectors():
     }
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_allow_permission_on_geolocation_via_html5(
     driver: Firefox,
     nav: Navigation,
@@ -74,7 +76,6 @@ def test_allow_permission_on_geolocation_via_html5(
     )
 
 
-# Test is unstable on Windows GHA because of permission changes on the CI image
 def test_block_permission_on_geolocation_via_w3c_api(
     driver: Firefox,
     nav: Navigation,

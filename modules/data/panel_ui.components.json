@@ -1,314 +1,530 @@
 {
-    "context": "chrome",
-    "do-not-cache": true,
-    "panel-ui-button": {
-        "selectorData": "PanelUI-menu-button",
-        "strategy": "id",
-        "groups": [
-            "requiredForPage"
-        ]
-    },
-    "panel-main-view": {
-        "selectorData": "appMenu-mainView",
-        "strategy": "id",
-        "groups": []
-    },
-    "sync-user-button": {
-        "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
-        "strategy": "css",
-        "groups": []
-    },
-    "fxa-manage-account-button": {
-        "selectorData": "fxa-manage-account-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "sync-fxa": {
-        "selectorData": "appMenu-fxa-status2",
-        "strategy": "id",
-        "groups": []
-    },
-    "fxa-sign-in": {
-        "selectorData": "#appMenu-fxa-status2 toolbarbutton",
-        "strategy": "css",
-        "groups": []
-    },
-    "fxa-finish-sign-in": {
-        "selectorData": "appMenu-header-description",
-        "strategy": "id",
-        "groups": []
-    },
-    "fxa-sync-label": {
-        "selectorData": "syncnow-label",
-        "strategy": "class",
-        "groups": []
-    },
-    "new-private-window-option": {
-        "selectorData": "appMenu-new-private-window-button2",
-        "strategy": "id",
-        "groups": []
-    },
-    "more-tools": {
-        "selectorData": "appMenu-more-button2",
-        "strategy": "id",
-        "groups": []
-    },
-    "customize-toolbar": {
-        "selectorData": "overflowMenu-customize-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "manage-themes": {
-        "selectorData": "customization-lwtheme-link",
-        "strategy": "id",
-        "groups": []
-    },
-    "zoom-reduce": {
-        "selectorData": "appMenu-zoomReduce-button2",
-        "strategy": "id",
-        "groups": [
-            "menuItem"
-        ]
-    },
-    "zoom-enlarge": {
-        "selectorData": "appMenu-zoomEnlarge-button2",
-        "strategy": "id",
-        "groups": [
-            "menuItem"
-        ]
-    },
-    "zoom-reset": {
-        "selectorData": "appMenu-zoomReset-button2",
-        "strategy": "id",
-        "groups": [
-            "menuItem"
-        ]
-    },
-    "find-in-page": {
-        "selectorData": "appMenu-find-button2",
-        "strategy": "id",
-        "groups": [
-            "menuItem"
-        ]
-    },
-    "panel-ui-new-window": {
-        "selectorData": "appMenu-new-window-button2",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history": {
-        "selectorData": "appMenu-history-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history-view": {
-        "selectorData": "PanelUI-history",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history-recently-closed": {
-        "selectorData": "appMenuRecentlyClosedTabs",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history-recently-closed-reopen-tabs": {
-        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']",
-        "strategy": "css",
-        "groups": []
-    },
-    "panel-ui-new-private-window": {
-        "selectorData": "appMenu-new-private-window-button2",
-        "strategy": "id",
-        "groups": []
-    },
-    "recent-history-content": {
-        "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
-        "strategy": "css",
-        "groups": []
-    },
-    "bookmark-item": {
-        "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
-        "strategy": "css",
-        "groups": []
-    },
-    "clear-recent-history": {
-        "selectorData": "appMenuClearRecentHistory",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history-recent-history-container": {
-        "selectorData": "appMenu_historyMenu",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-ui-history-recent-history-item": {
-        "selectorData": "toolbarbutton",
-        "strategy": "tag",
-        "groups": []
-    },
-    "panel-ui-bookmarks": {
-        "selectorData": "appMenu-bookmarks-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "panel-menu-item-by-title": {
-        "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bookmark-current-tab": {
-        "selectorData": "panelMenuBookmarkThisPage",
-        "strategy": "id",
-        "groups": []
-    },
-    "iframe": {
-        "selectorData": "dialogFrame",
-        "strategy": "class",
-        "groups": []
-    },
-    "clear-history-dropdown": {
-        "selectorData": "sanitizeDurationPopup",
-        "strategy": "id",
-        "groups": []
-    },
-    "all-history-warning": {
-        "selectorData": "sanitizeEverythingWarningBox",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmark-location": {
-        "selectorData": "editBMPanel_folderMenuList",
-        "strategy": "id",
-        "groups": []
-    },
-    "other-bookmarks": {
-        "selectorData": "editBMPanel_unfiledRootItem",
-        "strategy": "id",
-        "groups": []
-    },
-    "show-editor-when-saving-checkbox": {
-        "selectorData": "editBookmarkPanel_showForNewBookmarks",
-        "strategy": "id",
-        "groups": []
-    },
-    "other-bookmarks-by-title": {
-        "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
-        "strategy": "css",
-        "groups": []
-    },
-    "history-back-button": {
-        "selectorData": "toolbarbutton.subviewbutton-back > image.toolbarbutton-icon",
-        "strategy": "css",
-        "groups": []
-    },
-    "history_title": {
-        "selectorData": "//*[@id='PanelUI-history']//*[text()='History']",
-        "strategy": "xpath",
-        "groups": []
-    },
-    "recently_closed_tabs": {
-        "selectorData": "appMenuRecentlyClosedTabs",
-        "strategy": "id",
-        "groups": []
-    },
-    "recently_closed_windows": {
-        "selectorData": "appMenuRecentlyClosedWindows",
-        "strategy": "id",
-        "groups": []
-    },
-    "search_history": {
-        "selectorData": "appMenuSearchHistory",
-        "strategy": "id",
-        "groups": []
-    },
-    "recent_history": {
-        "selectorData": "panelMenu_recentHistory",
-        "strategy": "id",
-        "groups": []
-    },
-    "manage_history": {
-        "selectorData": "PanelUI-historyMore",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmark-tags": {
-        "selectorData": "editBMPanel_tagsField",
-        "strategy": "id",
-        "groups": []
-    },
-    "extend-bookmark-tags": {
-        "selectorData": "editBMPanel_tagsSelectorExpander",
-        "strategy": "id",
-        "groups": []
-    },
-    "work-tag": {
-        "selectorData": "label[value='Work']",
-        "strategy": "css",
-        "groups": []
-    },
-    "todo-tag": {
-        "selectorData": "label[value='To do']",
-        "strategy": "css",
-        "groups": []
-    },
-    "password-button": {
-        "selectorData": "appMenu-passwords-button",
-        "strategy": "id",
-        "groups": []
-    },
-    "print-option": {
-        "selectorData": "appMenu-print-button2",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmarks-toolbar": {
-        "selectorData": "PlacesToolbar",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmarks-type-dropdown": {
-        "selectorData": "editBMPanel_folderMenuList",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmarks-type-dropdown-other": {
-        "selectorData": "editBMPanel_unfiledRootItem",
-        "strategy": "id",
-        "groups": []
-    },
-    "save-bookmark-button": {
-        "selectorData": "editBookmarkPanelDoneButton",
-        "strategy": "id",
-        "groups": []
-    },
-    "edit-bookmark-panel": {
-        "selectorData": "editBMPanel_namePicker",
-        "strategy": "id",
-        "groups": []
-    },
-    "toolbarspring": {
-        "selectorData": "customizableui-special-spring2",
-        "strategy": "id",
-        "groups": []
-    },
-    "reopen-all-closed-tabs-button": {
-        "selectorData": "toolbarbutton.restoreallitem[label='Reopen all tabs']",
-        "strategy": "css",
-        "groups": []
-    },
-    "bookmark-iframe": {
-        "selectorData": "browser[class='dialogFrame']",
-        "strategy": "css",
-        "groups": []
-    },
-    "tabs-toolbar": {
-        "selectorData": "TabsToolbar",
-        "strategy": "id",
-        "groups": []
-    },
-    "bookmarks-panel-location-label": {
-        "selectorData": "label.editBMPanel_folderRow.hideable[value='Location']",
-        "strategy": "css",
-        "groups": []
+  "context": "chrome",
+  "do-not-cache": true,
+  "panel-ui-button": {
+    "selectorData": "PanelUI-menu-button",
+    "strategy": "id",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "Menu button / Hambuger menu",
+      "location": "Toolbar"
     }
+  },
+  "panel-main-view": {
+    "selectorData": "appMenu-mainView",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Main body of Panel UI",
+      "location": "See above"
+    }
+  },
+  "sync-user-button": {
+    "selectorData": "toolbarbutton[id='fxa-toolbar-menu-button']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Account button",
+      "location": "Toolbar"
+    }
+  },
+  "fxa-manage-account-button": {
+    "selectorData": "fxa-manage-account-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Sign in to sync button",
+      "location": "Account panel"
+    }
+  },
+  "sync-fxa": {
+    "selectorData": "appMenu-fxa-status2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Sync and save data",
+      "location": "Firefox menu"
+    }
+  },
+  "fxa-sign-in": {
+    "selectorData": "#appMenu-fxa-status2 toolbarbutton",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sign in button",
+      "location": "Firefox menu"
+    }
+  },
+  "fxa-finish-sign-in": {
+    "selectorData": "appMenu-header-description",
+    "strategy": "id",
+    "groups": []
+  },
+  "fxa-sync-label": {
+    "selectorData": "syncnow-label",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "Sync now",
+      "location": "Firefox menu after singing in"
+    }
+  },
+  "new-private-window-option": {
+    "selectorData": "appMenu-new-private-window-button2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "New private window buttin",
+      "location": "Firefox menu"
+    }
+  },
+  "more-tools": {
+    "selectorData": "appMenu-more-button2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "More tools button",
+      "location": "Firefox menu"
+    }
+  },
+  "customize-toolbar": {
+    "selectorData": "overflowMenu-customize-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Customize toolbar",
+      "location": "More tools inside Firefox menu"
+    }
+  },
+  "manage-themes": {
+    "selectorData": "customization-lwtheme-link",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Manage themes",
+      "location": "On the hamburger menu > More Tools > Customize Toolbar > Manage Themes"
+    }
+  },
+  "zoom-reduce": {
+    "selectorData": "appMenu-zoomReduce-button2",
+    "strategy": "id",
+    "groups": [
+      "menuItem"
+    ],
+    "comment": {
+      "description": "Zoom reduce button",
+      "location": "Firefox menu"
+    }
+  },
+  "zoom-enlarge": {
+    "selectorData": "appMenu-zoomEnlarge-button2",
+    "strategy": "id",
+    "groups": [
+      "menuItem"
+    ],
+    "comment": {
+      "description": "Zoom enlarge button",
+      "location": "Firefox menu"
+    }
+  },
+  "zoom-reset": {
+    "selectorData": "appMenu-zoomReset-button2",
+    "strategy": "id",
+    "groups": [
+      "menuItem"
+    ],
+    "comment": {
+      "description": "Zoom reset button",
+      "location": "Firefox menu"
+    }
+  },
+  "find-in-page": {
+    "selectorData": "appMenu-find-button2",
+    "strategy": "id",
+    "groups": [
+      "menuItem"
+    ],
+    "comment": {
+      "description": "Find in page button",
+      "location": "Firefox menu"
+    }
+  },
+  "panel-ui-new-window": {
+    "selectorData": "appMenu-new-window-button2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "New window button",
+      "location": "Firefox menu"
+    }
+  },
+  "panel-ui-history": {
+    "selectorData": "appMenu-history-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "History button",
+      "location": "Firefox menu"
+    }
+  },
+  "panel-ui-history-view": {
+    "selectorData": "PanelUI-history",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Subview of Panel UI",
+      "location": "See above"
+    }
+  },
+  "panel-ui-history-recently-closed": {
+    "selectorData": "appMenuRecentlyClosedTabs",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Recently closed tabs",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "panel-ui-history-recently-closed-reopen-tabs": {
+    "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-nav'][label='Recently closed tabs']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Recently closed reopen tabs",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "panel-ui-new-private-window": {
+    "selectorData": "appMenu-new-private-window-button2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "New private window",
+      "location": "Hamburger menu"
+    }
+  },
+  "recent-history-content": {
+    "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Recent history content",
+      "location": "Hamburger menu"
+    }
+  },
+  "bookmark-item": {
+    "selectorData": "toolbarbutton[class='subviewbutton subviewbutton-iconic bookmark-item']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark item",
+      "location": "On the hamburger menu > Bookmarks"
+    }
+  },
+  "clear-recent-history": {
+    "selectorData": "appMenuClearRecentHistory",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Clear recent history",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "panel-ui-history-recent-history-container": {
+    "selectorData": "appMenu_historyMenu",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Recent history",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "panel-ui-history-recent-history-item": {
+    "selectorData": "toolbarbutton",
+    "strategy": "tag",
+    "groups": [],
+    "comment": {
+      "description": "Recent history item",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "panel-ui-bookmarks": {
+    "selectorData": "appMenu-bookmarks-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark button",
+      "location": "On the hamburger menu"
+    }
+  },
+  "panel-menu-item-by-title": {
+    "selectorData": "toolbarbutton.bookmark-item[label*='{title}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark or history item by title. This selector works for both bookmarks and history items since Firefox uses the same CSS class \"bookmark-item\" for both in the hamburger menu UI.",
+      "location": "On the hamburger menu > Bookmarks or History"
+    }
+  },
+  "bookmark-current-tab": {
+    "selectorData": "panelMenuBookmarkThisPage",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark current tab button",
+      "location": "On the hamburger menu > Bookmarks"
+    }
+  },
+  "iframe": {
+    "selectorData": "dialogFrame",
+    "strategy": "class",
+    "groups": [],
+    "comment": {
+      "description": "iframe",
+      "location": "iframe"
+    }
+  },
+  "clear-history-dropdown": {
+    "selectorData": "sanitizeDurationPopup",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Clear browsing data and cookies by duration",
+      "location": "On the hamburger menu > History > Clear recent history"
+    }
+  },
+  "all-history-warning": {
+    "selectorData": "sanitizeEverythingWarningBox",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Sanitize everything warning box",
+      "location": "On the hamburger menu > History > Clear recent history > Select everything from when"
+    }
+  },
+  "bookmark-location": {
+    "selectorData": "editBMPanel_folderMenuList",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark location",
+      "location": "Bookmark panel"
+    }
+  },
+  "other-bookmarks": {
+    "selectorData": "editBMPanel_unfiledRootItem",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Other bookmarks",
+      "location": "Bookmark panel"
+    }
+  },
+  "show-editor-when-saving-checkbox": {
+    "selectorData": "editBookmarkPanel_showForNewBookmarks",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Show editor when saving checkbox",
+      "location": "Bookmark panel"
+    }
+  },
+  "other-bookmarks-by-title": {
+    "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark item",
+      "location": "Toolbar"
+    }
+  },
+  "history-back-button": {
+    "selectorData": "toolbarbutton.subviewbutton-back > image.toolbarbutton-icon",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "History back button",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "history_title": {
+    "selectorData": "//*[@id='PanelUI-history']//*[text()='History']",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "History title",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "recently_closed_tabs": {
+    "selectorData": "appMenuRecentlyClosedTabs",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Recently closed tabs button",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "recently_closed_windows": {
+    "selectorData": "appMenuRecentlyClosedWindows",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Recently closed windows",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "search_history": {
+    "selectorData": "appMenuSearchHistory",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Search history button",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "recent_history": {
+    "selectorData": "panelMenu_recentHistory",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Recent history",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "manage_history": {
+    "selectorData": "PanelUI-historyMore",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Manage history button",
+      "location": "On the hamburger menu > History"
+    }
+  },
+  "bookmark-tags": {
+    "selectorData": "editBMPanel_tagsField",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark tage",
+      "location": "Bookmark panel"
+    }
+  },
+  "extend-bookmark-tags": {
+    "selectorData": "editBMPanel_tagsSelectorExpander",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Extend bookmark tags",
+      "location": "Bookmark panel"
+    }
+  },
+  "work-tag": {
+    "selectorData": "label[value='Work']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark tag",
+      "location": "Bookmark panel"
+    }
+  },
+  "todo-tag": {
+    "selectorData": "label[value='To do']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Bookmark tag",
+      "location": "Bookmark panel"
+    }
+  },
+  "password-button": {
+    "selectorData": "appMenu-passwords-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Password button",
+      "location": "Hamburger Menu"
+    }
+  },
+  "print-option": {
+    "selectorData": "appMenu-print-button2",
+    "strategy": "id",
+    "groups": []
+  },
+  "bookmarks-toolbar": {
+    "selectorData": "PlacesToolbar",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Bookmarks toolbar",
+      "location": "Bookmarks toolbar"
+    }
+  },
+  "bookmarks-type-dropdown": {
+    "selectorData": "editBMPanel_folderMenuList",
+    "strategy": "id",
+    "groups": []
+  },
+  "bookmarks-type-dropdown-other": {
+    "selectorData": "editBMPanel_unfiledRootItem",
+    "strategy": "id",
+    "groups": []
+  },
+  "save-bookmark-button": {
+    "selectorData": "editBookmarkPanelDoneButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "edit-bookmark-panel": {
+    "selectorData": "editBMPanel_namePicker",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Edit bookmark panel",
+      "location": "Bookmark panel"
+    }
+  },
+  "toolbarspring": {
+    "selectorData": "customizableui-special-spring2",
+    "strategy": "id",
+    "groups": []
+  },
+  "reopen-all-closed-tabs-button": {
+    "selectorData": "toolbarbutton.restoreallitem[label='Reopen all tabs']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Reopen all closed tabs button",
+      "location": "On the hamburger menu > History > Recently closed tabs"
+    }
+  },
+  "bookmark-iframe": {
+    "selectorData": "browser[class='dialogFrame']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Add bookmark folder",
+      "location": "Add bookmark folder from bookmarks toolbar"
+    }
+  },
+  "tabs-toolbar": {
+    "selectorData": "TabsToolbar",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Click outside the Add Folder panel to simulate cancelling or clicking away",
+      "location": "Add bookmark folder"
+    }
+  },
+  "bookmarks-panel-location-label": {
+    "selectorData": "label.editBMPanel_folderRow.hideable[value='Location']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Click inside the Add Folder panel to simulate cancelling or clicking away",
+      "location": "Add/Edit bookmark folder"
+    }
+  }
 }

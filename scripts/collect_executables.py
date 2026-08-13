@@ -15,6 +15,10 @@ from bs4 import BeautifulSoup
 
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 BACKSTOP = "146.0b9"
+# Used only when the GitHub API cannot be reached. Keep this current with the
+# latest geckodriver release: tests/meta/test_version.py compares the running
+# driver against the latest release on GitHub, so a stale pin fails CI.
+GECKO_FALLBACK_VERSION = "0.37.1"
 
 
 def get_fx_platform():
@@ -77,20 +81,34 @@ def main(args):
 
         gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
-        # In mac, sometimes this request fails to produce a link
+        # Retry on a missing "assets" key rather than on a falsy object. A
+        # rate-limited reply is a populated dict carrying only "message", so the
+        # old falsy check broke out on the first pass and fell straight through
+        # to the pinned fallback. In mac, the request sometimes fails outright.
         for _ in range(4):
-            if gecko_rs_obj:
+            if gecko_rs_obj.get("assets"):
                 break
             sleep(2)
             gecko_rs_obj = requests.get(GECKO_API_URL).json()
 
-        # If we failed, just dump any old link, maybe update this on new gecko release
+        # Still nothing, so fall back to the pinned release. Warn loudly: the
+        # download otherwise looks successful and the mismatch only surfaces
+        # later, as a test_gecko_version failure that names no cause.
         if not gecko_rs_obj.get("assets"):
             gd_platform = get_gd_platform()
             ext = "zip" if "win" in gd_platform else "tar.gz"
+            logging.warning(
+                "GitHub API returned no geckodriver assets (%s). This is usually "
+                "rate limiting: the API allows 60 calls/hour per IP and CI "
+                "runners share addresses. Falling back to pinned v%s; "
+                "test_gecko_version will fail if that is not the latest release.",
+                gecko_rs_obj.get("message", "no message in response"),
+                GECKO_FALLBACK_VERSION,
+            )
             print(
-                "https://github.com/mozilla/geckodriver/releases/download/v0.36.0/"
-                f"geckodriver-v0.36.0-{gd_platform}.{ext}"
+                "https://github.com/mozilla/geckodriver/releases/download/"
+                f"v{GECKO_FALLBACK_VERSION}/"
+                f"geckodriver-v{GECKO_FALLBACK_VERSION}-{gd_platform}.{ext}"
             )
             exit()
 

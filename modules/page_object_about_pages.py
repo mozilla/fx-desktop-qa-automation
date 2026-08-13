@@ -1,10 +1,13 @@
 import logging
 import os
-import re
+from time import sleep, time
+from typing import Optional
 
 from pypom import Page
 from selenium.common.exceptions import (
+    NoAlertPresentException,
     StaleElementReferenceException,
+    TimeoutException,
     WebDriverException,
 )
 from selenium.webdriver import ActionChains, Firefox
@@ -14,7 +17,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
-from modules.page_object_generics import GenericPage
 from modules.util import BrowserActions
 
 
@@ -149,6 +151,10 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
+    # Settle interval to let a native (non-DOM) prompt take keyboard focus before
+    # typing OS-level keystrokes; its readiness cannot be polled directly.
+    _NATIVE_PROMPT_SETTLE_S = 0.5
+
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.ba = BrowserActions(self.driver)
@@ -200,13 +206,11 @@ class AboutLogins(BasePage):
         else:
             assert expected_logins == actual_logins
 
-    def remove_password_csv(self, downloads_dir):
-        # Delete password.csv, if there is one in the export location
-        passwords_csv = os.path.join(downloads_dir, "passwords.csv")
-        for file in os.listdir(downloads_dir):
-            delete_files_regex = re.compile(r"\bpasswords.csv\b")
-            if delete_files_regex.match(file):
-                os.remove(passwords_csv)
+    def remove_password_csv(self, downloads_dir, filename: str = "passwords.csv"):
+        # Delete the exported CSV, if there is one in the export location
+        passwords_csv = os.path.join(downloads_dir, filename)
+        if os.path.exists(passwords_csv):
+            os.remove(passwords_csv)
 
     def verify_csv_export(
         self, downloads_folder: str, filename: str, timeout: int = 20
@@ -257,18 +261,80 @@ class AboutLogins(BasePage):
             }
         )
 
-    def export_passwords_csv(self, downloads_folder: str, filename: str):
+    def _primary_password_prompt_present(self) -> bool:
+        """Return True if a modal primary-password prompt is currently open."""
+        try:
+            self.driver.switch_to.alert
+            return True
+        except NoAlertPresentException:
+            return False
+
+    def _submit_export_primary_password(
+        self, primary_password: str, attempts: int = 5
+    ) -> BasePage:
         """
-        Export passwords to a CSV file and navigate the save dialog to the target location.
+        Handle the modal 'Primary Password' prompt Firefox raises when exporting
+        with a primary password set.
+
+        Marionette cannot type into this prompt (it rejects Alert.send_keys), so
+        the password is entered with OS-level keystrokes. The prompt also appears
+        a moment after the export is confirmed, so wait for it before typing and
+        re-enter until it dismisses (guards against typing before it is ready).
+        """
+        try:
+            self.custom_wait(timeout=10).until(
+                lambda _: self._primary_password_prompt_present()
+            )
+        except TimeoutException:
+            logging.warning("No primary password prompt appeared during export.")
+            return self
+
+        for _ in range(attempts):
+            if not self._primary_password_prompt_present():
+                return self
+            # Brief settle so the native prompt has keyboard focus before typing;
+            # it is not in the DOM, so its readiness cannot be polled directly.
+            sleep(self._NATIVE_PROMPT_SETTLE_S)
+            self.gui.write(primary_password, interval=0.05)
+            self.gui.press("enter")
+            # Condition-based wait for the prompt to dismiss (instead of a fixed
+            # sleep); only retry if it is still present afterward.
+            try:
+                self.custom_wait(timeout=5).until(
+                    lambda _: not self._primary_password_prompt_present()
+                )
+                return self
+            except TimeoutException:
+                continue
+        logging.warning(
+            "Primary password export prompt was never dismissed after %d attempts.",
+            attempts,
+        )
+        return self
+
+    def export_passwords_csv(
+        self,
+        downloads_folder: str,
+        filename: str,
+        primary_password: Optional[str] = None,
+    ) -> None:
+        """
+        Export passwords to a CSV file at the target location.
+
+        The native "Save As" picker is mocked on all platforms so the export
+        runs headlessly in CI (driving the OS file dialog is unreliable there).
+        Disable the export re-auth prompt for logins that do not use a primary
+        password by setting `signon.management.page.os-auth.locked.enabled` to
+        False in the test's prefs.
 
         Args:
             downloads_folder (str): The folder where the CSV should be saved.
             filename (str): The name of the CSV file.
+            primary_password (Optional[str]): If a primary password is set, the
+                value to enter at the export re-authentication prompt.
         """
         target_path = os.path.join(downloads_folder, filename)
-        use_mock_picker = self.sys_platform() == "Linux"
-        if use_mock_picker:
-            self.install_mock_file_picker(target_path)
+        self.install_mock_file_picker(target_path)
 
         # Open about:logins and click export buttons
         try:
@@ -277,15 +343,13 @@ class AboutLogins(BasePage):
             self.click_on("export-passwords-button")
             self.click_on("continue-export-button")
 
-            if use_mock_picker:
-                self.wait_for_mock_file_picker()
-            else:
-                # Wait for export dialog and navigate to folder
-                page = GenericPage(self.driver)
-                page.navigate_dialog_to_location(downloads_folder, filename)
+            # A primary password (if set) must be re-entered before the save dialog.
+            if primary_password:
+                self._submit_export_primary_password(primary_password)
+
+            self.wait_for_mock_file_picker()
         finally:
-            if use_mock_picker:
-                self.cleanup_mock_file_picker()
+            self.cleanup_mock_file_picker()
 
     def click_copy_username_button(self) -> Page:
         """Click the copy username button"""
@@ -322,6 +386,11 @@ class AboutLogins(BasePage):
         """
         Waits for the primary password prompt in chrome context,
         switches to the new tab, enters the password, and submits it.
+
+        The prompt can reset its input field while it finishes initializing,
+        which drops the typed password and leaves the dialog waiting. Re-enter
+        the password until the value sticks, then submit, treating the prompt
+        closing as success.
         """
 
         original_window = self.driver.current_window_handle
@@ -336,13 +405,38 @@ class AboutLogins(BasePage):
         primary_password_prompt = self.get_element("primary-password-prompt")
         assert primary_password_prompt.is_displayed()
 
-        # Enter password
-        input_field = self.get_element("primary-password-dialog-input-field")
-        input_field.send_keys(primary_password)
-        input_field.send_keys(Keys.ENTER)
+        enter_sent = False
+
+        def _enter_and_submit(_):
+            # wait_for_num_tabs(expected_tabs) already ran above, so if the count
+            # has since dropped the dialog has closed — the definitive success
+            # signal.
+            nonlocal enter_sent
+            if len(self.driver.window_handles) < expected_tabs:
+                return True
+            try:
+                input_field = self.get_element("primary-password-dialog-input-field")
+                # Re-enter if the dialog cleared the field during initialization;
+                # allow ENTER again once the value has been re-typed.
+                if input_field.get_attribute("value") != primary_password:
+                    input_field.clear()
+                    input_field.send_keys(primary_password)
+                    enter_sent = False
+                    return False
+                # Send ENTER once per typed value; wait for closure on later polls
+                # so it is not sent twice while the dialog is still processing.
+                if not enter_sent:
+                    input_field.send_keys(Keys.ENTER)
+                    enter_sent = True
+            except StaleElementReferenceException:
+                # The dialog re-rendered mid-interaction; retry on the next poll.
+                pass
+            return False
+
+        # Resolves once _enter_and_submit sees the prompt tab close.
+        self.wait.until(_enter_and_submit)
 
         # Switch back after prompt closes
-        self.wait.until(lambda d: len(d.window_handles) == 1)
         self.driver.switch_to.window(original_window)
 
         return self
@@ -393,6 +487,28 @@ class AboutLogins(BasePage):
             self.driver.switch_to.alert.dismiss()
         except Exception:
             pass
+        return self
+
+    def enter_primary_password_native(self, primary_password, timeout=10) -> BasePage:
+        """
+        Unlock the login store by answering Firefox's native Primary Password prompt.
+
+        Firefox 154 presents the Primary Password request for login-form autofill as
+        a native tab-modal ``promptPassword`` dialog (not the older in-content page
+        handled by :meth:`enter_primary_password`). Marionette rejects
+        ``Alert.send_keys`` on it, so type via OS keystrokes and accept — the same
+        approach used for the CSV-export re-auth prompt. Entering the correct
+        password unlocks the store for the session, which stops it re-prompting on
+        later reads (a cancel instead leaves it re-prompting persistently). Waits for
+        the prompt, types, and waits for it to clear.
+        """
+        WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+        # Brief settle so the native prompt has keyboard focus before typing; it is
+        # not in the DOM, so its readiness cannot be polled directly.
+        sleep(self._NATIVE_PROMPT_SETTLE_S)
+        self.gui.write(primary_password, interval=0.05)
+        self.gui.press("enter")
+        WebDriverWait(self.driver, timeout).until_not(EC.alert_is_present())
         return self
 
     def assert_username_present(self, username: str) -> BasePage:
@@ -522,6 +638,70 @@ class AboutTelemetry(BasePage):
         return self.is_telemetry_entry_present(
             "telemetry-keyed-scalars-table-rows", expected_data
         )
+
+    # JS that reads a legacy keyed-scalar value directly from the Telemetry API.
+    # Scraping the rendered about:telemetry table is unreliable across CI runners
+    # because the page does not force a child-process flush; reading the snapshot
+    # (after an explicit flush) mirrors the robust Glean BOM approach.
+    _KEYED_SCALAR_JS = """
+        const callback = arguments[arguments.length - 1];
+        const wantedKey = arguments[0];
+        (async () => {
+            try {
+                if (Services.fog && Services.fog.testFlushAllChildren) {
+                    await Services.fog.testFlushAllChildren();
+                }
+                const snapshot =
+                    Services.telemetry.getSnapshotForKeyedScalars("main", false) || {};
+                let value = null;
+                for (const proc of Object.keys(snapshot)) {
+                    const scalars = snapshot[proc] || {};
+                    for (const name of Object.keys(scalars)) {
+                        const keyed = scalars[name] || {};
+                        if (Object.prototype.hasOwnProperty.call(keyed, wantedKey)) {
+                            value = keyed[wantedKey];
+                        }
+                    }
+                }
+                callback(value);
+            } catch (e) {
+                callback({ error: String(e) });
+            }
+        })();
+    """
+
+    @BasePage.context_chrome
+    def poll_keyed_scalar(
+        self,
+        key: str,
+        expected_value,
+        timeout: int = 30,
+        poll_interval: float = 0.5,
+    ) -> bool:
+        """Poll a legacy keyed scalar until `key` reaches `expected_value`.
+
+        Reads the scalar snapshot directly via the chrome Telemetry API rather
+        than scraping about:telemetry, forcing a flush first. Returns True on
+        match, False on timeout.
+        """
+        end_time = time() + timeout
+        last = None
+        while time() < end_time:
+            result = self.driver.execute_async_script(self._KEYED_SCALAR_JS, key)
+            if isinstance(result, dict) and "error" in result:
+                raise AssertionError(f"Telemetry JS error: {result['error']}")
+            last = result
+            if result is not None and str(result) == str(expected_value):
+                return True
+            sleep(poll_interval)
+        logging.warning(
+            "Keyed scalar %r did not reach %r within %ss (last=%r)",
+            key,
+            expected_value,
+            timeout,
+            last,
+        )
+        return False
 
 
 class AboutNetworking(BasePage):

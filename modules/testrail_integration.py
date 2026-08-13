@@ -5,11 +5,12 @@ import platform as _platform
 import re
 import subprocess
 import sys
+import time
 
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
-from modules.testrail import TESTRAIL_STATUS, TestRail
+from modules.testrail import TESTRAIL_STATUS, APIError, TestRail
 from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
@@ -68,31 +69,55 @@ def get_execution_link(os_name: str = None) -> str:
     return ""
 
 
-def replace_link_in_description(description, os_name) -> str:
-    """Add or replace a test execution link in the test run description"""
+def _execution_link_pattern(os_name: str) -> re.Pattern:
+    """Match an execution link in any format this repo has written: anchor,
+    markdown, or bare URL, with the <br>/<p> tags around it."""
+
+    label = rf"{re.escape(os_name)}\s+execution\s+link"
+    body = "|".join(
+        [
+            rf"<a\b[^>]*>\s*{label}\s*</a>",
+            rf"\[\s*{label}\s*\]\([^)]*\)",
+            # stops at "<" because the description is stored as a single line
+            rf"{label}\s*:\s*[^\s<]+",
+        ]
+    )
+    edge = r"(?:<br\s*/?>|<p>)\s*"
+    return re.compile(rf"(?:{edge})?(?:{body})(?:\s*</p>)?", re.IGNORECASE)
+
+
+def replace_link_in_description(description: str, os_name: str) -> str:
+    """
+    Leave exactly one execution link for os_name in the description.
+
+    Every copy for this OS is dropped and the current one re-inserted where the
+    first sat, so platform order stays stable and unrelated text is kept.
+    """
 
     link = get_execution_link(os_name)
     if not link:
         return description
 
-    new_line = f"[{os_name} execution link]({link})"
-    lines = description.splitlines()
-    pat = re.compile(
-        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
-        re.IGNORECASE,
+    # The field is HTML and TestRail only linkifies in its UI editor; the <br>
+    # is what puts the link on its own line
+    new_entry = (
+        f'<br><a href="{link}" target="_blank" rel="noopener noreferrer">'
+        f"{os_name} execution link</a>"
     )
 
-    # Look for existing line to replace
-    for i, line in enumerate(lines):
-        if pat.match(line):
-            if line.strip() == new_line:
-                return description
-            lines[i] = new_line
-            return "\n".join(lines)
+    # Whole string, not lines: TestRail collapses the description onto one line
+    matches = list(_execution_link_pattern(os_name).finditer(description))
+    if matches:
+        insert_at = matches[0].start()
+        updated = description
+        # Back to front so the earlier offsets stay valid
+        for match in reversed(matches):
+            updated = updated[: match.start()] + updated[match.end() :]
+        updated = updated[:insert_at] + new_entry + updated[insert_at:]
+    else:
+        updated = description + new_entry
 
-    # No existing line found, append new one
-    lines.append(new_line)
-    return "\n".join(lines)
+    return description if updated == description else updated
 
 
 def determine_current_os() -> str:
@@ -166,11 +191,13 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
-    if os.environ.get("STARFOX_SPLIT") and os.environ.get("STARFOX_SPLIT").startswith(
-        "functional"
-    ):
-        functional_split = os.environ["STARFOX_SPLIT"].split("functional")[-1]
+    split = os.environ.get("STARFOX_SPLIT") or ""
+    if split.startswith("functional"):
+        functional_split = split.split("functional")[-1]
         plan_title = f"{plan_title} - Functional (Split {functional_split})"
+    elif split == "glean":
+        # Glean reports to its own plan; it is not part of the smoke run
+        plan_title = f"{plan_title} - Glean Telemetry"
     return plan_title
 
 
@@ -569,43 +596,53 @@ def mark_results(testrail_session: TestRail, test_results):
             logging.warning(f"{category} does not exist for this test run")
             continue
         for run_id in test_results[category]:
-            if not existing_results.get(run_id):
-                existing_results[run_id] = testrail_session.get_test_results(run_id)
-            current_results = {
-                result.get("case_id"): result.get("status_id")
-                for result in existing_results[run_id]
-            }
-            suite_id = test_results[category][run_id][0].get("suite_id")
+            try:
+                if not existing_results.get(run_id):
+                    existing_results[run_id] = testrail_session.get_test_results(run_id)
+                current_results = {
+                    result.get("case_id"): result.get("status_id")
+                    for result in existing_results[run_id]
+                }
+                suite_id = test_results[category][run_id][0].get("suite_id")
 
-            all_test_cases = []
-            all_durations = []
-            for result in test_results[category][run_id]:
-                all_test_cases.append(result.get("test_case"))
-                all_durations.append(result.get("duration"))
+                all_test_cases = []
+                all_durations = []
+                for result in test_results[category][run_id]:
+                    all_test_cases.append(result.get("test_case"))
+                    all_durations.append(result.get("duration"))
 
-            # Never downgrade a result — skip if the new category is less severe.
-            test_cases_ids = []
-            durations = []
-            for i, test_case in enumerate(all_test_cases):
-                current_severity = current_results.get(test_case, 0)
-                if TESTRAIL_STATUS[category] < current_severity:
-                    continue
-                test_cases_ids.append(test_case)
-                durations.append(all_durations[i])
-            logging.warning(
-                f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
-            )
-            logging.warning(
-                f"Setting the following test cases {test_cases_ids} to duration {durations}"
-            )
-            testrail_session.update_test_cases(
-                test_results.get("project_id"),
-                testrail_run_id=run_id,
-                testrail_suite_id=suite_id,
-                test_case_ids=test_cases_ids,
-                status=category,
-                elapsed=durations,
-            )
+                # Never downgrade a result — skip if the new category is less severe.
+                test_cases_ids = []
+                durations = []
+                for i, test_case in enumerate(all_test_cases):
+                    current_severity = current_results.get(test_case, 0)
+                    if TESTRAIL_STATUS[category] < current_severity:
+                        continue
+                    test_cases_ids.append(test_case)
+                    durations.append(all_durations[i])
+                logging.warning(
+                    f"Setting the following test cases in run {run_id} to {category}: {test_cases_ids}"
+                )
+                logging.warning(
+                    f"Setting the following test cases {test_cases_ids} to duration {durations}"
+                )
+                testrail_session.update_test_cases(
+                    test_results.get("project_id"),
+                    testrail_run_id=run_id,
+                    testrail_suite_id=suite_id,
+                    test_case_ids=test_cases_ids,
+                    status=category,
+                    elapsed=durations,
+                )
+            except APIError as e:
+                # A TestRail rejection of this run's batch (e.g. a raced or invalid
+                # set of case IDs) must not abort marking the remaining runs and
+                # categories. Anything other than an API error is unexpected and is
+                # allowed to propagate.
+                logging.error(
+                    f"Failed to mark {category} results for run {run_id}: {e}",
+                    exc_info=True,
+                )
 
 
 def organize_l10n_entries(
@@ -737,6 +774,80 @@ def organize_l10n_entries(
     return test_results
 
 
+def _matching_suite_entries(testrail_session, milestone_id, plan_title, suite_id):
+    """Re-fetch the plan and return the entries matching suite_id."""
+    plan = testrail_session.matching_plan_in_milestone(
+        TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+    )
+    if not plan:
+        return []
+    return [
+        entry
+        for entry in plan.get("entries", []) or []
+        if entry.get("suite_id") == suite_id
+    ]
+
+
+def _refetch_suite_entries_with_retry(
+    testrail_session, milestone_id, plan_title, suite_id, retries=4, delay=2.0
+):
+    """
+    Re-fetch a plan's entries for a suite, retrying while the result is empty.
+
+    The parallel Windows/macOS smoke jobs write to the same plan, so a read
+    immediately after our own create can lag (read-after-write) or briefly miss the
+    entry the other platform is concurrently creating. Retrying a few times turns a
+    transient miss into a hit instead of an IndexError that aborts the whole report.
+    """
+    entries = _matching_suite_entries(
+        testrail_session, milestone_id, plan_title, suite_id
+    )
+    attempt = 0
+    while not entries and attempt < retries:
+        time.sleep(delay)
+        entries = _matching_suite_entries(
+            testrail_session, milestone_id, plan_title, suite_id
+        )
+        attempt += 1
+    return entries
+
+
+def _select_suite_entry(entries, config):
+    """
+    Choose a single entry from possibly-raced results.
+
+    Prefer an entry that already carries a run for our config, so both platform jobs
+    converge on the same entry; otherwise fall back to the first. Returns None when
+    there are no entries, so callers can skip the suite instead of IndexError-ing.
+    """
+    if not entries:
+        return None
+    for entry in entries:
+        for run_ in entry.get("runs") or []:
+            if run_.get("config") == config:
+                return entry
+    return entries[0]
+
+
+def _safe_organize_entries(testrail_session, expected_plan, suite_info):
+    """
+    Wrapper around organize_entries that never lets one suite's failure abort the
+    whole report. The parallel platform jobs race on shared plan entries; if a race
+    (or any API error) breaks one suite, log it and return {} so the remaining suites
+    and mark_results still run. Without this, a single exception raised here left
+    every already-created suite sitting as "Untested".
+    """
+    try:
+        return organize_entries(testrail_session, expected_plan, suite_info) or {}
+    except Exception as e:
+        logging.error(
+            f"Failed to organize entries for suite {suite_info.get('id')} "
+            f"({suite_info.get('description')}): {e}",
+            exc_info=True,
+        )
+        return {}
+
+
 def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info: dict):
     """
     When we get to the level of entries on a TestRail plan, we need to make sure:
@@ -787,7 +898,7 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         # If no entry, create entry for suite
         logging.info(f"Create entry in plan {plan_id} for suite {suite_id}")
         logging.info(f"cases: {cases_in_suite}")
-        entry = testrail_session.create_new_plan_entry(
+        testrail_session.create_new_plan_entry(
             plan_id=plan_id,
             suite_id=suite_id,
             name=suite_description,
@@ -795,41 +906,54 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
             case_ids=cases_in_suite,
             config_ids=[config_id],
         )
-
-        expected_plan = testrail_session.matching_plan_in_milestone(
-            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
+        suite_entries = _refetch_suite_entries_with_retry(
+            testrail_session, milestone_id, plan_title, suite_id
         )
-        suite_entries = [
-            entry
-            for entry in expected_plan.get("entries")
-            if entry.get("suite_id") == suite_id
-        ]
 
     if len(suite_entries) != 1:
-        logging.info("Suite entries are broken somehow")
+        logging.warning(
+            f"Expected one entry for suite {suite_id}, found {len(suite_entries)} "
+            "(likely a race with the other platform job)."
+        )
 
-    # There should only be one entry per suite per plan
-    # Check that this entry has a run with the correct config
-    # And if not, make that run
-    entry = suite_entries[0]
-    config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+    # There should only be one entry per suite per plan. Prefer the entry already
+    # carrying our config's run; skip the suite (rather than IndexError) if a race
+    # left us with none.
+    entry = _select_suite_entry(suite_entries, config)
+    if entry is None:
+        logging.warning(
+            f"No entry resolvable for suite {suite_id} in plan {plan_id}; skipping."
+        )
+        return {}
+    config_runs = [r for r in entry.get("runs") or [] if r.get("config") == config]
 
-    # Sometimes, we get entries with null descriptions, not sure why
+    # Sometimes, we get entries with null descriptions, not sure why (seen when the
+    # entry is created concurrently by the other platform job).
     if not entry.get("description"):
         logging.warning(f"Entry {entry.get('id')} is malformed, missing description")
-        testrail_session.update_plan_entry(
-            plan_id, entry.get("id"), description="Automation-generated test plan entry"
+        try:
+            testrail_session.update_plan_entry(
+                plan_id,
+                entry.get("id"),
+                description="Automation-generated test plan entry",
+            )
+        except APIError as e:
+            # The entry may have been replaced/removed by the concurrent job between
+            # our fetch and this update ("the DB said the entry didn't exist").
+            logging.warning(
+                f"Could not repair description for entry {entry.get('id')}: {e}"
+            )
+        suite_entries = _refetch_suite_entries_with_retry(
+            testrail_session, milestone_id, plan_title, suite_id
         )
-        expected_plan = testrail_session.matching_plan_in_milestone(
-            TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
-        )
-        suite_entries = [
-            entry
-            for entry in expected_plan.get("entries")
-            if entry.get("suite_id") == suite_id
-        ]
-        entry = suite_entries[0]
-        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+        entry = _select_suite_entry(suite_entries, config)
+        if entry is None:
+            logging.warning(
+                f"Entry for suite {suite_id} vanished after description repair; "
+                "skipping suite."
+            )
+            return {}
+        config_runs = [r for r in entry.get("runs") or [] if r.get("config") == config]
 
     logging.info(f"config runs {config_runs}")
     logging.warning(
@@ -837,21 +961,26 @@ def organize_entries(testrail_session: TestRail, expected_plan: dict, suite_info
         f"config_ids: [{config_id}] -- case_ids: {cases_in_suite}"
     )
     if not config_runs:
-        expected_plan = testrail_session.create_test_run_on_plan_entry(
+        testrail_session.create_test_run_on_plan_entry(
             plan_id,
             entry.get("id"),
             [config_id],
             description=f"Auto test plan entry: {suite_description}",
             case_ids=cases_in_suite,
         )
-        suite_entries = [
-            entry
-            for entry in expected_plan.get("entries")
-            if entry.get("suite_id") == suite_id
-        ]
-        entry = suite_entries[0]
+        suite_entries = _refetch_suite_entries_with_retry(
+            testrail_session, milestone_id, plan_title, suite_id
+        )
+        entry = _select_suite_entry(suite_entries, config) or entry
         logging.info(f"new entry: {entry}")
-        config_runs = [run for run in entry.get("runs") if run.get("config") == config]
+        config_runs = [r for r in entry.get("runs") or [] if r.get("config") == config]
+
+    if not config_runs:
+        logging.warning(
+            f"No run for config {config!r} on suite {suite_id} after creation; "
+            "skipping suite."
+        )
+        return {}
     run = testrail_session.get_run(config_runs[0].get("id"))
 
     # If the run is missing cases, add them
@@ -981,7 +1110,8 @@ def collect_changes(testrail_session: TestRail, report):
         )
 
     # Find plan to attach runs to, create if doesn't exist
-    logging.info(f"Plan title: {plan_title}")
+    # Informational, but logged at warn: CI runs at log_cli_level=warn
+    logging.warning(f"[INFO] Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title
@@ -1103,7 +1233,7 @@ def collect_changes(testrail_session: TestRail, report):
 
                 full_test_results = merge_results(
                     full_test_results,
-                    organize_entries(testrail_session, expected_plan, suite_info),
+                    _safe_organize_entries(testrail_session, expected_plan, suite_info),
                 )
 
         last_suite_id = suite_id
@@ -1132,7 +1262,8 @@ def collect_changes(testrail_session: TestRail, report):
             entries,
         )
     full_test_results = merge_results(
-        full_test_results, organize_entries(testrail_session, expected_plan, suite_info)
+        full_test_results,
+        _safe_organize_entries(testrail_session, expected_plan, suite_info),
     )
     logging.warning(f"full test results: {full_test_results}")
 

@@ -247,6 +247,13 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def clear_search_bar(self) -> BasePage:
+        """Clear the legacy search bar."""
+        self.set_search_bar()
+        self.search_bar.clear()
+        return self
+
+    @BasePage.context_chrome
     def search_bar_search(self, term: str) -> BasePage:
         """
         Search using the *Old* Search Bar. Returns self.
@@ -260,6 +267,36 @@ class Navigation(BasePage):
         self.search_bar = self.get_element("searchbar-input")
         self.search_bar.click()
         self.search_bar.send_keys(term + Keys.ENTER)
+        return self
+
+    @BasePage.context_chrome
+    def search_bar_select_suggestion(self, term: str) -> BasePage:
+        """Type in the search bar and submit an actual search suggestion.
+
+        Row 0 is the heuristic ("search for <term>"), which submits as search_enter;
+        selecting a lower row is what records search_suggestion.
+        """
+        self.search_bar = self.get_element("searchbar-input")
+        self.search_bar.click()
+        self.search_bar.send_keys(term)
+        # Longer wait: remote suggestions arrive slower under parallel (xdist) runs.
+        self.custom_wait(timeout=30).until(
+            lambda _: len(self.get_elements("searchbar-suggestions")) > 1
+        )
+        self.get_elements("searchbar-suggestions")[1].click()
+        return self
+
+    @BasePage.context_chrome
+    def search_bar_open_engine_search_form(self, engine: str) -> BasePage:
+        """Open the search bar engine switcher (USB) and Shift+click an engine to load its search form.
+
+        The search bar stays empty so Shift+click loads the engine's homepage (search form)
+        rather than running a search.
+        """
+        self.click_on("legacy-searchmode-switcher")
+        self.element_visible("search-mode-switcher-option", labels=[engine])
+        option = self.get_element("search-mode-switcher-option", labels=[engine])
+        self.actions.key_down(Keys.SHIFT).click(option).key_up(Keys.SHIFT).perform()
         return self
 
     @BasePage.context_chrome
@@ -312,8 +349,28 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def click_search_mode_switcher(self) -> BasePage:
+        """Open the Unified Search Button (USB) popup.
+
+        The switcher is a toolbar button that toggles the search-mode
+        panel-list. When clicked right after typing in the urlbar, the first
+        click is occasionally swallowed while the urlbar is still settling, so
+        the popup never opens and callers time out waiting for an engine
+        option. Re-click until the popup is actually open, checking its state
+        first each poll so an already-open popup is never toggled shut.
+        """
         self.element_visible("searchmode-switcher")
-        self.click_on("searchmode-switcher")
+
+        def _popup_open() -> bool:
+            popups = self.get_elements("legacy-searchbar-switcher-popup")
+            return bool(popups) and popups[0].is_displayed()
+
+        def _open_popup(_) -> bool:
+            if _popup_open():
+                return True
+            self.click_on("searchmode-switcher")
+            return _popup_open()
+
+        self.expect(_open_popup)
         return self
 
     @BasePage.context_chrome
@@ -326,9 +383,10 @@ class Navigation(BasePage):
         """
         self.click_search_mode_switcher()
 
-        # wait for menu to fully render
-        # We get "cannot scroll into view", so force with JS
-        self.element_visible("search-mode-switcher-prefs")
+        # The switcher popup is a <menupopup> whose engine entries are <menuitem>s that
+        # populate asynchronously. Wait for the target option itself to be clickable
+        # (this is the "menu fully rendered" gate), then JS-click it — a native click
+        # raises "cannot scroll into view" for menuitems.
         if local:
             self.element_clickable(
                 "search-mode-local-option", labels=[search_mode.lower()]
@@ -348,7 +406,8 @@ class Navigation(BasePage):
             search_mode (str): search mode to be selected
         """
         self.click_search_mode_switcher()
-        self.element_visible("search-mode-switcher-prefs")
+        # Wait for the target add-engine menuitem itself (the popup renders its
+        # items asynchronously), then JS-click it.
         self.element_clickable("search-mode-add-option", labels=[search_mode])
         self.js_click_on("search-mode-add-option", labels=[search_mode])
         return self
@@ -402,71 +461,98 @@ class Navigation(BasePage):
             text (str): Text to search for in the suggestions.
             search_mode(str): Search mode to use. Can be 'awesome' or 'search'. Defaults to 'awesome'.
             min_suggestions (int): Minimum number of suggestions to collect.
+
+        Raises:
+            TimeoutException: If the required number of suggestions does not appear.
         """
         if search_mode == "awesome":
             self.clear_awesome_bar()
             self.type_in_awesome_bar(text)
-            time.sleep(0.5)
+            self.element_attribute_is("awesome-bar", "value", text)
             return self.awesome_bar_has_suggestions(min_suggestions)
         elif search_mode == "search":
-            self.set_search_bar()
+            self.clear_search_bar()
             self.type_in_search_bar(text)
+            self.element_attribute_is("searchbar-input", "value", text)
             return self.search_bar_has_suggestions(min_suggestions)
         else:
             raise ValueError("search_mode must be either 'awesome' or 'search'")
 
     @BasePage.context_chrome
     def awesome_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
-        """Check if the awesome bar has any suggestions."""
-        self.wait_for_suggestions_present(min_suggestions)
-        suggestion_container = self.get_element("results-dropdown")
-        has_children = self.driver.execute_script(
-            f"return arguments[0].children.length > {min_suggestions};",
-            suggestion_container,
+        """Wait for enough external suggestions or raise TimeoutException."""
+        self.wait.until(
+            lambda _: self._visible_suggestion_count("search-engine-suggestion-row")
+            >= min_suggestions
         )
-        return has_children
+        return True
 
     def verify_no_external_suggestions(
         self,
         text: str | None = None,
         search_mode: str = "awesome",
-        max_rows: int = 3,
-        type_delay: float = 0.3,
     ) -> bool:
+        """Wait until external search suggestions remain absent."""
         if search_mode == "awesome":
             if text is not None:
                 self.clear_awesome_bar()
                 self.type_in_awesome_bar(text)
-                time.sleep(type_delay)  # allow dropdown to update
-
-            suggestions = self.get_all_children("results-dropdown")
-            return len(suggestions) <= max_rows
-
+                self.element_attribute_is("awesome-bar", "value", text)
+            element_name = "search-engine-suggestion-row"
         elif search_mode == "search":
             if text is not None:
-                self.set_search_bar()
+                self.clear_search_bar()
                 self.type_in_search_bar(text)
-            return not self.search_bar_has_suggestions(min_suggestions=1)
-
+                self.element_attribute_is("searchbar-input", "value", text)
+            element_name = "searchbar-external-suggestion-row"
         else:
             raise ValueError("search_mode must be either 'awesome' or 'search'")
 
+        self._wait_for_no_visible_suggestions(element_name)
+        return True
+
     @BasePage.context_chrome
-    def search_bar_has_suggestions(self, min_suggestions: int = 0) -> bool:
-        """Check if the legacy search bar has suggestions. if a style has max-height: 0px, then no suggestions are present."""
-        suggestion_container = self.get_element(
-            "legacy-search-mode-suggestion-container"
+    def search_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
+        """Wait for enough external suggestions or raise TimeoutException."""
+        self.wait.until(
+            lambda _: self._visible_suggestion_count(
+                "searchbar-external-suggestion-row"
+            )
+            >= min_suggestions
         )
-        if min_suggestions > 2:
-            return (
-                suggestion_container.find_element(By.XPATH, "./*[1]").tag_name
-                == "richlistitem"
-            )
-        else:
-            has_children = self.driver.execute_script(
-                "return arguments[0].children.length > 0;", suggestion_container
-            )
-            return has_children
+        return True
+
+    def _visible_suggestion_count(self, element_name: str) -> int:
+        """Return the number of currently visible rows for a suggestion selector."""
+        selector = self.elements[element_name]["selectorData"]
+        return self.driver.execute_script(
+            """
+            return Array.from(document.querySelectorAll(arguments[0])).filter(
+                element => element.getClientRects().length > 0
+            ).length;
+            """,
+            selector,
+        )
+
+    @BasePage.context_chrome
+    def _wait_for_no_visible_suggestions(
+        self, element_name: str, stable_checks: int = 3
+    ) -> BasePage:
+        """Wait until no matching suggestions are visible for consecutive polls."""
+        consecutive_empty_checks = 0
+
+        def suggestions_remain_absent(_):
+            nonlocal consecutive_empty_checks
+
+            if self._visible_suggestion_count(element_name) == 0:
+                consecutive_empty_checks += 1
+            else:
+                consecutive_empty_checks = 0
+
+            return consecutive_empty_checks >= stable_checks
+
+        self.wait.until(suggestions_remain_absent)
+        return self
 
     def wait_for_suggestions_present(self, at_least: int = 1):
         """Wait until the suggestion list has at least one visible item."""

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cp -f ./scripts/pre-commit ./.git/hooks/pre-commit
-cp -f ./config/dev_pyproject.toml ./pyproject.toml
+cp -f ./scripts/pre-commit ./.git/hooks/pre-commit;
+uv sync; uv run python3 scripts/switch_config.py dev

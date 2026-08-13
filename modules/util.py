@@ -569,9 +569,6 @@ class Utilities:
         domain_parsed_url = parsed_url._replace(path="")
         return urlunparse(domain_parsed_url)
 
-    def remove_all_non_numbers(self, item: str) -> str:
-        return re.sub(r"[^\d-]", "", item)
-
     def get_all_attributes(self, driver: Firefox, item: WebElement) -> str:
         attributes = driver.execute_script(
             """

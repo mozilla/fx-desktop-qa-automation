@@ -5,7 +5,7 @@ from modules.browser_object import AutofillPopup
 from modules.page_object_autofill import LoginAutofill
 from modules.page_object_generics import GenericPage
 
-TESTFIRE_LOGIN_URL = "http://demo.testfire.net/login.jsp"
+HTTP_LOGIN_URL = "http://the-internet.herokuapp.com/login"
 SUPPORT_PAGE_URL_PART = "support.mozilla.org"
 SUPPORT_PAGE_ARTICLE_PART = "insecure-password-warning-firefox"
 
@@ -18,9 +18,9 @@ def test_case():
 @pytest.fixture()
 def temp_selectors():
     return {
-        "testfire-username-field": {
+        "login-username-field": {
             "strategy": "css",
-            "selectorData": "input[name='uid']",
+            "selectorData": "input[name='username']",
             "groups": ["doNotCache"],
         }
     }
@@ -40,8 +40,14 @@ def test_insecure_login_contextual_warning(driver: Firefox, temp_selectors):
 
     def _verify_insecure_warning_dropdown():
         autofill_popup.ensure_autofill_dropdown_visible()
+        # Locale-stable presence check: the warning row is matched by
+        # originaltype='insecureWarning', independent of its wording.
         autofill_popup.element_visible("insecure-login-warning")
-        autofill_popup.element_visible("insecure-login-warning-text")
+        # Firefox 154 moved the warning text into the autocomplete-row-item shadow
+        # DOM, so also assert the visible label populated there. This is a
+        # case-sensitive substring of the en-US string ("This connection is not
+        # secure...") — the suite runs en-US builds; revisit if run under l10n.
+        autofill_popup.verify_autocomplete_option("not secure")
         autofill_popup.element_visible("manage-passwords")
 
     def _open_insecure_warning_article():
@@ -80,19 +86,19 @@ def test_insecure_login_contextual_warning(driver: Firefox, temp_selectors):
     login_autofill = LoginAutofill(driver)
     login_autofill.elements |= temp_selectors
 
-    page = GenericPage(driver, url=TESTFIRE_LOGIN_URL)
+    page = GenericPage(driver, url=HTTP_LOGIN_URL)
     page.open()
 
-    login_autofill.element_clickable("testfire-username-field")
-    login_autofill.click_on("testfire-username-field")
+    login_autofill.element_clickable("login-username-field")
+    login_autofill.click_on("login-username-field")
 
     _verify_insecure_warning_dropdown()
     _open_insecure_warning_article()
 
     page.open()
 
-    login_autofill.element_clickable("testfire-username-field")
-    login_autofill.click_on("testfire-username-field")
+    login_autofill.element_clickable("login-username-field")
+    login_autofill.click_on("login-username-field")
 
     _verify_insecure_warning_dropdown()
     _open_manage_passwords()

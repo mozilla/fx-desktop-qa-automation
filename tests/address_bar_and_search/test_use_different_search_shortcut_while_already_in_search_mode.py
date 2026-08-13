@@ -45,5 +45,8 @@ def test_use_search_shortcut_for_a_different_search_engine_while_already_in_sear
     # Verify the domain is explicitly wikipedia.org
     nav.verify_domain(URL_DOMAIN)
 
-    # Verify search term is also present in the URL
-    nav.url_contains(SEARCH_TERM.lstrip("@"))
+    # Verify search term is also present in the URL. Wikipedia's "go" feature may land on
+    # the matching article (e.g. /wiki/Amazon_(company)) where the term is capitalized, so
+    # compare case-insensitively.
+    term = SEARCH_TERM.lstrip("@").lower()
+    nav.expect_in_content(lambda d: term in d.current_url.lower())

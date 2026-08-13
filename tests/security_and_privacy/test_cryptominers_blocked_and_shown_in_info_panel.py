@@ -22,5 +22,5 @@ def test_cryptominers_blocked_and_shown_in_info_panel(
     tracking_page = GenericPage(driver, url=CRYPTOMINERS_URL)
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
     trust_panel.trackers_blocked("cryptominer")

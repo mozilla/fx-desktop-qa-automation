@@ -36,7 +36,9 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
     # Instantiate objects
     page = GenericPage(driver, url=DOC_LINK)
     nav = Navigation(driver)
-    about_prefs = AboutPrefs(driver, category="general")
+    # Settings redesign (bug 2043378) moved the Applications file-handlers list
+    # from the General pane to about:preferences#downloads.
+    about_prefs = AboutPrefs(driver, category="downloads")
 
     # Open the test page with the .doc download link
     page.open()

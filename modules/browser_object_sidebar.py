@@ -416,13 +416,16 @@ class Sidebar(BasePage):
         components with nested shadow roots. JS recursively pierces all shadow roots in contentDocument to find and
         click the link. Waits for the document to be fully loaded before searching. The link opens about:addons in a
         new tab.
+
         """
-        self.wait.until(
+
+        # prefix match: handles sidebar - manage - extensions, -extensions2, -extensions3, etc.
+        self.custom_wait(timeout=30).until(
             lambda _: self.driver.execute_script(
                 "const cd = document.querySelector('browser#sidebar')?.contentDocument;"
                 "if (!cd || cd.readyState !== 'complete') return null;"
                 "function search(root) {"
-                "  const el = root.querySelector('a[data-l10n-id=\"sidebar-manage-extensions2\"]');"
+                "  const el = root.querySelector('a[data-l10n-id^=\"sidebar-manage-extensions\"]');"
                 "  if (el) { el.click(); return true; }"
                 "  for (const host of root.querySelectorAll('*')) {"
                 "    if (host.shadowRoot && search(host.shadowRoot)) return true;"

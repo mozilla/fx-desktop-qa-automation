@@ -25,12 +25,12 @@ def test_trackers_cryptominers_fingerprinters_blocked(
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()
-    about_prefs.click_on("standard-radio")
+    about_prefs.select_etp_level("standard")
 
     # wait for the shield icon
     tracker_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # The Tracking Content is NOT blocked
     trust_panel.trackers_detected("tracking-content")

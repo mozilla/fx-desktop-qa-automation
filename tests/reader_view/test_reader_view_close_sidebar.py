@@ -10,16 +10,11 @@ def test_case():
     return "130912"
 
 
-READER_VIEW_URL = (
-    "https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages"
-)
-
-
-def test_reader_view_close_from_sidebar(driver: Firefox):
+def test_reader_view_close_from_sidebar(driver: Firefox, local_doc_path):
     """
     C130912: Ensure that reader view can be closed from the sidebar toolbar.
     """
-    wiki_page = GenericPage(driver, url=READER_VIEW_URL)
+    wiki_page = GenericPage(driver, url=local_doc_path)
     reader_view = ReaderView(driver)
 
     wiki_page.open()
