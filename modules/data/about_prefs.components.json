@@ -395,9 +395,11 @@
     }
   },
   "show-suggestions-awesomebar": {
-    "selectorData": "urlBarSuggestion",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#urlBarSuggestion, #urlBarSuggestionCheckbox",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Checkbox element to show suggestions in the Awesomebar",
       "location": "about:preferences#search"

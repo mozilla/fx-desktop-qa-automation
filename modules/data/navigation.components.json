@@ -136,9 +136,11 @@
     }
   },
   "search-engine-suggestion-row": {
-    "selectorData": "div[class='urlbarView-row'][type='search_engine']",
+    "selectorData": "#urlbar-results div.urlbarView-row[type='search_engine'], #urlbar-results div.urlbarView-row[type='search']:not([selected]), #urlbar-results div.urlbarView-row[type='rich-search']:not([selected])",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Search suggestions from the URL bar search results",
       "location": "URL bar search results"
@@ -1010,11 +1012,24 @@
     ]
   },
   "searchbar-suggestions": {
-    "selectorData": "div.urlbarView-row",
+    "selectorData": "#searchbar-results div.urlbarView-row",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Searchbar suggestions",
+      "location": "Searchbar results"
+    }
+  },
+  "searchbar-external-suggestion-row": {
+    "selectorData": "#searchbar-results div.urlbarView-row[type='search_engine'], #searchbar-results div.urlbarView-row[type='search']:not([selected]), #searchbar-results div.urlbarView-row[type='rich-search']:not([selected])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "External search suggestions in the legacy search bar",
       "location": "Searchbar results"
     }
   },

@@ -71,7 +71,7 @@ def test_lang_pack_changed_from_about_prefs(
 
     # Set the alternative language
     about_prefs.open()
-    about_prefs.set_alternative_language("pt-BR")
+    about_prefs.set_alternative_language("pt-BR", wait_for_ui=True)
 
     # Check Panel UI messages
     panel_ui.open_panel_menu()

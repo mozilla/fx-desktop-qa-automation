@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -52,27 +50,15 @@ def test_suggestions_for_empty_query_not_shown_in_search_mode(driver: Firefox):
     nav.set_search_mode("eBay")
     nav.click_in_awesome_bar()
 
-    # Verify there are no suggestions for an empty query in DuckDuckGo mode
-    has_no_external_suggestions = nav.verify_no_external_suggestions(
-        text="", search_mode="awesome", max_rows=0
-    )
-    assert has_no_external_suggestions, (
-        "Suggestions are displayed for an empty query when in DuckDuckGo search mode."
-    )
+    # Verify there are no suggestions for an empty query in eBay mode
+    nav.verify_search_mode_is_visible("eBay")
+    nav.verify_no_external_suggestions(search_mode="awesome")
 
     # --- Step 3: New tab + Ctrl/Cmd+K; verify no dropdown history is shown
     nav.open_and_switch_to_new_window("tab")
     nav.clear_awesome_bar()
     nav.click_in_awesome_bar()
 
-    if sys.platform == "darwin":
-        nav.actions.key_down(Keys.COMMAND).send_keys("k").key_up(Keys.COMMAND).perform()
-    else:
-        nav.actions.key_down(Keys.CONTROL).send_keys("k").key_up(Keys.CONTROL).perform()
-
-    has_no_external_suggestions = nav.verify_no_external_suggestions(
-        text="", search_mode="awesome", max_rows=0
-    )
-    assert has_no_external_suggestions, (
-        "Search history suggestions are displayed after Ctrl/Cmd+K with an empty query."
-    )
+    nav.perform_key_combo_chrome(Keys.CONTROL, "k")
+    nav.verify_search_mode_is_visible("DuckDuckGo")
+    nav.verify_no_external_suggestions(search_mode="awesome")

@@ -119,6 +119,28 @@ def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     nav.search_bar_search(search_term)
 
 
+@_entry("searchbar_suggestion")
+def _entry_searchbar_suggestion(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar, then submit a search by selecting one of its suggestions."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar to the toolbar and submit via a suggestion
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_select_suggestion(search_term)
+
+
+@_entry("searchbar_search_form")
+def _entry_searchbar_search_form(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar and Shift+click an engine one-off button to load its search form."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar and open the engine's search form via its one-off button
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_open_engine_search_form(params["engine"])
+
+
 @_entry("urlbar_handoff")
 def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
     """Simulate a urlbar_handoff search: the newtab in-content search box is a fake input that,
