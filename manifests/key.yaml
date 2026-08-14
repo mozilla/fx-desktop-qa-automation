@@ -17,8 +17,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_addon_suggestion:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_addressbar_bookmarks_when_history_disabled:
@@ -168,8 +167,7 @@ address_bar_and_search:
     - smoke
     - ci-extended
   test_search_suggestions_can_be_disabled:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2018766
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_term_persists:
@@ -587,6 +585,11 @@ geolocation:
     splits:
     - functional2
 glean:
+  misc_metrics:
+    test_misc_metrics:
+      result: pass
+      splits:
+      - glean
   serp_abandonment:
     test_serp_abandonment:
       result: pass
@@ -1599,17 +1602,12 @@ tabs:
     splits:
     - functional3
   test_close_pinned_tab_via_mouse:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
     - smoke
     - ci
   test_close_tab_through_middle_mouse_click:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result: unstable
+    result: pass
     splits:
     - ci
     - functional3
@@ -1658,8 +1656,7 @@ tabs:
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047903
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_open_new_tab:
