@@ -85,10 +85,10 @@ class AboutPrefs(BasePage):
             checkbox.click()
 
         self.expect(
-            lambda _: bool(
-                self.get_element("show-suggestions").get_attribute("checked")
+            lambda _: (
+                bool(self.get_element("show-suggestions").get_attribute("checked"))
+                == value
             )
-            == value
         )
 
         # Firefox builds expose the separate Address Bar checkbox under

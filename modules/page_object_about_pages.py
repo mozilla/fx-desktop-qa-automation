@@ -559,6 +559,11 @@ class AboutProtections(BasePage):
         self.element_has_text("lockwise-scanned-text", expected)
         return self
 
+    def get_weekly_tracker_count(self) -> int:
+        """Returns the number of trackers blocked over the past week from about:protections"""
+        raw = self.get_attribute_value("graph-week-summary", "data-l10n-args")
+        return int(raw.split(":")[1].replace("}", ""))
+
 
 class AboutTelemetry(BasePage):
     """

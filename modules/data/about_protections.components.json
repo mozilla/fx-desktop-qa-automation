@@ -34,5 +34,16 @@
       "description": "Manage passwords button in about:protections",
       "location": "about:protections > Password manager section"
     }
+  },
+  "graph-week-summary": {
+    "selectorData": "graph-week-summary",
+    "strategy": "id",
+    "groups": [
+        "doNotCache"
+    ],
+    "comment": {
+        "description": "Paragraph showing the number of trackers blocked",
+        "location": "about:protections > ETP card section"
+    }
   }
 }

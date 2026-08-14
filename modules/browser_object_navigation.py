@@ -482,8 +482,10 @@ class Navigation(BasePage):
     def awesome_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
         """Wait for enough external suggestions or raise TimeoutException."""
         self.wait.until(
-            lambda _: self._visible_suggestion_count("search-engine-suggestion-row")
-            >= min_suggestions
+            lambda _: (
+                self._visible_suggestion_count("search-engine-suggestion-row")
+                >= min_suggestions
+            )
         )
         return True
 
@@ -515,10 +517,10 @@ class Navigation(BasePage):
     def search_bar_has_suggestions(self, min_suggestions: int = 1) -> bool:
         """Wait for enough external suggestions or raise TimeoutException."""
         self.wait.until(
-            lambda _: self._visible_suggestion_count(
-                "searchbar-external-suggestion-row"
+            lambda _: (
+                self._visible_suggestion_count("searchbar-external-suggestion-row")
+                >= min_suggestions
             )
-            >= min_suggestions
         )
         return True
 
