@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from time import sleep, time
@@ -562,7 +563,7 @@ class AboutProtections(BasePage):
     def get_weekly_tracker_count(self) -> int:
         """Returns the number of trackers blocked over the past week from about:protections"""
         raw = self.get_attribute_value("graph-week-summary", "data-l10n-args")
-        return int(raw.split(":")[1].replace("}", ""))
+        return json.loads(raw)["count"]
 
 
 class AboutTelemetry(BasePage):

@@ -39,7 +39,7 @@
     "selectorData": "graph-week-summary",
     "strategy": "id",
     "groups": [
-        "doNotCache"
+      "doNotCache"
     ],
     "comment": {
         "description": "Paragraph showing the number of trackers blocked",
