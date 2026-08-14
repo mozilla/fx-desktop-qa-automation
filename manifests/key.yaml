@@ -546,19 +546,16 @@ drag_and_drop:
     splits:
     - functional1
     - nightly
-    - no_xvfb
   test_copy_table_header:
     result: pass
     splits:
     - functional1
     - nightly
-    - no_xvfb
   test_paste_image_text:
     result: pass
     splits:
     - functional1
     - nightly
-    - no_xvfb
 find_toolbar:
   test_find_in_pdf:
     result: pass
@@ -720,7 +717,6 @@ menus:
     splits:
     - functional2
     - nightly
-    - no_xvfb
   test_hyperlink_context_menu:
     result: pass
     splits:
@@ -998,7 +994,6 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
   test_insecure_password:
     result: pass
     splits:
@@ -1009,7 +1004,6 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
@@ -1067,7 +1061,6 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
   test_primary_password_allows_csv_export:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
     result:
@@ -1102,7 +1095,6 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1924,7 +1916,6 @@ tabs:
     splits:
     - functional3
     - nightly
-    - no_xvfb
   test_open_new_tab:
     result: pass
     splits:
@@ -2013,6 +2004,7 @@ theme_and_toolbar:
     result: pass
     splits:
     - smoke
+    - no_xvfb
     - ci
   test_installed_theme_enabled:
     result: pass
