@@ -5,7 +5,6 @@ from modules.browser_object_tabbar import TabBar
 from modules.page_object_about_pages import AboutProtections
 from modules.page_object_prefs import AboutPrefs
 
-
 TEST_WEBSITE = "https://www.bbc.com/"
 
 
