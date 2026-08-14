@@ -31,9 +31,7 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # There is no blocked tracker displayed on the page: "Firefox/Nightly blocked 0 trackers over the past week"
-    protection.element_attribute_contains(
-        "graph-week-summary", "data-l10n-args", '"count":0'
-    )
+    assert protection.get_weekly_tracker_count() == 0
 
     # Visit a website that has trackers
     driver.get(TEST_WEBSITE)
@@ -42,12 +40,7 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # Trackers are displayed as blocked on the page
-    protection.element_attribute_contains(
-        "graph-week-summary", "data-l10n-args", '"count":'
-    )
-    assert '"count":0' not in protection.get_attribute_value(
-        "graph-week-summary", "data-l10n-args"
-    )
+    assert protection.get_weekly_tracker_count() > 0
 
     # Get the current tracker count
     first_count = protection.get_weekly_tracker_count()
@@ -57,12 +50,7 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # Trackers are displayed as blocked on the page
-    protection.element_attribute_contains(
-        "graph-week-summary", "data-l10n-args", '"count":'
-    )
-    assert '"count":0' not in protection.get_attribute_value(
-        "graph-week-summary", "data-l10n-args"
-    )
+    assert protection.get_weekly_tracker_count() > 0
 
     # Refresh the "about:protections" page
     protection.open()
