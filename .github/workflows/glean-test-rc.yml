@@ -1,0 +1,67 @@
+name: Check new RC version - Glean
+
+on:
+  schedule:
+    - cron: "15 */4 * * *"
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-Run - If true, only report the plan; do not trigger downstream workflows."
+        required: false
+        default: "false"
+
+env:
+  LATEST: ""
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+
+jobs:
+  Check-RC-Version:
+    runs-on: ubuntu-latest
+    outputs:
+      win_reportable: ${{ steps.reportable.outputs.win }}
+      mac_reportable: ${{ steps.reportable.outputs.mac }}
+      preview_json: ${{ steps.reportable.outputs.preview_json }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup dependencies
+        run: bash ./scripts/setup_python.sh
+
+      - name: Check if the run is reportable
+        id: reportable
+        env:
+          FX_CHANNEL: "rc"
+          STARFOX_SPLIT: glean
+          TESTRAIL_REPORT: true
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          DRY_RUN: ${{ env.DRY_RUN }}
+        run:
+          bash ./scripts/check_reportable.sh
+
+  Run-Win-Glean:
+    needs: Check-RC-Version
+    if: ${{ needs.Check-RC-Version.outputs.win_reportable == 'True' }}
+    uses: ./.github/workflows/main.yml
+    with:
+      channel: "rc"
+      job_to_run: Test-Windows
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: glean
+    secrets: inherit
+
+  Run-Mac-Glean:
+    needs: Check-RC-Version
+    if: ${{ needs.Check-RC-Version.outputs.mac_reportable == 'True' }}
+    uses: ./.github/workflows/main.yml
+    with:
+      channel: "rc"
+      job_to_run: Test-MacOS
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: glean
+    secrets: inherit
