@@ -517,7 +517,7 @@ jobs:
           "$FX_EXECUTABLE" --version;
           XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
-          xvfb-run -e /dev/stdout -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
+          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
