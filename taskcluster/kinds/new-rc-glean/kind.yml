@@ -27,7 +27,7 @@ task-defaults:
 tasks:
   linux:
     attributes:
-      rc-glean: true
+      rc-qa: true
     run-on-tasks-for: []
     run:
       using: run-task

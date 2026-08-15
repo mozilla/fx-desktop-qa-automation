@@ -102,7 +102,13 @@ jobs:
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: glean
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
 
   Run-Glean-Mac:
     needs: Select-Test-Type
@@ -117,7 +123,13 @@ jobs:
       is_pull_request: true
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: glean
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
 
   Run-L10n-Win:
     needs: Select-Test-Type
