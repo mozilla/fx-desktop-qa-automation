@@ -11,24 +11,24 @@ on:
         type: string
 
       win_installer_link:
-        description: Windows Firefox installer URL (omit to skip Windows)
+        description: 'The link to the Windows installer (win64) for the Fx under test'
         required: false
         type: string
 
       mac_installer_link:
-        description: macOS Firefox installer URL (omit to skip macOS)
+        description: 'The link to the macOS installer for the Fx under test'
         required: false
         type: string
 
       linux_tarball_link:
-        description: Linux Firefox tarball URL (omit to skip Linux)
+        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
 
       dry_run:
-        description: Select tests without downloading Firefox or running tests
+        description: "If true, skip downloads/installs/tests/uploads (safe dry run)"
         required: false
-        default: "false"
+        default: false
         type: string
 
       timeout_minutes:
@@ -83,9 +83,6 @@ jobs:
           MAC_LINK: ${{ inputs.mac_installer_link }}
           LINUX_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          # Plain if-statements, not `[[ ... ]] && var=true`: the runner shell
-          # is `bash -e`, and a bare AND-list whose test fails returns non-zero
-          # and would abort the step.
           windows=false
           macos=false
           linux=false
@@ -312,10 +309,6 @@ jobs:
         continue-on-error: true
         shell: pwsh
         run: |
-          # GitHub prepends `$ErrorActionPreference = 'stop'`, and PowerShell
-          # 7.4+ turns a non-zero native exit into a terminating error. Without
-          # this, a failing pytest run throws here and the artifact copy below
-          # never happens - losing exactly the artifacts worth keeping.
           $ErrorActionPreference = 'Continue'
 
           $tests = @(
@@ -343,8 +336,6 @@ jobs:
 
           exit $exitCode
 
-      # The ci and ci_headed configs both write report.json / report.html into
-      # artifacts/, so the directory has to be cleared between phases.
       - name: Reset artifacts before headed tests
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && matrix.test_set != 'glean' }}
         shell: pwsh
@@ -409,7 +400,6 @@ jobs:
           Write-Host "Headless: $env:HEADLESS_RESULT"
           Write-Host "Headed: $env:HEADED_RESULT"
 
-          # 'skipped' is expected for the headed phase on the Glean entry.
           $failures = @(
             "VERIFY_RESULT", "HEADLESS_RESULT", "HEADED_RESULT" |
               Where-Object {
@@ -847,8 +837,6 @@ jobs:
             echo "| Linux | \`$LINUX_RESULT\` |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-          # 'skipped' means the platform had no installer link, which is a
-          # legitimate way to call this workflow.
           for result in "$WINDOWS_RESULT" "$MACOS_RESULT" "$LINUX_RESULT"; do
             if [[ -n "$result" && "$result" != "success" && "$result" != "skipped" ]]; then
               echo "::error::At least one platform did not pass."

@@ -10,17 +10,17 @@ on:
   workflow_dispatch:
     inputs:
       win_installer_link:
-        description: Windows Firefox installer URL (omit to skip Windows)
+        description: 'The link to the Windows installer (win64) for the Fx under test'
         required: false
         type: string
 
       mac_installer_link:
-        description: macOS Firefox installer URL (omit to skip macOS)
+        description: 'The link to the macOS installer for the Fx under test'
         required: false
         type: string
 
       linux_tarball_link:
-        description: Linux Firefox tarball URL (omit to skip Linux)
+        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
 
