@@ -1,9 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_about_pages import AboutProtections
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import TabBar
+from modules.page_object import AboutProtections, AboutPrefs
 
 TEST_WEBSITE = "https://www.bbc.com/"
 
@@ -39,6 +38,11 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     # Reach "about:protections"
     protection.open()
 
+    # Wait for trackers to be counted
+    protection.wait.until(
+        lambda _: protection.get_weekly_tracker_count() > 0
+    )
+
     # Trackers are displayed as blocked on the page
     assert protection.get_weekly_tracker_count() > 0
 
@@ -71,7 +75,6 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # The number of trackers is increasing with each site visit
-    new_count = protection.get_weekly_tracker_count()
-    assert new_count > first_count, (
-        f"Expected tracker count to increase above {first_count} but got {new_count}"
+    protection.wait.until(
+        lambda _: protection.get_weekly_tracker_count() > first_count
     )
