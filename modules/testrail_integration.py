@@ -26,7 +26,8 @@ PLAN_NAME_RE = re.compile(r"\[(\w+) (\d+)\]")
 TEST_KEY_LOCATION = os.path.join("manifests", "key.yaml")
 CONFIG_GROUP_ID = 95
 TESTRAIL_FX_DESK_PRJ = 17
-# Glean Telemetry suite: report skips as Blocked instead of leaving them Untested.
+# Glean Telemetry suite; must match the suite_id fixture in tests/glean/conftest.py.
+# Skips in this suite report as Blocked instead of staying Untested.
 GLEAN_SUITE_ID = 70197
 TC_EXECUTION_TEMPLATE = (
     "https://firefox-ci-tc.services.mozilla.com/tasks/"
