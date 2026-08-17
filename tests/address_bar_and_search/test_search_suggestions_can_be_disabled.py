@@ -24,11 +24,11 @@ def test_search_suggestions_pref_affects_urlbar_and_search_bar(driver):
 
     # --- Step 2: Validate NO suggestions when disabled (both in awesome and search bar)
     for search_mode in ["search", "awesome"]:
-        has_suggestions = nav.search_and_check_if_suggestions_are_present(
+        has_no_external_suggestions = nav.verify_no_external_suggestions(
             RANDOM_TEXT, search_mode
         )
-        assert not has_suggestions, (
-            "Suggestions should be disabled for the Address Bar."
+        assert has_no_external_suggestions, (
+            f"External suggestions should be disabled for {search_mode} mode."
         )
 
     # --- Step 3: Re-enable to restore the original state

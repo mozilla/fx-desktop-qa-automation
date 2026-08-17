@@ -41,7 +41,6 @@ def test_no_search_engine_suggestions_in_private_window(driver: Firefox):
         has_no_external_suggestions = nav.verify_no_external_suggestions(
             text="random",
             search_mode="awesome",
-            max_rows=3,  # allow small internal items like history/bookmarks
         )
 
         assert has_no_external_suggestions, (
