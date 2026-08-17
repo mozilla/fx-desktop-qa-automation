@@ -5,9 +5,7 @@ on:
   workflow_call:
     inputs:
       test_sets:
-        description: >-
-          JSON array of STARFOX_SPLIT values to run, e.g. '["smoke"]'. Leave
-          empty to run every functional split in manifests/key.yaml plus glean.
+        description: "Test set to run"
         required: false
         default: ""
         type: string
