@@ -484,7 +484,8 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2063587
+    result: unstable
     splits:
     - smoke
     - ci
