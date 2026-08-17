@@ -1612,6 +1612,11 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_protection_report_displays_blocked_trackers_after_opening_tab:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
