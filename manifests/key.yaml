@@ -1155,6 +1155,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_with_form_fields:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064142
     result: unstable
     splits:
     - functional2
@@ -1337,6 +1338,7 @@ printing_ui:
     - nightly
 profile:
   test_set_default_profile:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064143
     result:
       linux: pass
       mac: pass
