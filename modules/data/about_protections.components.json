@@ -42,8 +42,8 @@
       "doNotCache"
     ],
     "comment": {
-        "description": "Paragraph showing the number of trackers blocked",
-        "location": "about:protections > ETP card section"
+      "description": "Paragraph showing the number of trackers blocked",
+      "location": "about:protections > ETP card section"
     }
   }
 }
