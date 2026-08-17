@@ -28,14 +28,8 @@ on:
       dry_run:
         description: "If true, skip downloads/installs/tests/uploads (safe dry run)"
         required: false
-        default: false
+        default: "false"
         type: string
-
-      timeout_minutes:
-        description: Per-platform job timeout
-        required: false
-        default: 180
-        type: number
 
 permissions:
   contents: read
@@ -49,7 +43,6 @@ jobs:
   Preflight:
     name: Preflight
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     outputs:
       test_sets: ${{ steps.sets.outputs.test_sets }}
       run_windows: ${{ steps.platforms.outputs.windows }}
@@ -168,7 +161,6 @@ jobs:
     needs: Preflight
     if: ${{ needs.Preflight.outputs.run_windows == 'true' }}
     runs-on: windows-latest
-    timeout-minutes: ${{ inputs.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix:
@@ -417,7 +409,6 @@ jobs:
     needs: Preflight
     if: ${{ needs.Preflight.outputs.run_macos == 'true' }}
     runs-on: macos-26
-    timeout-minutes: ${{ inputs.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix:
@@ -602,7 +593,6 @@ jobs:
     needs: Preflight
     if: ${{ needs.Preflight.outputs.run_linux == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix:
@@ -818,7 +808,6 @@ jobs:
       - Test-Linux
     if: ${{ !cancelled() && needs.Preflight.result == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     steps:
       - name: Summarise results
