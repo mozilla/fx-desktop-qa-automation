@@ -24,7 +24,7 @@ def test_download_exe_and_check_extension(driver: Firefox):
     page = GenericPage(driver, url="about:blank")
     page.open()
 
-    # Simulate downloading the file by creating and clicking an anchor element
+    # Simulate downloading a file by creating and clicking an anchor element
     driver.execute_script(
         """
         const a = document.createElement("a");
