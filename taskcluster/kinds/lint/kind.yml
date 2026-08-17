@@ -15,8 +15,12 @@ tasks:
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         pip3 install 'ruff==0.9.6' --break-system-packages;
+        pip3 install 'uv==0.11.18' --break-system-packages;
         python3 -m ruff version;
-        python3 -m ruff format --check;
+        uv sync;
+        python3 -m scripts.manifest_lint;
         export EXIT_CODE=$?;
+        python3 -m ruff format --check;
+        export EXIT_CODE=$(( $EXIT_CODE || $? ));
         python3 -m ruff check --select I;
         exit $(( $EXIT_CODE || $? ));

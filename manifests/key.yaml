@@ -752,7 +752,7 @@ menus:
     - nightly
 meta:
   test_selectors:
-    comment: Not part of feature functional test suites
+    comment: Not part of feature functional test suites (no need for http link)
     result: unstable
     splits: []
   test_version:
@@ -989,9 +989,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: uses pyautogui (headed) to answer the native Primary Password prompt;
-      not reliable on linux (Wayland) or win CI, so mac-only like the CSV-export PP
-      tests
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
     result:
       linux: unstable
       mac: pass
@@ -1024,6 +1022,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
@@ -1072,8 +1071,7 @@ password_manager:
     - functional2
     - nightly
   test_password_manager_on_google_US:
-    comment: external site; mac was historically unstable for unknown reasons before
-      bug 2056524, keep in mind if it re-flakes
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167, old mac bug
     result:
       linux: pass
       mac: unstable
@@ -1123,6 +1121,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1367,10 +1366,10 @@ scrolling_panning_zooming:
     splits:
     - smoke
   test_mouse_wheel_zoom:
-    comment: No support for testing this on MAc
+    comment: Mac cannot be supported
     result:
       linux: pass
-      mac: unstable
+      mac: unsupported
       win: pass
     splits:
     - functional2
@@ -1802,7 +1801,7 @@ sidebar:
     - functional3
     - nightly
   test_sidebar_vertical_tabs_mute_unmute:
-    comment: CI limitation - audio playback not supported on Windows CI runners
+    comment: GHA win audio bug, https://bugzilla.mozilla.org/show_bug.cgi?id=2064170
     result:
       linux: pass
       mac: pass
