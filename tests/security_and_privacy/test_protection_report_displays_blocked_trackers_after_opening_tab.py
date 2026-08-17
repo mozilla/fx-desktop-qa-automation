@@ -39,12 +39,7 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # Wait for trackers to be counted
-    protection.wait.until(
-        lambda _: protection.get_weekly_tracker_count() > 0
-    )
-
-    # Trackers are displayed as blocked on the page
-    assert protection.get_weekly_tracker_count() > 0
+    protection.wait.until(lambda _: protection.get_weekly_tracker_count() > 0)
 
     # Get the current tracker count
     first_count = protection.get_weekly_tracker_count()
@@ -75,6 +70,4 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection.open()
 
     # The number of trackers is increasing with each site visit
-    protection.wait.until(
-        lambda _: protection.get_weekly_tracker_count() > first_count
-    )
+    protection.wait.until(lambda _: protection.get_weekly_tracker_count() > first_count)
