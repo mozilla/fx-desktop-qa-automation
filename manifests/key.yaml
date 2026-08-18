@@ -905,20 +905,12 @@ password_manager:
     - functional2
     - nightly
   test_about_logins_search_passwords:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064116
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
   test_about_logins_search_username:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064114
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -965,11 +957,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1034,11 +1022,7 @@ password_manager:
     - functional2
     - nightly
   test_no_generated_password_options_with_pp_and_no_credentials:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064126
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1108,11 +1092,7 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
