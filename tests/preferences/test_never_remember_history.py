@@ -1,9 +1,11 @@
-import os
+from pathlib import Path
 
 import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
+
+PREFERENCE_STRING = 'user_pref("browser.privatebrowsing.autostart", true);'
 
 
 @pytest.fixture()
@@ -33,16 +35,11 @@ def test_never_remember_history(
     # Change the settings to not remember the browser history
     about_prefs.set_history_option("dontremember")
 
-    # Verify that the pref is set to True
-    profile_path = driver.capabilities["moz:profile"]
-    prefs_file_path = os.path.join(profile_path, "prefs.js")
-
-    # Read the contents of the 'prefs.js' file to check for the preference
-    with open(prefs_file_path, "r") as prefs_file:
-        prefs_content = prefs_file.read()
-
-    # Check that the preference is now True
-    preference_string = 'user_pref("browser.privatebrowsing.autostart", true);'
-    assert preference_string in prefs_content, (
-        f"The preference {preference_string} is not set correctly."
+    # The pref is only true while the "must restart" dialog is open, and any WebDriver
+    # call would dismiss it, so read prefs.js off disk instead. Firefox writes the file
+    # lazily (slowly on Windows), so poll until the pref shows up.
+    prefs_file = Path(driver.capabilities["moz:profile"]) / "prefs.js"
+    about_prefs.wait.until(
+        lambda _: PREFERENCE_STRING in prefs_file.read_text(encoding="utf-8"),
+        message=f"The preference {PREFERENCE_STRING} is not set correctly.",
     )

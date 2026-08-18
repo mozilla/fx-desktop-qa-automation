@@ -395,9 +395,11 @@
     }
   },
   "show-suggestions-awesomebar": {
-    "selectorData": "urlBarSuggestion",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#urlBarSuggestion, #urlBarSuggestionCheckbox",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Checkbox element to show suggestions in the Awesomebar",
       "location": "about:preferences#search"
@@ -1087,11 +1089,11 @@
     }
   },
   "permission-dialog": {
-    "selectorData": "[data-l10n-id='permission-dialog']",
+    "selectorData": "dialog",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Permission dialog",
+      "description": "Permission subdialog; shadow host for the accept/cancel buttons",
       "location": "about:preferences#privacy -> Permissions"
     }
   },
@@ -1102,16 +1104,6 @@
     "groups": [],
     "comment": {
       "description": "Autoplay save changes",
-      "location": "Settings Autoplay popup"
-    }
-  },
-  "spacer": {
-    "selectorData": "button-spacer",
-    "strategy": "class",
-    "shadowParent": "permission-dialog",
-    "groups": [],
-    "comment": {
-      "description": "Spacer to dismiss autoplay options menu",
       "location": "Settings Autoplay popup"
     }
   },
@@ -1554,6 +1546,24 @@
     "comment": {
       "description": "The inner input field inside the shadow DOM of the \"Re-enter password\" moz-input-password element in the Primary Password dialog",
       "location": "About Preferences - Passwords - Primary Password dialog"
+    }
+  },
+  "homepage-new-tabs-dropdown": {
+    "selectorData": "homepageNewTabs",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The moz-select dropdown for the \"New tabs\" homepage setting in About Preferences Home section",
+      "location": "About Preferences - Home - Homepage section"
+    }
+  },
+  "homepage-new-tabs-firefox-home-option": {
+    "selectorData": "moz-option[value='home']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Firefox Home (Default)\" option inside the New tabs dropdown in About Preferences Home section",
+      "location": "About Preferences - Home - Homepage section"
     }
   }
 }

@@ -14,20 +14,22 @@ def test_case():
     return "387363"
 
 
-def test_fingerprinters_blocked_and_shown_in_panel_and_preferences(driver: Firefox):
+def test_fingerprinters_blocked_and_shown_in_panel_and_preferences(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C387363 - Fingerprinters are blocked and shown correctly (Control Center and Preferences)
     """
 
     # Instantiate objects
     tracking_page = GenericPage(driver, url=FINGERPRINTERS_URL)
-    trust_panel = TrustPanel(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
 
     # Open page and check the Information panel
     tracking_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # The "Blocked" string is displayed under the Fingerprinters section
     trust_panel.trackers_blocked("fingerprinter")

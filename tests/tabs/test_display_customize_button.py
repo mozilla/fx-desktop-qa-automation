@@ -12,7 +12,7 @@ def test_case():
     return "134463"
 
 
-def test_customize_button_displayed_in_tab_bar(driver: Firefox):
+def test_customize_button_displayed_in_tab_bar(driver: Firefox, browser_name: str):
     """
     C134463 - Verify that the Customize button is displayed in the tab bar
     and the Customize tab persists when switching tabs.
@@ -35,7 +35,7 @@ def test_customize_button_displayed_in_tab_bar(driver: Firefox):
     with driver.context(driver.CONTEXT_CHROME):
         customize_tab = tabs.get_tab(2)
         assert customize_tab is not None, "Customize tab should still exist."
-        assert tabs.get_tab_title(customize_tab) == "Customize Firefox"
+        assert tabs.get_tab_title(customize_tab) == f"Customize {browser_name}"
         assert customize_tab.get_attribute("visuallyselected") != "true", (
             "Customize tab should be unfocused."
         )

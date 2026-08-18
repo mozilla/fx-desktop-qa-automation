@@ -38,11 +38,19 @@ STRATEGY_MAP = {
     "name": By.NAME,
 }
 
+CV_PATH = Path("data", "cv")
+OS_SHORT_NAMES = {"Windows": "win", "Darwin": "mac", "Linux": "linux"}
+
 _gui_auto = None
 
 
 def _make_gui_auto(sysname):
-    if sysname == "Linux":
+    if (
+        sysname == "Linux"
+        and not os.environ.get("MANUAL")
+        and not os.environ.get("DISPLAY")
+        and not os.environ.get("WAYLAND_DISPLAY")
+    ):
         return None
     import pyautogui
 
@@ -108,7 +116,7 @@ class BasePage(Page):
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
-        if not driver.capabilities.get("moz:headless", "_"):
+        if not driver.capabilities.get("moz:headless", True):  # headless set to false
             self.gui = _get_gui_auto(sys_platform)
 
     _xul_source_snippet = (
@@ -731,6 +739,7 @@ class BasePage(Page):
             logging.info(f"{reference} clicked")
         return self
 
+    @context_of_model
     def multi_click(
         self, iters: int, reference: str | tuple | WebElement, labels=None
     ) -> Page:
@@ -763,6 +772,7 @@ class BasePage(Page):
         """Actions helper: perform triple-click on a given element"""
         return self.multi_click(3, reference, labels)
 
+    @context_of_model
     def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Actions helper: perform control-click on given element"""
         element = self.fetch(reference, labels)
@@ -1204,46 +1214,39 @@ class BasePage(Page):
         after the click.
         """
 
-        system = platform.system()
-        if system == "Linux":
+        system = OS_SHORT_NAMES.get(platform.system())
+        if system == "linux":  # pyautogui not working in Wayland
             self.gui.press("enter")
             return
 
-        import pyautogui
+        button_img = str(CV_PATH / f"{system}_save_button.png")
 
-        if system == "Windows":
-            button_img = os.path.join("data", "win_save_button.png")
-        elif system == "Darwin":
-            button_img = os.path.join("data", "mac_save_button.png")
-        else:
-            button_img = os.path.join("data", "linux_save_button.png")
-
-        original_failsafe = pyautogui.FAILSAFE
-        pyautogui.FAILSAFE = False
+        original_failsafe = self.gui.FAILSAFE
+        self.gui.FAILSAFE = False
 
         try:
             time.sleep(0.5)
 
-            loc = pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
+            loc = self.gui.locateCenterOnScreen(button_img, confidence=0.75)
             logging.info(f"OS dialog button found at {loc}, clicking")
             self.gui.click(loc)
             time.sleep(1)
 
             try:
-                pyautogui.locateCenterOnScreen(button_img, confidence=0.75)
+                self.gui.locateCenterOnScreen(button_img, confidence=0.75)
                 logging.info(
                     "Button still visible after click; pressing Enter as fallback"
                 )
                 self.gui.press("enter")
-            except pyautogui.ImageNotFoundException:
+            except self.gui.ImageNotFoundException:
                 pass  # dialog dismissed successfully
 
-        except pyautogui.ImageNotFoundException:
+        except self.gui.ImageNotFoundException:
             logging.info("OS dialog button image not found; pressing Enter as fallback")
             self.gui.press("enter")
 
         finally:
-            pyautogui.FAILSAFE = original_failsafe
+            self.gui.FAILSAFE = original_failsafe
 
     def hide_popup_by_child_node(
         self, reference: str | tuple | WebElement, labels=None, retry=False

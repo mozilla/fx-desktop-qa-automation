@@ -12,7 +12,10 @@ def test_case():
     return "3054907"
 
 
-def test_etp_panel_displayed_when_protection_off(driver: Firefox):
+def test_etp_panel_displayed_when_protection_off(
+    driver: Firefox,
+    trust_panel: TrustPanel,
+):
     """
     C3054907 - The ETP panel is correctly displayed when protection if turned off
     """
@@ -20,7 +23,6 @@ def test_etp_panel_displayed_when_protection_off(driver: Firefox):
     # Instantiate objects
     about_prefs = AboutPrefs(driver, category="privacy")
     test_page = GenericPage(driver, url=YOUTUBE_URL)
-    trust_panel = TrustPanel(driver)
 
     # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs.open()

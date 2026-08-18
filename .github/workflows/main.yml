@@ -42,6 +42,11 @@ on:
         description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
+      test_set:
+        description: 'Test set to run'
+        default: "smoke"
+        required: false
+        type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
@@ -74,18 +79,20 @@ jobs:
       - name: Set CI Environment (Default)
         shell: pwsh
         run: |
-          "STARFOX_SPLIT=$env:INPUTS_TEST_SET" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "STARFOX_SPLIT=$env:TEST_SET" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         env:
-          INPUTS_TEST_SET: ${{ inputs.test_set }}
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Set CI Environment (Manual)
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         shell: pwsh
         run: |
           "MANUAL=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "STARFOX_SPLIT=smoke" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "STARFOX_SPLIT=$env:TEST_SET" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Running smoke tests on supplied executable"
+        env:
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Set CI Environment (Scheduled Beta)
         if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false && inputs.dry_run != true }}
@@ -225,6 +232,8 @@ jobs:
         run: |
           $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
           if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
+          # Set after the guard: routes results to the dedicated Glean plan
+          $env:STARFOX_SPLIT = "glean"
           uv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -287,10 +296,10 @@ jobs:
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
         env:
-          INPUTS_TEST_SET: ${{ inputs.test_set }}
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -307,8 +316,10 @@ jobs:
         if: ${{ inputs.mac_installer_link && inputs.dry_run != true }}
         run: |
           echo "MANUAL=true" >> "$GITHUB_ENV"
-          echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=$TEST_SET" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable"
+        env:
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Install dependencies
         id: setup
@@ -321,8 +332,8 @@ jobs:
           uv run python scripts/switch_config.py ci;
           uv sync;
           if ! [ "$MANUAL_DOWNLOAD_LINK" ]; then echo "FX_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables)" >> "$GITHUB_ENV"; fi
-          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV"
-          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV"
+          echo "FX_VERSION=$(uv run python -m scripts.collect_executables -n)" >> "$GITHUB_ENV";
+          echo "GECKO_DOWNLOAD_URL=$(uv run python -m scripts.collect_executables -g)" >> "$GITHUB_ENV";
 
       - name: Install Fx
         id: install-fx
@@ -330,7 +341,7 @@ jobs:
         env:
           MANUAL_DOWNLOAD_LINK: ${{ inputs.mac_installer_link }}
         run:
-          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT"
+          echo "app_name=$(bash ./scripts/collect_executables.sh | xargs -0 ./scripts/parse_executables.sh)" >> "$GITHUB_OUTPUT";
 
       - name: Select Tests (MacOS)
         id: select
@@ -359,7 +370,7 @@ jobs:
           TESTRAIL_REPORT: false
         run: |
           "$FX_EXECUTABLE" --version
-          uv run pytest --fx-executable="$FX_EXECUTABLE"  tests/meta/test_version.py || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/meta/test_version.py || TEST_EXIT_CODE=$?
 
       - name: Run Tests in MacOS
         if: |-
@@ -404,7 +415,8 @@ jobs:
           "$FX_EXECUTABLE" --version
           split="${STARFOX_SPLIT:-smoke}"
           if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
-          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          # Prefixed, not exported: routes results to the dedicated Glean plan
+          STARFOX_SPLIT=glean uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -445,10 +457,10 @@ jobs:
 
       - name: Set CI Environment (Default)
         run: |
-          echo "STARFOX_SPLIT=${INPUTS_TEST_SET}" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=${TEST_SET}" >> "$GITHUB_ENV"
           echo "TESTRAIL_REPORT=false" >> "$GITHUB_ENV"
         env:
-          INPUTS_TEST_SET: ${{ inputs.test_set }}
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Check test case numbers
         run: |
@@ -459,8 +471,10 @@ jobs:
         if: ${{ inputs.linux_tarball_link && inputs.dry_run != true }}
         run: |
           echo "MANUAL=true" >> "$GITHUB_ENV"
-          echo "STARFOX_SPLIT=smoke" >> "$GITHUB_ENV"
+          echo "STARFOX_SPLIT=$TEST_SET" >> "$GITHUB_ENV"
           echo "Running smoke tests on supplied executable"
+        env:
+          TEST_SET: ${{ inputs.test_set }}
 
       - name: Install dependencies
         id: setup
@@ -492,6 +506,8 @@ jobs:
         id: select
         run: |
           uv run python -m scripts.choose_test_split
+        env:
+          STARFOX_EXCLUDE: no_xvfb
 
       - name: Run Smoke Tests in Ubuntu
         if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}
@@ -499,8 +515,9 @@ jobs:
           FX_EXECUTABLE: ./firefox/firefox
         run: |
           "$FX_EXECUTABLE" --version;
-          Xvfb :99 -screen 0 '1600x1200x24' > artifacts/xvfb.log &
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE"  $(cat selected_tests) || TEST_EXIT_CODE=$?
+          XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
+          if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
+          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
@@ -512,7 +529,9 @@ jobs:
           uv sync;
           uv run python scripts/switch_config.py ci_xvfb_headed;
           uv sync;
-          DISPLAY=:99 uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
+          if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
+          xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
   Use-Artifacts:

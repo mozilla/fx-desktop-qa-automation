@@ -73,7 +73,11 @@ def test_third_party_content_blocked_private_browsing_allowed_tracking(
 
 
 def test_third_party_content_private_browsing_tracking_statuses(
-    driver: Firefox, nav: Navigation, panel_ui: PanelUi, trust_panel: TrustPanel
+    driver: Firefox,
+    nav: Navigation,
+    panel_ui: PanelUi,
+    trust_panel: TrustPanel,
+    check_tracker_test_field,
 ):
     """
     C446323.3: Ensure that the statuses of some third party content are loaded properly
@@ -88,17 +92,7 @@ def test_third_party_content_private_browsing_tracking_statuses(
     # Open the tracker website
     tracker_website.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
 
-    # Assert the various statuses, ensure that the correct one is displayed
-    block_status = tracker_website.get_element(
-        "simulated-third-party-tracker-block-status"
-    )
-    load_status = tracker_website.get_element(
-        "simulated-first-party-tracker-load-status"
-    )
-    dnt_status = tracker_website.get_element("simulated-tracker-dnt-status")
-
-    assert "hidden" not in block_status.get_attribute("class")
-    assert "hidden" not in load_status.get_attribute("class")
-    assert "incorrect" in dnt_status.get_attribute("class")
+    check_tracker_test_field("third-party")
+    check_tracker_test_field("first-party")
+    check_tracker_test_field("dnt", correct=False)

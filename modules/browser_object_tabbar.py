@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException
@@ -444,13 +445,10 @@ class TabBar(BasePage):
         return selected_tabs
 
     @BasePage.context_chrome
-    def reopen_tabs_with_shortcut(self, sys_platform: str, count: int) -> None:
+    def reopen_tabs_with_shortcut(self, count: int) -> None:
         """Reopen closed tabs using keyboard shortcut Ctrl/Cmd + Shift + T."""
-        modifier = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
         for _ in range(count):
-            self.actions.key_down(modifier).key_down(Keys.SHIFT).send_keys(
-                "t"
-            ).key_down(Keys.SHIFT).key_up(modifier).perform()
+            self.perform_key_combo(Keys.CONTROL, Keys.SHIFT, "t")
 
     @BasePage.context_chrome
     def reload_tab(self, nav, mod_key=None, extra_key=None):

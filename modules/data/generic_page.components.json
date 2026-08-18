@@ -67,12 +67,16 @@
   "simulated-third-party-tracker-block-status": {
     "selectorData": "blacklisted-blocked",
     "strategy": "id",
-    "groups": []
+    "groups": [
+      "doNotCache"
+    ]
   },
   "simulated-third-party-tracker-load-status": {
     "selectorData": "blacklisted-loaded",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "The third-party tracker loaded status",
       "location": "Tracker test website"
@@ -81,7 +85,9 @@
   "simulated-first-party-tracker-load-status": {
     "selectorData": "whitelisted-loaded",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "The first-party tracker allowed status",
       "location": "Tracker test website"
@@ -239,11 +245,11 @@
     "groups": []
   },
   "download-malicious-warning": {
-    "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/content.exe']",
+    "selectorData": "a[href='https://testsafebrowsing.appspot.com/s/badrep.exe']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "A link to download a file with malicious warning",
+      "description": "A link to download a file with malicious warning. Uses badrep.exe because content.exe now serves text/html and no longer triggers a download.",
       "location": "testsafebrowsing website"
     }
   },
@@ -321,6 +327,17 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "bing-search-result": {
+    "selectorData": "li.b_algo h2 a",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An organic (non-sponsored) result title link on the Bing SERP; clicked for serp.engagement target='non_ads_link'. Ads live in li.b_ad, so this must not match them.",
+      "location": "bing.com SERP"
+    }
   },
   "ecosia-related-search-shortcut": {
     "selectorData": "a.related-queries__link-bottom",

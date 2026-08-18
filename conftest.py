@@ -336,6 +336,17 @@ def test_case():
     return None
 
 
+def pytest_collection_modifyitems(
+    items: list[pytest.Item],
+) -> None:
+    """Serialize Security & Privacy tests on all platforms."""
+    for item in items:
+        nodeid = item.nodeid.replace("\\", "/")
+
+        if nodeid.startswith("tests/security_and_privacy/"):
+            item.add_marker(pytest.mark.xdist_group(name="security-and-privacy"))
+
+
 def pytest_configure(config):
     logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
         logging.CRITICAL
@@ -496,8 +507,8 @@ def driver(
         Fixture that does other environment work, like set logging levels.
     """
     options = Options()
+    service_args = ["--allow-system-access"]
     # options.log.level = "trace"
-    options.add_argument("--remote-allow-system-access")
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
@@ -512,10 +523,10 @@ def driver(
         options.set_preference(opt, value)
     try:
         if geckodriver:
-            service = Service(executable_path=geckodriver)
-            driver = Firefox(service=service, options=options)
+            service = Service(executable_path=geckodriver, service_args=service_args)
         else:
-            driver = Firefox(options=options)
+            service = Service(service_args=service_args)
+        driver = Firefox(service=service, options=options)
 
         # Uncomment below to find Fx process info
         # for proc in psutil.process_iter(["name", "exe", "cmdline"]):
@@ -547,6 +558,7 @@ def driver(
         yield driver
         if hard_quit:
             if hasattr(driver, "service") and driver.service is not None:
+                logging.warning("Attempting to force close Firefox")
                 driver.service.stop()
             return
 
@@ -557,6 +569,16 @@ def driver(
     finally:
         if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
+
+
+@pytest.fixture()
+def browser_name(driver: Firefox) -> str:
+    """
+    Is it 'Firefox' or 'Nightly'?
+    """
+    return (
+        "Nightly" if "a" in driver.capabilities.get("browserVersion", "") else "Firefox"
+    )
 
 
 @pytest.fixture()

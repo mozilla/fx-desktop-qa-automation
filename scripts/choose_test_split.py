@@ -164,6 +164,13 @@ if __name__ == "__main__":
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
 
+        # Assign a split name to STARFOX_EXCLUDE to remove tests in that split from run
+        if os.environ.get("STARFOX_EXCLUDE"):
+            print(f"Excluding tests from split: {os.environ['STARFOX_EXCLUDE']}...")
+            for exclude in dedupe(manifest.gather_split(os.environ["STARFOX_EXCLUDE"])):
+                if exclude in run_list:
+                    run_list.remove(exclude)
+
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
         sys.exit(0)
@@ -183,11 +190,13 @@ if __name__ == "__main__":
 
     run_list = []
     check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
+    git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
+    rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
+    if rev_hash:
+        git_diff_cmd.append(rev_hash)
+    git_diff_cmd.append("origin/main")
     committed_files = (
-        check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
-        .decode()
-        .replace("/", SLASH)
-        .splitlines()
+        check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
     )
 
     # Never select tests that work in a different flow
@@ -203,8 +212,8 @@ if __name__ == "__main__":
     run_list = []
 
     if main_conftest in committed_files or base_page in committed_files:
-        # Run smoke tests if main conftest or basepage changed
-        run_list.extend(manifest.gather_split("smoke"))
+        # Run additional tests if main conftest or basepage changed
+        run_list.extend(manifest.gather_split("ci-extended"))
         run_list = dedupe(run_list)
 
     all_tests = []

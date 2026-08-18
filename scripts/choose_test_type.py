@@ -14,13 +14,9 @@ file_subsets = {
 }
 
 l10n_module_patterns = [
-    r"modules/page_object_prefs\.py",
-    r"modules/data/about_prefs\.components\.json",
     r"modules/page_object_autofill\.py",
     r"modules/data/address_fill\.components\.json",
-    r"modules/data/credit_card_fill\.components\.json",
     r"modules/browser_object_autofill_popup\.py",
-    r"modules/data/autofill_popup\.components\.json",
 ]
 
 l10n_module_patterns = set(
@@ -36,18 +32,17 @@ if len(sys.argv) > 1:
 
 check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
 
-committed_files = (
-    check_output(["git", "--no-pager", "diff", "--name-only", "origin/main"])
-    .decode()
-    .replace("/", SLASH)
-    .splitlines()
-)
-main_conftest = "conftest.py"
+git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
+rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
+if rev_hash:
+    git_diff_cmd.append(rev_hash)
+git_diff_cmd.append("origin/main")
+committed_files = check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
 base_page = os.path.join("modules", "page_base.py")
 
 test_types = set()
 
-if main_conftest in committed_files or base_page in committed_files:
+if base_page in committed_files:
     print(ALL_TEST_TYPES)
     sys.exit()
 
