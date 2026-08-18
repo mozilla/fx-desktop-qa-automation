@@ -79,23 +79,14 @@
       "location": "The about:login's page's sidebar"
     }
   },
-  "form-actions-row": {
-    "selectorData": "form-actions-row",
-    "strategy": "class",
-    "groups": [],
-    "comment": {
-      "description": "New login page's Cancel and Save button container (is a shadow parent)",
-      "location": "The about:login's new login page"
-    }
-  },
   "save-changes-button": {
     "selectorData": "save-changes-button",
     "strategy": "class",
-    "shadowParent": "form-actions-row",
+    "shadowParent": "login-item",
     "groups": [],
     "comment": {
-      "description": "New login page's Save button",
-      "location": "The about:login's new login page"
+      "description": "Save button for a new or edited login",
+      "location": "The about:login's login form"
     }
   },
   "website-address": {
@@ -259,16 +250,6 @@
     "comment": {
       "description": "About logins edit button",
       "location": "The about:login's main login page after adding a login"
-    }
-  },
-  "save-edited-login": {
-    "selectorData": "save-changes-button",
-    "strategy": "class",
-    "shadowParent": "login-item",
-    "groups": [],
-    "comment": {
-      "description": "Save edited login",
-      "location": "The about:login's main login page after editing a login"
     }
   },
   "copy-username": {
