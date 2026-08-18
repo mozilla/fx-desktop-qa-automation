@@ -464,23 +464,28 @@ downloads:
     - functional1
     - nightly
   test_download_apk_and_check_extension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional1
-  test_download_exe_and_check_extesion:
-    result: pass
+  test_download_exe_and_check_extension:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional1
   test_download_malicious_warning:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064074
+    result: unstable
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional1
   test_download_pdf:
@@ -498,15 +503,13 @@ downloads:
     - functional1
     - nightly
   test_install_unsigned_addons:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064083
+    result: unstable
     splits:
     - functional1
   test_mixed_content_download_via_https:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2004945
-    result:
-      linux: pass
-      mac: unstable
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064075
+    result: unstable
     splits:
     - functional1
   test_no_download_telemetry_without_panel:
@@ -520,7 +523,8 @@ downloads:
     - functional1
     - nightly
   test_telemetry_download_and_open:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064081
+    result: unstable
     splits:
     - functional1
   test_telemetry_pdf_download_open:
@@ -529,7 +533,8 @@ downloads:
     - functional1
     - nightly
   test_verify_telemetry_downloads_panel_open:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064081
+    result: unstable
     splits:
     - functional1
 drag_and_drop:
@@ -747,7 +752,7 @@ menus:
     - nightly
 meta:
   test_selectors:
-    comment: Not part of feature functional test suites
+    comment: Not part of feature functional test suites (no need for http link)
     result: unstable
     splits: []
   test_version:
@@ -755,7 +760,11 @@ meta:
     splits: []
 networking:
   test_cloudflare_as_default_doh_provider:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064127
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -811,11 +820,13 @@ notifications:
     - functional2
     - nightly
   test_downloads_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional2
   test_downloads_finished_button_is_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
+    result: unstable
     splits:
     - functional2
   test_geolocation_allow_browserleaks:
@@ -894,12 +905,20 @@ password_manager:
     - functional2
     - nightly
   test_about_logins_search_passwords:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064116
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
   test_about_logins_search_username:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064114
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -946,6 +965,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
     result:
       linux: pass
       mac: pass
@@ -969,9 +989,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: uses pyautogui (headed) to answer the native Primary Password prompt;
-      not reliable on linux (Wayland) or win CI, so mac-only like the CSV-export PP
-      tests
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
     result:
       linux: unstable
       mac: pass
@@ -1004,6 +1022,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
@@ -1015,7 +1034,11 @@ password_manager:
     - functional2
     - nightly
   test_no_generated_password_options_with_pp_and_no_credentials:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064126
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1048,8 +1071,7 @@ password_manager:
     - functional2
     - nightly
   test_password_manager_on_google_US:
-    comment: external site; mac was historically unstable for unknown reasons before
-      bug 2056524, keep in mind if it re-flakes
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167, old mac bug
     result:
       linux: pass
       mac: unstable
@@ -1086,7 +1108,11 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1095,6 +1121,7 @@ password_manager:
     splits:
     - functional2
     - nightly
+    - no_xvfb
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1122,10 +1149,12 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064111
     result: unstable
     splits:
     - functional2
   test_download_pdf_with_form_fields:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064142
     result: unstable
     splits:
     - functional2
@@ -1258,10 +1287,8 @@ preferences:
     - functional2
     - nightly
   test_clear_cookie_data:
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064065
+    result: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1310,6 +1337,7 @@ printing_ui:
     - nightly
 profile:
   test_set_default_profile:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064143
     result:
       linux: pass
       mac: pass
@@ -1338,10 +1366,10 @@ scrolling_panning_zooming:
     splits:
     - smoke
   test_mouse_wheel_zoom:
-    comment: No support for testing this on MAc
+    comment: Mac cannot be supported
     result:
       linux: pass
-      mac: unstable
+      mac: unsupported
       win: pass
     splits:
     - functional2
@@ -1468,11 +1496,13 @@ security_and_privacy:
     splits:
     - functional3
   test_download_list_cleared_by_end_private_session:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064132
+    result: unstable
     splits:
     - functional3
   test_downloads_from_private_not_leaked:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064130
+    result: unstable
     splits:
     - functional3
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
@@ -1776,7 +1806,7 @@ sidebar:
     - functional3
     - nightly
   test_sidebar_vertical_tabs_mute_unmute:
-    comment: CI limitation - audio playback not supported on Windows CI runners
+    comment: GHA win audio bug, https://bugzilla.mozilla.org/show_bug.cgi?id=2064170
     result:
       linux: pass
       mac: pass
