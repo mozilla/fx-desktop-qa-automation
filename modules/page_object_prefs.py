@@ -1609,12 +1609,19 @@ class AboutPrefs(BasePage):
         Returns:
             str: Current state ("available" or "blocked")
         """
-        select_elem = self.get_element("ai-control-translations-select")
-        return self.driver.execute_script("return arguments[0].value;", select_elem)
+        return self.get_element("ai-control-translations-select").get_attribute(
+            "value"
+        )
 
     def set_ai_translations(self, state: str) -> BasePage:
         """
         Set the AI Translations feature state.
+
+        Note: ai-control-translations-select is a `moz-select` custom element
+        (not a native <select>), so selenium.webdriver.support.ui.Select does
+        not apply and there is no plain-Selenium equivalent for value-setting.
+        We assign .value and dispatch input/change events the way the moz-select
+        internals do to trigger the same pref-write path a user click would.
 
         Arguments:
             state: "available" or "blocked"
@@ -1630,7 +1637,14 @@ class AboutPrefs(BasePage):
             select_elem,
             state,
         )
-        self.expect(lambda _: self.get_ai_translations_state() == state)
+        # Confirm the moz-select actually wrote through to the backing pref —
+        # asserting .value alone would be tautological since we just set it.
+        self.expect(
+            lambda _: self.driver.execute_script(
+                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            )
+            == state
+        )
         return self
 
     def cancel_ai_killswitch_click(self) -> BasePage:

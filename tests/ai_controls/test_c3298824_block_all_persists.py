@@ -19,7 +19,9 @@ def test_block_all_ai_features_option_persists(about_prefs: AboutPrefs):
     """
     about_prefs.navigate_to_ai_controls()
 
-    about_prefs.set_ai_blocking(True)
+    # Block via the UI toggle so the killswitch's real side effects fire
+    # (matches the pattern used in C3310314 / C3341331).
+    about_prefs.toggle_ai_killswitch_click()
     about_prefs.expect_ai_killswitch_state(pressed=True)
 
     # Enable one individual feature via pref — its UI control is hidden while
