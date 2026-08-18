@@ -119,6 +119,28 @@ def _entry_searchbar(driver: Firefox, search_term, params: dict = None):
     nav.search_bar_search(search_term)
 
 
+@_entry("searchbar_suggestion")
+def _entry_searchbar_suggestion(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar, then submit a search by selecting one of its suggestions."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar to the toolbar and submit via a suggestion
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_select_suggestion(search_term)
+
+
+@_entry("searchbar_search_form")
+def _entry_searchbar_search_form(driver: Firefox, search_term, params: dict = None):
+    """Add the search bar and Shift+click an engine one-off button to load its search form."""
+    # Instantiate objects
+    nav = Navigation(driver)
+
+    # Add the search bar and open the engine's search form via its one-off button
+    nav.add_search_bar_to_toolbar()
+    nav.search_bar_open_engine_search_form(params["engine"])
+
+
 @_entry("urlbar_handoff")
 def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None):
     """Simulate a urlbar_handoff search: the newtab in-content search box is a fake input that,
@@ -136,10 +158,12 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
 
 
-@_entry("unknown")
-def _entry_unknown(driver: Firefox, search_term: str, params: dict = None):
-    """Submit a urlbar search with Alt+Shift+Enter so the SERP opens in a new tab. Firefox cannot
-    attribute the originating surface for a SERP opened this way, so it records source='unknown'."""
+@_entry("urlbar_background_tab")
+def _entry_urlbar_background_tab(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Submit a urlbar search with Alt+Shift+Enter so the SERP opens in a background tab. Firefox
+    attributes the search to the urlbar, so it records source='urlbar'."""
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)

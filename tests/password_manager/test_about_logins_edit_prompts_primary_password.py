@@ -43,7 +43,7 @@ def test_about_logins_edit_prompts_primary_password(driver: Firefox):
 
     # The Edit mode is opened, change username and verify the field is changed
     about_logins.get_element("about-logins-page-username-field").send_keys(NEW_USERNAME)
-    about_logins.click_on("save-edited-login")
+    about_logins.click_on("save-changes-button")
     about_logins.element_attribute_contains(
         "about-logins-page-username-field", "value", NEW_USERNAME
     )

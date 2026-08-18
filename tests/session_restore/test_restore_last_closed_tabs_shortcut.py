@@ -31,7 +31,7 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
     tabs.wait_for_num_tabs(2)
     driver.close()
     tabs.wait_for_num_tabs(1)
-    tabs.reopen_tabs_with_shortcut(sys_platform, count=1)
+    tabs.reopen_tabs_with_shortcut(count=1)
     tabs.wait_for_num_tabs(2)
 
     # Clean up for next steps
@@ -52,7 +52,7 @@ def test_restore_closed_tabs(driver: Firefox, tabs: TabBar, sys_platform: str):
     tabs.wait_for_num_tabs(1)
 
     # Use the method to restore the closed tabs with shortcut
-    tabs.reopen_tabs_with_shortcut(sys_platform, count=4)
+    tabs.reopen_tabs_with_shortcut(count=4)
     tabs.wait_for_num_tabs(5)
 
     # Verify the page of each tab was restored

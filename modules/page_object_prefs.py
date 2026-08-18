@@ -80,12 +80,30 @@ class AboutPrefs(BasePage):
         Selects the search suggestions in the Address Bar checkbox according to the value given.
         """
         checkbox = self.get_element("show-suggestions")
-        awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
         checked = bool(checkbox.get_attribute("checked"))
         if value != checked:
             checkbox.click()
-        if value and not awesome_bar_checkbox.get_attribute("checked"):
-            awesome_bar_checkbox.click()
+
+        self.expect(
+            lambda _: bool(
+                self.get_element("show-suggestions").get_attribute("checked")
+            )
+            == value
+        )
+
+        # Firefox builds expose the separate Address Bar checkbox under
+        # different element IDs; the manifest supports both variants.
+        if value:
+            awesome_bar_checkbox = self.get_element("show-suggestions-awesomebar")
+            if not awesome_bar_checkbox.get_attribute("checked"):
+                awesome_bar_checkbox.click()
+            self.expect(
+                lambda _: bool(
+                    self.get_element("show-suggestions-awesomebar").get_attribute(
+                        "checked"
+                    )
+                )
+            )
         return self
 
     def search_engine_dropdown(self) -> Dropdown:
@@ -210,7 +228,9 @@ class AboutPrefs(BasePage):
         is_checked = checkbox.get_attribute("checked") in ("true", "checked", "")
         assert is_checked, "Expected clipboardSuggestion checkbox to be checked"
 
-    def set_alternative_language(self, lang_code: str) -> BasePage:
+    def set_alternative_language(
+        self, lang_code: str, wait_for_ui: bool = False
+    ) -> BasePage:
         """Sets the browser language via the Preferred language moz-select.
 
         The available-languages list is hydrated asynchronously — Firefox
@@ -218,6 +238,16 @@ class AboutPrefs(BasePage):
         pane opens — so the target option may be missing the instant we look.
         Wait for it before selecting. Firefox applies the locale live once the
         dropdown value changes.
+
+        Args:
+            lang_code: The language code to set (e.g. 'pt-BR', 'it')
+            wait_for_ui: If True, waits for the about:preferences page title
+                         to change before returning. The title change is used
+                         as a proxy signal that Firefox has fully applied the
+                         new locale to the chrome UI. This relies on the target
+                         language having a different preferences page title than
+                         the current one — if two languages share the same title,
+                         this wait will time out with a generic TimeoutException.
         """
         self.wait.until(
             lambda _: any(
@@ -227,10 +257,22 @@ class AboutPrefs(BasePage):
                 ).find_elements(By.TAG_NAME, "option")
             )
         )
+
+        # Capture title before language change to detect when locale is applied
+        current_title = self.driver.title if wait_for_ui else None
+
         Select(self.get_element("browser-language-preferred-select")).select_by_value(
             lang_code
         )
         self.element_attribute_is("browser-language-preferred", "value", lang_code)
+
+        if wait_for_ui:
+            # Wait for the page title to change as a signal that the locale
+            # has been fully applied to the chrome UI. Uses custom_wait with
+            # a longer timeout to give Firefox time to apply the locale change.
+            self.custom_wait(timeout=15).until(
+                lambda _: self.driver.title != current_title
+            )
         return self
 
     def open_doh_advanced(self) -> BasePage:

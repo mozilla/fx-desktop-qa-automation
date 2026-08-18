@@ -69,31 +69,55 @@ def get_execution_link(os_name: str = None) -> str:
     return ""
 
 
-def replace_link_in_description(description, os_name) -> str:
-    """Add or replace a test execution link in the test run description"""
+def _execution_link_pattern(os_name: str) -> re.Pattern:
+    """Match an execution link in any format this repo has written: anchor,
+    markdown, or bare URL, with the <br>/<p> tags around it."""
+
+    label = rf"{re.escape(os_name)}\s+execution\s+link"
+    body = "|".join(
+        [
+            rf"<a\b[^>]*>\s*{label}\s*</a>",
+            rf"\[\s*{label}\s*\]\([^)]*\)",
+            # stops at "<" because the description is stored as a single line
+            rf"{label}\s*:\s*[^\s<]+",
+        ]
+    )
+    edge = r"(?:<br\s*/?>|<p>)\s*"
+    return re.compile(rf"(?:{edge})?(?:{body})(?:\s*</p>)?", re.IGNORECASE)
+
+
+def replace_link_in_description(description: str, os_name: str) -> str:
+    """
+    Leave exactly one execution link for os_name in the description.
+
+    Every copy for this OS is dropped and the current one re-inserted where the
+    first sat, so platform order stays stable and unrelated text is kept.
+    """
 
     link = get_execution_link(os_name)
     if not link:
         return description
 
-    new_line = f"[{os_name} execution link]({link})"
-    lines = description.splitlines()
-    pat = re.compile(
-        rf"^\s*\[{re.escape(os_name)}\s+execution\s+link\]\(.*?\)\s*$",
-        re.IGNORECASE,
+    # The field is HTML and TestRail only linkifies in its UI editor; the <br>
+    # is what puts the link on its own line
+    new_entry = (
+        f'<br><a href="{link}" target="_blank" rel="noopener noreferrer">'
+        f"{os_name} execution link</a>"
     )
 
-    # Look for existing line to replace
-    for i, line in enumerate(lines):
-        if pat.match(line):
-            if line.strip() == new_line:
-                return description
-            lines[i] = new_line
-            return "\n".join(lines)
+    # Whole string, not lines: TestRail collapses the description onto one line
+    matches = list(_execution_link_pattern(os_name).finditer(description))
+    if matches:
+        insert_at = matches[0].start()
+        updated = description
+        # Back to front so the earlier offsets stay valid
+        for match in reversed(matches):
+            updated = updated[: match.start()] + updated[match.end() :]
+        updated = updated[:insert_at] + new_entry + updated[insert_at:]
+    else:
+        updated = description + new_entry
 
-    # No existing line found, append new one
-    lines.append(new_line)
-    return "\n".join(lines)
+    return description if updated == description else updated
 
 
 def determine_current_os() -> str:
@@ -167,11 +191,13 @@ def get_plan_title(version_str: str, channel: str) -> str:
             .replace("{minor}", minor)
             .replace("{beta}", "rc")
         )
-    if os.environ.get("STARFOX_SPLIT") and os.environ.get("STARFOX_SPLIT").startswith(
-        "functional"
-    ):
-        functional_split = os.environ["STARFOX_SPLIT"].split("functional")[-1]
+    split = os.environ.get("STARFOX_SPLIT") or ""
+    if split.startswith("functional"):
+        functional_split = split.split("functional")[-1]
         plan_title = f"{plan_title} - Functional (Split {functional_split})"
+    elif split == "glean":
+        # Glean reports to its own plan; it is not part of the smoke run
+        plan_title = f"{plan_title} - Glean Telemetry"
     return plan_title
 
 
@@ -1084,7 +1110,8 @@ def collect_changes(testrail_session: TestRail, report):
         )
 
     # Find plan to attach runs to, create if doesn't exist
-    logging.info(f"Plan title: {plan_title}")
+    # Informational, but logged at warn: CI runs at log_cli_level=warn
+    logging.warning(f"[INFO] Plan title: {plan_title}")
     milestone_id = channel_milestone.get("id")
     expected_plan = testrail_session.matching_plan_in_milestone(
         TESTRAIL_FX_DESK_PRJ, milestone_id, plan_title

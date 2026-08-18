@@ -77,6 +77,47 @@ class Glean(BasePage):
         return "\n".join(diff_lines)
 
     @BasePage.context_chrome
+    def poll_glean_labeled_counter(
+        self,
+        metric_path: str,
+        label: str,
+        min_count: int = 1,
+        timeout: int = 30,
+        poll_interval: float = 0.5,
+    ) -> dict:
+        """
+        Poll a labeled_counter Glean metric until one label reaches min_count.
+
+        Unlike poll_glean_metric (which reads event payloads), labeled counters
+        return a plain {label: count} object from testGetValue(), so this matches
+        on the count for a single label (for example browser.search.content.searchbar
+        keyed by 'google:tagged:firefox-b-1-d').
+        """
+        if not _GLEAN_METRIC_PATH_RE.match(metric_path):
+            raise ValueError(f"Invalid metric_path: {metric_path!r}")
+        js_code = self._build_poll_js(metric_path)
+        end_time = time.time() + timeout
+        last_result = {}
+
+        while time.time() < end_time:
+            result = self.driver.execute_async_script(js_code)
+
+            if isinstance(result, dict) and "error" in result:
+                raise AssertionError(f"Glean JS error: {result['error']}")
+
+            if result:
+                last_result = result
+                if result.get(label, 0) >= min_count:
+                    return result
+
+            time.sleep(poll_interval)
+
+        raise TimeoutError(
+            f"Glean labeled_counter '{metric_path}' label '{label}' did not reach "
+            f"{min_count} after {timeout}s. Last result: {last_result}"
+        )
+
+    @BasePage.context_chrome
     def poll_glean_metric(
         self,
         metric_path: str,

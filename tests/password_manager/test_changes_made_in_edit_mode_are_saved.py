@@ -38,7 +38,7 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     )
 
     # Click the "Save" button
-    about_logins.click_on("save-edited-login")
+    about_logins.click_on("save-changes-button")
 
     # Verify the username field is changed
     about_logins.element_attribute_contains(

@@ -20,9 +20,7 @@ links = [
     "about:blank",
 ]
 
-COOKIE_LABEL_TEXT = (
-    "Firefox clears cookies and site data from your session when you close the browser."
-)
+COOKIE_LABEL_TEMPLATE = "%BROWSER% clears cookies and site data from your session when you close the browser."
 HISTORY_LABEL_TEXT = (
     "Every window acts like a private window. When on, extensions need to be allowed."
 )
@@ -34,7 +32,7 @@ def add_to_prefs_list():
 
 
 def test_never_remember_browsing_history_settings(
-    driver: Firefox, about_prefs_privacy: AboutPrefs
+    driver: Firefox, about_prefs_privacy: AboutPrefs, browser_name: str
 ):
     """
     C102381.1: Ensure that setting the browser to never remember history has the correct
@@ -43,10 +41,11 @@ def test_never_remember_browsing_history_settings(
 
     # instantiate objs
     about_prefs_privacy.open()
+    cookie_label_text = COOKIE_LABEL_TEMPLATE.replace("%BROWSER%", browser_name)
 
     # perform all about:preferences#privacy assertions according to testrail
     cookies_label = about_prefs_privacy.get_element("cookies-privacy-label")
-    assert cookies_label.get_attribute("message") == COOKIE_LABEL_TEXT
+    assert cookies_label.get_attribute("message") == cookie_label_text
 
     delete_cookies_checkbox = about_prefs_privacy.get_element("cookies-delete-on-close")
     assert delete_cookies_checkbox.get_attribute("checked") == "true"
