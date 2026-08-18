@@ -31,6 +31,7 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
     # Wait for the test website to wake up and download the content
     web_page.open()
+    nav.element_visible("downloads-button")
     nav.click_download_button()
     nav.element_visible("download-target-element")
 
