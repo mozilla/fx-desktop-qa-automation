@@ -511,6 +511,7 @@ downloads:
     result: pass
     splits:
     - functional1
+    - nightly
   test_no_download_telemetry_without_panel:
     result: pass
     splits:
