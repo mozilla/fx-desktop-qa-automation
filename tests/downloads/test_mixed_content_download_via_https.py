@@ -21,7 +21,11 @@ MIXED_CONTENT_DOWNLOAD_URL = (
 MAX_CHECKS = 30
 
 
-# This test has been found to be unstable in CI
+@pytest.fixture()
+def add_to_prefs_list():
+    return [("browser.download.alwaysOpenPanel", True)]
+
+
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
