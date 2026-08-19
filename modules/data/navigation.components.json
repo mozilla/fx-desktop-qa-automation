@@ -695,7 +695,9 @@
   "download-target-element": {
     "selectorData": "downloadTarget",
     "strategy": "class",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Downloaded item in the download panel",
       "location": "Download panel"
