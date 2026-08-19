@@ -265,6 +265,7 @@ jobs:
           & $env:FX_EXECUTABLE --version
 
       - name: Download Geckodriver
+        id: download-geckodriver
         if: ${{ env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         shell: pwsh
         run: |
@@ -297,7 +298,7 @@ jobs:
 
       - name: Run headless tests
         id: headless
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.download-geckodriver.outcome == 'success' }}
         continue-on-error: true
         shell: pwsh
         run: |
@@ -337,7 +338,7 @@ jobs:
 
       - name: Run headed tests
         id: headed
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && matrix.test_set != 'glean' && steps.install-fx.outcome == 'success' }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && matrix.test_set != 'glean' && steps.download-geckodriver.outcome == 'success' }}
         continue-on-error: true
         shell: pwsh
         run: |
