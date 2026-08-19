@@ -464,18 +464,15 @@ downloads:
     - functional1
     - nightly
   test_download_apk_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_exe_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_malicious_warning:
@@ -484,8 +481,7 @@ downloads:
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_pdf:
@@ -820,13 +816,11 @@ notifications:
     - functional2
     - nightly
   test_downloads_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_downloads_finished_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_geolocation_allow_browserleaks:
