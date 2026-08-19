@@ -31,7 +31,9 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
 
     # Wait for the test website to wake up and download the content
     web_page.open()
-    nav.element_visible("downloads-button")
+
+    # Wait for download to start and downloads button to appear (longer timeout for CI)
+    web_page.wait.until(lambda _: nav.element_visible("downloads-button"))
     nav.click_download_button()
     nav.element_visible("download-target-element")
 
