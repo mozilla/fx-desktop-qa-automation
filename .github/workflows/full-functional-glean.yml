@@ -28,7 +28,6 @@ on:
 permissions:
   contents: read
 
-# multiple execution
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
