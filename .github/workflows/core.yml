@@ -602,7 +602,7 @@ jobs:
       STARFOX_SPLIT: ${{ matrix.test_set }}
       FX_EXECUTABLE: ./firefox/firefox
       # Kept outside artifacts/, which is wiped between phases.
-      XVFB_LOG: /tmp/xvfb.log
+      XVFB_LOG_DIR: /tmp/xvfb
 
     steps:
       - name: Checkout repository
@@ -622,7 +622,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          mkdir -p artifacts
+          mkdir -p artifacts "$XVFB_LOG_DIR"
 
           python -m pip install "uv==0.11.18"
 
@@ -632,6 +632,11 @@ jobs:
 
       - name: Select tests
         id: select
+        env:
+          # The no_xvfb split holds tests that cannot run under Xvfb. They are
+          # not marked with @pytest.mark.noxvfb, so the config's -m filter does
+          # not catch them; excluding them here is the only thing that does.
+          STARFOX_EXCLUDE: no_xvfb
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests
@@ -674,45 +679,33 @@ jobs:
 
           "$FX_EXECUTABLE" --version
 
-      - name: Start Xvfb
-        id: xvfb
-        if: ${{ env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
-        run: |
-          Xvfb :99 -screen 0 1600x1200x24 > "$XVFB_LOG" 2>&1 &
-          xvfb_pid=$!
-
-          echo "DISPLAY=:99" >> "$GITHUB_ENV"
-          echo "XVFB_PID=$xvfb_pid" >> "$GITHUB_ENV"
-
-          sleep 2
-
-          if ! kill -0 "$xvfb_pid" 2>/dev/null; then
-            echo "::error::Xvfb did not start successfully."
-            cat "$XVFB_LOG"
-            exit 1
-          fi
-
       - name: Verify Firefox version
         id: verify
-        if: ${{ env.DRY_RUN != 'true' && steps.xvfb.outcome == 'success' }}
+        if: ${{ env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
-          uv run pytest \
-            --fx-executable="$FX_EXECUTABLE" \
-            tests/meta/test_version.py
+          xvfb-run -a -e "$XVFB_LOG_DIR/verify.log" -f "$HOME/.Xauthority" \
+            -s "-screen 0 1600x1200x24" \
+            uv run pytest \
+              --fx-executable="$FX_EXECUTABLE" \
+              --geckodriver=geckodriver \
+              tests/meta/test_version.py
 
       - name: Run headless tests
         id: headless
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.xvfb.outcome == 'success' }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
           mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
-          uv run pytest \
-            --fx-executable="$FX_EXECUTABLE" \
-            "${tests[@]}" || exit_code=$?
+          xvfb-run -a -e "$XVFB_LOG_DIR/headless.log" -f "$HOME/.Xauthority" \
+            -s "-screen 0 1600x1200x24" \
+            uv run pytest \
+              --fx-executable="$FX_EXECUTABLE" \
+              --geckodriver=geckodriver \
+              "${tests[@]}" || exit_code=$?
 
           mkdir -p test-artifacts/headless
 
@@ -730,7 +723,7 @@ jobs:
 
       - name: Run headed tests
         id: headed
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && matrix.test_set != 'glean' && steps.xvfb.outcome == 'success' }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && matrix.test_set != 'glean' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
           uv run python scripts/switch_config.py ci_xvfb_headed
@@ -740,9 +733,12 @@ jobs:
 
           exit_code=0
 
-          uv run pytest \
-            --fx-executable="$FX_EXECUTABLE" \
-            "${tests[@]}" || exit_code=$?
+          xvfb-run -a -e "$XVFB_LOG_DIR/headed.log" -f "$HOME/.Xauthority" \
+            -s "-screen 0 1600x1200x24" \
+            uv run pytest \
+              --fx-executable="$FX_EXECUTABLE" \
+              --geckodriver=geckodriver \
+              "${tests[@]}" || exit_code=$?
 
           mkdir -p test-artifacts/headed
 
@@ -752,18 +748,14 @@ jobs:
 
           exit "$exit_code"
 
-      - name: Stop Xvfb and collect its log
+      - name: Collect Xvfb logs
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
         run: |
-          if [[ -n "${XVFB_PID:-}" ]]; then
-            kill "$XVFB_PID" 2>/dev/null || true
-          fi
+          # xvfb-run tears down its own server when pytest exits, so there is
+          # nothing to kill here -- only the per-phase server logs to keep.
+          mkdir -p test-artifacts/xvfb
 
-          mkdir -p test-artifacts
-
-          if [[ -f "$XVFB_LOG" ]]; then
-            cp "$XVFB_LOG" test-artifacts/ || true
-          fi
+          cp "$XVFB_LOG_DIR"/*.log test-artifacts/xvfb/ 2>/dev/null || true
 
       - name: Upload Linux artifacts
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
