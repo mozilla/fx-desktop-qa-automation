@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -31,6 +33,9 @@ def test_download_malicious_warning(driver: Firefox):
     page = GenericPage(driver, url=TEST_URL)
     nav = Navigation(driver)
     about_config = AboutConfig(driver)
+
+    # Set browser.download.alwaysOpenPanel to False and repeat step 2
+    about_config.toggle_config_value("browser.download.alwaysOpenPanel", True)
 
     # Access the link and download item number 2 from Desktop Download Warnings
     page.open()
