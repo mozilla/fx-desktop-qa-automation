@@ -1475,8 +1475,7 @@ security_and_privacy:
     splits:
     - functional3
   test_download_list_cleared_by_end_private_session:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064132
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_downloads_from_private_not_leaked:
