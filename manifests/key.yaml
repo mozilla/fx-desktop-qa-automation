@@ -1481,8 +1481,7 @@ security_and_privacy:
     splits:
     - functional3
   test_downloads_from_private_not_leaked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064130
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
