@@ -158,10 +158,12 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
 
 
-@_entry("unknown")
-def _entry_unknown(driver: Firefox, search_term: str, params: dict = None):
-    """Submit a urlbar search with Alt+Shift+Enter so the SERP opens in a new tab. Firefox cannot
-    attribute the originating surface for a SERP opened this way, so it records source='unknown'."""
+@_entry("urlbar_background_tab")
+def _entry_urlbar_background_tab(
+    driver: Firefox, search_term: str, params: dict = None
+):
+    """Submit a urlbar search with Alt+Shift+Enter so the SERP opens in a background tab. Firefox
+    attributes the search to the urlbar, so it records source='urlbar'."""
     # Instantiate objects
     page = GenericPage(driver, url="about:newtab")
     nav = Navigation(driver)
