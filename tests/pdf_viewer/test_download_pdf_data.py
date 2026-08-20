@@ -71,7 +71,7 @@ def test_download_pdf_data(
     finally:
         pdf_viewer.cleanup_mock_file_picker()
 
-    # # Set the expected download path and the expected PDF name
+    # Wait for file download to complete
     wait_for_file_download(saved_pdf_location)
 
     # Open the saved pdf and check if the edited field is displayed
