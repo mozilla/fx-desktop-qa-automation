@@ -1,9 +1,11 @@
 """Get the link to download Fx or Geckodriver, for any supported platform.
 Use -g to get geckodriver, otherwise you will get Fx. Use -n to just get the Fx version number.
+Use --nightly-build-set to get one resolved set of immutable Nightly URLs.
 Set env var FX_CHANNEL to get non-beta, blank string for Release.
 Set env var FX_LOCALE to get a different locale build.
 Set env var FX_PLATFORM to get a platform other than current system."""
 
+import json
 import logging
 from os import environ
 from platform import uname
@@ -13,12 +15,66 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 
+from scripts.firefox_train import (
+    NIGHTLY_ARCHIVE_URL,
+    nightly_download_from_buildhub,
+    parse_candidate_label,
+    select_nightly_buildhub_files,
+)
+
 GECKO_API_URL = "https://api.github.com/repos/mozilla/geckodriver/releases/latest"
 BACKSTOP = "146.0b9"
 # Used only when the GitHub API cannot be reached. Keep this current with the
 # latest geckodriver release: tests/meta/test_version.py compares the running
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
+NIGHTLY_WORKFLOW_PLATFORMS = ("win64", "mac", "linux-x86_64")
+
+
+def discover_nightly_builds(
+    platforms=NIGHTLY_WORKFLOW_PLATFORMS,
+    locale="en-US",
+):
+    """Resolve immutable archive URLs for one Nightly version."""
+    response = requests.get(NIGHTLY_ARCHIVE_URL)
+    if response.status_code >= 300:
+        raise RuntimeError(f"Could not find Nightly builds at {NIGHTLY_ARCHIVE_URL}.")
+
+    build, metadata_files = select_nightly_buildhub_files(
+        response.text,
+        platforms,
+        locale,
+    )
+    downloads = {}
+    for platform, filename in metadata_files.items():
+        metadata_url = f"{NIGHTLY_ARCHIVE_URL}{filename}"
+        metadata_response = requests.get(metadata_url)
+        if metadata_response.status_code >= 300:
+            raise RuntimeError(f"Could not read Nightly metadata at {metadata_url}.")
+        try:
+            metadata = metadata_response.json()
+        except requests.exceptions.JSONDecodeError as error:
+            raise RuntimeError(
+                f"Nightly metadata at {metadata_url} is not valid JSON."
+            ) from error
+        downloads[platform] = nightly_download_from_buildhub(
+            metadata,
+            build,
+            platform,
+            locale,
+        )
+
+    archive_directories = {url.rsplit("/", 1)[0] for url in downloads.values()}
+    if len(archive_directories) != 1:
+        raise RuntimeError(
+            "Nightly Buildhub metadata resolved platforms from different builds."
+        )
+
+    return {
+        "version": build.version,
+        "major": build.major,
+        "downloads": downloads,
+    }
 
 
 def get_fx_platform():
@@ -144,28 +200,63 @@ def main(args):
         if not language:
             language = "en-US"
 
-        if channel == "-devedition":
+        if "--nightly-build-set" in args:
+            return json.dumps(discover_nightly_builds(locale=language), sort_keys=True)
+
+        requested_label = environ.get("FX_VERSION")
+        requested_train = None
+        requested_build = None
+        if requested_label:
+            requested_train, requested_build = parse_candidate_label(requested_label)
+
+        if channel == "-nightly":
+            platform = get_fx_platform()
+            nightly_builds = discover_nightly_builds((platform,), language)
+            if (
+                requested_train is not None
+                and requested_train.version != nightly_builds["version"]
+            ):
+                exit(
+                    f"Could not find Nightly {requested_train.version} for "
+                    f"{platform}/{language} in the latest archive."
+                )
+            if number_only:
+                return nightly_builds["version"]
+            return nightly_builds["downloads"][platform]
+
+        elif channel == "-devedition":
             # Devedition has special requirements as it's testing a release
 
-            this_devedition = BACKSTOP
-            fx_download_dir_url = (
-                "https://archive.mozilla.org/pub/devedition/releases/135.0b5/"
-            )
-
-            while True:
-                (major, _) = this_devedition.split(".")
-                major = int(major)
-                this_devedition = f"{major + 1}.0b5"
-                next_candidate = (
+            if requested_train is not None:
+                if requested_train.channel != "beta" or requested_build is not None:
+                    exit(
+                        "FX_VERSION for DevEdition must be a Beta version without "
+                        f"a candidate build, got {requested_label!r}."
+                    )
+                fx_download_dir_url = (
                     "https://archive.mozilla.org/pub/devedition/releases/"
-                    f"{this_devedition}/"
+                    f"{requested_train.version}/"
+                )
+            else:
+                this_devedition = BACKSTOP
+                fx_download_dir_url = (
+                    "https://archive.mozilla.org/pub/devedition/releases/135.0b5/"
                 )
 
-                rs = requests.get(next_candidate)
-                if rs.status_code > 399:
-                    break
+                while True:
+                    (major, _) = this_devedition.split(".")
+                    major = int(major)
+                    this_devedition = f"{major + 1}.0b5"
+                    next_candidate = (
+                        "https://archive.mozilla.org/pub/devedition/releases/"
+                        f"{this_devedition}/"
+                    )
 
-                fx_download_dir_url = next_candidate
+                    rs = requests.get(next_candidate)
+                    if rs.status_code > 399:
+                        break
+
+                    fx_download_dir_url = next_candidate
 
             devedition_version = fx_download_dir_url.split("/")[-2]
             fx_download_dir_url = (
@@ -175,79 +266,95 @@ def main(args):
         else:
             # Anything but devedition
 
-            candidate_exists = True
-            this_beta = BACKSTOP
-            logging.warning(f"channel: {channel}")
-            while candidate_exists:
-                (major, minor_beta) = this_beta.split(".")
-                (minor, beta) = minor_beta.split("b")
-                major = int(major)
-                minor = int(minor)
-                beta = int(beta)
-
-                next_major = f"{major + 1}.0b1"
+            if requested_train is not None:
+                expected_channel = "release" if channel == "-rc" else "beta"
+                if requested_train.channel != expected_channel:
+                    exit(
+                        f"FX_VERSION for {channel or 'release'} must resolve to "
+                        f"{expected_channel}, got {requested_label!r}."
+                    )
+                latest_beta_ver = requested_train.version
+                build = requested_build or 1
                 fx_download_dir_url = (
                     "https://archive.mozilla.org/pub/firefox/candidates/"
-                    f"{next_major}-candidates/"
+                    f"{latest_beta_ver}-candidates/build{build}/"
+                    f"{get_fx_platform()}/{language}/"
                 )
-                if channel == "-rc":
-                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
-                rs = requests.get(fx_download_dir_url)
-                if rs.status_code < 300:
-                    latest_beta_ver = next_major
-                    this_beta = next_major
-                    continue
+            else:
+                candidate_exists = True
+                this_beta = BACKSTOP
+                logging.warning(f"channel: {channel}")
+                while candidate_exists:
+                    (major, minor_beta) = this_beta.split(".")
+                    (minor, beta) = minor_beta.split("b")
+                    major = int(major)
+                    minor = int(minor)
+                    beta = int(beta)
 
-                next_minor = f"{major}.{minor + 1}b1"
-                fx_download_dir_url = (
-                    "https://archive.mozilla.org/pub/firefox/candidates/"
-                    f"{next_minor}-candidates/"
-                )
-                if channel == "-rc":
-                    fx_download_dir_url = fx_download_dir_url.replace("b1", "")
-                rs = requests.get(fx_download_dir_url)
-                if rs.status_code < 300:
-                    latest_beta_ver = next_minor
-                    this_beta = next_minor
-                    continue
-
-                if channel != "-rc":
-                    next_beta = f"{major}.{minor}b{beta + 1}"
+                    next_major = f"{major + 1}.0b1"
                     fx_download_dir_url = (
                         "https://archive.mozilla.org/pub/firefox/candidates/"
-                        f"{next_beta}-candidates/"
+                        f"{next_major}-candidates/"
                     )
+                    if channel == "-rc":
+                        fx_download_dir_url = fx_download_dir_url.replace("b1", "")
                     rs = requests.get(fx_download_dir_url)
                     if rs.status_code < 300:
-                        latest_beta_ver = next_beta
-                        this_beta = next_beta
+                        latest_beta_ver = next_major
+                        this_beta = next_major
                         continue
 
-                candidate_exists = False
-
-            # Look for the latest build
-            if channel == "-rc":
-                latest_beta_ver = latest_beta_ver.replace("b1", "")
-            fx_download_dir_url = (
-                "https://archive.mozilla.org/pub/firefox/candidates/"
-                f"{latest_beta_ver}-candidates/"
-            )
-            response = requests.get(fx_download_dir_url)
-            build = 1
-            if response.status_code < 300:
-                soup = BeautifulSoup(response.text, "html.parser")
-                executable_name = ""
-                # Extract the text of each line
-                for line in soup.find_all("a"):
-                    line_text = line.getText().split(".")
-                    if not line_text[0]:
+                    next_minor = f"{major}.{minor + 1}b1"
+                    fx_download_dir_url = (
+                        "https://archive.mozilla.org/pub/firefox/candidates/"
+                        f"{next_minor}-candidates/"
+                    )
+                    if channel == "-rc":
+                        fx_download_dir_url = fx_download_dir_url.replace("b1", "")
+                    rs = requests.get(fx_download_dir_url)
+                    if rs.status_code < 300:
+                        latest_beta_ver = next_minor
+                        this_beta = next_minor
                         continue
-                    # Get the executable name
-                    build = max(int(line_text[0][-2]), build)
+
+                    if channel != "-rc":
+                        next_beta = f"{major}.{minor}b{beta + 1}"
+                        fx_download_dir_url = (
+                            "https://archive.mozilla.org/pub/firefox/candidates/"
+                            f"{next_beta}-candidates/"
+                        )
+                        rs = requests.get(fx_download_dir_url)
+                        if rs.status_code < 300:
+                            latest_beta_ver = next_beta
+                            this_beta = next_beta
+                            continue
+
+                    candidate_exists = False
+
+                # Look for the latest build
+                if channel == "-rc":
+                    latest_beta_ver = latest_beta_ver.replace("b1", "")
                 fx_download_dir_url = (
                     "https://archive.mozilla.org/pub/firefox/candidates/"
-                    f"{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+                    f"{latest_beta_ver}-candidates/"
                 )
+                response = requests.get(fx_download_dir_url)
+                build = 1
+                if response.status_code < 300:
+                    soup = BeautifulSoup(response.text, "html.parser")
+                    executable_name = ""
+                    # Extract the text of each line
+                    for line in soup.find_all("a"):
+                        line_text = line.getText().split(".")
+                        if not line_text[0]:
+                            continue
+                        # Get the executable name
+                        build = max(int(line_text[0][-2]), build)
+                    fx_download_dir_url = (
+                        "https://archive.mozilla.org/pub/firefox/candidates/"
+                        f"{latest_beta_ver}-candidates/build{build}/"
+                        f"{get_fx_platform()}/{language}/"
+                    )
 
         # Get the corresponding executable
         response = requests.get(fx_download_dir_url)

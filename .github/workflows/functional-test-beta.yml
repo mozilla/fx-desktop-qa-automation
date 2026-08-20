@@ -14,13 +14,20 @@ on:
 env:
   DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
+  Resolve-Firefox:
+    uses: ./.github/workflows/resolve-firefox-branch.yml
+    with:
+      channel: beta
+
   # This job discovers the available splits, converts them into JSON,
   # then exports that JSON as a job output:
   # for example: ["functional1","functional2","functional3","functional4"]
   Get-Functional-Splits:
+    needs: Resolve-Firefox
     runs-on: ubuntu-latest
     outputs:
       functional_splits: ${{ steps.splits.outputs.functional_splits }}
@@ -29,6 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
           persist-credentials: false
 
       - name: Get functional splits
@@ -44,7 +52,9 @@ jobs:
           echo "functional_splits=$splits" >> "$GITHUB_OUTPUT"
 
   Build-Reportable-Matrix:
-    needs: Get-Functional-Splits
+    needs:
+      - Resolve-Firefox
+      - Get-Functional-Splits
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
@@ -53,6 +63,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
           persist-credentials: false
 
       - name: Setup dependencies
@@ -66,6 +77,7 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          FX_VERSION: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
           DRY_RUN: ${{ env.DRY_RUN }}
         run: |
           matrix="[]"
@@ -109,7 +121,9 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   Run-Functional:
-    needs: Build-Reportable-Matrix
+    needs:
+      - Resolve-Firefox
+      - Build-Reportable-Matrix
     if: needs.Build-Reportable-Matrix.outputs.matrix != '[]' && (github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true')
     strategy:
       fail-fast: false
@@ -118,6 +132,11 @@ jobs:
 
     uses: ./.github/workflows/main.yml
     with:
+      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
+      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
+      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
+      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
+      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       job_to_run: ${{ matrix.job_to_run }}
       test_set: ${{ matrix.split }}
     secrets: inherit

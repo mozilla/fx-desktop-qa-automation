@@ -1,0 +1,44 @@
+name: Firefox Nightly tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Resolve and display the Nightly plan without running tests
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  Resolve-Firefox:
+    uses: ./.github/workflows/resolve-firefox-branch.yml
+    with:
+      channel: nightly
+
+  Run-Nightly-Tests:
+    needs:
+      - Resolve-Firefox
+    strategy:
+      fail-fast: false
+      matrix:
+        job_to_run:
+          - Test-Windows
+          - Test-MacOS
+        test_set:
+          - smoke
+          - nightly
+    uses: ./.github/workflows/main.yml
+    with:
+      channel: nightly
+      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
+      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
+      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
+      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
+      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
+      job_to_run: ${{ matrix.job_to_run }}
+      test_set: ${{ matrix.test_set }}
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+    secrets: inherit
