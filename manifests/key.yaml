@@ -245,11 +245,36 @@ address_bar_and_search:
     - functional1
     - nightly
 ai_controls:
+  test_c3276002_ai_features_keyboard_accessible:
+    test_ai_controls_elements_keyboard_accessible:
+      result: pass
+      splits:
+      - functional1
+    test_ai_controls_toggle_activates_via_keyboard:
+      result: pass
+      splits:
+      - functional1
+  test_c3298824_block_all_persists:
+    result: pass
+    splits:
+    - functional1
   test_c3308998_unblock_restores_state:
     result: pass
     splits:
     - functional1
     - nightly
+  test_c3310314_features_remain_after_unblock:
+    result: pass
+    splits:
+    - functional1
+  test_c3340562_cancel_blocking:
+    result: pass
+    splits:
+    - functional1
+  test_c3341331_extensions_api_disabled:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
