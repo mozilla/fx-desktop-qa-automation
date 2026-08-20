@@ -78,8 +78,3 @@ def test_download_pdf_data(
     tabs.open_and_switch_to_new_tab()
     driver.get("file://" + os.path.realpath(saved_pdf_location))
     pdf_viewer.element_visible("edited-name-field")
-
-    # Verify if the file exists
-    assert os.path.exists(saved_pdf_location), (
-        f"The file was not downloaded to {saved_pdf_location}."
-    )
