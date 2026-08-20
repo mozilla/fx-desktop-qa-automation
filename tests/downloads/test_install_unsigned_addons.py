@@ -21,7 +21,10 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("xpinstall.signatures.required", False)]
+    return [
+        ("xpinstall.signatures.required", False),
+        ("browser.download.alwaysOpenPanel", True),
+    ]
 
 
 def test_install_unsigned_addons(driver: Firefox):

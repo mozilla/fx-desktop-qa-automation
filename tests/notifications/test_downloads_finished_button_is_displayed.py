@@ -9,7 +9,10 @@ TEST_URL = "https://download.samplelib.com/mp3/sample-3s.mp3"
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("media.play-stand-alone", False)]
+    return [
+        ("media.play-stand-alone", False),
+        ("browser.download.alwaysOpenPanel", True),
+    ]
 
 
 @pytest.fixture()
