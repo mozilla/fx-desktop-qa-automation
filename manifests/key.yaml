@@ -464,28 +464,23 @@ downloads:
     - functional1
     - nightly
   test_download_apk_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_epub_shows_extension_in_downloads_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_exe_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_malicious_warning:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064074
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_mp3_and_check_extension:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_download_pdf:
@@ -818,13 +813,11 @@ notifications:
     - functional2
     - nightly
   test_downloads_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_downloads_finished_button_is_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064085
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_geolocation_allow_browserleaks:
@@ -918,7 +911,11 @@ password_manager:
     - functional2
     - nightly
   test_about_logins_username_copy_button:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064795
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -955,7 +952,11 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1090,7 +1091,11 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1530,7 +1535,11 @@ security_and_privacy:
     splits:
     - functional3
   test_fingerprinters_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064803
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional3
   test_fingerprinters_subpanel_display_when_not_blocked:
@@ -1619,7 +1628,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064805
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional3
     - nightly

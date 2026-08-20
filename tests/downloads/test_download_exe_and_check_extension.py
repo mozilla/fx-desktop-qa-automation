@@ -13,6 +13,13 @@ def test_case():
     return "1836829"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 @pytest.mark.headed
 def test_download_exe_and_check_extension(driver: Firefox):
     """
