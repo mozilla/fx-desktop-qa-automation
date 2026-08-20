@@ -21,7 +21,7 @@ def test_clear_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     """
     C143627: Cookies and site data can be cleared via the "Clear Data" panel
     """
-    # Visit a site to get a cookie added to saved data
+    # Visit a site to get a cookie added to the saved data
     driver.get(WEBSITE_ADDRESS)
 
     # Open dialog and read current value (must be > 0)
