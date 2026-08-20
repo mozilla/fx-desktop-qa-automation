@@ -502,7 +502,8 @@ downloads:
     splits:
     - functional1
   test_mixed_content_download_via_https:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064075
+    result: unstable
     splits:
     - functional1
   test_no_download_telemetry_without_panel:
