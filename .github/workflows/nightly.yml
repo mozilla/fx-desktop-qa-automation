@@ -9,6 +9,12 @@ run-name: Nightly smoke tests triggered by ${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
+      test_sets:
+        description: "Test set to run"
+        required: true
+        default: "smoke"
+        type: string
+
       win_installer_link:
         description: 'The link to the Windows installer (win64) for the Fx under test'
         required: false
@@ -41,7 +47,7 @@ jobs:
   Smoke:
     uses: ./.github/workflows/core.yml
     with:
-      test_sets: '["smoke"]'
+      test_sets: ${{ inputs.test_sets }}
       win_installer_link: ${{ inputs.win_installer_link }}
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}
