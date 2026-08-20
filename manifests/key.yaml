@@ -498,8 +498,7 @@ downloads:
     - functional1
     - nightly
   test_install_unsigned_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064083
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
@@ -1478,13 +1477,11 @@ security_and_privacy:
     splits:
     - functional3
   test_download_list_cleared_by_end_private_session:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064132
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_downloads_from_private_not_leaked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064130
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:

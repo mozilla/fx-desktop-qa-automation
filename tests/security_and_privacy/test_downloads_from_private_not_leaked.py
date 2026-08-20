@@ -18,7 +18,11 @@ NUM_LINKS = 3
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("browser.download.enableDeletePrivate", False), ("pdfjs.disabled", True)]
+    return [
+        ("browser.download.enableDeletePrivate", False),
+        ("pdfjs.disabled", True),
+        ("browser.download.alwaysOpenPanel", True),
+    ]
 
 
 @pytest.fixture()
