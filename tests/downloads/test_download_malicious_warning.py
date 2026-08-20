@@ -19,6 +19,7 @@ def add_to_prefs_list():
         ("browser.safebrowsing.malware.enabled", True),
         ("browser.safebrowsing.downloads.enabled", True),
         ("browser.aboutConfig.showWarning", False),
+        ("browser.download.alwaysOpenPanel", True),
     ]
 
 

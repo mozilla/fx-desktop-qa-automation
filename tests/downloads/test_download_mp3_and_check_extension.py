@@ -22,7 +22,10 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("media.play-stand-alone", False)]
+    return [
+        ("media.play-stand-alone", False),
+        ("browser.download.alwaysOpenPanel", True),
+    ]
 
 
 @pytest.fixture()

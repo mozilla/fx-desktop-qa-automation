@@ -196,7 +196,7 @@
     }
   },
   "close-dialog": {
-    "selectorData": "button[data-l10n-id='close-button']",
+    "selectorData": ":is(button, moz-button)[data-l10n-id='close-button']",
     "strategy": "css",
     "groups": [],
     "comment": {
@@ -330,7 +330,7 @@
     }
   },
   "panel-popup-button": {
-    "selectorData": "button[data-l10n-id='{name}']",
+    "selectorData": ":is(button, moz-button)[data-l10n-id='{name}']",
     "strategy": "css",
     "groups": [],
     "comment": {
