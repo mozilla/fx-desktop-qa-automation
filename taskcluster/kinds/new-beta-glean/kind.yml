@@ -3,19 +3,20 @@ transforms:
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Test New Release Candidate Version"
-  description: "Checks for new RC builds, tests them, reports to TestRail and Slack"
+  label: "Test New Beta Version - Glean"
+  description: "Checks for new betas, runs Glean telemetry tests, reports to TestRail and Slack"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
-    max-run-time: 3600
+    # Glean is 87 parametrized cases, each launching its own browser
+    max-run-time: 5400
     artifacts:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
     env:
       TESTRAIL_REPORT: "true"
-      STARFOX_SPLIT: "smoke"
+      STARFOX_SPLIT: "glean"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
@@ -26,7 +27,7 @@ task-defaults:
 tasks:
   linux:
     attributes:
-      rc-qa: true
+      beta-qa: true
     run-on-tasks-for: []
     run:
       using: run-task
@@ -36,26 +37,19 @@ tasks:
         mkdir -p artifacts;
         pip3 install 'uv==0.11.18' --break-system-packages;
         uv run python scripts/switch_config.py ci;
-        pip3 install 'uv==2023.11.15' --break-system-packages;
-        mv ./config/ci_pyproject.toml ./pyproject.toml;
         curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs | sh -s -- -y
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         uv sync;
         . ./scripts/setup-xauthority.sh
-        export FX_CHANNEL="rc";
+        export FX_CHANNEL="beta";
         ./scripts/collect_executables.sh;
         export FX_EXECUTABLE=./firefox/firefox;
         uv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
         $FX_EXECUTABLE --version;
         . ./scripts/keyring-unlock.sh
-        uv run python -m scripts.choose_test_split;
-        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        export FAILURE=${?};
-        export REPORTABLE=1;
-        uv run python scripts/switch_config.py ci_headed;
-        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        exit $((${?} | ${FAILURE}))
+        uv run pytest --fx-executable $FX_EXECUTABLE tests/glean;
+        exit ${?}
     notify:
       recipients:
         - type: slack-channel
