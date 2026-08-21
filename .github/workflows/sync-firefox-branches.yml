@@ -38,13 +38,14 @@ concurrency:
 
 jobs:
   Promote-Firefox-Trains:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.ref_name == github.event.repository.default_branch }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout branch-management code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
       - name: Setup dependencies
@@ -96,7 +97,8 @@ jobs:
             "$beta_stub" "${planner_args[@]}")
           action=$(jq -r '.action' <<< "$plan")
           archive_branch=$(jq -r '.archive_branch // ""' <<< "$plan")
-          delete_branches=$(jq -r '.delete_branches | join(" ")' <<< "$plan")
+          delete_branches=$(jq -c '.delete_branches' <<< "$plan")
+          delete_branches_display=$(jq -r '.delete_branches | join(", ")' <<< "$plan")
           reason=$(jq -r '.reason' <<< "$plan")
 
           echo "action=$action" >> "$GITHUB_OUTPUT"
@@ -109,7 +111,7 @@ jobs:
             echo "- Beta: $beta_version"
             echo "- Action: $action"
             echo "- Archive: ${archive_branch:-none}"
-            echo "- Delete: ${delete_branches:-none}"
+            echo "- Delete: ${delete_branches_display:-none}"
             echo "- Reason: $reason"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -177,15 +179,16 @@ jobs:
           fi
 
       - name: Delete expired Firefox branches
-        if: steps.plan.outputs.delete_branches != ''
+        if: steps.plan.outputs.delete_branches != '[]'
         env:
-          DELETE_BRANCHES: ${{ steps.plan.outputs.delete_branches }}
+          DELETE_BRANCHES_JSON: ${{ steps.plan.outputs.delete_branches }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
         shell: bash
         run: |
           set -euo pipefail
+          mapfile -t delete_branches < <(jq -r '.[]' <<< "$DELETE_BRANCHES_JSON")
           delete_refspecs=()
-          for branch in $DELETE_BRANCHES; do
+          for branch in "${delete_branches[@]}"; do
             if [[ ! "$branch" =~ ^firefox[0-9]{2,3}$ ]]; then
               echo "Refusing to delete unexpected branch: $branch" >&2
               exit 1
@@ -194,7 +197,7 @@ jobs:
           done
 
           if [[ "$DRY_RUN" == "true" ]]; then
-            echo "Dry run: would delete $DELETE_BRANCHES"
+            echo "Dry run: would delete ${delete_branches[*]}"
             exit 0
           fi
 

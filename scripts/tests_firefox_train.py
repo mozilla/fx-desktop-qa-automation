@@ -415,6 +415,23 @@ class NightlyDiscoveryTests(unittest.TestCase):
 
 
 class PinnedCandidateTests(unittest.TestCase):
+    def test_latest_candidate_build_handles_multiple_digits(self):
+        archive_html = """
+        <a href="../">../</a>
+        <a href="build1/">build1/</a>
+        <a href="build2/">build2/</a>
+        <a href="build10/">build10/</a>
+        <a href="not-a-build/">not-a-build/</a>
+        """
+
+        self.assertEqual(collect_executables.latest_candidate_build(archive_html), 10)
+
+    def test_latest_candidate_build_defaults_to_one(self):
+        self.assertEqual(
+            collect_executables.latest_candidate_build('<a href="../">../</a>'),
+            1,
+        )
+
     @patch.dict(
         "os.environ",
         {

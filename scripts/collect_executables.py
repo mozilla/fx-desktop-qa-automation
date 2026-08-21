@@ -7,6 +7,7 @@ Set env var FX_PLATFORM to get a platform other than current system."""
 
 import json
 import logging
+import re
 from os import environ
 from platform import uname
 from sys import argv, exit
@@ -29,6 +30,17 @@ BACKSTOP = "146.0b9"
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
 NIGHTLY_WORKFLOW_PLATFORMS = ("win64", "mac", "linux-x86_64")
+
+
+def latest_candidate_build(html):
+    """Return the highest buildN directory from a candidate archive listing."""
+    build = 1
+    soup = BeautifulSoup(html, "html.parser")
+    for link in soup.find_all("a"):
+        match = re.fullmatch(r"build(?P<number>\d+)/?", link.get_text(strip=True))
+        if match:
+            build = max(build, int(match.group("number")))
+    return build
 
 
 def discover_nightly_builds(
@@ -240,7 +252,8 @@ def main(args):
             else:
                 this_devedition = BACKSTOP
                 fx_download_dir_url = (
-                    "https://archive.mozilla.org/pub/devedition/releases/135.0b5/"
+                    "https://archive.mozilla.org/pub/devedition/releases/"
+                    f"{this_devedition}/"
                 )
 
                 while True:
@@ -339,17 +352,12 @@ def main(args):
                     f"{latest_beta_ver}-candidates/"
                 )
                 response = requests.get(fx_download_dir_url)
-                build = 1
+                build = (
+                    latest_candidate_build(response.text)
+                    if response.status_code < 300
+                    else 1
+                )
                 if response.status_code < 300:
-                    soup = BeautifulSoup(response.text, "html.parser")
-                    executable_name = ""
-                    # Extract the text of each line
-                    for line in soup.find_all("a"):
-                        line_text = line.getText().split(".")
-                        if not line_text[0]:
-                            continue
-                        # Get the executable name
-                        build = max(int(line_text[0][-2]), build)
                     fx_download_dir_url = (
                         "https://archive.mozilla.org/pub/firefox/candidates/"
                         f"{latest_beta_ver}-candidates/build{build}/"

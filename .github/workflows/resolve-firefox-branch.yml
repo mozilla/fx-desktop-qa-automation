@@ -93,7 +93,7 @@ jobs:
           done
           plan=$(uv run python -m scripts.firefox_branches \
             "$artifact_stub" "${planner_args[@]}" \
-            --execution-channel "${{ inputs.channel }}")
+            --execution-channel "$FX_CHANNEL")
 
           action=$(jq -r '.action' <<< "$plan")
           automation_branch=$(jq -r '.branch' <<< "$plan")
