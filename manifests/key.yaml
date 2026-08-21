@@ -1000,7 +1000,11 @@ password_manager:
     - functional2
     - nightly
   test_multiple_saved_logins:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2065464
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
