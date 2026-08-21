@@ -89,6 +89,48 @@ jobs:
       test_set: ${{ github.event.inputs.split }}
     secrets: inherit
 
+  Run-Glean-Win:
+    needs: Select-Test-Type
+    if: |-
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'glean') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main.yml
+    with:
+      job_to_run: Test-Windows
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: glean
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+
+  Run-Glean-Mac:
+    needs: Select-Test-Type
+    if: |-
+      ${{
+        contains(fromJSON(needs.Select-Test-Type.outputs.test_types), 'glean') &&
+        !( github.event.inputs.preview_only == 'true' )
+      }}
+    uses: ./.github/workflows/main.yml
+    with:
+      job_to_run: Test-MacOS
+      is_pull_request: true
+      dry_run: ${{ github.event.inputs.dry_run == 'true' }}
+      test_set: glean
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+
   Run-L10n-Win:
     needs: Select-Test-Type
     if: |-

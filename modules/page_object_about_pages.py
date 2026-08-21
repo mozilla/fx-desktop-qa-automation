@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from time import sleep, time
@@ -186,6 +187,12 @@ class AboutLogins(BasePage):
             logging.info("Element not found or stale, pressing 'Save Changes'")
             self.get_element("save-changes-button").click()
             logging.info("Pressed.")
+            # The item keeps data-editing until the save lands, and the copy
+            # and edit buttons are display:none while it is set.
+            self.wait.until(
+                lambda _: self.get_element("login-item").get_attribute("data-editing")
+                is None
+            )
         return self
 
     def check_logins_present(
@@ -558,6 +565,11 @@ class AboutProtections(BasePage):
         )
         self.element_has_text("lockwise-scanned-text", expected)
         return self
+
+    def get_weekly_tracker_count(self) -> int:
+        """Returns the number of trackers blocked over the past week from about:protections"""
+        raw = self.get_attribute_value("graph-week-summary", "data-l10n-args")
+        return json.loads(raw)["count"]
 
 
 class AboutTelemetry(BasePage):
