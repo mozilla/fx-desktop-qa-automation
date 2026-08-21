@@ -7,6 +7,7 @@ from tests.glean.flows import (
     ENTRY_PREFS,
     RELATED_SEARCH_TERM,
     SEARCH_TERM,
+    block_if_bot_challenge,
     run_action,
     run_entry,
 )
@@ -14,14 +15,6 @@ from tests.glean.utils import load_cases
 
 data = load_cases(__file__)
 METRIC = data["metric"]
-
-# Cases whose on-page SERP interaction never reaches a real SERP because the engine serves a bot
-# challenge to CI IPs instead. Keyed by platform, since the challenged set differs per platform.
-BOT_CHALLENGE_SKIPS = {
-    "Linux": ("3255447", "3255452", "3255477", "3255482"),
-    "Darwin": ("3255477", "3255482"),
-    "Windows": ("3255477", "3255482"),
-}
 
 
 @pytest.fixture(
@@ -49,11 +42,8 @@ def add_to_prefs_list(case):
     return prefs
 
 
-def test_serp_impression(driver: Firefox, case: dict, sys_platform: str):
+def test_serp_impression(driver: Firefox, case: dict):
     """Verify serp.impression Glean event payload after a SERP is opened."""
-    if case["id"] in BOT_CHALLENGE_SKIPS.get(sys_platform, ()):
-        pytest.skip("Engine serves a bot challenge instead of a SERP on CI")
-
     prefs = AboutPrefs(driver, category="search")
     glean = Glean(driver)
     params = case.get("params", {})
@@ -68,7 +58,11 @@ def test_serp_impression(driver: Firefox, case: dict, sys_platform: str):
     search_term = (
         RELATED_SEARCH_TERM if case.get("action") == "open_in_new_tab" else SEARCH_TERM
     )
-    run_entry(driver, case["entry"], search_term, params)
-    run_action(driver, case.get("action"), params)
+    try:
+        run_entry(driver, case["entry"], search_term, params)
+        run_action(driver, case.get("action"), params)
 
-    glean.poll_glean_metric(METRIC, case["expected"])
+        glean.poll_glean_metric(METRIC, case["expected"])
+    except Exception:
+        block_if_bot_challenge(driver)
+        raise
