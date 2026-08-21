@@ -13,7 +13,7 @@ def test_case():
 
 
 PDF_FILE_NAME = "i-9.pdf"
-DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"
+DOWNLOADED_PDF_REGEX = r"i-9\.pdf"
 
 
 @pytest.fixture()
