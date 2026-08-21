@@ -40,6 +40,12 @@ on:
         required: false
       GCP_CREDENTIAL:
         required: false
+      GCP_BQ_CREDENTIAL:
+        required: false
+      BQ_PROJECT:
+        required: false
+      BQ_DATASET:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -268,6 +274,16 @@ jobs:
           }
           exit $env:TEST_EXIT_CODE
 
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
+
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
@@ -426,6 +442,16 @@ jobs:
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
+
       - name: Upload artifacts
         if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
@@ -526,6 +552,16 @@ jobs:
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
 
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' }}

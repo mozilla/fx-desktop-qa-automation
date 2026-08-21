@@ -137,6 +137,16 @@ jobs:
           fi
           exit $SCRIPT_EXIT_CODE;
 
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
+
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
@@ -239,6 +249,16 @@ jobs:
             exit $EXIT_CODE;
           fi
           exit $SCRIPT_EXIT_CODE;
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -385,6 +405,16 @@ jobs:
           }
 
           exit $env:SCRIPT_EXIT_CODE
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: ${{ secrets.BQ_DATASET }}
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
