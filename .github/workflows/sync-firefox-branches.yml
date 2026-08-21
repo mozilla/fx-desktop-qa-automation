@@ -154,7 +154,12 @@ jobs:
           git switch --detach refs/remotes/origin/nightly
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git merge --no-edit refs/remotes/origin/main
+          git merge --no-edit refs/remotes/origin/main || {
+            echo "Merge conflict during Nightly-to-Beta promotion:" >&2
+            git diff --name-only --diff-filter=U >&2
+            git merge --abort
+            exit 1
+          }
           promoted_sha=$(git rev-parse HEAD)
 
           if [[ "$DRY_RUN" == "true" ]]; then
