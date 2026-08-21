@@ -121,7 +121,7 @@ jobs:
           {
             echo "## Firefox train resolution"
             echo
-            echo "- Channel: ${{ inputs.channel }}"
+            echo "- Channel: $FX_CHANNEL"
             echo "- Firefox: $firefox_version"
             echo "- Automation branch: $automation_branch"
             echo "- Automation commit: $automation_ref"
