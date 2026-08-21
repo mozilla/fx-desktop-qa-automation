@@ -1049,7 +1049,11 @@ password_manager:
     - functional2
     - nightly
   test_password_manager_on_google_US:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional2
   test_password_manager_on_reddit:
