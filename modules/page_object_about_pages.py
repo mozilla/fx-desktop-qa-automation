@@ -187,6 +187,12 @@ class AboutLogins(BasePage):
             logging.info("Element not found or stale, pressing 'Save Changes'")
             self.get_element("save-changes-button").click()
             logging.info("Pressed.")
+            # The item keeps data-editing until the save lands, and the copy
+            # and edit buttons are display:none while it is set.
+            self.wait.until(
+                lambda _: self.get_element("login-item").get_attribute("data-editing")
+                is None
+            )
         return self
 
     def check_logins_present(
