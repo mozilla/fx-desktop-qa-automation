@@ -1,0 +1,29 @@
+| STARfox suite | Tests | STRONG (duplicated) | % | PARTIAL | UNIQUE |
+|---|---:|---:|---:|---:|---:|
+| tests/security_and_privacy | 60 | **51** | 85% | 9 | 0 |
+| tests/password_manager | 46 | **36** | 78% | 7 | 3 |
+| tests/address_bar_and_search | 37 | **31** | 84% | 3 | 3 |
+| tests/bookmarks_and_history | 27 | **25** | 93% | 2 | 0 |
+| tests/tabs | 25 | **25** | 100% | 0 | 0 |
+| tests/form_autofill | 19 | **19** | 100% | 0 | 0 |
+| tests/downloads | 19 | **12** | 63% | 7 | 0 |
+| tests/notifications | 13 | **12** | 92% | 0 | 1 |
+| tests/sidebar | 24 | **12** | 50% | 1 | 11 |
+| tests/pdf_viewer | 20 | **10** | 50% | 2 | 8 |
+| tests/preferences | 8 | **7** | 88% | 1 | 0 |
+| tests/audio_video | 6 | **6** | 100% | 0 | 0 |
+| tests/menus | 7 | **6** | 86% | 1 | 0 |
+| tests/networking | 6 | **6** | 100% | 0 | 0 |
+| tests/scrolling_panning_zooming | 5 | **5** | 100% | 0 | 0 |
+| tests/session_restore | 5 | **5** | 100% | 0 | 0 |
+| tests/find_toolbar | 3 | **3** | 100% | 0 | 0 |
+| tests/geolocation | 2 | **2** | 100% | 0 | 0 |
+| tests/language_packs | 2 | **2** | 100% | 0 | 0 |
+| tests/printing_ui | 2 | **2** | 100% | 0 | 0 |
+| tests/reader_view | 3 | **2** | 67% | 1 | 0 |
+| tests/theme_and_toolbar | 2 | **2** | 100% | 0 | 0 |
+| tests/drag_and_drop | 5 | **0** | 0% | 0 | 5 |
+| tests/glean/serp_abandonment | 1 | **0** | 0% | 1 | 0 |
+| tests/glean/serp_impression | 1 | **0** | 0% | 1 | 0 |
+| tests/profile | 1 | **0** | 0% | 1 | 0 |
+| **Total** | **349** | **281** | **81%** | **37** | **31** |
