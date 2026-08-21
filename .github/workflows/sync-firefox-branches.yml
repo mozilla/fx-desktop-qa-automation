@@ -1,0 +1,213 @@
+name: Promote Firefox automation branches
+
+on:
+  schedule:
+    - cron: "5 * * * *"
+  repository_dispatch:
+    types:
+      - firefox-beta-promoted
+  workflow_dispatch:
+    inputs:
+      promoted_beta_version:
+        description: Beta version supplied by the promotion API (for example 156.0b1)
+        required: false
+        default: ""
+        type: string
+      released_major:
+        description: Outgoing Beta major to archive; defaults to promoted Beta minus one
+        required: false
+        default: ""
+        type: string
+      retention:
+        description: Number of firefoxNNN branches to retain
+        required: false
+        default: 2
+        type: number
+      dry_run:
+        description: Show the plan without changing remote branches
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-firefox-automation-branches
+  cancel-in-progress: false
+
+jobs:
+  Promote-Firefox-Trains:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.ref_name == github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch-management code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Setup dependencies
+        run: bash ./scripts/setup_python.sh
+
+      - name: Discover Beta and plan transition
+        id: plan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_BETA_VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.promoted_beta_version || inputs.promoted_beta_version }}
+          RELEASED_MAJOR: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.released_major || inputs.released_major }}
+          RETENTION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.retention || inputs.retention || 2 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "repository_dispatch" && -z "$REQUESTED_BETA_VERSION" ]]; then
+            echo "The firefox-beta-promoted event requires promoted_beta_version." >&2
+            exit 1
+          fi
+
+          if [[ -n "$REQUESTED_BETA_VERSION" ]]; then
+            beta_version="$REQUESTED_BETA_VERSION"
+            promotion_requested=true
+          else
+            beta_version=$(FX_CHANNEL=beta uv run python -m scripts.collect_executables -n)
+            promotion_requested=false
+          fi
+
+          version_without_build=${beta_version%%-build*}
+          beta_stub="https://archive.invalid/firefox-${version_without_build}.tar.xz"
+
+          mapfile -t existing_refs < <(
+            git ls-remote --heads origin |
+              awk '{sub("refs/heads/", "", $2); if ($2 == "main" || $2 == "nightly" || $2 ~ /^firefox[0-9]+$/) print $2}'
+          )
+          planner_args=(--plan-promotion --retention "$RETENTION")
+          for ref in "${existing_refs[@]}"; do
+            planner_args+=(--existing-ref "$ref")
+          done
+          if [[ "$promotion_requested" == "true" ]]; then
+            planner_args+=(--promotion-requested)
+          fi
+          if [[ -n "$RELEASED_MAJOR" ]]; then
+            planner_args+=(--released-major "$RELEASED_MAJOR")
+          fi
+
+          plan=$(uv run python -m scripts.firefox_branches \
+            "$beta_stub" "${planner_args[@]}")
+          action=$(jq -r '.action' <<< "$plan")
+          archive_branch=$(jq -r '.archive_branch // ""' <<< "$plan")
+          delete_branches=$(jq -c '.delete_branches' <<< "$plan")
+          delete_branches_display=$(jq -r '.delete_branches | join(", ")' <<< "$plan")
+          reason=$(jq -r '.reason' <<< "$plan")
+
+          echo "action=$action" >> "$GITHUB_OUTPUT"
+          echo "archive_branch=$archive_branch" >> "$GITHUB_OUTPUT"
+          echo "delete_branches=$delete_branches" >> "$GITHUB_OUTPUT"
+          echo "beta_version=$beta_version" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Firefox automation train transition"
+            echo
+            echo "- Beta: $beta_version"
+            echo "- Action: $action"
+            echo "- Archive: ${archive_branch:-none}"
+            echo "- Delete: ${delete_branches_display:-none}"
+            echo "- Reason: $reason"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate plan
+        if: steps.plan.outputs.action == 'blocked'
+        shell: bash
+        run: |
+          echo "Firefox branch promotion is blocked. See the workflow summary." >&2
+          exit 1
+
+      - name: Bootstrap Nightly branch
+        if: steps.plan.outputs.action == 'bootstrap'
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "main:refs/remotes/origin/main"
+          main_sha=$(git rev-parse refs/remotes/origin/main)
+
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "Dry run: would create nightly at $main_sha"
+            exit 0
+          fi
+
+          git push origin "$main_sha:refs/heads/nightly"
+
+      - name: Promote Nightly to Beta
+        if: steps.plan.outputs.action == 'promote'
+        env:
+          ARCHIVE_BRANCH: ${{ steps.plan.outputs.archive_branch }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin \
+            "main:refs/remotes/origin/main" \
+            "nightly:refs/remotes/origin/nightly"
+          outgoing_main_sha=$(git rev-parse refs/remotes/origin/main)
+          git switch --detach refs/remotes/origin/nightly
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-edit refs/remotes/origin/main || {
+            echo "Merge conflict during Nightly-to-Beta promotion:" >&2
+            git diff --name-only --diff-filter=U >&2
+            git merge --abort
+            exit 1
+          }
+          promoted_sha=$(git rev-parse HEAD)
+
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "Dry run: would create $ARCHIVE_BRANCH at $outgoing_main_sha"
+            echo "Dry run: would promote $promoted_sha to nightly and main"
+            exit 0
+          fi
+
+          git push --atomic origin \
+            "$outgoing_main_sha:refs/heads/$ARCHIVE_BRANCH" \
+            "$promoted_sha:refs/heads/nightly" \
+            "$promoted_sha:refs/heads/main"
+
+          remote_main=$(git ls-remote --heads origin main | awk '{print $1}')
+          remote_nightly=$(git ls-remote --heads origin nightly | awk '{print $1}')
+          remote_archive=$(git ls-remote --heads origin "$ARCHIVE_BRANCH" | awk '{print $1}')
+          if [[ "$remote_main" != "$promoted_sha" || \
+                "$remote_nightly" != "$promoted_sha" || \
+                "$remote_archive" != "$outgoing_main_sha" ]]; then
+            echo "Remote branch validation failed after promotion." >&2
+            exit 1
+          fi
+
+      - name: Delete expired Firefox branches
+        if: steps.plan.outputs.delete_branches != '[]'
+        env:
+          DELETE_BRANCHES_JSON: ${{ steps.plan.outputs.delete_branches }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t delete_branches < <(jq -r '.[]' <<< "$DELETE_BRANCHES_JSON")
+          delete_refspecs=()
+          for branch in "${delete_branches[@]}"; do
+            if [[ ! "$branch" =~ ^firefox[0-9]{2,3}$ ]]; then
+              echo "Refusing to delete unexpected branch: $branch" >&2
+              exit 1
+            fi
+            delete_refspecs+=(":refs/heads/$branch")
+          done
+
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "Dry run: would delete ${delete_branches[*]}"
+            exit 0
+          fi
+
+          git push --atomic origin "${delete_refspecs[@]}"
+
+      - name: Report no-op
+        if: steps.plan.outputs.action == 'noop'
+        run: echo "No Firefox branch promotion is required."

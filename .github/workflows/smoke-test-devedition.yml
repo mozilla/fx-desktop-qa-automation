@@ -16,7 +16,13 @@ env:
   DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
 jobs:
+  Resolve-Firefox:
+    uses: ./.github/workflows/resolve-firefox-branch.yml
+    with:
+      channel: devedition
+
   Check-DevEdition-Version:
+    needs: Resolve-Firefox
     runs-on: ubuntu-latest
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
@@ -26,6 +32,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
           persist-credentials: false
 
       - name: Setup dependencies
@@ -40,12 +47,15 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          FX_VERSION: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
           DRY_RUN: ${{ env.DRY_RUN }}
         run:
           bash ./scripts/check_reportable.sh
 
   Run-Win-Smoke:
-    needs: Check-DevEdition-Version
+    needs:
+      - Resolve-Firefox
+      - Check-DevEdition-Version
     if: |-
       ${{
         needs.Check-DevEdition-Version.outputs.win_reportable == 'True' &&
@@ -53,13 +63,20 @@ jobs:
        }}
     uses: ./.github/workflows/main.yml
     with:
+      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
+      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
+      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
+      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
+      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       channel: "devedition"
       job_to_run: Test-Windows
       test_set: smoke
     secrets: inherit
 
   Run-Mac-Smoke:
-    needs: Check-DevEdition-Version
+    needs:
+      - Resolve-Firefox
+      - Check-DevEdition-Version
     if: |-
       ${{
         needs.Check-DevEdition-Version.outputs.mac_reportable == 'True' &&
@@ -67,6 +84,11 @@ jobs:
        }}
     uses: ./.github/workflows/main.yml
     with:
+      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
+      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
+      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
+      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
+      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       channel: "devedition"
       job_to_run: Test-MacOS
       test_set: smoke

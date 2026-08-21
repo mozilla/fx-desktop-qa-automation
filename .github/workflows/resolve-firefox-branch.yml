@@ -1,0 +1,128 @@
+name: Resolve Firefox automation branch
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        description: Firefox channel understood by collect_executables
+        required: true
+        type: string
+    outputs:
+      automation_ref:
+        description: Immutable commit from the automation branch compatible with the build
+        value: ${{ jobs.Resolve.outputs.automation_ref }}
+      automation_branch:
+        description: Automation branch compatible with the build
+        value: ${{ jobs.Resolve.outputs.automation_branch }}
+      firefox_version:
+        description: Exact Firefox candidate/version selected for this run
+        value: ${{ jobs.Resolve.outputs.firefox_version }}
+      firefox_major:
+        description: Firefox major version selected for this run
+        value: ${{ jobs.Resolve.outputs.firefox_major }}
+      windows_download_url:
+        description: Exact Windows artifact selected for this run
+        value: ${{ jobs.Resolve.outputs.windows_download_url }}
+      macos_download_url:
+        description: Exact macOS artifact selected for this run
+        value: ${{ jobs.Resolve.outputs.macos_download_url }}
+      linux_download_url:
+        description: Exact Linux artifact selected for this run
+        value: ${{ jobs.Resolve.outputs.linux_download_url }}
+
+permissions:
+  contents: read
+
+jobs:
+  Resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      automation_ref: ${{ steps.resolve.outputs.automation_ref }}
+      automation_branch: ${{ steps.resolve.outputs.automation_branch }}
+      firefox_version: ${{ steps.resolve.outputs.firefox_version }}
+      firefox_major: ${{ steps.resolve.outputs.firefox_major }}
+      windows_download_url: ${{ steps.resolve.outputs.windows_download_url }}
+      macos_download_url: ${{ steps.resolve.outputs.macos_download_url }}
+      linux_download_url: ${{ steps.resolve.outputs.linux_download_url }}
+
+    steps:
+      - name: Checkout resolver
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup dependencies
+        run: bash ./scripts/setup_python.sh
+
+      - name: Resolve build and compatible branch
+        id: resolve
+        env:
+          FX_CHANNEL: ${{ inputs.channel }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          linux_download_url=""
+
+          if [[ "$FX_CHANNEL" == "nightly" ]]; then
+            nightly_builds=$(uv run python -m scripts.collect_executables \
+              --nightly-build-set)
+            firefox_version=$(jq -r '.version' <<< "$nightly_builds")
+            windows_download_url=$(jq -r '.downloads.win64' <<< "$nightly_builds")
+            macos_download_url=$(jq -r '.downloads.mac' <<< "$nightly_builds")
+          else
+            firefox_version=$(uv run python -m scripts.collect_executables -n)
+            windows_download_url=$(FX_VERSION="$firefox_version" FX_PLATFORM=Windows \
+              uv run python -m scripts.collect_executables)
+            macos_download_url=$(FX_VERSION="$firefox_version" FX_PLATFORM=Darwin \
+              uv run python -m scripts.collect_executables)
+            linux_download_url=$(FX_VERSION="$firefox_version" FX_PLATFORM=Linux \
+              uv run python -m scripts.collect_executables)
+          fi
+          version_without_build=${firefox_version%%-build*}
+          artifact_stub="https://archive.invalid/firefox-${version_without_build}.tar.xz"
+          train=$(uv run python -m scripts.firefox_train "$artifact_stub")
+
+          mapfile -t existing_refs < <(
+            git ls-remote --heads origin |
+              awk '{sub("refs/heads/", "", $2); if ($2 == "main" || $2 == "nightly" || $2 ~ /^firefox[0-9]+$/) print $2}'
+          )
+          planner_args=()
+          for ref in "${existing_refs[@]}"; do
+            planner_args+=(--existing-ref "$ref")
+          done
+          plan=$(uv run python -m scripts.firefox_branches \
+            "$artifact_stub" "${planner_args[@]}" \
+            --execution-channel "$FX_CHANNEL")
+
+          action=$(jq -r '.action' <<< "$plan")
+          automation_branch=$(jq -r '.branch' <<< "$plan")
+          firefox_major=$(jq -r '.major' <<< "$train")
+          if [[ "$action" != "use" ]]; then
+            reason=$(jq -r '.reason' <<< "$plan")
+            echo "Cannot run Firefox $firefox_version: $reason" >&2
+            echo "Expected branch: $automation_branch" >&2
+            exit 1
+          fi
+
+          automation_ref=$(git ls-remote --heads origin \
+            "refs/heads/$automation_branch" | awk 'NR == 1 {print $1}')
+          if [[ ! "$automation_ref" =~ ^([0-9a-f]{40}|[0-9a-f]{64})$ ]]; then
+            echo "Could not resolve $automation_branch to an immutable commit." >&2
+            exit 1
+          fi
+
+          echo "automation_ref=$automation_ref" >> "$GITHUB_OUTPUT"
+          echo "automation_branch=$automation_branch" >> "$GITHUB_OUTPUT"
+          echo "firefox_version=$firefox_version" >> "$GITHUB_OUTPUT"
+          echo "firefox_major=$firefox_major" >> "$GITHUB_OUTPUT"
+          echo "windows_download_url=$windows_download_url" >> "$GITHUB_OUTPUT"
+          echo "macos_download_url=$macos_download_url" >> "$GITHUB_OUTPUT"
+          echo "linux_download_url=$linux_download_url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Firefox train resolution"
+            echo
+            echo "- Channel: $FX_CHANNEL"
+            echo "- Firefox: $firefox_version"
+            echo "- Automation branch: $automation_branch"
+            echo "- Automation commit: $automation_ref"
+          } >> "$GITHUB_STEP_SUMMARY"
