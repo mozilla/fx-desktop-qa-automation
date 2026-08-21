@@ -556,6 +556,9 @@ class AboutProtections(BasePage):
 
     URL_TEMPLATE = "about:protections"
 
+    TRACKER_COUNT_TIMEOUT = 30
+    TRACKER_COUNT_POLL = 3
+
     def verify_lockwise_scanned_text(self, expected_count: int):
         """Verify the Lockwise 'N password(s) stored securely.' message matches `expected_count`."""
         expected = (
@@ -566,9 +569,29 @@ class AboutProtections(BasePage):
         self.element_has_text("lockwise-scanned-text", expected)
         return self
 
+    def wait_for_weekly_tracker_count(self, minimum: int) -> int:
+        """Reload about:protections until the weekly count reaches minimum.
+
+        The report queries the tracking database once on DOMContentLoaded, so a
+        count written after the page loaded only shows up on the next load.
+        """
+
+        def _count_reached(_):
+            self.open()
+            return self.get_weekly_tracker_count() >= minimum
+
+        self.custom_wait(
+            timeout=self.TRACKER_COUNT_TIMEOUT, poll_frequency=self.TRACKER_COUNT_POLL
+        ).until(_count_reached, message=f"weekly tracker count stayed below {minimum}")
+        return self.get_weekly_tracker_count()
+
     def get_weekly_tracker_count(self) -> int:
         """Returns the number of trackers blocked over the past week from about:protections"""
-        raw = self.get_attribute_value("graph-week-summary", "data-l10n-args")
+        # The graph summary carries no data-l10n-args until the report is populated
+        raw = self.wait.until(
+            lambda _: self.get_attribute_value("graph-week-summary", "data-l10n-args"),
+            message="about:protections did not populate the weekly tracker summary",
+        )
         return json.loads(raw)["count"]
 
 

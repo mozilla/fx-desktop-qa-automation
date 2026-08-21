@@ -35,14 +35,8 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     # Visit a website that has trackers
     driver.get(TEST_WEBSITE)
 
-    # Reach "about:protections"
-    protection.open()
-
-    # Wait for trackers to be counted
-    protection.wait.until(lambda _: protection.get_weekly_tracker_count() > 0)
-
-    # Get the current tracker count
-    first_count = protection.get_weekly_tracker_count()
+    # Reach "about:protections" and wait for the trackers to be counted
+    first_count = protection.wait_for_weekly_tracker_count(1)
 
     # Open "about:protections" in a new tab
     tabs.open_and_switch_to_new_tab()
@@ -67,7 +61,6 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
 
     # Open "about:protections" in a new tab
     tabs.open_and_switch_to_new_tab()
-    protection.open()
 
     # The number of trackers is increasing with each site visit
-    protection.wait.until(lambda _: protection.get_weekly_tracker_count() > first_count)
+    protection.wait_for_weekly_tracker_count(first_count + 1)
