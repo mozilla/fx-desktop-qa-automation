@@ -37,7 +37,6 @@ jobs:
       firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
       windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
       macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
-      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       job_to_run: ${{ matrix.job_to_run }}
       test_set: ${{ matrix.test_set }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}

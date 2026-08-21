@@ -8,13 +8,13 @@ import json
 import unittest
 from unittest.mock import Mock, patch
 
+from scripts import collect_executables
 from scripts.firefox_branches import (
     BranchPlan,
     PromotionPlan,
     plan_branch_action,
     plan_promotion,
 )
-from scripts import collect_executables
 from scripts.firefox_train import (
     NIGHTLY_ARCHIVE_URL,
     FirefoxTrain,
@@ -410,8 +410,15 @@ class NightlyDiscoveryTests(unittest.TestCase):
 
         self.assertEqual(build_set["version"], "156.0a1")
         self.assertEqual(build_set["major"], 156)
-        self.assertEqual(build_set["downloads"], self.dated_urls)
-        self.assertEqual(mock_get.call_count, 4)
+        self.assertEqual(
+            build_set["downloads"],
+            {
+                "win64": self.dated_urls["win64"],
+                "mac": self.dated_urls["mac"],
+            },
+        )
+        self.assertNotIn("linux-x86_64", build_set["downloads"])
+        self.assertEqual(mock_get.call_count, 3)
 
 
 class PinnedCandidateTests(unittest.TestCase):

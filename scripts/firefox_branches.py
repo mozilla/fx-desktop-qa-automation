@@ -9,7 +9,6 @@ from dataclasses import asdict, dataclass
 
 from scripts.firefox_train import FirefoxTrain, resolve_train_from_artifact
 
-
 RELEASE_BRANCH_RE = re.compile(r"^firefox(?P<major>\d{2,3})$")
 
 

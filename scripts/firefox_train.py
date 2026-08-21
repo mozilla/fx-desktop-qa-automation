@@ -11,7 +11,6 @@ from html.parser import HTMLParser
 from posixpath import basename
 from urllib.parse import unquote, urlsplit
 
-
 NIGHTLY_ARCHIVE_URL = (
     "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/"
 )

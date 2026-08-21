@@ -61,6 +61,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          linux_download_url=""
 
           if [[ "$FX_CHANNEL" == "nightly" ]]; then
             nightly_builds=$(uv run python -m scripts.collect_executables \
@@ -68,8 +69,6 @@ jobs:
             firefox_version=$(jq -r '.version' <<< "$nightly_builds")
             windows_download_url=$(jq -r '.downloads.win64' <<< "$nightly_builds")
             macos_download_url=$(jq -r '.downloads.mac' <<< "$nightly_builds")
-            linux_download_url=$(jq -r '.downloads["linux-x86_64"]' \
-              <<< "$nightly_builds")
           else
             firefox_version=$(uv run python -m scripts.collect_executables -n)
             windows_download_url=$(FX_VERSION="$firefox_version" FX_PLATFORM=Windows \
@@ -107,7 +106,7 @@ jobs:
 
           automation_ref=$(git ls-remote --heads origin \
             "refs/heads/$automation_branch" | awk 'NR == 1 {print $1}')
-          if [[ ! "$automation_ref" =~ ^[0-9a-f]{40}$ ]]; then
+          if [[ ! "$automation_ref" =~ ^([0-9a-f]{40}|[0-9a-f]{64})$ ]]; then
             echo "Could not resolve $automation_branch to an immutable commit." >&2
             exit 1
           fi

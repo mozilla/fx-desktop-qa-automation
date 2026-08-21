@@ -29,7 +29,7 @@ BACKSTOP = "146.0b9"
 # latest geckodriver release: tests/meta/test_version.py compares the running
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
-NIGHTLY_WORKFLOW_PLATFORMS = ("win64", "mac", "linux-x86_64")
+NIGHTLY_WORKFLOW_PLATFORMS = ("win64", "mac")
 
 
 def latest_candidate_build(html):
