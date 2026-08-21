@@ -1123,8 +1123,7 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064111
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
