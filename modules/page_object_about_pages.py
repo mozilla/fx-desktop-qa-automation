@@ -562,7 +562,10 @@ class AboutProtections(BasePage):
 
     def get_weekly_tracker_count(self) -> int:
         """Returns the number of trackers blocked over the past week from about:protections"""
-        raw = self.get_attribute_value("graph-week-summary", "data-l10n-args")
+        # The graph summary carries no data-l10n-args until the report is populated
+        raw = self.wait.until(
+            lambda _: self.get_attribute_value("graph-week-summary", "data-l10n-args")
+        )
         return json.loads(raw)["count"]
 
 

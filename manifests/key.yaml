@@ -1533,11 +1533,7 @@ security_and_privacy:
     splits:
     - functional3
   test_fingerprinters_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064803
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
   test_fingerprinters_subpanel_display_when_not_blocked:
@@ -1626,11 +1622,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064805
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
     - nightly
