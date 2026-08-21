@@ -19,9 +19,7 @@ DOWNLOADS_PANEL = "downloadsPanel"
 def add_to_prefs_list():
     return [
         ("media.play-stand-alone", False),
-        # The panel no longer auto-opens on every channel, and when it does it
-        # covers the content area and eats the click that starts the next
-        # download. Keep it closed and open it only to assert on it.
+        # Auto-opened panel covers the content area and eats the next download click.
         ("browser.download.alwaysOpenPanel", False),
     ]
 
