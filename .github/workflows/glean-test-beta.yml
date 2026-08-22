@@ -79,7 +79,6 @@ jobs:
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
       BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
-      BQ_DATASET: ${{ secrets.BQ_DATASET }}
 
   Run-Mac-Glean:
     needs: Check-Beta-Version
@@ -97,4 +96,3 @@ jobs:
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
       BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
-      BQ_DATASET: ${{ secrets.BQ_DATASET }}

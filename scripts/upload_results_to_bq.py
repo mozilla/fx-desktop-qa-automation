@@ -12,10 +12,12 @@ Two properties are deliberate:
   BigQuery drops each partition a year after the run it describes. There is
   no cleanup job to schedule or maintain.
 
-Configuration comes entirely from the environment; see ``REQUIRED_VARS``.
-If the credential or the table coordinates are missing, the script logs a
-notice and exits without doing anything, which keeps the step harmless on
-forks and in dry runs.
+Table coordinates come from the environment (see ``REQUIRED_VARS``).
+Credentials come from Application Default Credentials, set up by the
+``google-github-actions/auth`` step that precedes this one in each job --
+the same pattern ``add-stability-results-to-bq.yml`` uses. If either is
+missing the script logs a notice and exits without doing anything, which
+keeps the step harmless on forks and in dry runs.
 """
 
 import glob
@@ -25,6 +27,8 @@ import os
 import sys
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
+
+from google.auth.exceptions import DefaultCredentialsError
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -37,7 +41,7 @@ REPORT_GLOBS = [
     "artifacts-linux/report*.json",
 ]
 
-REQUIRED_VARS = ("GCP_BQ_CREDENTIAL", "BQ_PROJECT", "BQ_DATASET")
+REQUIRED_VARS = ("BQ_PROJECT", "BQ_DATASET")
 
 # One year, in milliseconds. BigQuery deletes a partition this long after the
 # date it covers, which is what gives us the 1 year retention guarantee.
@@ -131,8 +135,16 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
                 "ingested_at": ingested_at,
                 "run_started_at": run_started_at,
                 "repo": env("GITHUB_REPOSITORY"),
+                # GITHUB_WORKFLOW is the *entry point* workflow: when main.yml
+                # runs as a reusable workflow, this is the caller's name (e.g.
+                # "Glean Tests Beta"). workflow_file/job_name below are literals
+                # passed by the step, so they always name the workflow that
+                # actually ran the tests regardless of reusable-workflow
+                # context semantics.
                 "workflow": env("GITHUB_WORKFLOW"),
+                "workflow_file": env("BQ_WORKFLOW_FILE") or None,
                 "job": env("GITHUB_JOB"),
+                "job_name": env("BQ_JOB_NAME") or None,
                 "run_id": int(env("GITHUB_RUN_ID", "0")) or None,
                 "run_number": int(env("GITHUB_RUN_NUMBER", "0")) or None,
                 "run_attempt": int(env("GITHUB_RUN_ATTEMPT", "0")) or None,
@@ -142,7 +154,9 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
                 "event_name": env("GITHUB_EVENT_NAME") or None,
                 "platform": platform_name(),
                 "headed": headed,
-                "test_set": env("STARFOX_SPLIT") or None,
+                # main.yml puts the split in STARFOX_SPLIT; main-l10n.yml has no
+                # split concept, so its steps pass BQ_TEST_SET explicitly.
+                "test_set": env("BQ_TEST_SET") or env("STARFOX_SPLIT") or None,
                 "fx_channel": env("FX_CHANNEL") or None,
                 "fx_version": metadata.get("fx_version"),
                 "machine_config": metadata.get("machine_config"),
@@ -169,7 +183,9 @@ def table_schema():
         field("run_started_at", "TIMESTAMP", "REQUIRED"),
         field("repo", "STRING"),
         field("workflow", "STRING"),
+        field("workflow_file", "STRING"),
         field("job", "STRING"),
+        field("job_name", "STRING"),
         field("run_id", "INT64"),
         field("run_number", "INT64"),
         field("run_attempt", "INT64"),
@@ -212,7 +228,12 @@ def ensure_table(client, table_id: str):
     except NotFound:
         table = bigquery.Table(table_id, schema=table_schema())
         table.time_partitioning = partitioning
-        table.clustering_fields = ["platform", "suite_name", "outcome"]
+        table.clustering_fields = [
+            "workflow_file",
+            "platform",
+            "suite_name",
+            "outcome",
+        ]
         table = client.create_table(table)
         logging.info("Created table %s (365 day partition expiration)", table_id)
         return table
@@ -228,18 +249,16 @@ def ensure_table(client, table_id: str):
 
 def upload(rows: List[Dict[str, Any]]) -> None:
     from google.cloud import bigquery
-    from google.oauth2 import service_account
-
-    credentials = service_account.Credentials.from_service_account_info(
-        json.loads(os.environ["GCP_BQ_CREDENTIAL"])
-    )
 
     project = os.environ["BQ_PROJECT"]
     dataset = os.environ["BQ_DATASET"]
     table = env("BQ_TABLE", "test_results")
     table_id = f"{project}.{dataset}.{table}"
 
-    client = bigquery.Client(project=project, credentials=credentials)
+    # Credentials come from Application Default Credentials, which the
+    # "Auth to Google Cloud" step provides via google-github-actions/auth.
+    # Locally, `gcloud auth application-default login` works the same way.
+    client = bigquery.Client(project=project)
     ensure_table(client, table_id)
 
     # A load job is used rather than insert_rows_json: batch loads are free and
@@ -250,6 +269,9 @@ def upload(rows: List[Dict[str, Any]]) -> None:
         job_config=bigquery.LoadJobConfig(
             schema=table_schema(),
             write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
+            # Let a newly added column land in a table created by an older
+            # version of this script instead of failing the load.
+            schema_update_options=[bigquery.SchemaUpdateOption.ALLOW_FIELD_ADDITION],
         ),
     )
     job.result()
@@ -289,6 +311,12 @@ def main() -> int:
             return 0
 
         upload(rows)
+
+    except DefaultCredentialsError:
+        # The "Auth to Google Cloud" step is continue-on-error, so a missing or
+        # rejected credential lands here. Not worth an ERROR: the test results
+        # themselves are unaffected.
+        logging.info("Skipping BigQuery upload; no Google credentials available.")
 
     except Exception as exc:  # noqa: BLE001 - must never fail the CI job
         logging.error("BigQuery upload failed, continuing anyway: %s", exc)
