@@ -12,12 +12,6 @@ Two properties are deliberate:
   BigQuery drops each partition a year after the run it describes. There is
   no cleanup job to schedule or maintain.
 
-Table coordinates come from the environment (see ``REQUIRED_VARS``).
-Credentials come from Application Default Credentials, set up by the
-``google-github-actions/auth`` step that precedes this one in each job --
-the same pattern ``add-stability-results-to-bq.yml`` uses. If either is
-missing the script logs a notice and exits without doing anything, which
-keeps the step harmless on forks and in dry runs.
 """
 
 import glob
@@ -65,7 +59,6 @@ def platform_name() -> str:
     if runner_os == "linux":
         return "linux"
 
-    # Fall back to the interpreter when not running on a GitHub runner.
     if sys.platform.startswith("win"):
         return "win"
     if sys.platform == "darwin":
@@ -77,7 +70,7 @@ def find_reports() -> List[str]:
     paths: List[str] = []
     for pattern in REPORT_GLOBS:
         paths.extend(glob.glob(pattern))
-    # A job can rename artifacts/ mid-run, so the same report may match twice.
+
     return sorted(set(os.path.abspath(p) for p in paths))
 
 
@@ -135,12 +128,6 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
                 "ingested_at": ingested_at,
                 "run_started_at": run_started_at,
                 "repo": env("GITHUB_REPOSITORY"),
-                # GITHUB_WORKFLOW is the *entry point* workflow: when main.yml
-                # runs as a reusable workflow, this is the caller's name (e.g.
-                # "Glean Tests Beta"). workflow_file/job_name below are literals
-                # passed by the step, so they always name the workflow that
-                # actually ran the tests regardless of reusable-workflow
-                # context semantics.
                 "workflow": env("GITHUB_WORKFLOW"),
                 "workflow_file": env("BQ_WORKFLOW_FILE") or None,
                 "job": env("GITHUB_JOB"),
@@ -209,11 +196,7 @@ def table_schema():
 
 
 def ensure_table(client, table_id: str):
-    """Create the table if absent, and enforce the 1 year partition expiry.
-
-    The expiry is re-applied to pre-existing tables too, so a table created
-    before this script existed still picks up the retention policy.
-    """
+    """Create the table if absent, and enforce the one year partition expiry."""
     from google.cloud import bigquery
     from google.api_core.exceptions import NotFound
 
@@ -257,12 +240,9 @@ def upload(rows: List[Dict[str, Any]]) -> None:
 
     # Credentials come from Application Default Credentials, which the
     # "Auth to Google Cloud" step provides via google-github-actions/auth.
-    # Locally, `gcloud auth application-default login` works the same way.
     client = bigquery.Client(project=project)
     ensure_table(client, table_id)
 
-    # A load job is used rather than insert_rows_json: batch loads are free and
-    # have no streaming buffer, which keeps rows immediately queryable.
     job = client.load_table_from_json(
         rows,
         table_id,
@@ -313,12 +293,9 @@ def main() -> int:
         upload(rows)
 
     except DefaultCredentialsError:
-        # The "Auth to Google Cloud" step is continue-on-error, so a missing or
-        # rejected credential lands here. Not worth an ERROR: the test results
-        # themselves are unaffected.
         logging.info("Skipping BigQuery upload; no Google credentials available.")
 
-    except Exception as exc:  # noqa: BLE001 - must never fail the CI job
+    except Exception as exc:
         logging.error("BigQuery upload failed, continuing anyway: %s", exc)
 
     return 0
