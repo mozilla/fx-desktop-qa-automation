@@ -1,10 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
+from modules.browser_object import TabBar, TrustPanel
 from modules.page_object import AboutPrefs, AboutProtections
 
-TEST_WEBSITE = "https://www.bbc.com/"
+TEST_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
 
 @pytest.fixture()
@@ -21,6 +21,7 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
     protection = AboutProtections(driver)
     tabs = TabBar(driver)
     about_prefs = AboutPrefs(driver, category="privacy")
+    trust_panel = TrustPanel(driver)
 
     # Use Strict ETP mode
     about_prefs.open()
@@ -34,6 +35,10 @@ def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: F
 
     # Visit a website that has trackers
     driver.get(TEST_WEBSITE)
+
+    # Confirm the trackers were blocked on this page before navigating away
+    trust_panel.open_panel()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # Reach "about:protections" and wait for the trackers to be counted
     first_count = protection.wait_for_weekly_tracker_count(1)
