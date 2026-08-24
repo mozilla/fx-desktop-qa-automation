@@ -77,7 +77,7 @@ jobs:
       SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
-      GCP_BQ_CREDENTIAL: ${{ secrets.GCP_BQ_CREDENTIAL }}
+      GCP_BQ_CREDENTIAL: ${{ secrets.GC_CREDENTIAL_STABILITY }}
       BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-Mac-Glean:
