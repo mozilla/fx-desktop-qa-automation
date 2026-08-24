@@ -50,7 +50,7 @@ def verify_tabs_reloaded(
     for handle, previous_time_origin in time_origins.items():
         driver.switch_to.window(handle)
         tabs.expect_in_content(
-            lambda _, previous=previous_time_origin: driver.execute_script(
+            lambda d, previous=previous_time_origin: d.execute_script(
                 "return performance.timeOrigin"
             )
             != previous
@@ -99,7 +99,7 @@ def test_reload_multiselected_tabs(
     selected_tabs = tabs.select_multiple_tabs_by_indices(
         SELECTED_TAB_INDICES, sys_platform
     )
-    tab_context_menu.context_click(selected_tabs[1])
+    tab_context_menu.context_click(selected_tabs[0])
     tab_context_menu.click_and_hide_menu(RELOAD_SELECTED_TABS)
 
     verify_tabs_reloaded(driver, tabs, time_origins)
