@@ -76,6 +76,7 @@ jobs:
           fi
 
           version_without_build=${beta_version%%-build*}
+          # Reserved .invalid URL used only as version-parser input; no request is made.
           beta_stub="https://archive.invalid/firefox-${version_without_build}.tar.xz"
 
           mapfile -t existing_refs < <(
@@ -163,6 +164,7 @@ jobs:
           promoted_sha=$(git rev-parse HEAD)
 
           if [[ "$DRY_RUN" == "true" ]]; then
+            echo "Dry run: local Nightly-to-Beta merge succeeded at $promoted_sha"
             echo "Dry run: would create $ARCHIVE_BRANCH at $outgoing_main_sha"
             echo "Dry run: would promote $promoted_sha to nightly and main"
             exit 0

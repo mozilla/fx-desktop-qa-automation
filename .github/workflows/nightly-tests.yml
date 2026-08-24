@@ -24,6 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Linux Nightly coverage is intentionally deferred. Add Test-Linux and
+        # pass linux_download_url below when that coverage is ready.
         job_to_run:
           - Test-Windows
           - Test-MacOS
@@ -40,4 +42,8 @@ jobs:
       job_to_run: ${{ matrix.job_to_run }}
       test_set: ${{ matrix.test_set }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}

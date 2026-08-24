@@ -79,6 +79,7 @@ jobs:
               uv run python -m scripts.collect_executables)
           fi
           version_without_build=${firefox_version%%-build*}
+          # Reserved .invalid URL used only as version-parser input; no request is made.
           artifact_stub="https://archive.invalid/firefox-${version_without_build}.tar.xz"
           train=$(uv run python -m scripts.firefox_train "$artifact_stub")
 

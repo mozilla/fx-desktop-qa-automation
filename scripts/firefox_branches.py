@@ -57,6 +57,7 @@ def _retention_deletes(
     include_branch: str | None = None,
 ) -> tuple[str, ...]:
     numbered_refs = set()
+    # Set union keeps include_branch idempotent when it already exists in refs.
     for ref in refs | ({include_branch} if include_branch else set()):
         match = RELEASE_BRANCH_RE.fullmatch(ref)
         if match:

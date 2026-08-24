@@ -8,6 +8,8 @@ import json
 import unittest
 from unittest.mock import Mock, patch
 
+import requests
+
 from scripts import collect_executables
 from scripts.firefox_branches import (
     BranchPlan,
@@ -420,6 +422,35 @@ class NightlyDiscoveryTests(unittest.TestCase):
         self.assertNotIn("linux-x86_64", build_set["downloads"])
         self.assertEqual(mock_get.call_count, 3)
 
+    @patch("scripts.collect_executables.requests.get")
+    def test_reports_nightly_archive_network_errors(self, mock_get):
+        mock_get.side_effect = requests.exceptions.ConnectionError("offline")
+
+        with self.assertRaisesRegex(RuntimeError, "Could not request Nightly builds"):
+            collect_executables.discover_nightly_builds()
+
+    @patch("scripts.collect_executables.requests.get")
+    def test_reports_nightly_metadata_network_errors(self, mock_get):
+        mock_get.side_effect = [
+            self.nightly_response(NIGHTLY_ARCHIVE_URL),
+            requests.exceptions.ConnectionError("offline"),
+        ]
+
+        with self.assertRaisesRegex(RuntimeError, "Could not request Nightly metadata"):
+            collect_executables.discover_nightly_builds()
+
+    @patch("scripts.collect_executables.requests.get")
+    def test_reports_invalid_nightly_metadata_json(self, mock_get):
+        invalid_metadata = Mock(status_code=200)
+        invalid_metadata.json.side_effect = json.JSONDecodeError("invalid", "{", 0)
+        mock_get.side_effect = [
+            self.nightly_response(NIGHTLY_ARCHIVE_URL),
+            invalid_metadata,
+        ]
+
+        with self.assertRaisesRegex(RuntimeError, "is not valid JSON"):
+            collect_executables.discover_nightly_builds()
+
 
 class PinnedCandidateTests(unittest.TestCase):
     def test_latest_candidate_build_handles_multiple_digits(self):
@@ -469,6 +500,32 @@ class PinnedCandidateTests(unittest.TestCase):
             "firefox-151.0b9.tar.xz",
         )
         self.assertEqual(mock_get.call_count, 1)
+
+    @patch.dict(
+        "os.environ",
+        {
+            "FX_CHANNEL": "beta",
+            "FX_LOCALE": "en-US",
+            "FX_VERSION": "151.0b9-build99",
+        },
+        clear=True,
+    )
+    @patch("scripts.collect_executables.sleep")
+    @patch("scripts.collect_executables.get_fx_platform", return_value="linux-x86_64")
+    @patch("scripts.collect_executables.requests.get")
+    def test_pinned_candidate_reports_missing_build(
+        self,
+        mock_get,
+        _mock_platform,
+        _mock_sleep,
+    ):
+        mock_get.return_value = Mock(status_code=404)
+
+        with self.assertRaisesRegex(
+            SystemExit,
+            "Requested Firefox build '151.0b9-build99' does not exist",
+        ):
+            collect_executables.main([])
 
 
 if __name__ == "__main__":

@@ -48,7 +48,12 @@ def discover_nightly_builds(
     locale="en-US",
 ):
     """Resolve immutable archive URLs for one Nightly version."""
-    response = requests.get(NIGHTLY_ARCHIVE_URL)
+    try:
+        response = requests.get(NIGHTLY_ARCHIVE_URL)
+    except requests.exceptions.RequestException as error:
+        raise RuntimeError(
+            f"Could not request Nightly builds at {NIGHTLY_ARCHIVE_URL}."
+        ) from error
     if response.status_code >= 300:
         raise RuntimeError(f"Could not find Nightly builds at {NIGHTLY_ARCHIVE_URL}.")
 
@@ -60,12 +65,17 @@ def discover_nightly_builds(
     downloads = {}
     for platform, filename in metadata_files.items():
         metadata_url = f"{NIGHTLY_ARCHIVE_URL}{filename}"
-        metadata_response = requests.get(metadata_url)
+        try:
+            metadata_response = requests.get(metadata_url)
+        except requests.exceptions.RequestException as error:
+            raise RuntimeError(
+                f"Could not request Nightly metadata at {metadata_url}."
+            ) from error
         if metadata_response.status_code >= 300:
             raise RuntimeError(f"Could not read Nightly metadata at {metadata_url}.")
         try:
             metadata = metadata_response.json()
-        except requests.exceptions.JSONDecodeError as error:
+        except json.JSONDecodeError as error:
             raise RuntimeError(
                 f"Nightly metadata at {metadata_url} is not valid JSON."
             ) from error
@@ -379,6 +389,11 @@ def main(args):
         logging.warning(f"Collecting executable at {fx_download_dir_url}")
 
         if response_text is None:
+            if requested_train is not None:
+                exit(
+                    f"Requested Firefox build {requested_label!r} does not exist at "
+                    f"{fx_download_dir_url}."
+                )
             exit(f"Could not find build at {fx_download_dir_url}.")
 
         # Parse the HTML content

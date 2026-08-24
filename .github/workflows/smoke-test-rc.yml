@@ -19,6 +19,9 @@ env:
   LATEST: ""
   DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
+permissions:
+  contents: read
+
 jobs:
   Resolve-Firefox:
     uses: ./.github/workflows/resolve-firefox-branch.yml

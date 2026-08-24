@@ -6,6 +6,9 @@ on:
 env:
   LATEST: ""
 
+permissions:
+  contents: read
+
 jobs:
   Resolve-Firefox:
     uses: ./.github/workflows/resolve-firefox-branch.yml
