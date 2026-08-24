@@ -972,11 +972,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
