@@ -85,10 +85,10 @@ class AboutPrefs(BasePage):
             checkbox.click()
 
         self.expect(
-            lambda _: bool(
-                self.get_element("show-suggestions").get_attribute("checked")
+            lambda _: (
+                bool(self.get_element("show-suggestions").get_attribute("checked"))
+                == value
             )
-            == value
         )
 
         # Firefox builds expose the separate Address Bar checkbox under
@@ -330,8 +330,11 @@ class AboutPrefs(BasePage):
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
         """Wait until the DoH status box reports the given provider name."""
-        self.element_attribute_contains(
-            "doh-status-box", "data-l10n-args", provider_name
+        self.custom_wait(timeout=30).until(
+            lambda _: provider_name
+            in (
+                self.get_element("doh-status-box").get_attribute("data-l10n-args") or ""
+            )
         )
         return self
 

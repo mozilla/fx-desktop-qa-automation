@@ -1,61 +1,49 @@
 transforms:
-  - fx_desktop_qa_automation_taskgraph.transforms.new_beta_qa:transforms
+  - fx_desktop_qa_automation_taskgraph.transforms.smoketest:transforms
   - taskgraph.transforms.notify:transforms
 
 task-defaults:
-  label: "Test New Release Candidate Version"
-  description: "Checks for new RC builds, tests them, reports to TestRail and Slack"
+  label: "CI Glean Tests"
+  description: "Runs Glean telemetry tests when a PR touches them"
   worker-type: t-linux-wayland
   worker:
     taskcluster-proxy: true
-    max-run-time: 3600
+    # Glean is 87 parametrized cases, each launching its own browser
+    max-run-time: 5400
     artifacts:
       - name: public/results
         path: checkouts/vcs/artifacts
         type: directory
     env:
-      TESTRAIL_REPORT: "true"
-      STARFOX_SPLIT: "smoke"
+      STARFOX_SPLIT: "glean"
   routes:
     - notify.slack-channel.C07AHPJ525V.on-resolved
   scopes:
-    - secrets:get:project/mozilla/fx-desktop-qa-automation/level-3/*
     - queue:route:notify.slack-channel.C07AHPJ525V # notify mobile-alerts-sandbox on failure
     - notify:slack-channel:C07AHPJ525V
 
 tasks:
   linux:
-    attributes:
-      rc-qa: true
-    run-on-tasks-for: []
     run:
       using: run-task
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
         mkdir -p artifacts;
+        # Gate first: a PR that doesn't touch glean shouldn't pay for uv and rustup
+        if [[ ! $(python3 ./scripts/choose_test_type.py) =~ "glean" ]]; then exit 0; fi;
         pip3 install 'uv==0.11.18' --break-system-packages;
         uv run python scripts/switch_config.py ci;
-        pip3 install 'uv==2023.11.15' --break-system-packages;
-        mv ./config/ci_pyproject.toml ./pyproject.toml;
         curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs | sh -s -- -y
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         uv sync;
         . ./scripts/setup-xauthority.sh
-        export FX_CHANNEL="rc";
         ./scripts/collect_executables.sh;
-        export FX_EXECUTABLE=./firefox/firefox;
-        uv run python -c 'from modules import testrail_integration as tri; tri.tc_reportable()' || exit 0;
-        $FX_EXECUTABLE --version;
+        ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
-        uv run python -m scripts.choose_test_split;
-        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        export FAILURE=${?};
-        export REPORTABLE=1;
-        uv run python scripts/switch_config.py ci_headed;
-        uv run pytest --fx-executable $FX_EXECUTABLE $(cat selected_tests);
-        exit $((${?} | ${FAILURE}))
+        uv run pytest --fx-executable ./firefox/firefox tests/glean;
+        exit ${?}
     notify:
       recipients:
         - type: slack-channel
@@ -115,4 +103,4 @@ tasks:
               ]
             }
           ]
-          text: "Cron {task[name]} with id $taskId has finished!"
+          text: "{task[name]} with id $taskId has finished!"
