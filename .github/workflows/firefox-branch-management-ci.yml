@@ -10,6 +10,7 @@ on:
       - "scripts/collect_executables.py"
       - "scripts/firefox_branches.py"
       - "scripts/firefox_train.py"
+      - "scripts/setup_python.sh"
       - "scripts/tests_firefox_train.py"
   push:
     branches:
@@ -23,6 +24,7 @@ on:
       - "scripts/collect_executables.py"
       - "scripts/firefox_branches.py"
       - "scripts/firefox_train.py"
+      - "scripts/setup_python.sh"
       - "scripts/tests_firefox_train.py"
   workflow_dispatch:
 
