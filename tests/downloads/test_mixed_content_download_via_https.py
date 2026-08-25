@@ -29,11 +29,10 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
     nav = Navigation(driver)
 
-    # Wait for the test website to wake up and download the content
+    # Open the page and trigger the mixed content download
     web_page.open()
 
-    # Wait for download to start and downloads button to appear (longer timeout for CI)
-    nav.element_visible("downloads-button")
+    # Wait for the downloads button to appear before interacting with it
     nav.click_download_button()
     nav.element_visible("download-target-element")
 
