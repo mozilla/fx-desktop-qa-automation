@@ -4,6 +4,12 @@ name: Full Functional and Glean Tests
 on:
   workflow_dispatch:
     inputs:
+      test_sets:
+        description: "Test set to run"
+        required: true
+        default: "functional-glean"
+        type: string
+
       win_installer_link:
         description: Windows Firefox installer URL (omit to skip Windows)
         required: false
