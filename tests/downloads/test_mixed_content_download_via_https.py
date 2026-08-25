@@ -21,6 +21,13 @@ MIXED_CONTENT_DOWNLOAD_URL = (
 MAX_CHECKS = 30
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -33,7 +40,6 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     web_page.open()
 
     # Wait for the downloads button to appear before interacting with it
-    nav.click_download_button()
     nav.element_visible("download-target-element")
 
     # Verify download name matches expected pattern
