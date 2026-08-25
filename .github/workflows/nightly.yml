@@ -1,37 +1,46 @@
 ---
-name: Nightly Smoke Tests
+name: Nightly Tests
 
 run-name: Nightly smoke tests triggered by ${{ github.actor }}
 
-# Dispatch only, so the caller decides when to run (cycle nights 2-13; the
-# first and last night are covered by full-functional-glean.yml).
+# Dispatch only, that runs smoke tests every day on the morning generated nightly build
+# or the functional and glean tests on the first and last day of the cycle, in addition
+# to the first Thursday morning.
 
 on:
   workflow_dispatch:
     inputs:
       test_sets:
-        description: "Test set to run"
+        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"functional\", \"glean\"]' "
         required: true
-        default: "smoke"
+        default: '["smoke"]'
+        type: string
+
+      build_datetime_utc:
+        description: >
+          UTC generation time of the Firefox build, for example
+          2026-08-25T10:30:00Z. This should be supplied by the Firefox-tree
+          API caller.
+        required: true
         type: string
 
       win_installer_link:
-        description: 'The link to the Windows installer (win64) for the Fx under test'
+        description: 'The Windows ZIP URL for the Firefox build under test'
         required: false
         type: string
 
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: 'The macOS installer URL for the Firefox build under test'
         required: false
         type: string
 
       linux_tarball_link:
-        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
+        description: 'The Linux tarball URL for the Firefox build under test'
         required: false
         type: string
 
       dry_run:
-        description: Select smoke tests without downloading or running Firefox
+        description: 'Select smoke tests without downloading or running Firefox'
         required: false
         default: "false"
         type: string
@@ -43,11 +52,153 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  # Set this repository variable to the UTC date of a known first day of a
+  # 14-day release cycle, for example: 2026-09-15
+  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
+
+  # Hours 00:00 through 11:59 UTC are considered the morning build.
+  MORNING_CUTOFF_HOUR_UTC: "12"
+
 jobs:
-  Smoke:
+  Plan:
+    name: Determine nightly test plan
+    runs-on: ubuntu-latest
+
+    outputs:
+      should_run: ${{ steps.plan.outputs.should_run }}
+      test_sets: ${{ steps.plan.outputs.test_sets }}
+      cycle_day: ${{ steps.plan.outputs.cycle_day }}
+      reason: ${{ steps.plan.outputs.reason }}
+
+    steps:
+      - name: Determine tests from UTC build time
+        id: plan
+        env:
+          BUILD_DATETIME_UTC: ${{ inputs.build_datetime_utc }}
+          DEFAULT_TEST_SETS: ${{ inputs.test_sets }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$RELEASE_CYCLE_ANCHOR_UTC" ]]; then
+            echo "::error::Repository variable RELEASE_CYCLE_ANCHOR_UTC is not set."
+            exit 1
+          fi
+
+          if [[ ! "$RELEASE_CYCLE_ANCHOR_UTC" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "::error::RELEASE_CYCLE_ANCHOR_UTC must use YYYY-MM-DD."
+            exit 1
+          fi
+
+          if [[ -z "$BUILD_DATETIME_UTC" ]]; then
+            echo "::error::build_datetime_utc is required."
+            exit 1
+          fi
+
+          if [[ ! "$BUILD_DATETIME_UTC" =~ Z$ ]]; then
+            echo "::error::build_datetime_utc must be an explicit UTC timestamp ending in Z."
+            exit 1
+          fi
+
+          if ! build_epoch="$(
+            date --utc --date="$BUILD_DATETIME_UTC" +%s 2>/dev/null
+          )"; then
+            echo "::error::Invalid build_datetime_utc: $BUILD_DATETIME_UTC"
+            exit 1
+          fi
+
+          anchor_epoch="$(
+            date --utc --date="${RELEASE_CYCLE_ANCHOR_UTC}T00:00:00Z" +%s
+          )"
+
+          if (( build_epoch < anchor_epoch )); then
+            echo "::error::Build time precedes RELEASE_CYCLE_ANCHOR_UTC."
+            exit 1
+          fi
+
+          build_date="$(date --utc --date="@$build_epoch" +%F)"
+          build_hour="$(date --utc --date="@$build_epoch" +%H)"
+          build_hour=$((10#$build_hour))
+
+          elapsed_days=$(( (build_epoch - anchor_epoch) / 86400 ))
+
+          # Zero-based cycle index:
+          #   0  = first day
+          #   13 = last day
+          cycle_index=$(( elapsed_days % 14 ))
+          cycle_day=$(( cycle_index + 1 ))
+
+          # ISO weekday values: Monday=1 through Sunday=7.
+          anchor_weekday="$(
+            date --utc \
+              --date="${RELEASE_CYCLE_ANCHOR_UTC}T00:00:00Z" \
+              +%u
+          )"
+
+          # Offset of the first Thursday within the 14-day cycle.
+          first_thursday_index=$(( (4 - anchor_weekday + 7) % 7 ))
+
+          should_run=false
+          test_sets='[]'
+          reason="afternoon build"
+
+          if (( build_hour < MORNING_CUTOFF_HOUR_UTC )); then
+            should_run=true
+            test_sets="$DEFAULT_TEST_SETS"
+            reason="ordinary morning build"
+
+            if (( cycle_index == 0 )); then
+              test_sets='["functional","glean"]'
+              reason="first day of release cycle"
+            elif (( cycle_index == 13 )); then
+              test_sets='["functional","glean"]'
+              reason="last day of release cycle"
+            elif (( cycle_index == first_thursday_index )); then
+              test_sets='["functional","glean"]'
+              reason="first Thursday of release cycle"
+            fi
+          fi
+
+          if [[ "$should_run" == "true" ]]; then
+            if ! jq -e \
+              'type == "array" and length > 0 and all(.[]; type == "string")' \
+              <<<"$test_sets" > /dev/null; then
+              echo "::error::Calculated test_sets is invalid: $test_sets"
+              exit 1
+            fi
+
+            test_sets="$(jq -c . <<<"$test_sets")"
+          fi
+
+          {
+            echo "should_run=$should_run"
+            echo "test_sets=$test_sets"
+            echo "cycle_day=$cycle_day"
+            echo "reason=$reason"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Nightly test plan"
+            echo
+            echo "| Setting | Value |"
+            echo "|---|---|"
+            echo "| Build timestamp | \`$BUILD_DATETIME_UTC\` |"
+            echo "| Build UTC date | \`$build_date\` |"
+            echo "| Build UTC hour | \`$build_hour\` |"
+            echo "| Cycle day | \`$cycle_day of 14\` |"
+            echo "| First Thursday cycle day | \`$((first_thursday_index + 1))\` |"
+            echo "| Run tests | \`$should_run\` |"
+            echo "| Test sets | \`$test_sets\` |"
+            echo "| Reason | $reason |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  Run:
+    name: Run selected nightly tests
+    needs: Plan
+    if: ${{ needs.Plan.outputs.should_run == 'true' }}
     uses: ./.github/workflows/core.yml
     with:
-      test_sets: ${{ inputs.test_sets }}
+      test_sets: ${{ needs.Plan.outputs.test_sets }}
       win_installer_link: ${{ inputs.win_installer_link }}
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}
