@@ -1966,7 +1966,6 @@ tabs:
     result: pass
     splits:
     - functional3
-    - nightly
   test_reload_overiding_cache_keys:
     result: pass
     splits:
