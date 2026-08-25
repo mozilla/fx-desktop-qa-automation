@@ -18,6 +18,7 @@ def add_to_prefs_list():
 
 TARGET_PAGE = "https://de.wikipedia.org/wiki/Mozilla_Firefox"
 SEARCH_TERM = "für"
+MIN_MATCHES = 50  # the page had 113 matches when the test was written
 
 # Text, selected range count and position of the current match, null while there is none
 CURRENT_MATCH = """
@@ -42,7 +43,7 @@ def test_find_word_with_special_characters(driver: Firefox, find_toolbar: FindTo
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
     total_matches = find_toolbar.match_dict["total"]
-    assert total_matches > 1
+    assert total_matches >= MIN_MATCHES
 
     # The searched word is the only highlight
     find_toolbar.rewind_to_first_match()
