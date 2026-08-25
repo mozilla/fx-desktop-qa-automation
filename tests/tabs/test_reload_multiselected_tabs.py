@@ -1,4 +1,3 @@
-from os import listdir
 from shutil import copyfile
 
 import pytest
@@ -29,8 +28,8 @@ def test_case():
 @pytest.fixture()
 def page_urls(tmp_path):
     """Copy the test pages to tmp_path and return their file:// URLs"""
-    for file in listdir("data/pages"):
-        copyfile(f"data/pages/{file}", tmp_path / file)
+    for filename in PAGE_FILENAMES:
+        copyfile(f"data/pages/{filename}", tmp_path / filename)
     return [f"file://{tmp_path / filename}" for filename in PAGE_FILENAMES]
 
 
