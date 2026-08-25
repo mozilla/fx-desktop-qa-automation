@@ -5,6 +5,10 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import GenericPdf
 
+DUMMY_PDF_URL = (
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+)
+
 
 @pytest.fixture()
 def test_case():
@@ -13,12 +17,11 @@ def test_case():
 
 @pytest.fixture()
 def delete_files_regex_string():
-    return r".*i-9-downloads\.pdf"
+    return r".*dummy-saved\.pdf"
 
 
 def test_download_pdf(
     driver: Firefox,
-    fillable_pdf_url: str,
     downloads_folder: str,
     delete_files,
     wait_for_file_download,
@@ -35,11 +38,11 @@ def test_download_pdf(
     """
 
     # Set the expected download path and the expected PDF name
-    file_name = "i-9-downloads.pdf"
+    file_name = "dummy-saved.pdf"
     saved_pdf_location = os.path.join(downloads_folder, file_name)
 
     # Initialize objects
-    pdf_page = GenericPdf(driver, pdf_url=fillable_pdf_url)
+    pdf_page = GenericPdf(driver, pdf_url=DUMMY_PDF_URL)
 
     # Replace the native save dialog with a mock that returns our target path
     pdf_page.install_mock_file_picker(saved_pdf_location)

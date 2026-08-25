@@ -448,8 +448,7 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2063442
-    result: unstable
+    result: pass
     splits:
     - functional1
     - ci
@@ -910,11 +909,7 @@ password_manager:
     - functional2
     - nightly
   test_about_logins_username_copy_button:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064795
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -941,7 +936,8 @@ password_manager:
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2066156
+    result: unstable
     splits:
     - functional2
     - nightly
@@ -951,11 +947,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -975,11 +967,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1004,7 +992,11 @@ password_manager:
     - functional2
     - nightly
   test_multiple_saved_logins:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2065464
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1053,7 +1045,7 @@ password_manager:
     - functional2
     - nightly
   test_password_manager_on_google_US:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167, old mac bug
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167
     result:
       linux: pass
       mac: unstable
@@ -1090,11 +1082,7 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1131,13 +1119,11 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064111
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064142
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
@@ -1419,7 +1405,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_connection_secure_second_level_panel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2066161
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional3
     - nightly
@@ -1533,11 +1523,7 @@ security_and_privacy:
     splits:
     - functional3
   test_fingerprinters_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064803
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
   test_fingerprinters_subpanel_display_when_not_blocked:
@@ -1626,11 +1612,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064805
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
     - nightly

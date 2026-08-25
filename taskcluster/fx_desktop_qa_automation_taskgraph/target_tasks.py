@@ -4,7 +4,10 @@ from taskgraph.util.taskcluster import find_task_id
 
 @register_target_task("new_beta_qa")
 def target_tasks_beta_qa(full_task_graph, parameters, graph_config):
-    """Select the set of tasks required for a Beta Smoke + Reporting session."""
+    """Select the set of tasks required for a Beta Smoke + Reporting session.
+
+    Also selects new-beta-glean, which shares this cron.
+    """
 
     def filter(task, parameters):
         return task.attributes.get("beta-qa", False)
@@ -34,7 +37,10 @@ def target_tasks_devedition_qa(full_task_graph, parameters, graph_config):
 
 @register_target_task("new_rc_qa")
 def target_tasks_rc_qa(full_task_graph, parameters, graph_config):
-    """Select the set of tasks required for a RC Smoke + Reporting session."""
+    """Select the set of tasks required for a RC Smoke + Reporting session.
+
+    Also selects new-rc-glean, which shares this cron.
+    """
 
     def filter(task, parameters):
         return task.attributes.get("rc-qa", False)
