@@ -20,12 +20,20 @@ TARGET_PAGE = "https://de.wikipedia.org/wiki/Mozilla_Firefox"
 SEARCH_TERM = "für"
 MIN_MATCHES = 50  # the page had 113 matches when the test was written
 
-# Text, selected range count and position of the current match, null while there is none
+# Text, selected range count and DOM position of the current match, null while there is none
 CURRENT_MATCH = """
     const selection = window.getSelection();
     if (!selection || !selection.rangeCount) return null;
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
-    return [selection.toString(), selection.rangeCount, Math.round(rect.top + window.scrollY)];
+    const range = selection.getRangeAt(0);
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node = -1;
+    for (let i = 0; walker.nextNode(); i++) {
+      if (walker.currentNode === range.startContainer) {
+        node = i;
+        break;
+      }
+    }
+    return [selection.toString(), selection.rangeCount, node, range.startOffset];
 """
 
 
