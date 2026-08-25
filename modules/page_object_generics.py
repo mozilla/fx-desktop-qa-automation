@@ -16,6 +16,26 @@ class GenericPage(BasePage):
 
     URL_TEMPLATE = "{url}"
 
+    # Anti-bot interstitials by provider. Only add markers seen in a real run:
+    # a guessed one turns a real failure into a silent Blocked.
+    BOT_CHALLENGE_TITLE_MARKERS = {
+        "Cloudflare": "just a moment",
+    }
+
+    @BasePage.context_content
+    def bot_challenge_reason(self) -> str | None:
+        """
+        Check whether an anti-bot interstitial replaced the page.
+
+        Returns:
+            str: Provider and page title, or None if the page looks normal.
+        """
+        title = self.driver.title or ""
+        for provider, marker in self.BOT_CHALLENGE_TITLE_MARKERS.items():
+            if marker in title.lower():
+                return f"{provider} ({title!r})"
+        return None
+
     def navigate_dialog_to_location(
         self, location: str, filename="test.txt"
     ) -> BasePage:
