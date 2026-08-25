@@ -568,6 +568,10 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_word_with_special_characters:
+    result: pass
+    splits:
+    - functional1
 form_autofill:
   test_address_autofill_attribute:
     result: pass
