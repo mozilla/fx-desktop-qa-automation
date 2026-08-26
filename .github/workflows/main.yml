@@ -167,6 +167,7 @@ jobs:
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "firefox.zip"
             Expand-Archive -Path firefox.zip -PassThru
             Move-Item -Path firefox -Destination "C:\Program Files\Custom Firefox" -Force -PassThru
+            dir "C:\Program Files\Custom Firefox"
             Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           } else {
             New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
