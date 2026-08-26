@@ -165,7 +165,7 @@ jobs:
           if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
             Write-Host "Downloading and unzipping file..."
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "firefox.zip"
-            Expand-Archive -Path firefox.zip -PassThru
+            Expand-Archive -Path firefox.zip -Wait
             Move-Item -Path firefox\* -Destination "C:\Program Files\Custom Firefox"
           } else {
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
@@ -176,7 +176,9 @@ jobs:
         id: setup
         shell: pwsh
         run: |
-          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          if (-not $env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          }
 
       - name: Select Tests (Win)
         id: select
