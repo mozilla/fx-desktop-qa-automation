@@ -162,6 +162,7 @@ jobs:
         shell: pwsh
         run: |
           if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Write-Host "Downloading and unzipping file..."
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "setup.zip"
             Expand-Archive -Path setup.zip -DestinationPath "${{ github.workspace }}"
           } else {
