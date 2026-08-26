@@ -172,11 +172,13 @@ jobs:
           }
 
       - name: Install Beta
-        if: ${{ inputs.dry_run != true }}
         id: setup
+        if: ${{ inputs.dry_run != true }}
+        env:
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
-          if (-not $env:WIN_INSTALLER_LINK.Contains(".zip")) {
+          if (-not ($env:WIN_INSTALLER_LINK -or $env:WIN_INSTALLER_LINK.Contains(".zip"))) {
             Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
           }
 
