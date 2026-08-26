@@ -161,14 +161,15 @@ jobs:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
           if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
             Write-Host "Downloading and unzipping file..."
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "setup.zip"
-            Expand-Archive -Path setup.zip -DestinationPath "${{ github.workspace }}" -PassThru
+            Expand-Archive -Path setup.zip
+            Move-Item -Path firefox\* -Destination "C:\Program Files\Custom Firefox"
           } else {
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
           }
-          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
 
       - name: Install Beta
         if: ${{ inputs.dry_run != true }}
