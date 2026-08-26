@@ -1953,6 +1953,10 @@ tabs:
     - functional3
     - nightly
     - no_xvfb
+  test_reload_multiselected_tabs:
+    result: pass
+    splits:
+    - functional3
   test_reload_overiding_cache_keys:
     result: pass
     splits:
