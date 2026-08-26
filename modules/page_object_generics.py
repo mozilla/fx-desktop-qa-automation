@@ -176,8 +176,16 @@ class GenericPage(BasePage):
             self.element_visible("facebook-cookie-dialog")
         except TimeoutException:
             return self
-        decline_buttons = self.get_elements("facebook-cookie-decline")
-        allow_buttons = self.get_elements("facebook-cookie-allow")
+        try:
+            self.element_visible("facebook-cookie-decline")
+            decline_buttons = self.get_elements("facebook-cookie-decline")
+        except TimeoutException:
+            decline_buttons = []
+        try:
+            self.element_visible("facebook-cookie-allow")
+            allow_buttons = self.get_elements("facebook-cookie-allow")
+        except TimeoutException:
+            allow_buttons = []
         if decline_buttons:
             self.click_on(decline_buttons[0])
         elif allow_buttons:
