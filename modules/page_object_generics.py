@@ -186,8 +186,8 @@ class GenericPage(BasePage):
         try:
             self.custom_wait(timeout=5).until(
                 lambda _: (
-                        self.get_elements("facebook-cookie-decline")
-                        or self.get_elements("facebook-cookie-allow")
+                    self.get_elements("facebook-cookie-decline")
+                    or self.get_elements("facebook-cookie-allow")
                 )
             )
         except TimeoutException:
@@ -203,9 +203,7 @@ class GenericPage(BasePage):
             else:
                 return self
 
-        self.wait.until(
-            lambda _: len(self.get_elements("facebook-cookie-dialog")) == 0
-        )
+        self.wait.until(lambda _: len(self.get_elements("facebook-cookie-dialog")) == 0)
         return self
 
     def open_facebook_login(self):
