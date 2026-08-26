@@ -36,8 +36,7 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     autofill_popup = AutofillPopup(driver)
 
     # Go to a site that have login field focus on page load
-    web_page = GenericPage(driver, url=TEST_PAGE).open()
-    web_page.dismiss_facebook_cookies_if_present()
+    web_page = GenericPage(driver, url=TEST_PAGE).open_facebook_login()
 
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
