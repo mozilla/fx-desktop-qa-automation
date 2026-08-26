@@ -40,19 +40,6 @@ def get_facebook_logins(about_logins: AboutLogins):
     ]
 
 
-def open_facebook_login(driver: Firefox) -> GenericPage:
-    web_page = GenericPage(driver, url=LOGIN_URL).open()
-
-    web_page.element_visible("facebook-username-field")
-    web_page.element_visible("facebook-password-field")
-
-    web_page.dismiss_facebook_cookies_if_present()
-
-    web_page.element_visible("facebook-username-field")
-    web_page.element_visible("facebook-password-field")
-    return web_page
-
-
 def get_autocomplete_values(driver: Firefox, autofill_popup: AutofillPopup):
     with driver.context(driver.CONTEXT_CHROME):
         autofill_popup.wait.until(
@@ -80,7 +67,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox):
     autofill_popup = AutofillPopup(driver)
 
     # Step 1: open login page
-    open_facebook_login(driver)
+    GenericPage(driver, url=LOGIN_URL).open_facebook_login()
 
     # Step 2: add first credential in about:logins
     about_logins.open()
@@ -97,7 +84,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox):
     assert facebook_logins
 
     # Step 3: refresh page and verify autofill works
-    web_page = open_facebook_login(driver)
+    web_page = GenericPage(driver, url=LOGIN_URL).open_facebook_login()
 
     web_page.wait.until(
         lambda _: (
@@ -127,7 +114,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox):
     assert len(facebook_logins) >= 2
 
     # Step 5: input another credential set
-    web_page = open_facebook_login(driver)
+    web_page = GenericPage(driver, url=LOGIN_URL).open_facebook_login()
 
     web_page.fill("facebook-username-field", DENIED_USERNAME, press_enter=False)
     web_page.fill("facebook-password-field", DENIED_PASSWORD, press_enter=False)
@@ -142,7 +129,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox):
     # - dropdown is displayed on focus
     # - saved credentials are listed
     # - Manage Passwords footer is present
-    web_page = open_facebook_login(driver)
+    web_page = GenericPage(driver, url=LOGIN_URL).open_facebook_login()
 
     web_page.wait.until(
         lambda _: (

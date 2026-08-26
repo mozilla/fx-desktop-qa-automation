@@ -187,12 +187,12 @@ class GenericPage(BasePage):
         self.wait.until(lambda _: len(self.get_elements("facebook-cookie-dialog")) == 0)
         return self
 
-    def open_facebook_login(self, url: str):
+    def open_facebook_login(self):
         """
         Opens the Facebook login page and dismisses the cookie consent
         dialog if present.
         """
-        self.open(url=url)
+        self.open()
         self.element_visible("facebook-username-field")
         self.element_visible("facebook-password-field")
         self.dismiss_facebook_cookies_if_present()
