@@ -936,8 +936,7 @@ password_manager:
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2066156
-    result: unstable
+    result: pass
     splits:
     - functional2
     - nightly
