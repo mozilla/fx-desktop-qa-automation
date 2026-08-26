@@ -159,6 +159,7 @@ jobs:
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
@@ -167,6 +168,8 @@ jobs:
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "firefox.zip"
             Expand-Archive -Path firefox.zip -PassThru
             Move-Item -Path firefox\* -Destination "C:\Program Files\Custom Firefox"
+            dir "C:\Program Files\Custom Firefox"
+            Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           } else {
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
           }
@@ -212,8 +215,6 @@ jobs:
         shell: pwsh
         run: |
           uv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           uv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       # --- REAL RUN: actually execute tests ---
