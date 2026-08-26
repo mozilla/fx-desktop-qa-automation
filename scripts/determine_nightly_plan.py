@@ -235,7 +235,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--build-datetime-utc",
         required=True,
-        help="Build timestamp such as 2026-08-25T10:30:00Z.",
+        help=(
+            "Firefox build ID or UTC timestamp, such as "
+            "20260818174224, buildID=20260818174224, or "
+            "2026-08-18T17:42:24Z."
+        ),
     )
     parser.add_argument(
         "--release-cycle-anchor-utc",
