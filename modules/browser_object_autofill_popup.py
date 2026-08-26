@@ -273,3 +273,14 @@ class AutofillPopup(BasePage):
         """Dismiss the Password Manager doorhanger using ESC."""
         self._get_doorhanger_username_input().send_keys(Keys.ESCAPE)
         return self
+
+    @BasePage.context_chrome
+    def wait_for_options_populated(self, minimum: int = 1):
+        """
+        Wait until at least `minimum` autocomplete option rows have rendered
+        inside the dropdown.
+        """
+        self.wait.until(
+            lambda _: len(self.get_elements("select-form-option")) >= minimum
+        )
+        return self
