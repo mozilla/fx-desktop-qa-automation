@@ -189,13 +189,13 @@ class GenericPage(BasePage):
 
     def open_facebook_login(self):
         """
-        Opens the Facebook login page and dismisses the cookie consent
-        dialog if present.
+        Opens the Facebook login page (using the page's configured URL)
+        and dismisses the cookie consent dialog if present.
         """
         self.open()
-        self.element_visible("facebook-username-field")
-        self.element_visible("facebook-password-field")
+
         self.dismiss_facebook_cookies_if_present()
+
         self.element_visible("facebook-username-field")
         self.element_visible("facebook-password-field")
         return self
