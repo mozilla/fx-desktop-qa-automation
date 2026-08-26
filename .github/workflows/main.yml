@@ -161,7 +161,12 @@ jobs:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
+          if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "setup.zip"
+            Expand-Archive -Path setup.zip -DestinationPath "${{ github.workspace }}"
+          } else {
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
+          }
           New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
 
       - name: Install Beta
