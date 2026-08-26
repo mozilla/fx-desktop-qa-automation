@@ -164,7 +164,7 @@ jobs:
           if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
             Write-Host "Downloading and unzipping file..."
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "setup.zip"
-            Expand-Archive -Path setup.zip -DestinationPath "${{ github.workspace }}"
+            Expand-Archive -Path setup.zip -DestinationPath "${{ github.workspace }}" -PassThru
           } else {
             Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
           }
