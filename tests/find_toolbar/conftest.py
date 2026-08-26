@@ -33,3 +33,22 @@ def find_toolbar(driver: Firefox):
 def browser_actions(driver: Firefox):
     ba = BrowserActions(driver)
     yield ba
+
+
+@pytest.fixture()
+def current_match():
+    """Script returning info about the current match, null while there is none"""
+    return """
+        const selection = window.getSelection();
+        if (!selection || !selection.rangeCount) return null;
+        const range = selection.getRangeAt(0);
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node = -1;
+        for (let i = 0; walker.nextNode(); i++) {
+          if (walker.currentNode === range.startContainer) {
+            node = i;
+            break;
+          }
+        }
+        return [selection.toString(), selection.rangeCount, node, range.startOffset];
+    """
