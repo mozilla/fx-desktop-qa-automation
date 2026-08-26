@@ -57,8 +57,4 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     # Firefox 154 removed the richlistitem ac-value attribute, so match the row by
     # its label (read from the autocomplete-row-item shadow DOM) instead.
     autofill_popup.ensure_autofill_dropdown_visible()
-
-    # Wait for the dropdown rows to actually populate before querying them
-    autofill_popup.wait_for_options_populated()
-
-    assert autofill_popup.get_option_by_value(USERNAME) is not None
+    autofill_popup.verify_autocomplete_option(USERNAME)
