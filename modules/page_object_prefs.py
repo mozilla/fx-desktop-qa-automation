@@ -331,9 +331,12 @@ class AboutPrefs(BasePage):
     def verify_doh_provider(self, provider_name: str) -> BasePage:
         """Wait until the DoH status box reports the given provider name."""
         self.custom_wait(timeout=30).until(
-            lambda _: provider_name
-            in (
-                self.get_element("doh-status-box").get_attribute("data-l10n-args") or ""
+            lambda _: (
+                provider_name
+                in (
+                    self.get_element("doh-status-box").get_attribute("data-l10n-args")
+                    or ""
+                )
             )
         )
         return self

@@ -36,7 +36,9 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     autofill_popup = AutofillPopup(driver)
 
     # Go to a site that have login field focus on page load
-    GenericPage(driver, url=TEST_PAGE).open()
+    web_page = GenericPage(driver, url=TEST_PAGE).open()
+    web_page.dismiss_facebook_cookies_if_present()
+
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
@@ -49,7 +51,11 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     tabs.click_tab_by_index(1)
     driver.switch_to.window(driver.window_handles[0])
 
+    # Click the username field to (re)trigger focus and the autocomplete dropdown
+    web_page.click_on("facebook-username-field")
+
     # The saved credential row is shown in the auto-toggled autocomplete dropdown.
     # Firefox 154 removed the richlistitem ac-value attribute, so match the row by
     # its label (read from the autocomplete-row-item shadow DOM) instead.
+    autofill_popup.ensure_autofill_dropdown_visible()
     assert autofill_popup.get_option_by_value(USERNAME) is not None

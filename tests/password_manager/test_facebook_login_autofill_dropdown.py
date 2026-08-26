@@ -1,5 +1,4 @@
 import pytest
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
@@ -33,47 +32,6 @@ def add_to_prefs_list():
     ]
 
 
-@pytest.fixture()
-def temp_selectors():
-    return {
-        "facebook-username-field": {
-            "selectorData": "input[name='email']",
-            "strategy": "css",
-            "groups": ["doNotCache"],
-        },
-        "facebook-password-field": {
-            "selectorData": "input[name='pass']",
-            "strategy": "css",
-            "groups": ["doNotCache"],
-        },
-        "facebook-cookie-dialog": {
-            "selectorData": (
-                "//div[@role='dialog'][.//text()[contains(.,'cookies') or contains(.,'Cookies')]]"
-            ),
-            "strategy": "xpath",
-            "groups": ["doNotCache"],
-        },
-        "facebook-cookie-decline": {
-            "selectorData": (
-                "//div[@role='dialog']//*[self::button or @role='button']"
-                "[contains(normalize-space(.),'Decline optional cookies') "
-                "or contains(normalize-space(.),'Only allow essential cookies')]"
-            ),
-            "strategy": "xpath",
-            "groups": ["doNotCache"],
-        },
-        "facebook-cookie-allow": {
-            "selectorData": (
-                "//div[@role='dialog']//*[self::button or @role='button']"
-                "[contains(normalize-space(.),'Allow all cookies') "
-                "or contains(normalize-space(.),'Accept all cookies')]"
-            ),
-            "strategy": "xpath",
-            "groups": ["doNotCache"],
-        },
-    }
-
-
 def get_facebook_logins(about_logins: AboutLogins):
     return [
         login
@@ -82,35 +40,13 @@ def get_facebook_logins(about_logins: AboutLogins):
     ]
 
 
-def dismiss_facebook_cookies_if_present(web_page: GenericPage):
-    try:
-        web_page.element_visible("facebook-cookie-dialog")
-    except TimeoutException:
-        return
-
-    decline_buttons = web_page.get_elements("facebook-cookie-decline")
-    allow_buttons = web_page.get_elements("facebook-cookie-allow")
-
-    if decline_buttons:
-        web_page.click_on(decline_buttons[0])
-    elif allow_buttons:
-        web_page.click_on(allow_buttons[0])
-    else:
-        return
-
-    web_page.wait.until(
-        lambda _: len(web_page.get_elements("facebook-cookie-dialog")) == 0
-    )
-
-
-def open_facebook_login(driver: Firefox, temp_selectors: dict) -> GenericPage:
+def open_facebook_login(driver: Firefox) -> GenericPage:
     web_page = GenericPage(driver, url=LOGIN_URL).open()
-    web_page.elements |= temp_selectors
 
     web_page.element_visible("facebook-username-field")
     web_page.element_visible("facebook-password-field")
 
-    dismiss_facebook_cookies_if_present(web_page)
+    web_page.dismiss_facebook_cookies_if_present()
 
     web_page.element_visible("facebook-username-field")
     web_page.element_visible("facebook-password-field")
@@ -130,7 +66,7 @@ def get_autocomplete_values(driver: Firefox, autofill_popup: AutofillPopup):
 
 
 @pytest.mark.headed
-def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
+def test_facebook_login_autofill_dropdown(driver: Firefox):
     """
     2245445: Verify that:
     1. A single saved Facebook credential autofills on page load.
@@ -144,7 +80,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     autofill_popup = AutofillPopup(driver)
 
     # Step 1: open login page
-    open_facebook_login(driver, temp_selectors)
+    open_facebook_login(driver)
 
     # Step 2: add first credential in about:logins
     about_logins.open()
@@ -161,7 +97,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     assert facebook_logins
 
     # Step 3: refresh page and verify autofill works
-    web_page = open_facebook_login(driver, temp_selectors)
+    web_page = open_facebook_login(driver)
 
     web_page.wait.until(
         lambda _: (
@@ -191,7 +127,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     assert len(facebook_logins) >= 2
 
     # Step 5: input another credential set
-    web_page = open_facebook_login(driver, temp_selectors)
+    web_page = open_facebook_login(driver)
 
     web_page.fill("facebook-username-field", DENIED_USERNAME, press_enter=False)
     web_page.fill("facebook-password-field", DENIED_PASSWORD, press_enter=False)
@@ -206,7 +142,7 @@ def test_facebook_login_autofill_dropdown(driver: Firefox, temp_selectors):
     # - dropdown is displayed on focus
     # - saved credentials are listed
     # - Manage Passwords footer is present
-    web_page = open_facebook_login(driver, temp_selectors)
+    web_page = open_facebook_login(driver)
 
     web_page.wait.until(
         lambda _: (

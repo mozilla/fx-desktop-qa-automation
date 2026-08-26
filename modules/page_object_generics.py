@@ -1,6 +1,7 @@
 import logging
 from time import sleep
 
+from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -166,6 +167,38 @@ class GenericPage(BasePage):
 
         # Click PDF Document (.pdf)
         self.click_on("gdoc-file-download-pdf")
+
+    def dismiss_facebook_cookies_if_present(self):
+        """
+        Dismiss the Facebook cookie consent dialog if it appears.
+        """
+        try:
+            self.element_visible("facebook-cookie-dialog")
+        except TimeoutException:
+            return self
+        decline_buttons = self.get_elements("facebook-cookie-decline")
+        allow_buttons = self.get_elements("facebook-cookie-allow")
+        if decline_buttons:
+            self.click_on(decline_buttons[0])
+        elif allow_buttons:
+            self.click_on(allow_buttons[0])
+        else:
+            return self
+        self.wait.until(lambda _: len(self.get_elements("facebook-cookie-dialog")) == 0)
+        return self
+
+    def open_facebook_login(self, url: str):
+        """
+        Opens the Facebook login page and dismisses the cookie consent
+        dialog if present.
+        """
+        self.open(url=url)
+        self.element_visible("facebook-username-field")
+        self.element_visible("facebook-password-field")
+        self.dismiss_facebook_cookies_if_present()
+        self.element_visible("facebook-username-field")
+        self.element_visible("facebook-password-field")
+        return self
 
 
 class GenericPdf(BasePage):
