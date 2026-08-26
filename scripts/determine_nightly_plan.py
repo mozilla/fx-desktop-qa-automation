@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 CYCLE_LENGTH_DAYS = 14
-FULL_TEST_SETS = ("functional", "glean")
+FULL_TEST_SETS = ("smoke", "functional", "glean")
 
 
 @dataclass(frozen=True)
@@ -112,9 +112,9 @@ def determine_plan(
 ) -> NightlyPlan:
     """Calculate the nightly test plan."""
 
-    if not 0 <= morning_cutoff_hour <= 24:
+    if not 0 <= morning_cutoff_hour < 24:
         raise ValueError(
-            "morning_cutoff_hour_utc must be between 0 and 24."
+            "morning_cutoff_hour_utc must be between 0 and 23."
         )
 
     elapsed_days = (build_datetime.date() - release_cycle_anchor).days
