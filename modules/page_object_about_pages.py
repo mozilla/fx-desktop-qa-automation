@@ -530,6 +530,15 @@ class AboutLogins(BasePage):
         )
         return self
 
+    def add_login_and_wait(self, origin: str, username: str, password: str):
+        """Add a login and wait for it to appear in the login list."""
+        original_count = len(self.get_elements("login-list-item"))
+        self.add_login(origin, username, password)
+        self.wait.until(
+            lambda _: len(self.get_elements("login-list-item")) > original_count
+        )
+        return self
+
 
 class AboutPrivatebrowsing(BasePage):
     """
