@@ -84,8 +84,6 @@ jobs:
         env:
           BUILD_DATETIME_UTC: ${{ inputs.build_datetime_utc }}
           DEFAULT_TEST_SETS: ${{ inputs.test_sets }}
-          RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
-          MORNING_CUTOFF_HOUR_UTC: "12"
         run: |
           python scripts/determine_nightly_plan.py \
             --build-datetime-utc "$BUILD_DATETIME_UTC" \
