@@ -62,6 +62,7 @@ def parse_utc_datetime(value: str) -> datetime:
 
     return parsed.astimezone(timezone.utc)
 
+
 def parse_anchor_date(value: str) -> date:
     """Parse the first UTC date of a known 14-day release cycle."""
 
