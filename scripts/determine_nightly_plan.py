@@ -8,7 +8,6 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-
 CYCLE_LENGTH_DAYS = 14
 FULL_TEST_SETS = ("smoke", "functional", "glean")
 
@@ -40,9 +39,7 @@ def parse_utc_datetime(value: str) -> datetime:
         try:
             parsed = datetime.strptime(value, "%Y%m%d%H%M%S")
         except ValueError as error:
-            raise ValueError(
-                f"Invalid Firefox build ID: {value}"
-            ) from error
+            raise ValueError(f"Invalid Firefox build ID: {value}") from error
 
         return parsed.replace(tzinfo=timezone.utc)
 
@@ -56,9 +53,7 @@ def parse_utc_datetime(value: str) -> datetime:
     try:
         parsed = datetime.fromisoformat(f"{value[:-1]}+00:00")
     except ValueError as error:
-        raise ValueError(
-            f"Invalid UTC build timestamp: {value}"
-        ) from error
+        raise ValueError(f"Invalid UTC build timestamp: {value}") from error
 
     return parsed.astimezone(timezone.utc)
 
@@ -67,16 +62,12 @@ def parse_anchor_date(value: str) -> date:
     """Parse the first UTC date of a known 14-day release cycle."""
 
     if not value:
-        raise ValueError(
-            "Repository variable RELEASE_CYCLE_ANCHOR_UTC is not set."
-        )
+        raise ValueError("Repository variable RELEASE_CYCLE_ANCHOR_UTC is not set.")
 
     try:
         return date.fromisoformat(value)
     except ValueError as error:
-        raise ValueError(
-            "RELEASE_CYCLE_ANCHOR_UTC must use YYYY-MM-DD."
-        ) from error
+        raise ValueError("RELEASE_CYCLE_ANCHOR_UTC must use YYYY-MM-DD.") from error
 
 
 def parse_test_sets(value: str) -> list[str]:
@@ -85,16 +76,13 @@ def parse_test_sets(value: str) -> list[str]:
     try:
         test_sets = json.loads(value)
     except json.JSONDecodeError as error:
-        raise ValueError(
-            f"test_sets must be valid JSON: {error.msg}"
-        ) from error
+        raise ValueError(f"test_sets must be valid JSON: {error.msg}") from error
 
     if (
         not isinstance(test_sets, list)
         or not test_sets
         or not all(
-            isinstance(test_set, str) and test_set.strip()
-            for test_set in test_sets
+            isinstance(test_set, str) and test_set.strip() for test_set in test_sets
         )
     ):
         raise ValueError(
@@ -114,16 +102,12 @@ def determine_plan(
     """Calculate the nightly test plan."""
 
     if not 0 <= morning_cutoff_hour < 24:
-        raise ValueError(
-            "morning_cutoff_hour_utc must be between 0 and 23."
-        )
+        raise ValueError("morning_cutoff_hour_utc must be between 0 and 23.")
 
     elapsed_days = (build_datetime.date() - release_cycle_anchor).days
 
     if elapsed_days < 0:
-        raise ValueError(
-            "Build time precedes RELEASE_CYCLE_ANCHOR_UTC."
-        )
+        raise ValueError("Build time precedes RELEASE_CYCLE_ANCHOR_UTC.")
 
     # cycle_index is zero-based:
     #   0  = first day
@@ -218,10 +202,7 @@ def write_github_summary(
             f"| Build UTC date | `{plan.build_date}` |",
             f"| Build UTC hour | `{plan.build_hour}` |",
             f"| Cycle day | `{plan.cycle_day} of {CYCLE_LENGTH_DAYS}` |",
-            (
-                "| First Thursday cycle day | "
-                f"`{plan.first_thursday_cycle_day}` |"
-            ),
+            (f"| First Thursday cycle day | `{plan.first_thursday_cycle_day}` |"),
             f"| Run tests | `{str(plan.should_run).lower()}` |",
             f"| Test sets | `{test_sets_json}` |",
             f"| Reason | {plan.reason} |",
@@ -266,15 +247,9 @@ def main() -> int:
 
     try:
         plan = determine_plan(
-            build_datetime=parse_utc_datetime(
-                args.build_datetime_utc
-            ),
-            release_cycle_anchor=parse_anchor_date(
-                args.release_cycle_anchor_utc
-            ),
-            default_test_sets=parse_test_sets(
-                args.default_test_sets
-            ),
+            build_datetime=parse_utc_datetime(args.build_datetime_utc),
+            release_cycle_anchor=parse_anchor_date(args.release_cycle_anchor_utc),
+            default_test_sets=parse_test_sets(args.default_test_sets),
             morning_cutoff_hour=args.morning_cutoff_hour_utc,
         )
     except ValueError as error:
