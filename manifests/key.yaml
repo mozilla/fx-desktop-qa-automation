@@ -475,7 +475,11 @@ downloads:
     splits:
     - functional1
   test_download_malicious_warning:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067181
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_download_mp3_and_check_extension:

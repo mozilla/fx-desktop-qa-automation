@@ -530,8 +530,7 @@ class AboutLogins(BasePage):
         )
         return self
 
-    # On AboutLogins
-    def add_login_and_wait(self, origin: str, username: str, password: str):
+    def add_login_and_wait(self, origin: str, username: str, password: str) -> BasePage:
         """Add a login and wait for it to actually appear in the login list."""
         self.add_login(origin, username, password)
         self.assert_username_present(username)
