@@ -23,39 +23,19 @@ class NightlyPlan:
     first_thursday_cycle_day: int
 
 
-def parse_utc_datetime(value: str) -> datetime:
-    """Parse a Firefox build ID or an ISO-8601 UTC timestamp."""
+def parse_build_datetime(value: str) -> datetime:
+    """Parse the UTC build time from a target_info value: buildID=YYYYMMDDHHMMSS."""
 
-    if not value:
-        raise ValueError("build_datetime_utc is required.")
-
-    value = value.strip()
-
-    if value.startswith("buildID="):
-        value = value.removeprefix("buildID=")
-
-    # Firefox build ID format: YYYYMMDDHHMMSS
-    if len(value) == 14 and value.isdigit():
-        try:
-            parsed = datetime.strptime(value, "%Y%m%d%H%M%S")
-        except ValueError as error:
-            raise ValueError(f"Invalid Firefox build ID: {value}") from error
-
-        return parsed.replace(tzinfo=timezone.utc)
-
-    # ISO-8601 UTC format: YYYY-MM-DDTHH:MM:SSZ
-    if not value.endswith("Z"):
-        raise ValueError(
-            "Build time must be a 14-digit Firefox build ID or "
-            "an ISO-8601 UTC timestamp ending in Z."
-        )
+    build_id = value.strip().removeprefix("buildID=")
 
     try:
-        parsed = datetime.fromisoformat(f"{value[:-1]}+00:00")
+        parsed = datetime.strptime(build_id, "%Y%m%d%H%M%S")
     except ValueError as error:
-        raise ValueError(f"Invalid UTC build timestamp: {value}") from error
+        raise ValueError(
+            f"target_info must use buildID=YYYYMMDDHHMMSS, got: {value}"
+        ) from error
 
-    return parsed.astimezone(timezone.utc)
+    return parsed.replace(tzinfo=timezone.utc)
 
 
 def parse_anchor_date(value: str) -> date:
@@ -178,50 +158,14 @@ def write_github_outputs(plan: NightlyPlan) -> None:
     )
 
 
-def write_github_summary(
-    plan: NightlyPlan,
-    build_datetime_utc: str,
-) -> None:
-    """Add the calculated plan to the GitHub Actions job summary."""
-
-    github_summary = os.environ.get("GITHUB_STEP_SUMMARY")
-
-    if not github_summary:
-        return
-
-    test_sets_json = json.dumps(plan.test_sets, separators=(",", ":"))
-
-    append_lines(
-        github_summary,
-        [
-            "### Nightly test plan",
-            "",
-            "| Setting | Value |",
-            "|---|---|",
-            f"| Build timestamp | `{build_datetime_utc}` |",
-            f"| Build UTC date | `{plan.build_date}` |",
-            f"| Build UTC hour | `{plan.build_hour}` |",
-            f"| Cycle day | `{plan.cycle_day} of {CYCLE_LENGTH_DAYS}` |",
-            (f"| First Thursday cycle day | `{plan.first_thursday_cycle_day}` |"),
-            f"| Run tests | `{str(plan.should_run).lower()}` |",
-            f"| Test sets | `{test_sets_json}` |",
-            f"| Reason | {plan.reason} |",
-        ],
-    )
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Determine the test plan for a Firefox nightly build."
     )
     parser.add_argument(
-        "--build-datetime-utc",
+        "--target-info",
         required=True,
-        help=(
-            "Firefox build ID or UTC timestamp, such as "
-            "20260818174224, buildID=20260818174224, or "
-            "2026-08-18T17:42:24Z."
-        ),
+        help="Firefox build ID, such as buildID=20260818174224.",
     )
     parser.add_argument(
         "--release-cycle-anchor-utc",
@@ -247,7 +191,7 @@ def main() -> int:
 
     try:
         plan = determine_plan(
-            build_datetime=parse_utc_datetime(args.build_datetime_utc),
+            build_datetime=parse_build_datetime(args.target_info),
             release_cycle_anchor=parse_anchor_date(args.release_cycle_anchor_utc),
             default_test_sets=parse_test_sets(args.default_test_sets),
             morning_cutoff_hour=args.morning_cutoff_hour_utc,
@@ -257,7 +201,6 @@ def main() -> int:
         return 1
 
     write_github_outputs(plan)
-    write_github_summary(plan, args.build_datetime_utc)
 
     # This is for when running the script locally.
     print(json.dumps(asdict(plan), indent=2))
