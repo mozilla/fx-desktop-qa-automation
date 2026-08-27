@@ -558,6 +558,10 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_nav:
     result: pass
     splits:
