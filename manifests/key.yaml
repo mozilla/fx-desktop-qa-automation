@@ -576,6 +576,10 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+  test_search_again_after_navigation:
+    result: pass
+    splits:
+    - functional1
 form_autofill:
   test_address_autofill_attribute:
     result: pass
