@@ -1066,14 +1066,36 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def clear_cookies_and_get_dialog_iframe(self):
+    def switch_to_clear_data_dialog(self) -> BasePage:
         """
-        Returns the iframe object for the dialog panel in the popup after pressing the clear site
-        data button.
+        Press the clear site data button and switch into the dialog panel's iframe.
+
+        The .dialogFrame element exists before the dialog loads, so switch from the top
+        and retry until the dialog's own content is reachable.
         """
         self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
-        return self.get_element("browser-popup")
+
+        def _switched_into_loaded_dialog(_) -> bool:
+            self.switch_to_default_frame()
+            for frame in self.get_elements("browser-popup"):
+                try:
+                    self.switch_to_iframe_context(frame)
+                    if self.get_elements("cookies-data-checkbox"):
+                        return True
+                except WebDriverException:
+                    pass
+                self.switch_to_default_frame()
+            return False
+
+        # Don't pay the implicit wait on every miss
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.wait.until(_switched_into_loaded_dialog)
+        finally:
+            self.driver.implicitly_wait(original)
+        return self
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
@@ -1185,8 +1207,6 @@ class AboutPrefs(BasePage):
         The <memory used> value for no cookies is '0 bytes', otherwise values are
         '### MB', or '### KB'
         """
-        # Find the dialog option elements containing the checkbox label
-        self.element_exists("clear-data-dialog-options")
         cookies_checkbox = self.get_element("cookies-data-checkbox")
         self.element_has_attribute(cookies_checkbox, "data-l10n-args")
         cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
@@ -1411,14 +1431,12 @@ class AboutPrefs(BasePage):
                 self.element_has_text(locator, text_value)
         return self
 
-    def open_clear_cookie_site_and_get_data(self):
+    def open_clear_cookie_site_and_get_data(self) -> int:
         """
-        Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
-        wait for its option container to be present, read the value, then switch back.
+        Open about:preferences#privacy and read the cookies and site data value.
         """
         self.open()
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.switch_to_clear_data_dialog()
         val = self.get_cookie_site_data_value()
         self.switch_to_default_frame()
         self.close_dialog_box()
@@ -1428,8 +1446,8 @@ class AboutPrefs(BasePage):
         """
         Open about:preferences#privacy and clear cookies and site data.
         """
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.open()
+        self.switch_to_clear_data_dialog()
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
