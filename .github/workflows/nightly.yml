@@ -1,0 +1,54 @@
+---
+name: Nightly Smoke Tests
+
+run-name: Nightly smoke tests triggered by ${{ github.actor }}
+
+# Dispatch only, so the caller decides when to run (cycle nights 2-13; the
+# first and last night are covered by full-functional-glean.yml).
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_sets:
+        description: "Test set to run"
+        required: true
+        default: "smoke"
+        type: string
+
+      win_installer_link:
+        description: 'The link to the Windows installer (win64) for the Fx under test'
+        required: false
+        type: string
+
+      mac_installer_link:
+        description: 'The link to the macOS installer for the Fx under test'
+        required: false
+        type: string
+
+      linux_tarball_link:
+        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
+        required: false
+        type: string
+
+      dry_run:
+        description: Select smoke tests without downloading or running Firefox
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  Smoke:
+    uses: ./.github/workflows/core.yml
+    with:
+      test_sets: ${{ inputs.test_sets }}
+      win_installer_link: ${{ inputs.win_installer_link }}
+      mac_installer_link: ${{ inputs.mac_installer_link }}
+      linux_tarball_link: ${{ inputs.linux_tarball_link }}
+      dry_run: ${{ inputs.dry_run }}

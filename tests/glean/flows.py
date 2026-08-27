@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
@@ -508,6 +509,22 @@ def _action_click_non_ads_link(driver: Firefox, params: dict = None):
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
+
+def block_if_bot_challenge(driver: Firefox) -> None:
+    """
+    Skip as Blocked when an anti-bot interstitial caused the failure.
+
+    Call from a test's except block. No recognized challenge leaves the original failure
+    to propagate, so a case that passes through a challenge stays Passed.
+    """
+    try:
+        reason = GenericPage(driver).bot_challenge_reason()
+    except Exception:
+        # A broken diagnostic must not replace the failure it was inspecting.
+        return
+    if reason:
+        pytest.skip(f"Blocked by an external bot challenge: {reason}")
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
