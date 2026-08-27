@@ -2021,7 +2021,6 @@ theme_and_toolbar:
     splits:
     - smoke
     - no_xvfb
-    - ci
   test_installed_theme_enabled:
     result: pass
     splits:
