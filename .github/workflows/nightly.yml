@@ -15,8 +15,8 @@ on:
         default: '["smoke"]'
         type: string
 
-      build_datetime_utc:
-        description: 'UTC generation time of the Firefox build'
+      target_info:
+        description: 'Build ID information containing date and time of the Firefox build'
         required: true
         type: string
 
@@ -78,14 +78,14 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Determine tests from UTC build time
+      - name: Determine tests from target info
         id: plan
         env:
-          BUILD_DATETIME_UTC: ${{ inputs.build_datetime_utc }}
+          TARGET_INFO: ${{ inputs.target_info }}
           DEFAULT_TEST_SETS: ${{ inputs.test_sets }}
         run: |
           python scripts/determine_nightly_plan.py \
-            --build-datetime-utc "$BUILD_DATETIME_UTC" \
+            --target-info "$TARGET_INFO" \
             --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC" \
             --default-test-sets "$DEFAULT_TEST_SETS" \
             --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC"
