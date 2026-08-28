@@ -27,31 +27,6 @@ on:
         required: false
         type: boolean
         default: false
-      automation_ref:
-        description: "Automation branch compatible with the Firefox build"
-        required: false
-        type: string
-        default: ""
-      firefox_version:
-        description: "Exact Firefox candidate/version to use on every platform"
-        required: false
-        type: string
-        default: ""
-      windows_download_url:
-        description: "Exact Windows Firefox artifact"
-        required: false
-        type: string
-        default: ""
-      macos_download_url:
-        description: "Exact macOS Firefox artifact"
-        required: false
-        type: string
-        default: ""
-      linux_download_url:
-        description: "Exact Linux Firefox artifact"
-        required: false
-        type: string
-        default: ""
     secrets:
       TESTRAIL_BASE_URL:
         required: false
@@ -87,7 +62,6 @@ on:
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
-  FX_VERSION: ${{ inputs.firefox_version }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -97,14 +71,11 @@ jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.windows_download_url }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
           fetch-depth: 0
 
@@ -137,7 +108,7 @@ jobs:
           TEST_SET: ${{ inputs.test_set }}
 
       - name: Set CI Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.channel != 'nightly' && inputs.is_pull_request == false && inputs.dry_run != true }}
+        if: ${{ inputs.job_to_run == 'Test-Windows' && inputs.is_pull_request == false && inputs.dry_run != true }}
         shell: pwsh
         run: |
           "TESTRAIL_REPORT=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -307,14 +278,11 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-26
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.macos_download_url }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
           fetch-depth: 0
 
@@ -341,7 +309,7 @@ jobs:
           exit $?
 
       - name: Set CI Environment (Scheduled Beta)
-        if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.channel != 'nightly' && inputs.is_pull_request == false && inputs.dry_run != true }}
+        if: ${{ inputs.job_to_run == 'Test-MacOS' && inputs.is_pull_request == false && inputs.dry_run != true }}
         run: |
           echo "TESTRAIL_REPORT=true" >> "$GITHUB_ENV"
           echo "Running report for most recent Beta on MacOS"
@@ -468,14 +436,11 @@ jobs:
   Smoke-Linux:
     if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.linux_download_url }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Set up Python 3.13
@@ -572,7 +537,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Set up Python 3.13

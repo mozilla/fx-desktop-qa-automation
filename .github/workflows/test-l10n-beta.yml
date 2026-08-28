@@ -6,17 +6,8 @@ on:
 env:
   LATEST: ""
 
-permissions:
-  contents: read
-
 jobs:
-  Resolve-Firefox:
-    uses: ./.github/workflows/resolve-firefox-branch.yml
-    with:
-      channel: beta
-
   Check-Beta-Version:
-    needs: Resolve-Firefox
     runs-on: ubuntu-latest
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
@@ -28,7 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
           persist-credentials: false
       - name: Check if the l10n run is reportable
         id: l10n-reportable
@@ -38,7 +28,6 @@ jobs:
           TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-          FX_VERSION: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
         run: |
           pip3 install 'pipenv==2023.11.15';
           pipenv install
@@ -47,46 +36,25 @@ jobs:
           echo linux_l10n=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Linux"))') >> "$GITHUB_OUTPUT"
 
   Run-L10N-Mac-Smoke:
-    needs:
-      - Resolve-Firefox
-      - Check-Beta-Version
+    needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_l10n_reportable == 'True' }}
     uses: ./.github/workflows/main-l10n.yml
     with:
-      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
-      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
-      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
-      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
-      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       job_to_run: L10N-MacOS
     secrets: inherit
 
   Run-L10N-Win-Smoke:
-    needs:
-      - Resolve-Firefox
-      - Check-Beta-Version
+    needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.win_l10n_reportable == 'True' }}
     uses: ./.github/workflows/main-l10n.yml
     with:
-      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
-      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
-      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
-      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
-      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       job_to_run: L10N-Windows
     secrets: inherit
 
   Run-L10N-Linux-Smoke:
-    needs:
-      - Resolve-Firefox
-      - Check-Beta-Version
+    needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.linux_l10n_reportable == 'True' }}
     uses: ./.github/workflows/main-l10n.yml
     with:
-      automation_ref: ${{ needs.Resolve-Firefox.outputs.automation_ref }}
-      firefox_version: ${{ needs.Resolve-Firefox.outputs.firefox_version }}
-      windows_download_url: ${{ needs.Resolve-Firefox.outputs.windows_download_url }}
-      macos_download_url: ${{ needs.Resolve-Firefox.outputs.macos_download_url }}
-      linux_download_url: ${{ needs.Resolve-Firefox.outputs.linux_download_url }}
       job_to_run: L10N-Linux
     secrets: inherit

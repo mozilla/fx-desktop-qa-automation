@@ -22,31 +22,6 @@ on:
         required: false
         type: boolean
         default: false
-      automation_ref:
-        description: "Automation branch compatible with the Firefox build"
-        required: false
-        type: string
-        default: ""
-      firefox_version:
-        description: "Exact Firefox candidate/version to use on every platform"
-        required: false
-        type: string
-        default: ""
-      windows_download_url:
-        description: "Exact Windows Firefox artifact"
-        required: false
-        type: string
-        default: ""
-      macos_download_url:
-        description: "Exact macOS Firefox artifact"
-        required: false
-        type: string
-        default: ""
-      linux_download_url:
-        description: "Exact Linux Firefox artifact"
-        required: false
-        type: string
-        default: ""
 
   workflow_dispatch:
     inputs:
@@ -64,7 +39,6 @@ on:
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
-  FX_VERSION: ${{ inputs.firefox_version }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
@@ -75,13 +49,10 @@ jobs:
   L10N-MacOS:
     if: ${{ inputs.job_to_run == 'L10N-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-latest
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.macos_download_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -176,13 +147,10 @@ jobs:
   L10N-Linux:
     if: ${{ inputs.job_to_run == 'L10N-Linux' || inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.linux_download_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -282,13 +250,10 @@ jobs:
   L10N-Windows:
     if: ${{ inputs.job_to_run == 'L10N-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
-    env:
-      FX_DOWNLOAD_URL: ${{ inputs.windows_download_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -439,7 +404,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: ${{ inputs.automation_ref || github.sha }}
           persist-credentials: false
 
       - name: Set up Python 3.13
