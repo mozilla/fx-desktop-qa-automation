@@ -562,6 +562,10 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_nav:
     result: pass
     splits:
@@ -948,8 +952,7 @@ password_manager:
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2066156
-    result: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -2017,7 +2020,6 @@ theme_and_toolbar:
     splits:
     - smoke
     - no_xvfb
-    - ci
   test_installed_theme_enabled:
     result: pass
     splits:
