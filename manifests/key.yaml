@@ -448,8 +448,7 @@ downloads:
     splits:
     - functional1
   test_change_download_folder:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2063442
-    result: unstable
+    result: pass
     splits:
     - functional1
     - ci
@@ -484,8 +483,7 @@ downloads:
     splits:
     - functional1
   test_download_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2063587
-    result: unstable
+    result: pass
     splits:
     - smoke
     - ci
@@ -560,6 +558,10 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_nav:
     result: pass
     splits:
@@ -570,6 +572,14 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_word_with_special_characters:
+    result: pass
+    splits:
+    - functional1
+  test_find_word_with_special_characters_2:
+    result: pass
+    splits:
+    - functional1
 form_autofill:
   test_address_autofill_attribute:
     result: pass
@@ -948,11 +958,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -972,11 +978,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1091,11 +1093,7 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1962,6 +1960,10 @@ tabs:
     - functional3
     - nightly
     - no_xvfb
+  test_reload_multiselected_tabs:
+    result: pass
+    splits:
+    - functional3
   test_reload_overiding_cache_keys:
     result: pass
     splits:
@@ -2018,7 +2020,6 @@ theme_and_toolbar:
     splits:
     - smoke
     - no_xvfb
-    - ci
   test_installed_theme_enabled:
     result: pass
     splits:

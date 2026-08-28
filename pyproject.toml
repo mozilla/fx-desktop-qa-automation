@@ -173,7 +173,7 @@ dependencies = [
   "urllib3[socks]==2.7.0 ; python_full_version >= '3.10'",
   "virtualenv==21.4.2 ; python_full_version >= '3.8'",
   "voluptuous==0.16.0 ; python_full_version >= '3.9'",
-  "webob==1.8.10 ; python_full_version >= '2.7'",
+  "webob==1.8.11 ; python_full_version >= '2.7'",
   "websocket-client==1.9.0 ; python_full_version >= '3.9'",
   "werkzeug==3.1.8 ; python_full_version >= '3.9'",
   "wrapt==1.17.3 ; python_full_version >= '3.11'",

@@ -151,6 +151,11 @@
     "strategy": "id",
     "groups": []
   },
+  "context-menu_reload-selected-tabs": {
+    "selectorData": "context_reloadSelectedTabs",
+    "strategy": "id",
+    "groups": []
+  },
   "context-menu-move-to-new-window": {
     "selectorData": "context_openTabInWindow",
     "strategy": "id",

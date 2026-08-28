@@ -1,5 +1,5 @@
 import pytest
-from selenium.webdriver import Firefox
+from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object_autofill_popup import AutofillPopup
 from modules.browser_object_tabbar import TabBar
@@ -36,7 +36,8 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     autofill_popup = AutofillPopup(driver)
 
     # Go to a site that have login field focus on page load
-    GenericPage(driver, url=TEST_PAGE).open()
+    web_page = GenericPage(driver, url=TEST_PAGE).open_facebook_login()
+
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
 
@@ -49,7 +50,13 @@ def test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load(
     tabs.click_tab_by_index(1)
     driver.switch_to.window(driver.window_handles[0])
 
+    # Click triggers focus; arrow key reliably triggers the dropdown
+    username_field = web_page.get_element("facebook-username-field")
+    web_page.click_on("facebook-username-field")
+    username_field.send_keys(Keys.ARROW_DOWN)
+
     # The saved credential row is shown in the auto-toggled autocomplete dropdown.
     # Firefox 154 removed the richlistitem ac-value attribute, so match the row by
     # its label (read from the autocomplete-row-item shadow DOM) instead.
-    assert autofill_popup.get_option_by_value(USERNAME) is not None
+    autofill_popup.ensure_autofill_dropdown_visible()
+    autofill_popup.verify_autocomplete_option(USERNAME)
