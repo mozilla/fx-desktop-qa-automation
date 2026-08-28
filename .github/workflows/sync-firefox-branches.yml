@@ -29,10 +29,6 @@ concurrency:
 
 jobs:
   promote:
-    if: >-
-      github.event_name == 'repository_dispatch' ||
-      github.ref == 'refs/heads/main' ||
-      inputs.dry_run
     runs-on: ubuntu-latest
     env:
       EVENT_NAME: ${{ github.event_name }}
@@ -43,8 +39,18 @@ jobs:
       MANUAL_DRY_RUN: ${{ inputs.dry_run }}
 
     steps:
+      - name: Validate promotion source
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          github.ref != 'refs/heads/main' &&
+          inputs.dry_run != true
+        shell: bash
+        run: |
+          echo "::error::Live promotions must run from main. Select main or enable dry_run."
+          exit 1
+
       - name: Check out the repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Rotate Firefox train branches
         id: rotate
@@ -129,6 +135,7 @@ jobs:
           echo "release_branch=$release_branch" >> "$GITHUB_OUTPUT"
           echo "main_sha=$main_sha" >> "$GITHUB_OUTPUT"
           echo "nightly_sha=$nightly_sha" >> "$GITHUB_OUTPUT"
+          echo "dry_run=$dry_run" >> "$GITHUB_OUTPUT"
 
           echo "Action: $action"
           echo "Archive main as: $release_branch"
@@ -153,6 +160,7 @@ jobs:
           git push "${push_options[@]}" origin "${push_args[@]}"
 
       - name: Write summary
+        if: steps.rotate.outcome == 'success'
         shell: bash
         run: |
           {
@@ -162,4 +170,5 @@ jobs:
             echo "- Archived branch: \`${{ steps.rotate.outputs.release_branch }}\`"
             echo "- Previous main: \`${{ steps.rotate.outputs.main_sha }}\`"
             echo "- Nightly promoted to main: \`${{ steps.rotate.outputs.nightly_sha }}\`"
+            echo "- Dry run: \`${{ steps.rotate.outputs.dry_run }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
