@@ -76,6 +76,14 @@ jobs:
           fi
 
           release_branch="release${released_major}"
+          for required_branch in main nightly; do
+            if ! git ls-remote --exit-code --heads origin \
+              "refs/heads/$required_branch" > /dev/null; then
+              echo "Required branch '$required_branch' does not exist on origin." >&2
+              exit 1
+            fi
+          done
+
           git fetch --no-tags origin \
             '+refs/heads/main:refs/remotes/origin/main' \
             '+refs/heads/nightly:refs/remotes/origin/nightly'
@@ -103,6 +111,7 @@ jobs:
           if [[ -n "$release_sha" ]]; then
             action="already-promoted"
             push_args=()
+            echo "$release_branch already exists; skipping promotion."
           else
             action="promote"
             push_args=(
@@ -111,6 +120,7 @@ jobs:
             )
           fi
 
+          # Retention cleanup also runs after a repeated promotion event.
           for branch in "${old_branches[@]}"; do
             push_args+=(":refs/heads/$branch")
           done
