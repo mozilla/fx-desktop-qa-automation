@@ -689,6 +689,11 @@ glean:
       result: pass
       splits:
       - glean
+  sap_counts:
+    test_sap_counts:
+      result: pass
+      splits:
+      - glean
   serp_abandonment:
     test_serp_abandonment:
       result: pass
