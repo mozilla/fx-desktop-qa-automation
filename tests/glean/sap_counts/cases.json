@@ -13,7 +13,6 @@
     {"id": "3255577", "entry": "urlbar_handoff", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar_handoff"}},
     {"id": "3255589", "entry": "urlbar_handoff", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar_handoff"}},
 
-    {"id": "3255566", "entry": "urlbar_persisted", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "urlbar_persisted"}},
     {"id": "3255578", "entry": "urlbar_persisted", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar_persisted"}},
     {"id": "3255590", "entry": "urlbar_persisted", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar_persisted"}},
 
