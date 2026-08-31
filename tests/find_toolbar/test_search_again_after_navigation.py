@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import FindToolbar
+from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
@@ -17,14 +15,27 @@ TARGET_PAGE = (
 )
 SEARCH_TERM = "browser"
 MIN_MATCHES = 10  # the page had 25 matches when the test was written
-TOOLBOX_LINK = (
-    By.CSS_SELECTOR,
-    "div[itemprop='articleBody'] a[href$='tools_toolbox/index.html']",
-)
+NEXT_PAGE_URL_PART = "tools_toolbox"
+
+
+@pytest.fixture()
+def temp_selectors():
+    return {
+        "toolbox-link": {
+            "selectorData": (
+                "div[itemprop='articleBody'] a[href$='tools_toolbox/index.html']"
+            ),
+            "strategy": "css",
+            "groups": [],
+        },
+    }
 
 
 def test_search_again_after_navigation(
-    driver: Firefox, find_toolbar: FindToolbar, current_match: str
+    driver: Firefox,
+    find_toolbar: FindToolbar,
+    current_match: str,
+    temp_selectors: dict,
 ):
     """
     C127264: Verify that searching again after navigating to another page works
@@ -32,27 +43,31 @@ def test_search_again_after_navigation(
     Arguments:
         find_toolbar: instantiation of FindToolbar BOM.
         current_match: script returning info about the currently highlighted match.
+        temp_selectors: the in-content link to the next page.
     """
-    driver.get(TARGET_PAGE)
+    page = GenericPage(driver, url=TARGET_PAGE)
+    page.elements |= temp_selectors
+    page.open()
 
     # Search the term
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
-    assert find_toolbar.match_dict["total"] >= MIN_MATCHES
+    find_toolbar.expect(lambda _: find_toolbar.get_match_args()["total"] >= MIN_MATCHES)
 
     # Follow a link, the findbar stays open with the term in it
-    driver.find_element(*TOOLBOX_LINK).click()
-    WebDriverWait(driver, 30).until(lambda d: "tools_toolbox" in d.current_url)
+    page.click_on("toolbox-link")
+    page.url_contains(NEXT_PAGE_URL_PART)
 
-    # Navigating drops the highlight, hitting ENTER searches the new page
-    assert driver.execute_script(current_match) is None
-    with driver.context(driver.CONTEXT_CHROME):
-        find_bar = find_toolbar.get_element("find-toolbar-input")
-        find_bar.click()
-        find_bar.send_keys(Keys.ENTER)
+    # Navigating drops the highlight
+    page.expect_not(lambda d: d.execute_script(current_match))
 
-    # The searched word is the only highlight
-    new_match = WebDriverWait(driver, 10).until(
-        lambda d: d.execute_script(current_match)
-    )
-    assert new_match[0].lower() == SEARCH_TERM
+    # Selecting the findbar and hitting ENTER searches the new page for the same term
+    find_toolbar.click_on("find-toolbar-input")
+    find_toolbar.fill("find-toolbar-input", "", clear_first=False)
+
+    # The searched word is highlighted on the new page
+    def search_term_highlighted(d):
+        match = d.execute_script(current_match)
+        return match and match[0].lower() == SEARCH_TERM
+
+    page.expect(search_term_highlighted)
