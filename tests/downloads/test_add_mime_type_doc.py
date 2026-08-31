@@ -27,7 +27,7 @@ def delete_files_regex_string():
 def close_doc_handler(sys_platform):
     """Quit the app the OS opens the downloaded .doc in."""
     yield
-    # Let the handler finish launching, or it opens onto a deleted file
+    # Always wait, since an open handler can block later tests with a dialog
     sleep(HANDLER_LAUNCH_SEC)
     if sys_platform == "Darwin":
         for app in ("TextEdit", "Pages", "Microsoft Word"):
@@ -44,7 +44,8 @@ def close_doc_handler(sys_platform):
     elif sys_platform == "Linux":
         run(["pkill", "-f", "soffice"], check=False)
     elif sys_platform == "Windows":
-        run(["taskkill", "/F", "/T", "/IM", "WINWORD.EXE"], check=False)
+        for proc in ("WINWORD.EXE", "soffice.exe", "soffice.bin"):
+            run(["taskkill", "/F", "/T", "/IM", proc], check=False)
     # Windows keeps the file locked briefly after the app dies.
     sleep(HANDLER_CLOSE_SEC)
 
