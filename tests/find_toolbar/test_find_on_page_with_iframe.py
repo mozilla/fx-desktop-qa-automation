@@ -100,8 +100,15 @@ def test_find_on_page_with_iframe(
     find_toolbar.navigate_matches_by_keys(backwards=True)
     web_page.expect(lambda d: d.execute_script(current_match) == first_match)
 
-    # Past the last parent match, the highlight enters the iframe
-    find_toolbar.navigate_matches_n_times(PARENT_MATCHES)
+    # The last parent match still highlights in the parent
+    find_toolbar.navigate_matches_n_times(PARENT_MATCHES - 1)
+    find_toolbar.expect(
+        lambda _: find_toolbar.get_match_args()["current"] == PARENT_MATCHES
+    )
+    web_page.expect(lambda d: _single_highlight(d, current_match))
+
+    # One more crosses into the iframe
+    find_toolbar.next_match()
     find_toolbar.expect(
         lambda _: find_toolbar.get_match_args()["current"] == PARENT_MATCHES + 1
     )
