@@ -46,8 +46,8 @@ def close_doc_handler(sys_platform):
     elif sys_platform == "Windows":
         for proc in ("WINWORD.EXE", "soffice.exe", "soffice.bin"):
             run(["taskkill", "/F", "/T", "/IM", proc], check=False)
-    # Windows keeps the file locked briefly after the app dies.
-    sleep(HANDLER_CLOSE_SEC)
+        # Windows keeps the file locked briefly after the app dies
+        sleep(HANDLER_CLOSE_SEC)
 
 
 @pytest.mark.noxvfb
