@@ -49,10 +49,9 @@ def verify_tabs_reloaded(
     for handle, previous_time_origin in time_origins.items():
         driver.switch_to.window(handle)
         tabs.expect_in_content(
-            lambda d, previous=previous_time_origin: d.execute_script(
-                "return performance.timeOrigin"
+            lambda d, previous=previous_time_origin: (
+                d.execute_script("return performance.timeOrigin") != previous
             )
-            != previous
         )
 
 

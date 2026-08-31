@@ -475,7 +475,11 @@ downloads:
     splits:
     - functional1
   test_download_malicious_warning:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067181
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_download_mp3_and_check_extension:
@@ -978,7 +982,11 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067357
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1003,11 +1011,7 @@ password_manager:
     - functional2
     - nightly
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2065464
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
