@@ -562,6 +562,10 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+  test_find_on_page_with_iframe:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_nav:
     result: pass
     splits:
