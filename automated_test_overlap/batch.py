@@ -61,4 +61,4 @@ with open(sys.argv[1]) as fh:
             else:
                 current_responses[row["starfox_test"]] = resp
             with open("responses.json", "w") as ofh:
-                json.dump(current_responses, ofh)
+                json.dump(current_responses, ofh, indent=2)
