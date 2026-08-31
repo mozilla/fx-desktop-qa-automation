@@ -159,17 +159,30 @@ jobs:
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
-          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Write-Host "Downloading and unzipping file..."
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "firefox.zip"
+            Expand-Archive -Path firefox.zip -PassThru
+            Move-Item -Path firefox\firefox -Destination "C:\Program Files\Custom Firefox" -Force -PassThru
+            Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          } else {
+            New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
+          }
 
       - name: Install Beta
-        if: ${{ inputs.dry_run != true }}
         id: setup
+        if: ${{ inputs.dry_run != true }}
+        env:
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
-          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          if (-not $env:WIN_INSTALLER_LINK -or -not $env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          }
 
       - name: Select Tests (Win)
         id: select
@@ -201,8 +214,6 @@ jobs:
         shell: pwsh
         run: |
           uv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           uv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       # --- REAL RUN: actually execute tests ---

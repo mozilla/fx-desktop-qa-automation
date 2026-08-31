@@ -9,6 +9,9 @@ SEARCH_TERM = "firefox"
 # Spaces get URL-encoded, so match only the first token when checking the SERP URL.
 RELATED_SEARCH_TERM = "women shoes"
 RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
+# High-intent commercial query, so the SERP serves the text ads that withads and
+# serp.adImpression need. SEARCH_TERM returns no ads.
+AD_SEARCH_TERM = "car insurance quotes"
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
 
