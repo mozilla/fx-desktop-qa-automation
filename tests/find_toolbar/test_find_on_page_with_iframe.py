@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from shutil import copyfile
 
@@ -62,6 +63,12 @@ def _no_highlight(driver: Firefox, script: str) -> bool:
     return not match or not match[0].strip()
 
 
+def _match_args(find_toolbar: FindToolbar) -> dict:
+    """The findbar counter, empty while it has not been populated"""
+    args = find_toolbar.get_element("matches-label").get_attribute("data-l10n-args")
+    return json.loads(args) if args else {}
+
+
 def test_find_on_page_with_iframe(
     driver: Firefox,
     find_toolbar: FindToolbar,
@@ -84,7 +91,7 @@ def test_find_on_page_with_iframe(
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
     find_toolbar.expect(
-        lambda _: find_toolbar.get_match_args()["total"] == TOTAL_MATCHES
+        lambda _: _match_args(find_toolbar).get("total") == TOTAL_MATCHES
     )
 
     # First match is in the parent, and is the only highlight
@@ -103,14 +110,14 @@ def test_find_on_page_with_iframe(
     # The last parent match still highlights in the parent
     find_toolbar.navigate_matches_n_times(PARENT_MATCHES - 1)
     find_toolbar.expect(
-        lambda _: find_toolbar.get_match_args()["current"] == PARENT_MATCHES
+        lambda _: _match_args(find_toolbar).get("current") == PARENT_MATCHES
     )
     web_page.expect(lambda d: _single_highlight(d, current_match))
 
     # One more crosses into the iframe
     find_toolbar.next_match()
     find_toolbar.expect(
-        lambda _: find_toolbar.get_match_args()["current"] == PARENT_MATCHES + 1
+        lambda _: _match_args(find_toolbar).get("current") == PARENT_MATCHES + 1
     )
     web_page.expect(lambda d: _no_highlight(d, current_match))
 
@@ -128,5 +135,5 @@ def test_find_on_page_with_iframe(
     driver.execute_script("window.scrollTo(0, 0)")
     web_page.expect(lambda d: d.execute_script(current_match) == last_parent_match)
     find_toolbar.expect(
-        lambda _: find_toolbar.get_match_args()["total"] == TOTAL_MATCHES
+        lambda _: _match_args(find_toolbar).get("total") == TOTAL_MATCHES
     )
