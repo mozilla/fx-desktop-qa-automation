@@ -7,7 +7,6 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import FindToolbar
 from modules.page_object import GenericPage
-from modules.util import BrowserActions
 
 PARENT_HTML = "find_in_iframe_page.html"
 FRAME_HTML = "find_in_iframe_frame.html"
@@ -72,7 +71,6 @@ def _match_args(find_toolbar: FindToolbar) -> dict:
 def test_find_on_page_with_iframe(
     driver: Firefox,
     find_toolbar: FindToolbar,
-    browser_actions: BrowserActions,
     web_page: GenericPage,
     current_match: str,
 ):
@@ -83,7 +81,6 @@ def test_find_on_page_with_iframe(
 
     Arguments:
         find_toolbar: instantiation of FindToolbar BOM.
-        browser_actions: instantiation of BrowserActions BOM.
         web_page: the local page that contains an iframe.
         current_match: script returning info about the currently highlighted match.
     """
@@ -121,7 +118,7 @@ def test_find_on_page_with_iframe(
     )
     web_page.expect(lambda d: _no_highlight(d, current_match))
 
-    browser_actions.switch_to_iframe_context(web_page.get_element("content-iframe"))
+    web_page.switch_to_iframe_context(web_page.get_element("content-iframe"))
     web_page.expect(lambda d: _single_highlight(d, current_match))
     web_page.switch_to_default_frame()
 
