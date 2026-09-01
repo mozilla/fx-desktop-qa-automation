@@ -105,5 +105,18 @@
   "tests/menus/test_new_tab_label.py": "Agree",
   "tests/menus/test_tab_context_menu_actions.py": "Agree",
   "tests/menus/test_tab_context_menu_close.py": "Agree",
-  "tests/networking/test_cloudflare_as_default_doh_provider.py": "live site"
+  "tests/networking/test_cloudflare_as_default_doh_provider.py": "live site",
+  "tests/networking/test_custom_doh_provider.py": "live site",
+  "tests/networking/test_default_dns_protection.py": "Agree",
+  "tests/networking/test_heuristics_disabled_when_trr_mode_2.py": "Agree",
+  "tests/networking/test_http_site.py": "Agree",
+  "tests/networking/test_nextdns_as_doh_provider.py": "Agree",
+  "tests/notifications/test_audio_video_permissions_notification.py": "Agree",
+  "tests/notifications/test_camera_permissions_notification.py": "Agree",
+  "tests/notifications/test_cancel_webextension.py": "Agree",
+  "tests/notifications/test_deny_geolocation.py": "Agree",
+  "tests/notifications/test_deny_screen_capture.py": "Agree",
+  "tests/notifications/test_downloads_button_is_displayed.py": "Agree",
+  "tests/notifications/test_downloads_finished_button_is_displayed.py": "incomplete overlap",
+  "tests/notifications/test_geolocation_prompt_presence.py": "live site"
 }
