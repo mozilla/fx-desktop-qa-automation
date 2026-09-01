@@ -16,7 +16,7 @@ on:
         type: string
 
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: 'The link to the MacOS installer for the Fx under test'
         required: false
         type: string
 
@@ -406,7 +406,7 @@ jobs:
           }
 
   Test-MacOS:
-    name: macOS (${{ matrix.test_set }})
+    name: MacOS (${{ matrix.test_set }})
     needs: Preflight
     if: ${{ needs.Preflight.outputs.run_macos == 'true' }}
     runs-on: macos-26
@@ -563,16 +563,16 @@ jobs:
 
           exit "$exit_code"
 
-      - name: Upload macOS artifacts
+      - name: Upload MacOS artifacts
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
-          name: macos-${{ matrix.test_set }}-${{ github.run_id }}
+          name: Macos-${{ matrix.test_set }}-${{ github.run_id }}
           path: test-artifacts
           if-no-files-found: error
           retention-days: 14
 
-      - name: Set macOS job result
+      - name: Set MacOS job result
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
         env:
           VERIFY_RESULT: ${{ steps.verify.outcome }}
@@ -833,7 +833,7 @@ jobs:
             echo "| platform | result |"
             echo "|---|---|"
             echo "| Windows | \`$WINDOWS_RESULT\` |"
-            echo "| macOS | \`$MACOS_RESULT\` |"
+            echo "| MacOS | \`$MACOS_RESULT\` |"
             echo "| Linux | \`$LINUX_RESULT\` |"
           } >> "$GITHUB_STEP_SUMMARY"
 
