@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
   group: firefox-train-promotion
@@ -45,6 +46,36 @@ jobs:
 
       - name: Check out the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: List open pull requests targeting main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          {
+            echo "### Open pull requests targeting main"
+            echo
+            echo "A live promotion will change the commit behind main for these pull requests."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if open_prs="$(gh pr list \
+            --base main \
+            --state open \
+            --limit 1000 \
+            --json number,title,author \
+            --template '{{range .}}- #{{.number}} {{.title}}{{with .author}}{{if .login}} (@{{.login}}){{end}}{{end}}{{"\n"}}{{end}}')"; then
+            if [[ -n "$open_prs" ]]; then
+              echo "$open_prs" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "None." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "::warning::Could not list open pull requests targeting main."
+            echo "The promotion will continue without the PR list." \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Rotate Firefox train branches
         id: rotate
@@ -83,16 +114,31 @@ jobs:
             '+refs/heads/nightly:refs/remotes/origin/nightly'
           main_sha="$(git rev-parse refs/remotes/origin/main)"
           nightly_sha="$(git rev-parse refs/remotes/origin/nightly)"
-          if git ls-remote --exit-code --heads origin \
-            "refs/heads/$release_branch" > /dev/null; then
+          release_refs="$(git ls-remote --heads origin 'refs/heads/release*')"
+          if awk -v target="refs/heads/$release_branch" \
+            '$2 == target { found = 1 } END { exit !found }' \
+            <<< "$release_refs"; then
             release_exists=true
           else
             release_exists=false
           fi
 
+          latest_release_major="$(
+            awk '$2 ~ /^refs\/heads\/release[0-9]+$/ {
+              sub("refs/heads/release", "", $2)
+              if ($2 > latest) latest = $2
+            } END { if (latest) print latest }' <<< "$release_refs"
+          )"
+          if [[ "$release_exists" == "false" && -n "$latest_release_major" ]] &&
+            ((released_major <= latest_release_major)); then
+            echo "release${released_major} is missing, but release${latest_release_major} already exists." >&2
+            echo "Refusing a stale or out-of-order promotion." >&2
+            exit 1
+          fi
+
           mapfile -t release_majors < <(
             {
-              git ls-remote --heads origin 'refs/heads/release*'
+              printf '%s\n' "$release_refs"
               if [[ "$release_exists" == "false" ]]; then
                 echo "planned refs/heads/$release_branch"
               fi
