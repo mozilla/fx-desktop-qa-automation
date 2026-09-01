@@ -1,0 +1,29 @@
+{
+  "metric": "sap.counts",
+  "cases": [
+    {"id": "3255564", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "urlbar"}},
+    {"id": "3255576", "entry": "urlbar", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar"}},
+    {"id": "3255588", "entry": "urlbar", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar"}},
+
+    {"id": "3255562", "entry": "searchbar", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "searchbar"}},
+    {"id": "3255574", "entry": "searchbar", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "searchbar"}},
+    {"id": "3255586", "entry": "searchbar", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "searchbar"}},
+
+    {"id": "3255565", "entry": "urlbar_handoff", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "urlbar_handoff"}},
+    {"id": "3255577", "entry": "urlbar_handoff", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar_handoff"}},
+    {"id": "3255589", "entry": "urlbar_handoff", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar_handoff"}},
+
+    {"id": "3255578", "entry": "urlbar_persisted", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar_persisted"}},
+    {"id": "3255590", "entry": "urlbar_persisted", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar_persisted"}},
+
+    {"id": "3255567", "entry": "urlbar_searchmode", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "urlbar_searchmode"}},
+    {"id": "3255579", "entry": "urlbar_searchmode", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "urlbar_searchmode"}},
+    {"id": "3255591", "entry": "urlbar_searchmode", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "urlbar_searchmode"}},
+
+    {"id": "3255561", "entry": "contextmenu", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "contextmenu"}},
+    {"id": "3255573", "entry": "contextmenu", "params": {"engine": "Bing"}, "prefs": [], "expected": {"provider_id": "bing", "source": "contextmenu"}},
+    {"id": "3255585", "entry": "contextmenu", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"provider_id": "ddg", "source": "contextmenu"}},
+
+    {"id": "3255560", "entry": "contextmenu_visual", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "contextmenu_visual"}}
+  ]
+}
