@@ -83,12 +83,19 @@ jobs:
             '+refs/heads/nightly:refs/remotes/origin/nightly'
           main_sha="$(git rev-parse refs/remotes/origin/main)"
           nightly_sha="$(git rev-parse refs/remotes/origin/nightly)"
-          release_sha="$(git ls-remote --heads origin "refs/heads/$release_branch" | awk '{print $1}')"
+          if git ls-remote --exit-code --heads origin \
+            "refs/heads/$release_branch" > /dev/null; then
+            release_exists=true
+          else
+            release_exists=false
+          fi
 
           mapfile -t release_majors < <(
             {
               git ls-remote --heads origin 'refs/heads/release*'
-              echo "planned refs/heads/$release_branch"
+              if [[ "$release_exists" == "false" ]]; then
+                echo "planned refs/heads/$release_branch"
+              fi
             } |
               awk '$2 ~ /^refs\/heads\/release[0-9]+$/ {
                 sub("refs/heads/release", "", $2)
@@ -102,10 +109,9 @@ jobs:
             old_branches+=("release${release_majors[$index]}")
           done
 
-          if [[ -n "$release_sha" ]]; then
+          if [[ "$release_exists" == "true" ]]; then
             action="already-promoted"
             push_args=()
-            echo "$release_branch already exists; skipping promotion."
           else
             action="promote"
             push_args=(
@@ -126,8 +132,13 @@ jobs:
           echo "dry_run=$dry_run" >> "$GITHUB_OUTPUT"
 
           echo "Action: $action"
-          echo "Archive main as: $release_branch"
-          echo "Promote nightly SHA to main: $nightly_sha"
+          echo "Release branch: $release_branch"
+          if [[ "$action" == "promote" ]]; then
+            echo "Archive main SHA: $main_sha"
+            echo "Promote nightly SHA to main: $nightly_sha"
+          else
+            echo "Promotion already completed; only retention cleanup will run."
+          fi
           echo "Release branches to delete: ${old_branches[*]:-none}"
 
           if [[ "$dry_run" == "true" ]]; then
@@ -157,8 +168,8 @@ jobs:
             echo "### Firefox train promotion"
             echo
             echo "- Result: \`${{ steps.rotate.outputs.action }}\`"
-            echo "- Archived branch: \`${{ steps.rotate.outputs.release_branch }}\`"
-            echo "- Previous main: \`${{ steps.rotate.outputs.main_sha }}\`"
-            echo "- Nightly promoted to main: \`${{ steps.rotate.outputs.nightly_sha }}\`"
+            echo "- Release branch: \`${{ steps.rotate.outputs.release_branch }}\`"
+            echo "- Main SHA at start: \`${{ steps.rotate.outputs.main_sha }}\`"
+            echo "- Nightly SHA at start: \`${{ steps.rotate.outputs.nightly_sha }}\`"
             echo "- Dry run: \`${{ steps.rotate.outputs.dry_run }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
