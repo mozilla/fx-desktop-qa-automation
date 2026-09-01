@@ -27,9 +27,9 @@ def delete_files_regex_string():
 def close_doc_handler(sys_platform):
     """Quit the app the OS opens the downloaded .doc in."""
     yield
-    # Always wait, since an open handler can block later tests with a dialog
-    sleep(HANDLER_LAUNCH_SEC)
     if sys_platform == "Darwin":
+        # Give the handler time to launch, or it opens onto a deleted file
+        sleep(HANDLER_LAUNCH_SEC)
         for app in ("TextEdit", "Pages", "Microsoft Word"):
             # The `is running` guard stops osascript launching the app
             run(
@@ -42,14 +42,17 @@ def close_doc_handler(sys_platform):
                 check=False,
             )
     elif sys_platform == "Linux":
+        # No wait needed, the CI image has no .doc handler to launch
         run(["pkill", "-f", "soffice"], check=False)
     elif sys_platform == "Windows":
+        sleep(HANDLER_LAUNCH_SEC)
         for proc in ("WINWORD.EXE", "soffice.exe", "soffice.bin"):
             run(["taskkill", "/F", "/T", "/IM", proc], check=False)
         # Windows keeps the file locked briefly after the app dies
         sleep(HANDLER_CLOSE_SEC)
 
 
+@pytest.mark.headed
 @pytest.mark.noxvfb
 def test_mime_type_doc(driver: Firefox, delete_files, close_doc_handler):
     """
