@@ -1,8 +1,6 @@
 name: Promote Firefox train branches
 
 on:
-  repository_dispatch:
-    types: [firefox-beta-promoted]
   workflow_dispatch:
     inputs:
       released_major:
@@ -12,12 +10,12 @@ on:
       retention:
         description: Number of release branches to keep
         default: 2
-        required: true
+        required: false
         type: number
       dry_run:
         description: Show the planned changes without updating branches
         default: true
-        required: true
+        required: false
         type: boolean
 
 permissions:
@@ -31,17 +29,13 @@ jobs:
   promote:
     runs-on: ubuntu-latest
     env:
-      EVENT_NAME: ${{ github.event_name }}
-      API_RELEASED_MAJOR: ${{ github.event.client_payload.released_major }}
-      API_RETENTION: ${{ github.event.client_payload.retention }}
-      MANUAL_RELEASED_MAJOR: ${{ inputs.released_major }}
-      MANUAL_RETENTION: ${{ inputs.retention }}
-      MANUAL_DRY_RUN: ${{ inputs.dry_run }}
+      RELEASED_MAJOR: ${{ inputs.released_major }}
+      RETENTION: ${{ inputs.retention }}
+      DRY_RUN: ${{ inputs.dry_run }}
 
     steps:
       - name: Validate promotion source
         if: >-
-          github.event_name == 'workflow_dispatch' &&
           github.ref != 'refs/heads/main' &&
           inputs.dry_run != true
         shell: bash
@@ -58,15 +52,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "$EVENT_NAME" == "repository_dispatch" ]]; then
-            released_major="$API_RELEASED_MAJOR"
-            retention="${API_RETENTION:-2}"
-            dry_run=false
-          else
-            released_major="$MANUAL_RELEASED_MAJOR"
-            retention="$MANUAL_RETENTION"
-            dry_run="$MANUAL_DRY_RUN"
-          fi
+          released_major="$RELEASED_MAJOR"
+          retention="$RETENTION"
+          dry_run="$DRY_RUN"
 
           if [[ ! "$released_major" =~ ^[1-9][0-9]*$ ]]; then
             echo "released_major must be a positive integer." >&2
@@ -157,6 +145,8 @@ jobs:
             # The lease prevents overwriting a main update made after discovery.
             push_options+=("--force-with-lease=refs/heads/main:$main_sha")
           fi
+          # The refspecs archive old main, point main at nightly, and prune old releases.
+          # --atomic makes this one transaction; a failed ref update or lease changes nothing.
           git push "${push_options[@]}" origin "${push_args[@]}"
 
       - name: Write summary
