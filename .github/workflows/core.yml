@@ -122,17 +122,17 @@ jobs:
             exit 1
           fi
 
-          mapfile -t splits < <(
+          splits="$(
             grep -oE 'functional[0-9]+' "$manifest_path" | sort -Vu
-          )
+          )"
 
-          if [[ "${#splits[@]}" -eq 0 ]]; then
+          if [[ -z "$splits" ]]; then
             echo "::error::No functional splits found in $manifest_path."
             exit 1
           fi
 
           test_sets="$(
-            printf '%s\n' "${splits[@]}" glean | jq -Rc . | jq -sc .
+            printf '%s\n' "$splits" glean | jq -Rc . | jq -sc .
           )"
 
           echo "test_sets=$test_sets" >> "$GITHUB_OUTPUT"
@@ -447,7 +447,10 @@ jobs:
             uv run python -m scripts.choose_test_split
           fi
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           if [[ "${#tests[@]}" -eq 0 ]]; then
             echo "::error::No tests were selected for $STARFOX_SPLIT."
@@ -460,7 +463,7 @@ jobs:
       - name: Dry-run summary
         if: ${{ env.DRY_RUN == 'true' }}
         run: |
-          count="$(grep -cve '^[[:space:]]*$' selected_tests)"
+          count="$(grep -cve '^[[:space:]]*$' selected_tests || true)"
 
           echo "DRY_RUN enabled."
           echo "Test set: $STARFOX_SPLIT"
@@ -508,7 +511,10 @@ jobs:
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -538,7 +544,10 @@ jobs:
           uv run python scripts/switch_config.py ci_headed
           uv sync
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -644,7 +653,10 @@ jobs:
             uv run python -m scripts.choose_test_split
           fi
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           if [[ "${#tests[@]}" -eq 0 ]]; then
             echo "::error::No tests were selected for $STARFOX_SPLIT."
@@ -657,7 +669,7 @@ jobs:
       - name: Dry-run summary
         if: ${{ env.DRY_RUN == 'true' }}
         run: |
-          count="$(grep -cve '^[[:space:]]*$' selected_tests)"
+          count="$(grep -cve '^[[:space:]]*$' selected_tests || true)"
 
           echo "DRY_RUN enabled."
           echo "Test set: $STARFOX_SPLIT"
@@ -696,7 +708,10 @@ jobs:
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -729,7 +744,10 @@ jobs:
           uv run python scripts/switch_config.py ci_xvfb_headed
           uv sync
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
