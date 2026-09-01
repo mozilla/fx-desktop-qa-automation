@@ -475,7 +475,11 @@ downloads:
     splits:
     - functional1
   test_download_malicious_warning:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067181
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_download_mp3_and_check_extension:
@@ -559,6 +563,10 @@ find_toolbar:
     - functional1
     - nightly
   test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
+  test_find_on_page_with_iframe:
     result: pass
     splits:
     - functional1
@@ -953,8 +961,7 @@ password_manager:
     splits:
     - smoke
   test_autocomplete_dropdown_is_toggled_for_focused_login_fields_on_page_load:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2066156
-    result: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1009,11 +1016,7 @@ password_manager:
     - functional2
     - nightly
   test_multiple_saved_logins:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2065464
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1321,11 +1324,7 @@ printing_ui:
     - nightly
 profile:
   test_set_default_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064143
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
 reader_view:
