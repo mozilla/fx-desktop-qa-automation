@@ -57,7 +57,6 @@ def test_find_toolbar_persists_after_back_forward(
     find_toolbar.expect(shows_search_term)
 
     # Forward to the next page
-    nav.element_clickable("forward-button")
-    nav.click_on("forward-button")
+    nav.click_forward_button()
     nav.url_contains(SECOND_PAGE_URL_PART)
     find_toolbar.expect(shows_search_term)
