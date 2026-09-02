@@ -1,4 +1,5 @@
 import pytest
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
 from modules.browser_object import FindToolbar
@@ -52,7 +53,15 @@ def test_search_again_after_navigation(
     # Search the term
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
-    find_toolbar.expect(lambda _: find_toolbar.get_match_args()["total"] >= MIN_MATCHES)
+
+    def has_enough_matches(_):
+        """get_match_args raises while the counter is empty, keep polling instead"""
+        try:
+            return find_toolbar.get_match_args()["total"] >= MIN_MATCHES
+        except TimeoutException:
+            return False
+
+    find_toolbar.expect(has_enough_matches)
 
     # Follow a link, the findbar stays open with the term in it
     page.click_on("toolbox-link")
