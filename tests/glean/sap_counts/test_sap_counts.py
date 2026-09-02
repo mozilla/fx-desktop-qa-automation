@@ -5,10 +5,8 @@ from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
 from tests.glean.flows import (
     ENTRY_PREFS,
-    RELATED_SEARCH_TERM,
     SEARCH_TERM,
     block_if_bot_challenge,
-    run_action,
     run_entry,
 )
 from tests.glean.utils import load_cases, skip_if_unstable
@@ -19,9 +17,7 @@ METRIC = data["metric"]
 
 @pytest.fixture(
     params=data["cases"],
-    ids=lambda c: (
-        f"{c['id']}-{c['entry']}" + (f"-{c['action']}" if c.get("action") else "")
-    ),
+    ids=lambda c: f"{c['id']}-{c['params']['engine']}-{c['entry']}",
 )
 def case(request):
     """Parametrized fixture yielding one test case dict from cases.json."""
@@ -43,25 +39,17 @@ def add_to_prefs_list(case):
     return prefs
 
 
-def test_serp_impression(driver: Firefox, case: dict):
-    """Verify serp.impression Glean event payload after a SERP is opened."""
+def test_sap_counts(driver: Firefox, case: dict):
+    """Verify sap.counts records the access point a search was issued from."""
     prefs = AboutPrefs(driver, category="search")
     glean = Glean(driver)
-    params = case.get("params", {})
+    params = case["params"]
 
-    engine = params.get("engine")
-    if engine:
-        prefs.open()
-        prefs.search_engine_dropdown().select_option(engine)
+    prefs.open()
+    prefs.search_engine_dropdown().select_option(params["engine"])
 
-    # open_in_new_tab clicks an on-page related-search link, which only renders for a
-    # commercial query; every other flow uses the default term.
-    search_term = (
-        RELATED_SEARCH_TERM if case.get("action") == "open_in_new_tab" else SEARCH_TERM
-    )
     try:
-        run_entry(driver, case["entry"], search_term, params)
-        run_action(driver, case.get("action"), params)
+        run_entry(driver, case["entry"], SEARCH_TERM, params)
 
         glean.poll_glean_metric(METRIC, case["expected"])
     except Exception:

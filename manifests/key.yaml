@@ -435,11 +435,7 @@ bookmarks_and_history:
     - nightly
 downloads:
   test_add_mime_type_doc:
-    comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_add_zip_type:
@@ -563,6 +559,14 @@ find_toolbar:
     - functional1
     - nightly
   test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
+  test_find_on_page_with_iframe:
+    result: pass
+    splits:
+    - functional1
+  test_find_text_on_buttons:
     result: pass
     splits:
     - functional1
@@ -690,6 +694,11 @@ geolocation:
 glean:
   misc_metrics:
     test_misc_metrics:
+      result: pass
+      splits:
+      - glean
+  sap_counts:
+    test_sap_counts:
       result: pass
       splits:
       - glean
@@ -982,11 +991,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067357
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly

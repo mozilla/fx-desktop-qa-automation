@@ -11,7 +11,7 @@ from tests.glean.flows import (
     run_action,
     run_entry,
 )
-from tests.glean.utils import load_cases
+from tests.glean.utils import load_cases, skip_if_unstable
 
 data = load_cases(__file__)
 
@@ -38,6 +38,7 @@ DEFAULT_ENGINE = "Google"
 )
 def case(request):
     """Parametrized fixture yielding one test case dict from cases.json."""
+    skip_if_unstable(request.param)
     return request.param
 
 
