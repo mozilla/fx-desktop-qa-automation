@@ -188,7 +188,7 @@ jobs:
         env:
           FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         run: |
-          pipenv run python dll_check/check_dll_interceptors.py
+          uv run python dll_check/check_dll_interceptors.py
 
       - name: Select Tests (Win)
         id: select

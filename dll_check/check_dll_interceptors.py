@@ -1,7 +1,6 @@
 import os
 from shutil import copyfile
 from subprocess import STDOUT, check_call, check_output, run
-from time import sleep
 
 import requests
 import thclient
@@ -54,12 +53,8 @@ def main(bits: int):
         fx_dir = os.path.dirname(os.environ.get("FX_EXECUTABLE"))
         for dll in MISSING_DLLS:
             copyfile(os.path.join(fx_dir, dll), dll)
-    itcptr_testout = check_output(
-        [".\\TestDllInterceptor.exe"], stderr=STDOUT, shell=True
-    ).decode()
-    icptxp_testout = check_output(
-        [".\\TestDllInterceptorCrossProcess.exe"], shell=True
-    ).decode()
+    itcptr_testout = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
+    icptxp_testout = check_output([".\\TestDllInterceptorCrossProcess.exe"]).decode()
     print(f"===\n===\n{itcptr_testout}\n===\n===")
     assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
     assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
