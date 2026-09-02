@@ -49,7 +49,7 @@ def test_find_toolbar_persists_after_back_forward(
 
     # Visit two pages in the same tab, so there is history in both directions
     GenericPage(driver, url=FIRST_PAGE).open()
-    page = GenericPage(driver, url=SECOND_PAGE).open()
+    GenericPage(driver, url=SECOND_PAGE).open()
 
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
@@ -67,11 +67,11 @@ def test_find_toolbar_persists_after_back_forward(
 
     # Back to the previous page, the findbar stays open with the term in it
     nav.click_back_button()
-    page.url_contains(FIRST_PAGE_URL_PART)
+    nav.url_contains(FIRST_PAGE_URL_PART)
     find_toolbar.expect(shows_search_term)
 
     # Forward to the next page
     nav.element_clickable("forward-button")
     nav.click_on("forward-button")
-    page.url_contains(SECOND_PAGE_URL_PART)
+    nav.url_contains(SECOND_PAGE_URL_PART)
     find_toolbar.expect(shows_search_term)
