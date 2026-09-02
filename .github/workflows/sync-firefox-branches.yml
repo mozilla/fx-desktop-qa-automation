@@ -29,6 +29,7 @@ concurrency:
 jobs:
   promote:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       RELEASED_MAJOR: ${{ inputs.released_major }}
       RETENTION: ${{ inputs.retention }}
@@ -187,6 +188,20 @@ jobs:
           fi
           echo "Release branches to delete: ${old_branches[*]:-none}"
 
+          push_options=(--atomic)
+          if [[ "$action" == "promote" ]]; then
+            # The lease prevents overwriting a main update made after discovery.
+            push_options+=("--force-with-lease=refs/heads/main:$main_sha")
+          fi
+
+          if ((${#push_args[@]} > 0)); then
+            printf 'Planned command:'
+            printf ' %q' git push "${push_options[@]}" origin "${push_args[@]}"
+            printf '\n'
+          else
+            echo "No git push is required."
+          fi
+
           if [[ "$dry_run" == "true" ]]; then
             echo "Dry run: no branches were changed."
             exit 0
@@ -197,25 +212,26 @@ jobs:
             exit 0
           fi
 
-          push_options=(--atomic)
-          if [[ "$action" == "promote" ]]; then
-            # The lease prevents overwriting a main update made after discovery.
-            push_options+=("--force-with-lease=refs/heads/main:$main_sha")
-          fi
           # The refspecs archive old main, point main at nightly, and prune old releases.
           # --atomic makes this one transaction; a failed ref update or lease changes nothing.
           git push "${push_options[@]}" origin "${push_args[@]}"
 
       - name: Write summary
         if: steps.rotate.outcome == 'success'
+        env:
+          ACTION: ${{ steps.rotate.outputs.action }}
+          RELEASE_BRANCH: ${{ steps.rotate.outputs.release_branch }}
+          MAIN_SHA: ${{ steps.rotate.outputs.main_sha }}
+          NIGHTLY_SHA: ${{ steps.rotate.outputs.nightly_sha }}
+          SUMMARY_DRY_RUN: ${{ steps.rotate.outputs.dry_run }}
         shell: bash
         run: |
           {
             echo "### Firefox train promotion"
             echo
-            echo "- Result: \`${{ steps.rotate.outputs.action }}\`"
-            echo "- Release branch: \`${{ steps.rotate.outputs.release_branch }}\`"
-            echo "- Main SHA at start: \`${{ steps.rotate.outputs.main_sha }}\`"
-            echo "- Nightly SHA at start: \`${{ steps.rotate.outputs.nightly_sha }}\`"
-            echo "- Dry run: \`${{ steps.rotate.outputs.dry_run }}\`"
+            echo "- Result: \`$ACTION\`"
+            echo "- Release branch: \`$RELEASE_BRANCH\`"
+            echo "- Main SHA at start: \`$MAIN_SHA\`"
+            echo "- Nightly SHA at start: \`$NIGHTLY_SHA\`"
+            echo "- Dry run: \`$SUMMARY_DRY_RUN\`"
           } >> "$GITHUB_STEP_SUMMARY"
