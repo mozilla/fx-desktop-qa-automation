@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       released_major:
-        description: Major version currently on main (for example, 155)
+        description: Major version on main; checked against releaseNNN history
         required: true
         type: string
       retention:
@@ -18,18 +18,35 @@ on:
         required: false
         type: boolean
 
-permissions:
-  contents: write
-  pull-requests: read
+permissions: {}
 
 concurrency:
   group: firefox-train-promotion
   cancel-in-progress: false
 
 jobs:
+  approve_live:
+    name: Approve live Firefox train promotion
+    if: inputs.dry_run != true
+    runs-on: ubuntu-latest
+    # Configure this environment with required reviewers before live use.
+    environment:
+      name: firefox-branch-promotion
+    steps:
+      - name: Confirm approval
+        run: echo "Live Firefox train promotion approved."
+
   promote:
+    name: Plan or promote Firefox train branches
+    needs: approve_live
+    if: >-
+      always() &&
+      (inputs.dry_run == true || needs.approve_live.result == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # Create, update, and delete Firefox train branches.
+      pull-requests: read # List PRs that will be affected by moving main.
     env:
       RELEASED_MAJOR: ${{ inputs.released_major }}
       RETENTION: ${{ inputs.retention }}
@@ -47,6 +64,14 @@ jobs:
 
       - name: Check out the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Configure Git authentication
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh auth setup-git
 
       - name: List open pull requests targeting main
         env:
@@ -80,6 +105,8 @@ jobs:
 
       - name: Rotate Firefox train branches
         id: rotate
+        env:
+          GH_TOKEN: ${{ inputs.dry_run != true && github.token || '' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -92,12 +119,10 @@ jobs:
             echo "released_major must be a positive integer." >&2
             exit 1
           fi
+          # GitHub enforces type: number; this additionally rejects zero,
+          # negative values, and fractions.
           if [[ ! "$retention" =~ ^[1-9][0-9]*$ ]]; then
             echo "retention must be a positive integer." >&2
-            exit 1
-          fi
-          if [[ "$dry_run" != "true" && "$dry_run" != "false" ]]; then
-            echo "dry_run must be true or false." >&2
             exit 1
           fi
 
@@ -116,9 +141,15 @@ jobs:
           main_sha="$(git rev-parse refs/remotes/origin/main)"
           nightly_sha="$(git rev-parse refs/remotes/origin/nightly)"
           release_refs="$(git ls-remote --heads origin 'refs/heads/release*')"
-          if awk -v target="refs/heads/$release_branch" \
-            '$2 == target { found = 1 } END { exit !found }' \
-            <<< "$release_refs"; then
+
+          declare -A release_shas=()
+          while read -r sha ref; do
+            if [[ "$ref" =~ ^refs/heads/(release[0-9]+)$ ]]; then
+              release_shas["${BASH_REMATCH[1]}"]="$sha"
+            fi
+          done <<< "$release_refs"
+
+          if [[ -n "${release_shas[$release_branch]:-}" ]]; then
             release_exists=true
           else
             release_exists=false
@@ -130,11 +161,26 @@ jobs:
               if ($2 > latest) latest = $2
             } END { if (latest) print latest }' <<< "$release_refs"
           )"
-          if [[ "$release_exists" == "false" && -n "$latest_release_major" ]] &&
-            ((released_major <= latest_release_major)); then
-            echo "release${released_major} is missing, but release${latest_release_major} already exists." >&2
-            echo "Refusing a stale or out-of-order promotion." >&2
-            exit 1
+          if [[ "$release_exists" == "false" ]]; then
+            if [[ -z "$latest_release_major" ]]; then
+              # First-run bootstrap: no releaseNNN history exists to verify the
+              # operator input. A live run still requires environment approval.
+              echo \
+                "No release branch history; treating release${released_major}" \
+                "as the bootstrap promotion."
+            else
+              # By convention, main is one train newer than the latest
+              # releaseNNN branch.
+              expected_released_major=$((latest_release_major + 1))
+              if ((released_major != expected_released_major)); then
+                echo \
+                  "Expected release${expected_released_major} after" \
+                  "release${latest_release_major}, got release${released_major}." \
+                  >&2
+                echo "Refusing a stale or out-of-order promotion." >&2
+                exit 1
+              fi
+            fi
           fi
 
           mapfile -t release_majors < <(
@@ -157,6 +203,8 @@ jobs:
           done
 
           if [[ "$release_exists" == "true" ]]; then
+            # An existing target marks a repeated event. Do not move main again;
+            # only enforce retention across the numerically sorted release list.
             action="already-promoted"
             push_args=()
           else
@@ -167,9 +215,18 @@ jobs:
             )
           fi
 
+          delete_lease_options=()
           # Retention cleanup also runs after a repeated promotion event.
           for branch in "${old_branches[@]}"; do
+            branch_sha="${release_shas[$branch]:-}"
+            if [[ -z "$branch_sha" ]]; then
+              echo "Could not determine the discovered SHA for $branch." >&2
+              exit 1
+            fi
             push_args+=(":refs/heads/$branch")
+            delete_lease_options+=(
+              "--force-with-lease=refs/heads/$branch:$branch_sha"
+            )
           done
 
           echo "action=$action" >> "$GITHUB_OUTPUT"
@@ -188,7 +245,7 @@ jobs:
           fi
           echo "Release branches to delete: ${old_branches[*]:-none}"
 
-          push_options=(--atomic)
+          push_options=(--atomic "${delete_lease_options[@]}")
           if [[ "$action" == "promote" ]]; then
             # The lease prevents overwriting a main update made after discovery.
             push_options+=("--force-with-lease=refs/heads/main:$main_sha")
@@ -213,6 +270,8 @@ jobs:
           fi
 
           # The refspecs archive old main, point main at nightly, and prune old releases.
+          # A changed or missing release branch intentionally aborts the atomic
+          # transaction; a rerun will discover the new state and make a new plan.
           # --atomic makes this one transaction; a failed ref update or lease changes nothing.
           git push "${push_options[@]}" origin "${push_args[@]}"
 
