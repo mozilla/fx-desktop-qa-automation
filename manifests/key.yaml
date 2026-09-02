@@ -566,6 +566,10 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+  test_find_on_page_with_rtl_language:
+    result: pass
+    splits:
+    - functional1
   test_find_text_on_buttons:
     result: pass
     splits:
