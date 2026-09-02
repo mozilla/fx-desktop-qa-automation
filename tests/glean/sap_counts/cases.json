@@ -41,6 +41,26 @@
     {"id": "3255606", "entry": "contextmenu", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"provider_id": "qwant", "source": "contextmenu"}},
     {"id": "3255626", "entry": "contextmenu", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider_id": "ecosia", "source": "contextmenu"}},
 
-    {"id": "3255560", "entry": "contextmenu_visual", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "contextmenu_visual"}}
+    {"id": "3255560", "entry": "contextmenu_visual", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "contextmenu_visual"}},
+
+    {"id": "3255557", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "firefox-b-d", "provider_id": "google", "provider_name": "Google"}},
+    {"id": "3255558", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "CA"]], "expected": {"partner_code": "firefox-b-d", "provider_id": "google", "provider_name": "Google"}},
+    {"id": "3255559", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "expected": {"partner_code": "firefox-b-1-d", "provider_id": "google", "provider_name": "Google"}},
+
+    {"id": "3255570", "entry": "urlbar", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "MOZI", "provider_id": "bing", "provider_name": "Bing"}},
+    {"id": "3255571", "entry": "urlbar", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "CA"]], "expected": {"partner_code": "MOZI", "provider_id": "bing", "provider_name": "Bing"}},
+    {"id": "3255572", "entry": "urlbar", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"partner_code": "MOZI", "provider_id": "bing", "provider_name": "Bing"}},
+
+    {"id": "3255582", "entry": "urlbar", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "ffab", "provider_id": "ddg", "provider_name": "DuckDuckGo"}},
+    {"id": "3255583", "entry": "urlbar", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "CA"]], "expected": {"partner_code": "ffab", "provider_id": "ddg", "provider_name": "DuckDuckGo"}},
+    {"id": "3255584", "entry": "urlbar", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"partner_code": "ffab", "provider_id": "ddg", "provider_name": "DuckDuckGo"}},
+
+    {"id": "3255594", "entry": "urlbar", "params": {"engine": "Perplexity"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "firefox", "provider_id": "perplexity", "provider_name": "Perplexity"}},
+    {"id": "3255595", "entry": "urlbar", "params": {"engine": "Perplexity"}, "prefs": [["browser.search.region", "CA"]], "expected": {"partner_code": "firefox", "provider_id": "perplexity", "provider_name": "Perplexity"}},
+    {"id": "3255596", "entry": "urlbar", "params": {"engine": "Perplexity"}, "prefs": [["browser.search.region", "US"]], "expected": {"partner_code": "firefox", "provider_id": "perplexity", "provider_name": "Perplexity"}},
+
+    {"id": "3255605", "entry": "urlbar", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"partner_code": "brz-moz", "provider_id": "qwant", "provider_name": "Qwant"}},
+
+    {"id": "3255625", "entry": "urlbar", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "mzl", "provider_id": "ecosia", "provider_name": "Ecosia"}}
   ]
 }
