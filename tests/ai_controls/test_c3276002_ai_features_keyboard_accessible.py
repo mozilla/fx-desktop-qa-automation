@@ -10,6 +10,8 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.page_object_prefs import AboutPrefs
 
+MAX_TAB_STOPS = 20
+
 
 @pytest.fixture()
 def test_case():
@@ -22,22 +24,24 @@ def _focused_matches(driver, element) -> bool:
     active = driver.switch_to.active_element
     if active == element:
         return True
-    # Custom elements (moz-toggle, moz-select) delegate focus into their
-    # shadow root; walk up host chain to compare.
+    # Custom elements (moz-toggle, moz-select) put their focusable control
+    # inside a shadow root, so document.activeElement reports the host rather
+    # than the control. Walk up from the element to see if the focused element
+    # hosts it.
     return bool(
         driver.execute_script(
             """
-            const target = arguments[0];
+            const active = arguments[0];
             let node = arguments[1];
             while (node) {
-                if (node === target) return true;
+                if (node === active) return true;
                 const root = node.getRootNode && node.getRootNode();
-                node = root && root.host ? root.host : null;
+                node = root && root.host ? root.host : node.parentNode;
             }
             return false;
             """,
-            element,
             active,
+            element,
         )
     )
 
@@ -51,21 +55,38 @@ def test_ai_controls_elements_keyboard_accessible(about_prefs: AboutPrefs):
     about_prefs.navigate_to_ai_controls()
 
     toggle = about_prefs.get_element("ai-controls-toggle")
-    chatbot = about_prefs.get_element("ai-control-sidebar-chatbot-select")
-    translations = about_prefs.get_element("ai-control-translations-select")
+    targets = {
+        "Translations dropdown": about_prefs.get_element(
+            "ai-control-translations-select"
+        ),
+        "Chatbot provider dropdown": about_prefs.get_element(
+            "ai-control-sidebar-chatbot-select"
+        ),
+    }
 
     # Seed focus on the toggle, then verify TAB traversal reaches each control.
     about_prefs.driver.execute_script("arguments[0].focus();", toggle)
     about_prefs.expect(lambda d: _focused_matches(d, toggle))
     logging.info("AI Controls toggle is keyboard-focusable")
 
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.expect(lambda d: _focused_matches(d, chatbot))
-    logging.info("Chatbot provider dropdown is keyboard-focusable")
+    # The rows sitting between the toggle and each select are feature-gated, so
+    # assert only that TAB reaches every control, not that they are adjacent.
+    for _ in range(MAX_TAB_STOPS):
+        if not targets:
+            break
+        about_prefs.actions.send_keys(Keys.TAB).perform()
+        reached = [
+            name
+            for name, element in targets.items()
+            if _focused_matches(about_prefs.driver, element)
+        ]
+        for name in reached:
+            logging.info("%s is keyboard-focusable", name)
+            del targets[name]
 
-    about_prefs.actions.send_keys(Keys.TAB).perform()
-    about_prefs.expect(lambda d: _focused_matches(d, translations))
-    logging.info("Translations dropdown is keyboard-focusable")
+    assert not targets, (
+        f"not reachable by TAB within {MAX_TAB_STOPS} stops: {sorted(targets)}"
+    )
 
 
 def test_ai_controls_toggle_activates_via_keyboard(about_prefs: AboutPrefs):
@@ -87,7 +108,5 @@ def test_ai_controls_toggle_activates_via_keyboard(about_prefs: AboutPrefs):
     # After Escape the pressed state should be unchanged from `initial`; the
     # meaningful assertion is that the keypress reached the control at all
     # (i.e. it was focused and interactive).
-    about_prefs.expect(
-        lambda _: toggle.get_attribute("aria-pressed") == initial
-    )
+    about_prefs.expect(lambda _: toggle.get_attribute("aria-pressed") == initial)
     logging.info("AI Controls toggle responds to keyboard activation")

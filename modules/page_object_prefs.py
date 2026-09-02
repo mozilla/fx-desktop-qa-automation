@@ -1612,9 +1612,7 @@ class AboutPrefs(BasePage):
         Returns:
             str: Current state ("available" or "blocked")
         """
-        return self.get_element("ai-control-translations-select").get_attribute(
-            "value"
-        )
+        return self.get_element("ai-control-translations-select").get_attribute("value")
 
     def set_ai_translations(self, state: str) -> BasePage:
         """
