@@ -21,31 +21,17 @@ SECOND_PAGE_URL_PART = "wikipedia.org"
 SEARCH_TERM = "firefox"
 
 
-@pytest.fixture()
-def temp_selectors():
-    return {
-        "forward-button": {
-            "selectorData": "forward-button",
-            "strategy": "id",
-            "groups": ["doNotCache"],
-        },
-    }
-
-
 def test_find_toolbar_persists_after_back_forward(
     driver: Firefox,
     find_toolbar: FindToolbar,
-    temp_selectors: dict,
 ):
     """
     C127261: Verify that navigation back and forward on a page works properly
 
     Arguments:
         find_toolbar: instantiation of FindToolbar BOM.
-        temp_selectors: the forward button, next to the URL bar.
     """
     nav = Navigation(driver)
-    nav.elements |= temp_selectors
 
     # Visit two pages in the same tab, so there is history in both directions
     GenericPage(driver, url=FIRST_PAGE).open()
