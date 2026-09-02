@@ -39,7 +39,11 @@ address_bar_and_search:
     - functional1
     - nightly
   test_clipboard_pref_flip:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068680
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -345,7 +349,11 @@ bookmarks_and_history:
     - functional1
     - nightly
   test_edit_bookmark_from_bookmark_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068679
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -971,7 +979,11 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068682
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1275,7 +1287,11 @@ preferences:
     - functional2
     - nightly
   test_clear_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064065
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
