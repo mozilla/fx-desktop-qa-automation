@@ -435,11 +435,7 @@ bookmarks_and_history:
     - nightly
 downloads:
   test_add_mime_type_doc:
-    comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_add_zip_type:

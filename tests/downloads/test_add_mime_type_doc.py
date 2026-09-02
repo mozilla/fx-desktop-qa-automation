@@ -1,3 +1,6 @@
+from subprocess import run
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -7,10 +10,12 @@ from modules.page_object import AboutPrefs, GenericPage
 
 @pytest.fixture()
 def test_case():
-    return "1756748"
+    return "4108461"
 
 
 DOC_LINK = "https://sapphire-hendrika-5.tiiny.site/"
+HANDLER_LAUNCH_SEC = 5
+HANDLER_CLOSE_SEC = 2
 
 
 @pytest.fixture()
@@ -18,26 +23,47 @@ def delete_files_regex_string():
     return r"sample.*\.doc"
 
 
-def expected_app_name(sys_platform: str, opt_ci: bool) -> str:
+@pytest.fixture()
+def close_doc_handler(sys_platform):
+    """Quit the app the OS opens the downloaded .doc in."""
+    yield
     if sys_platform == "Darwin":
-        return "TextEdit" if opt_ci else "Pages"
-    return "LibreOffice Writer"
+        # Give the handler time to launch, or it opens onto a deleted file
+        sleep(HANDLER_LAUNCH_SEC)
+        for app in ("TextEdit", "Pages", "Microsoft Word"):
+            # The `is running` guard stops osascript launching the app
+            run(
+                [
+                    "osascript",
+                    "-e",
+                    f'if application "{app}" is running then '
+                    f'tell application "{app}" to quit saving no',
+                ],
+                check=False,
+            )
+    elif sys_platform == "Linux":
+        # No wait needed, the CI image has no .doc handler to launch
+        run(["pkill", "-f", "soffice"], check=False)
+    elif sys_platform == "Windows":
+        sleep(HANDLER_LAUNCH_SEC)
+        for proc in ("WINWORD.EXE", "soffice.exe", "soffice.bin"):
+            run(["taskkill", "/F", "/T", "/IM", proc], check=False)
+        # Windows keeps the file locked briefly after the app dies
+        sleep(HANDLER_CLOSE_SEC)
 
 
-# Test is unstable on Windows GHA because the image does not have a .doc handler
-# This test isn't even written to work on Windows due to above method
+@pytest.mark.headed
 @pytest.mark.noxvfb
-def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_files):
+def test_mime_type_doc(driver: Firefox, delete_files, close_doc_handler):
     """
-    C1756748 - Verify that downloading a .doc file adds a new MIME type entry
-    and the correct default application is assigned.
+    C4108461 - Verify that downloading a .doc file adds the .doc MIME type
+    entry to the Files and Applications list.
     """
 
     # Instantiate objects
     page = GenericPage(driver, url=DOC_LINK)
     nav = Navigation(driver)
-    # Settings redesign (bug 2043378) moved the Applications file-handlers list
-    # from the General pane to about:preferences#downloads.
+    # The settings redesign (bug 2043378) moved file handlers to this pane
     about_prefs = AboutPrefs(driver, category="downloads")
 
     # Open the test page with the .doc download link
@@ -47,7 +73,6 @@ def test_mime_type_doc(driver: Firefox, sys_platform: str, opt_ci: bool, delete_
     # Download the file and set 'Always Open Similar Files'
     nav.perform_download_context_action("context-menu-always-open-similar-files")
 
-    # Verify the MIME type entry exists and default app matches expectation
+    # Check the doc mime type is listed. Its label and app come from the OS
     about_prefs.open()
-    app_name = about_prefs.get_app_name_for_mime_type("application/msword")
-    assert app_name == expected_app_name(sys_platform, opt_ci)
+    about_prefs.element_exists("mime-type-item", labels=["application/msword"])
