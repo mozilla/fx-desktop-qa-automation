@@ -2368,6 +2368,7 @@ dependencies = [
     { name = "tokenize-rt" },
     { name = "toml" },
     { name = "tomlkit" },
+    { name = "treeherder-client" },
     { name = "trio" },
     { name = "trio-websocket" },
     { name = "typer" },
@@ -2549,6 +2550,7 @@ requires-dist = [
     { name = "tokenize-rt", marker = "python_full_version >= '3.9'", specifier = "==6.2.0" },
     { name = "toml", specifier = ">=0.10.2" },
     { name = "tomlkit", marker = "python_full_version >= '3.9'", specifier = "==0.15.0" },
+    { name = "treeherder-client", specifier = ">=5.0.0" },
     { name = "trio", marker = "python_full_version >= '3.10'", specifier = "==0.33.0" },
     { name = "trio-websocket", marker = "python_full_version >= '3.8'", specifier = "==0.12.2" },
     { name = "typer", marker = "python_full_version >= '3.10'", specifier = "==0.26.6" },
@@ -3026,6 +3028,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/51/db/03eaf4331631ef6b27d6e3c9b68c54dc6f0d63d87201fed600cc409307fd/tomlkit-0.15.0.tar.gz", hash = "sha256:7d1a9ecba3086638211b13814ea79c90dd54dd11993564376f3aa92271f5c7a3", size = 161875, upload-time = "2026-05-10T07:38:22.245Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/43/8bd850ee71a191bf072e31302c73a66be413fecdd98fdcd111ecbcce13ca/tomlkit-0.15.0-py3-none-any.whl", hash = "sha256:4dbc8f0fc024412b57ced8757ac7461305126a648ff8c2c807fcb8e133a78738", size = 41328, upload-time = "2026-05-10T07:38:23.517Z" },
+]
+
+[[package]]
+name = "treeherder-client"
+version = "5.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/08/3b/4c8b5df16db5ed575db13b557455f219db115e4cbfa21871acac65aacbc5/treeherder-client-5.0.0.tar.gz", hash = "sha256:4020809424384574277232023c78bcee436ec5474020b4430b4770f0ddd8bba3", size = 4584, upload-time = "2019-02-20T08:29:22.2Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2e/98/78ab39dc8a96b3fc8b9dad6a6699395e3f834bd705ca259a592637a06e70/treeherder_client-5.0.0-py2.py3-none-any.whl", hash = "sha256:db25150480d0501c79b72966899e5c901a5a625e12739389f6bee03273e1d002", size = 5171, upload-time = "2019-02-20T08:29:20.861Z" },
 ]
 
 [[package]]

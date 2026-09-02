@@ -184,6 +184,12 @@ jobs:
             Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
           }
 
+      - name: Spike test - DLL Interceptors
+        env:
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
+        run: |
+          pipenv run python dll_check/check_dll_interceptors.py
+
       - name: Select Tests (Win)
         id: select
         if: ${{ inputs.test_set != 'glean' }}
