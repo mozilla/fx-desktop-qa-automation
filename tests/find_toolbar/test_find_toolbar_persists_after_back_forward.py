@@ -54,29 +54,24 @@ def test_find_toolbar_persists_after_back_forward(
     find_toolbar.open_with_key_combo()
     find_toolbar.find(SEARCH_TERM)
 
-    def find_toolbar_persists():
-        """The findbar is still open and still holds the search term"""
+    def shows_search_term(_):
+        """The findbar is torn down and rebuilt while the page loads"""
+        try:
+            find_bar = find_toolbar.get_element("find-toolbar-input")
+            return (
+                find_bar.is_displayed()
+                and find_bar.get_property("value") == SEARCH_TERM
+            )
+        except (NoSuchElementException, StaleElementReferenceException):
+            return False
 
-        def shows_search_term(_):
-            """The findbar is torn down and rebuilt while the page loads"""
-            try:
-                find_bar = find_toolbar.get_element("find-toolbar-input")
-                return (
-                    find_bar.is_displayed()
-                    and find_bar.get_property("value") == SEARCH_TERM
-                )
-            except (NoSuchElementException, StaleElementReferenceException):
-                return False
-
-        find_toolbar.expect(shows_search_term)
-
-    # Back to the previous page
+    # Back to the previous page, the findbar stays open with the term in it
     nav.click_back_button()
     page.url_contains(FIRST_PAGE_URL_PART)
-    find_toolbar_persists()
+    find_toolbar.expect(shows_search_term)
 
     # Forward to the next page
     nav.element_clickable("forward-button")
     nav.click_on("forward-button")
     page.url_contains(SECOND_PAGE_URL_PART)
-    find_toolbar_persists()
+    find_toolbar.expect(shows_search_term)
