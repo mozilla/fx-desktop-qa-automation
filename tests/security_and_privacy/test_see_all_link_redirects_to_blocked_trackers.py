@@ -36,4 +36,7 @@ def test_see_all_link_redirects_to_blocked_trackers(
         except TimeoutException:
             if attempt == MAX_ATTEMPTS:
                 raise
-            trust_panel.click_subview_back_button()
+            try:
+                trust_panel.click_subview_back_button()
+            except Exception:
+                pass
