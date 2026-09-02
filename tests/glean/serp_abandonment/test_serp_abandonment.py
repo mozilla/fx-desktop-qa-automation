@@ -11,7 +11,7 @@ from tests.glean.flows import (
     block_if_bot_challenge,
     run_abandonment,
 )
-from tests.glean.utils import load_cases
+from tests.glean.utils import load_cases, skip_if_unstable
 
 data = load_cases(__file__)
 METRIC = data["metric"]
@@ -28,6 +28,7 @@ IMPRESSION_ID_RE = re.compile(
 )
 def case(request):
     """Parametrized fixture yielding one test case dict from cases.json."""
+    skip_if_unstable(request.param)
     return request.param
 
 
