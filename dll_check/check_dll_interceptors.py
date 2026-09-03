@@ -66,8 +66,8 @@ def main(bits: int):
         cproc or check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
     )
     icptxp_testout = check_output([".\\TestDllInterceptorCrossProcess.exe"]).decode()
-    itcptr_output_lines = itcptr_testout.strip().split()
-    icptxp_output_lines = icptxp_testout.strip().split()
+    itcptr_output_lines = itcptr_testout.strip().split("\n")
+    icptxp_output_lines = icptxp_testout.strip().split("\n")
     assert "all checks passed" in itcptr_testout, (
         "Failure in TestDllInterceptor.exe:" + "\n".join(itcptr_output_lines)
     )
