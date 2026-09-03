@@ -25,8 +25,10 @@ def add_to_prefs_list():
     return [
         ("browser.download.alwaysOpenPanel", True),
         ("browser.download.folderList", 2),
-        ("browser.helperApps.neverAsk.saveToDisk",
-         "application/vnd.oasis.opendocument.text,application/octet-stream"),
+        (
+            "browser.helperApps.neverAsk.saveToDisk",
+            "application/vnd.oasis.opendocument.text,application/octet-stream",
+        ),
     ]
 
 
