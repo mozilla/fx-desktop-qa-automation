@@ -49,12 +49,11 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # Set this repository variable to the UTC date of a known first day of a
-  # 14-day release cycle, for example: 2026-09-15
-  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
-
   # Hours 00:00 through 11:59 UTC are considered the morning build.
   MORNING_CUTOFF_HOUR_UTC: "12"
+
+  # Only used when the release schedule API cannot be read.
+  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
 
 jobs:
   Plan:
@@ -86,9 +85,9 @@ jobs:
         run: |
           python scripts/determine_nightly_plan.py \
             --target-info "$TARGET_INFO" \
-            --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC" \
             --default-test-sets "$DEFAULT_TEST_SETS" \
-            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC"
+            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC" \
+            --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC"
 
   Run:
     name: Run selected nightly tests

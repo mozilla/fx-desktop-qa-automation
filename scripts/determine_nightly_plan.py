@@ -4,12 +4,30 @@ import argparse
 import json
 import os
 import sys
+import urllib.error
+import urllib.request
 from dataclasses import asdict, dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+FULL_TEST_SETS = ("smoke", "nightly")
+
+# Firefox Release Management's schedule API.
+SCHEDULE_URL = "https://whattrainisitnow.com/api/release/schedule/?version=nightly"
+SCHEDULE_TIMEOUT_SECONDS = 15
+
+# Fallback for when the schedule API cannot be read: count 14-day cycles from a
+# known first day of a cycle, which is set as a repository variable.
+ANCHOR_ENV_VAR = "RELEASE_CYCLE_ANCHOR_UTC"
 CYCLE_LENGTH_DAYS = 14
-FULL_TEST_SETS = ("smoke", "functional", "glean")
+
+
+@dataclass(frozen=True)
+class ReleaseCycle:
+    version: str
+    start: date
+    merge_day: date
+    source: str
 
 
 @dataclass(frozen=True)
@@ -17,10 +35,13 @@ class NightlyPlan:
     should_run: bool
     test_sets: list[str]
     cycle_day: int
+    cycle_length: int
     reason: str
     build_date: str
     build_hour: int
-    first_thursday_cycle_day: int
+    nightly_version: str
+    cycle_start: str
+    cycle_source: str
 
 
 def parse_build_datetime(value: str) -> datetime:
@@ -36,18 +57,6 @@ def parse_build_datetime(value: str) -> datetime:
         ) from error
 
     return parsed.replace(tzinfo=timezone.utc)
-
-
-def parse_anchor_date(value: str) -> date:
-    """Parse the first UTC date of a known 14-day release cycle."""
-
-    if not value:
-        raise ValueError("Repository variable RELEASE_CYCLE_ANCHOR_UTC is not set.")
-
-    try:
-        return date.fromisoformat(value)
-    except ValueError as error:
-        raise ValueError("RELEASE_CYCLE_ANCHOR_UTC must use YYYY-MM-DD.") from error
 
 
 def parse_test_sets(value: str) -> list[str]:
@@ -72,10 +81,75 @@ def parse_test_sets(value: str) -> list[str]:
     return test_sets
 
 
+def fetch_train_info(url: str) -> ReleaseCycle:
+    """Read the current Nightly cycle from the Firefox release schedule API."""
+
+    request = urllib.request.Request(url, headers={"Accept": "application/json"})
+
+    with urllib.request.urlopen(request, timeout=SCHEDULE_TIMEOUT_SECONDS) as response:
+        schedule = json.load(response)
+
+    try:
+        return ReleaseCycle(
+            version=str(schedule["version"]),
+            start=datetime.fromisoformat(schedule["nightly_start"]).date(),
+            merge_day=datetime.fromisoformat(schedule["merge_day"]).date(),
+            source="release schedule API",
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(f"Unexpected release schedule payload: {error}") from error
+
+
+def parse_anchor_date(value: str) -> date:
+    """Parse the first UTC date of a known 14-day release cycle."""
+
+    if not value:
+        raise ValueError(f"Repository variable {ANCHOR_ENV_VAR} is not set.")
+
+    try:
+        return date.fromisoformat(value)
+    except ValueError as error:
+        raise ValueError(f"{ANCHOR_ENV_VAR} must use YYYY-MM-DD.") from error
+
+
+def calculate_from_anchor(anchor: date, build_date: date) -> ReleaseCycle:
+    """Derive the cycle around a build date by counting 14-day cycles from an anchor."""
+
+    days_since_anchor = (build_date - anchor).days
+    cycles_elapsed = days_since_anchor // CYCLE_LENGTH_DAYS
+    cycle_start = anchor + timedelta(days=cycles_elapsed * CYCLE_LENGTH_DAYS)
+
+    return ReleaseCycle(
+        version="unknown",
+        start=cycle_start,
+        merge_day=cycle_start + timedelta(days=CYCLE_LENGTH_DAYS),
+        source="Anchor date fallback",
+    )
+
+
+def resolve_release_cycle(
+    *, url: str, anchor_value: str, build_date: date
+) -> ReleaseCycle:
+    """Read the cycle from the schedule API, falling back to the anchor date."""
+
+    try:
+        return fetch_train_info(url)
+    except (urllib.error.URLError, ValueError) as error:
+        print(f"Warning! could not read the release schedule: {error}")
+
+    anchor = parse_anchor_date(anchor_value)
+    cycle = calculate_from_anchor(anchor, build_date)
+    print(
+        f"::warning::Falling back to {CYCLE_LENGTH_DAYS}-day cycles counted from the anchor date"
+    )
+
+    return cycle
+
+
 def determine_plan(
     *,
     build_datetime: datetime,
-    release_cycle_anchor: date,
+    cycle: ReleaseCycle,
     default_test_sets: list[str],
     morning_cutoff_hour: int,
 ) -> NightlyPlan:
@@ -84,37 +158,29 @@ def determine_plan(
     if not 0 <= morning_cutoff_hour < 24:
         raise ValueError("morning_cutoff_hour_utc must be between 0 and 23.")
 
-    elapsed_days = (build_datetime.date() - release_cycle_anchor).days
-
-    if elapsed_days < 0:
-        raise ValueError("Build time precedes RELEASE_CYCLE_ANCHOR_UTC.")
-
-    # cycle_index is zero-based:
-    #   0  = first day
-    #   13 = last day
-    cycle_index = elapsed_days % CYCLE_LENGTH_DAYS
-    cycle_day = cycle_index + 1
-
-    # date.weekday() uses Monday=0 through Sunday=6.
-    # Thursday therefore has index 3.
-    first_thursday_index = (3 - release_cycle_anchor.weekday()) % 7
-    first_thursday_cycle_day = first_thursday_index + 1
-
+    build_date = build_datetime.date()
     should_run = build_datetime.hour < morning_cutoff_hour
+
     test_sets: list[str] = []
     reason = "afternoon build"
 
+    cycle_day = (build_date - cycle.start).days + 1
+    cycle_length = (cycle.merge_day - cycle.start).days
+
+    # date.weekday() uses Monday=0 through Sunday=6, so Thursday is 3.
+    first_thursday = cycle.start + timedelta(days=(3 - cycle.start.weekday()) % 7)
+
     if should_run:
-        test_sets = default_test_sets.copy()
+        test_sets = list(default_test_sets)
         reason = "ordinary morning build"
 
-        if cycle_index == 0:
+        if build_date == cycle.start:
             test_sets = list(FULL_TEST_SETS)
             reason = "first day of release cycle"
-        elif cycle_index == CYCLE_LENGTH_DAYS - 1:
+        elif cycle_day == cycle_length:
             test_sets = list(FULL_TEST_SETS)
             reason = "last day of release cycle"
-        elif cycle_index == first_thursday_index:
+        elif build_date == first_thursday:
             test_sets = list(FULL_TEST_SETS)
             reason = "first Thursday of release cycle"
 
@@ -122,10 +188,13 @@ def determine_plan(
         should_run=should_run,
         test_sets=test_sets,
         cycle_day=cycle_day,
+        cycle_length=cycle_length,
         reason=reason,
-        build_date=build_datetime.date().isoformat(),
+        build_date=build_date.isoformat(),
         build_hour=build_datetime.hour,
-        first_thursday_cycle_day=first_thursday_cycle_day,
+        nightly_version=cycle.version,
+        cycle_start=cycle.start.isoformat(),
+        cycle_source=cycle.source,
     )
 
 
@@ -168,11 +237,6 @@ def parse_args() -> argparse.Namespace:
         help="Firefox build ID, such as buildID=20260818174224.",
     )
     parser.add_argument(
-        "--release-cycle-anchor-utc",
-        required=True,
-        help="UTC date of a known cycle day 1, using YYYY-MM-DD.",
-    )
-    parser.add_argument(
         "--default-test-sets",
         default='["smoke"]',
         help="JSON array used for ordinary morning builds.",
@@ -183,6 +247,16 @@ def parse_args() -> argparse.Namespace:
         default=12,
         help="Hours before this UTC hour are considered morning.",
     )
+    parser.add_argument(
+        "--schedule-url",
+        default=SCHEDULE_URL,
+        help="Firefox release schedule API URL.",
+    )
+    parser.add_argument(
+        "--release-cycle-anchor-utc",
+        default=os.environ.get(ANCHOR_ENV_VAR, ""),
+        help="UTC date of a known cycle day one, using YYYY-MM-DD.",
+    )
     return parser.parse_args()
 
 
@@ -190,14 +264,26 @@ def main() -> int:
     args = parse_args()
 
     try:
+        build_datetime = parse_build_datetime(args.target_info)
+        default_test_sets = parse_test_sets(args.default_test_sets)
+    except ValueError as error:
+        print(f"Error, {error}", file=sys.stderr)
+        return 1
+
+    try:
+        cycle = resolve_release_cycle(
+            url=args.schedule_url,
+            anchor_value=args.release_cycle_anchor_utc,
+            build_date=build_datetime.date(),
+        )
         plan = determine_plan(
-            build_datetime=parse_build_datetime(args.target_info),
-            release_cycle_anchor=parse_anchor_date(args.release_cycle_anchor_utc),
-            default_test_sets=parse_test_sets(args.default_test_sets),
+            build_datetime=build_datetime,
+            cycle=cycle,
+            default_test_sets=default_test_sets,
             morning_cutoff_hour=args.morning_cutoff_hour_utc,
         )
     except ValueError as error:
-        print(f"::error::{error}", file=sys.stderr)
+        print(f"Error, {error}", file=sys.stderr)
         return 1
 
     write_github_outputs(plan)
