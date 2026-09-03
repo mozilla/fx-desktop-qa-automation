@@ -1,6 +1,6 @@
 import os
 from shutil import copyfile
-from subprocess import STDOUT, check_call, check_output, run
+from subprocess import STDOUT, CalledProcessError, check_call, check_output, run
 
 import requests
 import thclient
@@ -53,8 +53,10 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
-    cproc = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
-    if not len(cproc):
+    try:
+        cproc = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
+    except CalledProcessError:
+        cproc = None
         fx_dir = os.path.dirname(os.environ.get("FX_EXECUTABLE"))
 
         # If the test exits without output, we're missing dlls
