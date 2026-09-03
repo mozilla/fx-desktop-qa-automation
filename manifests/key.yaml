@@ -608,6 +608,10 @@ find_toolbar:
     splits:
     - smoke
     - ci-extended
+  test_find_toolbar_persists_after_back_forward:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_search:
     result: pass
     splits:
