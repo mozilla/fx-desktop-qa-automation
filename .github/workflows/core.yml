@@ -239,30 +239,25 @@ jobs:
         shell: pwsh
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         run: |
-          $installerPath = Join-Path $env:GITHUB_WORKSPACE "setup.exe"
-          $installPath = Split-Path $env:FX_EXECUTABLE -Parent
+          if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Write-Host "Downloading and extracting Firefox..."
+            Invoke-WebRequest -Uri $env:WIN_INSTALLER_LINK -OutFile "firefox.zip"
+            Expand-Archive -Path "firefox.zip" -Force
+            Move-Item -Path "firefox\firefox" -Destination "C:\Program Files\Custom Firefox" -Force
+          } else {
+            Write-Host "Downloading and installing Firefox..."
+            New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+            Invoke-WebRequest -Uri $env:WIN_INSTALLER_LINK -OutFile "${{ github.workspace }}\setup.exe"
+            Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", "/D=C:\Program Files\Custom Firefox" -Wait -NoNewWindow -PassThru
 
-          Invoke-WebRequest -Uri $env:WIN_INSTALLER_LINK -OutFile $installerPath
-
-          New-Item -ItemType Directory -Path $installPath -Force | Out-Null
-
-          $process = Start-Process `
-            -FilePath $installerPath `
-            -ArgumentList "/S", "/D=$installPath" `
-            -Wait `
-            -NoNewWindow `
-            -PassThru
-
-          if ($process.ExitCode -ne 0) {
-            throw "Firefox installation failed with exit code $($process.ExitCode)."
+            if ($process.ExitCode -ne 0) {
+              throw "Firefox installation failed with exit code $($process.ExitCode)."
+            }
           }
 
-          if (-not (Test-Path $env:FX_EXECUTABLE)) {
-            throw "Firefox executable not found at $env:FX_EXECUTABLE."
-          }
-
-          & $env:FX_EXECUTABLE --version
+          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
 
       - name: Download Geckodriver
         id: download-geckodriver
