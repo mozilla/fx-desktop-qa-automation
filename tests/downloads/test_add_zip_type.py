@@ -21,7 +21,7 @@ def delete_files_regex_string():
 def temp_selectors():
     return {
         "zip-download-link": {
-            "selectorData": "a[href$='.zip']",
+            "selectorData": "a[href$='Firefox-win32-0.9rc.zip']",
             "strategy": "css",
             "groups": [],
         },
