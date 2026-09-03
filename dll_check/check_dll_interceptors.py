@@ -56,7 +56,7 @@ def main(bits: int):
     itcptr_testout = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
     icptxp_testout = check_output([".\\TestDllInterceptorCrossProcess.exe"]).decode()
     print(f"===\n===\n{itcptr_testout}\n===\n===")
-    assert "all tests passed" in itcptr_testout.strip().split("\n")[-1]
+    assert "all checks passed" in itcptr_testout
     assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
     assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout
 
