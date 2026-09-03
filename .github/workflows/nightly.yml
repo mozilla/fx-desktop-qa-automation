@@ -1,37 +1,42 @@
 ---
-name: Nightly Smoke Tests
+name: Nightly Tests
 
 run-name: Nightly smoke tests triggered by ${{ github.actor }}
 
-# Dispatch only, so the caller decides when to run (cycle nights 2-13; the
-# first and last night are covered by full-functional-glean.yml).
+# Dispatch only, that runs smoke tests every day on the morning generated nightly build
+# or the functional and glean tests on the first and last day of the cycle, in addition
+# to the first Thursday morning.
 
 on:
   workflow_dispatch:
     inputs:
       test_sets:
-        description: "Test set to run"
+        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"functional\", \"glean\"]' "
+        default: '["smoke"]'
+        type: string
+
+      target_info:
+        description: 'Build ID information containing date and time of the Firefox build'
         required: true
-        default: "smoke"
         type: string
 
       win_installer_link:
-        description: 'The link to the Windows installer (win64) for the Fx under test'
+        description: 'The Windows ZIP URL for the Firefox build under test'
         required: false
         type: string
 
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: 'The macOS installer URL for the Firefox build under test'
         required: false
         type: string
 
       linux_tarball_link:
-        description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
+        description: 'The Linux tarball URL for the Firefox build under test'
         required: false
         type: string
 
       dry_run:
-        description: Select smoke tests without downloading or running Firefox
+        description: 'Select smoke tests without downloading or running Firefox'
         required: false
         default: "false"
         type: string
@@ -43,11 +48,55 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  # Set this repository variable to the UTC date of a known first day of a
+  # 14-day release cycle, for example: 2026-09-15
+  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
+
+  # Hours 00:00 through 11:59 UTC are considered the morning build.
+  MORNING_CUTOFF_HOUR_UTC: "12"
+
 jobs:
-  Smoke:
+  Plan:
+    name: Determine nightly test plan
+    runs-on: ubuntu-latest
+
+    outputs:
+      should_run: ${{ steps.plan.outputs.should_run }}
+      test_sets: ${{ steps.plan.outputs.test_sets }}
+      cycle_day: ${{ steps.plan.outputs.cycle_day }}
+      reason: ${{ steps.plan.outputs.reason }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Determine tests from target info
+        id: plan
+        env:
+          TARGET_INFO: ${{ inputs.target_info }}
+          DEFAULT_TEST_SETS: ${{ inputs.test_sets }}
+        run: |
+          python scripts/determine_nightly_plan.py \
+            --target-info "$TARGET_INFO" \
+            --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC" \
+            --default-test-sets "$DEFAULT_TEST_SETS" \
+            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC"
+
+  Run:
+    name: Run selected nightly tests
+    needs: Plan
+    if: ${{ needs.Plan.outputs.should_run == 'true' }}
     uses: ./.github/workflows/core.yml
     with:
-      test_sets: ${{ inputs.test_sets }}
+      test_sets: ${{ needs.Plan.outputs.test_sets }}
       win_installer_link: ${{ inputs.win_installer_link }}
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Page With An Iframe</title>
+    <style>
+      body { margin: 0; padding: 16px; font-family: sans-serif; }
+      p { margin: 0 0 24px; }
+      .spacer { height: 1200px; }
+      iframe { width: 90%; height: 400px; }
+    </style>
+  </head>
+  <body>
+    <h2 class="header">Find in a page with an iframe</h2>
+    <p class="para">The first language in this paragraph is a top level match.</p>
+    <p class="para">A second language and a third language live in the parent document.</p>
+    <p class="para">Here is a fourth language, and here is a fifth language.</p>
+    <iframe class="frame" src="find_in_iframe_frame.html" title="Iframe with matches"></iframe>
+    <div class="spacer"></div>
+    <p class="footer">Nothing below the iframe matches, this text is only here to make the page scroll.</p>
+  </body>
+</html>
