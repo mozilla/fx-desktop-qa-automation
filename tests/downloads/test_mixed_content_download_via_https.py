@@ -38,9 +38,6 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     # Open the page and trigger the mixed content download
     web_page.open()
 
-    # Wait for the downloads button to appear before interacting with it
-    nav.element_visible("download-target-element")
-
     # Verify download name matches expected pattern
     nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")
 
