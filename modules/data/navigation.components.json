@@ -1130,6 +1130,13 @@
       "doNotCache"
     ]
   },
+  "forward-button": {
+    "selectorData": "forward-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "content-area-menu": {
     "selectorData": "browser[contextmenu='contentAreaContextMenu']",
     "strategy": "css",

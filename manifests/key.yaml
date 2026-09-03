@@ -39,7 +39,11 @@ address_bar_and_search:
     - functional1
     - nightly
   test_clipboard_pref_flip:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068680
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -245,11 +249,36 @@ address_bar_and_search:
     - functional1
     - nightly
 ai_controls:
+  test_c3276002_ai_features_keyboard_accessible:
+    test_ai_controls_elements_keyboard_accessible:
+      result: pass
+      splits:
+      - functional1
+    test_ai_controls_toggle_activates_via_keyboard:
+      result: pass
+      splits:
+      - functional1
+  test_c3298824_block_all_persists:
+    result: pass
+    splits:
+    - functional1
   test_c3308998_unblock_restores_state:
     result: pass
     splits:
     - functional1
     - nightly
+  test_c3310314_features_remain_after_unblock:
+    result: pass
+    splits:
+    - functional1
+  test_c3340562_cancel_blocking:
+    result: pass
+    splits:
+    - functional1
+  test_c3341331_extensions_api_disabled:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
@@ -345,7 +374,11 @@ bookmarks_and_history:
     - functional1
     - nightly
   test_edit_bookmark_from_bookmark_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068679
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -566,6 +599,10 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+  test_find_on_page_with_rtl_language:
+    result: pass
+    splits:
+    - functional1
   test_find_text_on_buttons:
     result: pass
     splits:
@@ -575,6 +612,10 @@ find_toolbar:
     splits:
     - smoke
     - ci-extended
+  test_find_toolbar_persists_after_back_forward:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_search:
     result: pass
     splits:
@@ -585,6 +626,10 @@ find_toolbar:
     splits:
     - functional1
   test_find_word_with_special_characters_2:
+    result: pass
+    splits:
+    - functional1
+  test_search_again_after_navigation:
     result: pass
     splits:
     - functional1
@@ -971,7 +1016,11 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068682
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional2
     - nightly
@@ -1275,7 +1324,11 @@ preferences:
     - functional2
     - nightly
   test_clear_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064065
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:

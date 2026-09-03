@@ -48,6 +48,18 @@ class FindToolbar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def type_in_find_bar(self, term: str) -> BasePage:
+        """Type into the find bar without submitting the search"""
+        self.get_element("find-toolbar-input").send_keys(term)
+        return self
+
+    @BasePage.context_chrome
+    def delete_chars_from_find_bar(self, count: int) -> BasePage:
+        """Backspace over the last `count` characters in the find bar"""
+        self.get_element("find-toolbar-input").send_keys(Keys.BACK_SPACE * count)
+        return self
+
+    @BasePage.context_chrome
     def get_match_args(self) -> dict:
         """Return the status of the find session"""
         self.expect(
