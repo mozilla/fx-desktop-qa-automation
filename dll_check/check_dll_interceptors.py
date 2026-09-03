@@ -8,7 +8,7 @@ import thclient
 # Assume beta link is in env as FX_DOWNLOAD_LINK, fx executable as FX_EXECUTABLE
 PROJECT = "mozilla-beta"
 BUILDHUB = "buildhub.json"
-SEARCH_STRING = "Windows,x86,Shippable,opt,build-win32-shippable/opt,B"
+SEARCH_STRING = "Windows,x86,Shippable,opt,build-win{}-shippable/opt,B"
 JOB_TYPE_NAME = "build-win{}-shippable/opt"
 TREEHERDER_LINK = "https://treeherder.mozilla.org/jobs?repo=mozilla-beta&searchStr=Windows%2Cshippable%2Fopt&revision={}"
 ARTIFACT_LINK = "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/{}/runs/0/artifacts/public%2Fbuild%2Ftarget.cppunittest.tests.tar.zst"
@@ -16,6 +16,9 @@ MISSING_DLLS = ["mozglue.dll", "msvcp140.dll", "vcruntime140.dll"]
 
 
 def main(bits: int):
+    # set correct search term
+    search_term = SEARCH_STRING.replace("{}", str(bits))
+
     # get buildhub json
     download_dir, _ = os.getenv("FX_DOWNLOAD_URL").rsplit("/", 1)
     response = requests.get(f"{download_dir}/{BUILDHUB}")
@@ -25,13 +28,15 @@ def main(bits: int):
     buildinfo = response.json()
     rev = buildinfo.get("source").get("revision")
     treeherder = thclient.TreeherderClient()
-    push = treeherder.get_pushes(PROJECT, searchStr=SEARCH_STRING, revision=rev)[0]
+    push = treeherder.get_pushes(PROJECT, searchStr=search_term, revision=rev)[0]
     job_type = JOB_TYPE_NAME.replace("{}", str(bits))
     jobs_list = treeherder.get_jobs(
         project="mozilla-beta", job_type_name=job_type, push_id=push.get("id")
     )
     if not jobs_list:
-        return None  # replace with raise
+        raise ValueError(
+            f"No matching jobs: project {PROJECT}, search term {search_term}, revision {rev}"
+        )
 
     # use taskcluster api to get artifact
     task_id = jobs_list[-1].get("task_id")
@@ -48,17 +53,30 @@ def main(bits: int):
     check_call(["7z", "e", "cpptests.tar"])
 
     # run tests
-    cproc = run([".\\TestDllInterceptor.exe"], capture_output=True)
-    if not len(cproc.stdout):
+    cproc = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
+    if not len(cproc):
         fx_dir = os.path.dirname(os.environ.get("FX_EXECUTABLE"))
+
+        # If the test exits without output, we're missing dlls
         for dll in MISSING_DLLS:
             copyfile(os.path.join(fx_dir, dll), dll)
-    itcptr_testout = check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
+    itcptr_testout = (
+        cproc or check_output([".\\TestDllInterceptor.exe"], stderr=STDOUT).decode()
+    )
     icptxp_testout = check_output([".\\TestDllInterceptorCrossProcess.exe"]).decode()
-    print(f"===\n===\n{itcptr_testout}\n===\n===")
-    assert "all checks passed" in itcptr_testout
-    assert "TEST-PASS" in icptxp_testout.strip().split("\n")[-1]
-    assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout
+    itcptr_output_lines = itcptr_testout.strip().split()
+    icptxp_output_lines = icptxp_testout.strip().split()
+    assert "all checks passed" in itcptr_testout, (
+        "Failure in TestDllInterceptor.exe:" + "\n".join(itcptr_output_lines)
+    )
+    assert "TEST-PASS" in icptxp_output_lines[-1], (
+        "Failure in TestDllInterceptorCrossProcess.exe:"
+        + "\n".join(icptxp_output_lines)
+    )
+    assert "TEST-UNEXPECTED-FAIL" not in icptxp_testout, (
+        "Failure in TestDllInterceptorCrossProcess.exe:"
+        + "\n".join(icptxp_output_lines)
+    )
 
 
 if __name__ == "__main__":
