@@ -27,6 +27,9 @@ def test_whats_new_link(driver: Firefox, about_prefs: AboutPrefs):
     """
     about_prefs.open()
 
+    # The link points at the release notes for the build under test.
+    release_notes_url = about_prefs.get_element("whats-new-link").get_attribute("href")
+
     # Hovering changes the link color, so compare it before and after.
     default_color = about_prefs.get_element("whats-new-link").value_of_css_property(
         "color"
@@ -41,4 +44,4 @@ def test_whats_new_link(driver: Firefox, about_prefs: AboutPrefs):
     about_prefs.click_on("whats-new-link")
     about_prefs.wait_for_num_tabs(2)
     about_prefs.switch_to_new_tab()
-    about_prefs.url_contains("releasenotes")
+    about_prefs.url_contains(release_notes_url.split("?")[0])
