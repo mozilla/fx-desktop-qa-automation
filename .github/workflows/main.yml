@@ -184,12 +184,6 @@ jobs:
             Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
           }
 
-      - name: Spike test - DLL Interceptors
-        env:
-          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
-        run: |
-          uv run python dll_check/check_dll_interceptors.py
-
       - name: Select Tests (Win)
         id: select
         if: ${{ inputs.test_set != 'glean' }}
@@ -291,6 +285,14 @@ jobs:
         with:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
+
+      - name: DLL Interceptor tests
+        id: dll
+        if: ${{ always() && !inputs.win_installer_link && inputs.dry_run != true && inputs.is_pull_request != true }}
+        env:
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
+        run: |
+          uv run python dll_check/check_dll_interceptors.py
 
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
