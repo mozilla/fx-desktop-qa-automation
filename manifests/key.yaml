@@ -1567,6 +1567,11 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_etp_panel_displayed_when_trackers_detected:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_etp_toggle_on_off_behavior:
     result: pass
     splits:
