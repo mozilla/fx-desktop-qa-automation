@@ -1358,6 +1358,10 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_whats_new_link:
+    result: pass
+    splits:
+    - functional1
 printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
