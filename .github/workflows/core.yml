@@ -250,7 +250,7 @@ jobs:
             Write-Host "Downloading and installing Firefox..."
             New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
             Invoke-WebRequest -Uri $env:WIN_INSTALLER_LINK -OutFile "${{ github.workspace }}\setup.exe"
-            Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", "/D=C:\Program Files\Custom Firefox" -Wait -NoNewWindow -PassThru
+            $process = Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", "/D=C:\Program Files\Custom Firefox" -Wait -NoNewWindow -PassThru
 
             if ($process.ExitCode -ne 0) {
               throw "Firefox installation failed with exit code $($process.ExitCode)."
