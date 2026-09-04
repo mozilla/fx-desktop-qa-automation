@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_prefs import AboutPrefs
+from modules.page_object import AboutPrefs
 
 
 @pytest.fixture()
