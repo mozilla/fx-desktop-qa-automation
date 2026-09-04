@@ -20,6 +20,13 @@ def test_case():
     return "1756776"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 def test_telemetry_download_and_open(driver: Firefox):
     """
     C1756776 - Verify that telemetry is recorded when a user Downloads a file and opens it

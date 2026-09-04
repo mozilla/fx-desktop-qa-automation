@@ -39,7 +39,11 @@ address_bar_and_search:
     - functional1
     - nightly
   test_clipboard_pref_flip:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068680
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -245,11 +249,36 @@ address_bar_and_search:
     - functional1
     - nightly
 ai_controls:
+  test_c3276002_ai_features_keyboard_accessible:
+    test_ai_controls_elements_keyboard_accessible:
+      result: pass
+      splits:
+      - functional1
+    test_ai_controls_toggle_activates_via_keyboard:
+      result: pass
+      splits:
+      - functional1
+  test_c3298824_block_all_persists:
+    result: pass
+    splits:
+    - functional1
   test_c3308998_unblock_restores_state:
     result: pass
     splits:
     - functional1
     - nightly
+  test_c3310314_features_remain_after_unblock:
+    result: pass
+    splits:
+    - functional1
+  test_c3340562_cancel_blocking:
+    result: pass
+    splits:
+    - functional1
+  test_c3341331_extensions_api_disabled:
+    result: pass
+    splits:
+    - functional1
 audio_video:
   test_allow_audio_video_functionality:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
@@ -345,7 +374,11 @@ bookmarks_and_history:
     - functional1
     - nightly
   test_edit_bookmark_from_bookmark_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068679
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -435,21 +468,15 @@ bookmarks_and_history:
     - nightly
 downloads:
   test_add_mime_type_doc:
-    comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
-    result:
-      linux: unstable
-      mac: unstable
-      win: unstable
+    result: pass
     splits:
     - functional1
   test_add_zip_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_change_download_folder:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2063442
-    result: unstable
+    result: pass
     splits:
     - functional1
     - ci
@@ -476,7 +503,11 @@ downloads:
     splits:
     - functional1
   test_download_malicious_warning:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2067181
+    result:
+      linux: unstable
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_download_mp3_and_check_extension:
@@ -498,8 +529,7 @@ downloads:
     - functional1
     - nightly
   test_install_unsigned_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064083
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_mixed_content_download_via_https:
@@ -518,8 +548,7 @@ downloads:
     - functional1
     - nightly
   test_telemetry_download_and_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064081
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_telemetry_pdf_download_open:
@@ -528,8 +557,7 @@ downloads:
     - functional1
     - nightly
   test_verify_telemetry_downloads_panel_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064081
-    result: unstable
+    result: pass
     splits:
     - functional1
 drag_and_drop:
@@ -562,16 +590,48 @@ find_toolbar:
     splits:
     - functional1
     - nightly
+  test_find_in_txt_file:
+    result: pass
+    splits:
+    - functional1
+  test_find_on_page_with_iframe:
+    result: pass
+    splits:
+    - functional1
+  test_find_on_page_with_rtl_language:
+    result: pass
+    splits:
+    - functional1
+  test_find_text_on_buttons:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_nav:
     result: pass
     splits:
     - smoke
     - ci-extended
+  test_find_toolbar_persists_after_back_forward:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_search:
     result: pass
     splits:
     - functional1
     - nightly
+  test_find_word_with_special_characters:
+    result: pass
+    splits:
+    - functional1
+  test_find_word_with_special_characters_2:
+    result: pass
+    splits:
+    - functional1
+  test_search_again_after_navigation:
+    result: pass
+    splits:
+    - functional1
 form_autofill:
   test_address_autofill_attribute:
     result: pass
@@ -678,6 +738,11 @@ geolocation:
 glean:
   misc_metrics:
     test_misc_metrics:
+      result: pass
+      splits:
+      - glean
+  sap_counts:
+    test_sap_counts:
       result: pass
       splits:
       - glean
@@ -913,11 +978,7 @@ password_manager:
     - functional2
     - nightly
   test_about_logins_username_copy_button:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064795
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -954,7 +1015,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064124
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068682
     result:
       linux: pass
       mac: pass
@@ -978,11 +1039,7 @@ password_manager:
     - functional2
     - nightly
   test_edit_autofill_after_pp_dismissed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064165
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1056,7 +1113,7 @@ password_manager:
     - functional2
     - nightly
   test_password_manager_on_google_US:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167, old mac bug
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064167
     result:
       linux: pass
       mac: unstable
@@ -1093,11 +1150,7 @@ password_manager:
     - functional2
     - nightly
   test_saved_hyperlink_redirects_to_corresponding_page:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064104
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1134,13 +1187,11 @@ pdf_viewer:
     splits:
     - functional2
   test_download_pdf_data:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064111
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_pdf_with_form_fields:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064142
-    result: unstable
+    result: pass
     splits:
     - functional2
   test_download_triggered_on_content_disposition_attachment:
@@ -1272,7 +1323,11 @@ preferences:
     - functional2
     - nightly
   test_clear_cookie_data:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064065
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
   test_firefox_home_new_tabs:
@@ -1321,11 +1376,7 @@ printing_ui:
     - nightly
 profile:
   test_set_default_profile:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064143
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - smoke
 reader_view:
@@ -1480,13 +1531,11 @@ security_and_privacy:
     splits:
     - functional3
   test_download_list_cleared_by_end_private_session:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064132
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_downloads_from_private_not_leaked:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064130
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_end_private_session_button_can_be_removed_or_added_on_toolbar:
@@ -1538,11 +1587,7 @@ security_and_privacy:
     splits:
     - functional3
   test_fingerprinters_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064803
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
   test_fingerprinters_subpanel_display_when_not_blocked:
@@ -1631,11 +1676,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064805
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional3
     - nightly
@@ -1976,6 +2017,10 @@ tabs:
     - functional3
     - nightly
     - no_xvfb
+  test_reload_multiselected_tabs:
+    result: pass
+    splits:
+    - functional3
   test_reload_overiding_cache_keys:
     result: pass
     splits:
@@ -2032,7 +2077,6 @@ theme_and_toolbar:
     splits:
     - smoke
     - no_xvfb
-    - ci
   test_installed_theme_enabled:
     result: pass
     splits:

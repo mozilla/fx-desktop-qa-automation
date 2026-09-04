@@ -603,8 +603,12 @@ class BasePage(Page):
                 shadow_element = self.utils.find_shadow_element(
                     shadow_parent, selector, context=self.context
                 )
-                if "doNotCache" not in element_data["groups"]:
-                    logging.info(f"Not caching {cache_name}...")
+                # Don't cache a None match, or the next lookup hands None to
+                # the staleness check instead of searching again.
+                if shadow_element is not None and (
+                    "doNotCache" not in element_data["groups"]
+                ):
+                    logging.info(f"Caching {cache_name}...")
                     self.elements[cache_name]["seleniumObject"] = shadow_element
                 return shadow_element
             else:

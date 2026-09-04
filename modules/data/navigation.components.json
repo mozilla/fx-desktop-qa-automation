@@ -695,7 +695,9 @@
   "download-target-element": {
     "selectorData": "downloadTarget",
     "strategy": "class",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Downloaded item in the download panel",
       "location": "Download panel"
@@ -1123,6 +1125,13 @@
   },
   "back-button": {
     "selectorData": "back-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "forward-button": {
+    "selectorData": "forward-button",
     "strategy": "id",
     "groups": [
       "doNotCache"

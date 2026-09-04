@@ -21,6 +21,13 @@ def test_case():
     return "1756777"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 def test_verify_telemetry_downloads_panel_open(driver: Firefox):
     """
     C1756777 - Verify that telemetry is recorded for Opening the Downloads panel

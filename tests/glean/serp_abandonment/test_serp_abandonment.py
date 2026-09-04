@@ -5,8 +5,13 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Glean
 from modules.page_object import AboutPrefs
-from tests.glean.flows import ENTRY_PREFS, SEARCH_TERM, run_abandonment
-from tests.glean.utils import load_cases
+from tests.glean.flows import (
+    ENTRY_PREFS,
+    SEARCH_TERM,
+    block_if_bot_challenge,
+    run_abandonment,
+)
+from tests.glean.utils import load_cases, skip_if_unstable
 
 data = load_cases(__file__)
 METRIC = data["metric"]
@@ -23,6 +28,7 @@ IMPRESSION_ID_RE = re.compile(
 )
 def case(request):
     """Parametrized fixture yielding one test case dict from cases.json."""
+    skip_if_unstable(request.param)
     return request.param
 
 
@@ -51,9 +57,13 @@ def test_serp_abandonment(driver: Firefox, case: dict):
         prefs.open()
         prefs.search_engine_dropdown().select_option(engine)
 
-    run_abandonment(driver, case["action"], SEARCH_TERM, params)
+    try:
+        run_abandonment(driver, case["action"], SEARCH_TERM, params)
 
-    events = glean.poll_glean_metric(METRIC, case["expected"])
+        events = glean.poll_glean_metric(METRIC, case["expected"])
+    except Exception:
+        block_if_bot_challenge(driver)
+        raise
 
     # The matched abandonment must carry a well-formed UUID impression_id
     impression_ids = [

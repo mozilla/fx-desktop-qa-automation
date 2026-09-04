@@ -330,8 +330,14 @@ class AboutPrefs(BasePage):
 
     def verify_doh_provider(self, provider_name: str) -> BasePage:
         """Wait until the DoH status box reports the given provider name."""
-        self.element_attribute_contains(
-            "doh-status-box", "data-l10n-args", provider_name
+        self.custom_wait(timeout=30).until(
+            lambda _: (
+                provider_name
+                in (
+                    self.get_element("doh-status-box").get_attribute("data-l10n-args")
+                    or ""
+                )
+            )
         )
         return self
 
@@ -1060,14 +1066,36 @@ class AboutPrefs(BasePage):
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def clear_cookies_and_get_dialog_iframe(self):
+    def switch_to_clear_data_dialog(self) -> BasePage:
         """
-        Returns the iframe object for the dialog panel in the popup after pressing the clear site
-        data button.
+        Press the clear site data button and switch into the dialog panel's iframe.
+
+        The .dialogFrame element exists before the dialog loads, so switch from the top
+        and retry until the dialog's own content is reachable.
         """
         self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
-        return self.get_element("browser-popup")
+
+        def _switched_into_loaded_dialog(_) -> bool:
+            self.switch_to_default_frame()
+            for frame in self.get_elements("browser-popup"):
+                try:
+                    self.switch_to_iframe_context(frame)
+                    if self.get_elements("cookies-data-checkbox"):
+                        return True
+                except WebDriverException:
+                    pass
+                self.switch_to_default_frame()
+            return False
+
+        # Don't pay the implicit wait on every miss
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.wait.until(_switched_into_loaded_dialog)
+        finally:
+            self.driver.implicitly_wait(original)
+        return self
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
@@ -1179,8 +1207,6 @@ class AboutPrefs(BasePage):
         The <memory used> value for no cookies is '0 bytes', otherwise values are
         '### MB', or '### KB'
         """
-        # Find the dialog option elements containing the checkbox label
-        self.element_exists("clear-data-dialog-options")
         cookies_checkbox = self.get_element("cookies-data-checkbox")
         self.element_has_attribute(cookies_checkbox, "data-l10n-args")
         cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
@@ -1405,14 +1431,12 @@ class AboutPrefs(BasePage):
                 self.element_has_text(locator, text_value)
         return self
 
-    def open_clear_cookie_site_and_get_data(self):
+    def open_clear_cookie_site_and_get_data(self) -> int:
         """
-        Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
-        wait for its option container to be present, read the value, then switch back.
+        Open about:preferences#privacy and read the cookies and site data value.
         """
         self.open()
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.switch_to_clear_data_dialog()
         val = self.get_cookie_site_data_value()
         self.switch_to_default_frame()
         self.close_dialog_box()
@@ -1422,8 +1446,8 @@ class AboutPrefs(BasePage):
         """
         Open about:preferences#privacy and clear cookies and site data.
         """
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.open()
+        self.switch_to_clear_data_dialog()
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
@@ -1543,6 +1567,133 @@ class AboutPrefs(BasePage):
             else:
                 self.element_attribute_is_not(key, "disabled", "")
         return self
+
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
+        """
+        Verify that the three always-present AI Controls elements are visible
+        (the killswitch toggle, the translations select, and the chatbot select).
+        """
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation. Pass False when enterprise
+                    policies hide those controls.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        # The toggle reports its state through the aria-pressed attribute (the
+        # same signal expect_ai_killswitch_state waits on); "true" means blocked.
+        return (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "true"
+        )
+
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Note: this writes the pref directly and does NOT run the UI toggle's
+        side effects (e.g. flipping extensions.ml.enabled). Use
+        toggle_ai_killswitch_click when those side effects must be exercised
+        (see C3341331).
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        if block != self.get_ai_killswitch_state():
+            self.driver.execute_script(
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
+            )
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+
+        Returns:
+            str: Current state ("available" or "blocked")
+        """
+        return self.get_element("ai-control-translations-select").get_attribute("value")
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+
+        Note: ai-control-translations-select is a `moz-select` custom element
+        (not a native <select>), so selenium.webdriver.support.ui.Select does
+        not apply and there is no plain-Selenium equivalent for value-setting.
+        We assign .value and dispatch input/change events the way the moz-select
+        internals do to trigger the same pref-write path a user click would.
+
+        Arguments:
+            state: "available" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        # Confirm the moz-select actually wrote through to the backing pref —
+        # asserting .value alone would be tautological since we just set it.
+        self.expect(
+            lambda _: self.driver.execute_script(
+                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            )
+            == state
+        )
+        return self
+
+    def cancel_ai_killswitch_click(self) -> BasePage:
+        """
+        Click the AI killswitch toggle and dismiss the confirmation dialog with
+        its "Cancel" button, leaving AI unblocked. Mirrors
+        toggle_ai_killswitch_click but exercises the cancel path of the
+        "Block all AI enhancements?" prompt.
+        """
+        self.click_on("ai-controls-toggle")
+        self.element_visible("ai-controls-disable-dialog-button")
+        buttons = self.get_elements("ai-controls-disable-dialog-button")
+        cancel = [el for el in buttons if el.get_attribute("label") == "Cancel"]
+        assert cancel, "Cancel button not found in block-AI confirmation dialog"
+        cancel[0].click()
+        return self
+
+    def get_extensions_ml_enabled(self) -> bool:
+        """
+        Read the extensions.ml.enabled pref, which the AI killswitch flips off
+        while blocking. Returns True when the WebExtensions ML API is enabled.
+        """
+        return bool(
+            self.driver.execute_script(
+                "return Services.prefs.getBoolPref('extensions.ml.enabled', false);"
+            )
+        )
 
     def open_etp_advanced_settings(self):
         """Opens the ETP advanced settings in Privacy & Security preferences"""

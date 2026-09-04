@@ -18,6 +18,7 @@ def add_to_prefs_list():
     return [
         ("browser.privatebrowsing.resetPBM.enabled", True),
         ("browser.privatebrowsing.felt-privacy-v1", True),
+        ("browser.download.alwaysOpenPanel", True),
     ]
 
 

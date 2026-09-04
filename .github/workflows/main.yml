@@ -27,6 +27,19 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      TESTRAIL_BASE_URL:
+        required: false
+      TESTRAIL_API_KEY:
+        required: false
+      TESTRAIL_USERNAME:
+        required: false
+      SVC_ACCT_DECRYPT:
+        required: false
+      SLACK_KEY:
+        required: false
+      GCP_CREDENTIAL:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -146,20 +159,34 @@ jobs:
         if: ${{ inputs.win_installer_link && inputs.dry_run != true }}
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
-          New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+          if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Write-Host "Downloading and unzipping file..."
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "firefox.zip"
+            Expand-Archive -Path firefox.zip -PassThru
+            Move-Item -Path firefox\firefox -Destination "C:\Program Files\Custom Firefox" -Force -PassThru
+            Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
+          } else {
+            New-Item -ItemType Directory -Path "C:\Program Files\Custom Firefox" -Force
+            Invoke-WebRequest -Uri "$env:WIN_INSTALLER_LINK" -OutFile "${{ github.workspace }}\setup.exe"
+          }
 
       - name: Install Beta
-        if: ${{ inputs.dry_run != true }}
         id: setup
+        if: ${{ inputs.dry_run != true }}
+        env:
+          WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
         shell: pwsh
         run: |
-          Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          if (-not $env:WIN_INSTALLER_LINK -or -not $env:WIN_INSTALLER_LINK.Contains(".zip")) {
+            Start-Process -FilePath "${{ github.workspace }}\setup.exe" -ArgumentList "/S", '/D=C:\Program Files\Custom Firefox' -Wait -NoNewWindow -PassThru
+          }
 
       - name: Select Tests (Win)
         id: select
+        if: ${{ inputs.test_set != 'glean' }}
         shell: pwsh
         run: |
           uv sync;
@@ -179,7 +206,7 @@ jobs:
         if: |-
           ${{
             steps.setup.conclusion == 'success' &&
-            steps.select.conclusion == 'success' &&
+            (steps.select.conclusion == 'success' || inputs.test_set == 'glean') &&
             inputs.dry_run != true
           }}
         env:
@@ -187,8 +214,6 @@ jobs:
         shell: pwsh
         run: |
           uv run python -c "import sys; print(sys.platform)"
-          $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
-          Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
           uv run pytest ".\tests\meta\test_version.py" --geckodriver=geckodriver.exe
 
       # --- REAL RUN: actually execute tests ---
@@ -197,6 +222,7 @@ jobs:
           ${{
             steps.setup.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
+            inputs.test_set != 'glean' &&
             inputs.dry_run != true
           }}
         shell: pwsh
@@ -206,34 +232,15 @@ jobs:
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
 
-      - name: Skip Telemetry for most PRs
+      - name: Run Glean Tests in Win
         if: |-
           ${{
             steps.setup.conclusion == 'success' &&
-            inputs.dry_run != true &&
-            inputs.is_pull_request == true &&
-            always()
+            inputs.test_set == 'glean' &&
+            inputs.dry_run != true
           }}
         shell: pwsh
         run: |
-          $origin = (git merge-base origin/main HEAD)
-          $gitdiff = (git --no-pager diff --name-only $origin) -join "`n"
-          Write-Host $gitdiff
-          if ($gitdiff -notmatch "/glean/") {"SKIP_GLEAN=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append}
-
-      - name: Run Telemetry Tests in Win
-        if: |-
-          ${{
-            steps.setup.conclusion == 'success' &&
-            inputs.dry_run != true &&
-            always()
-          }}
-        shell: pwsh
-        run: |
-          $split = if ($env:STARFOX_SPLIT) { $env:STARFOX_SPLIT } else { "smoke" }
-          if ($split -ne "smoke" -or $env:SKIP_GLEAN -eq "true") {exit 0}
-          # Set after the guard: routes results to the dedicated Glean plan
-          $env:STARFOX_SPLIT = "glean"
           uv run pytest tests/glean --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
@@ -242,7 +249,13 @@ jobs:
           REPORTABLE: ${{ !inputs.is_pull_request }}
 
       - name: Run Tests in Win (Headed)
-        if: ${{ steps.setup.conclusion == 'success' && always() && inputs.dry_run != true }}
+        if: |-
+          ${{
+            steps.setup.conclusion == 'success' &&
+            inputs.test_set != 'glean' &&
+            always() &&
+            inputs.dry_run != true
+          }}
         env:
           REPORTABLE: true
         shell: pwsh
@@ -267,10 +280,10 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
-          name: artifacts-win
+          name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
 
   Test-MacOS:
@@ -345,6 +358,7 @@ jobs:
 
       - name: Select Tests (MacOS)
         id: select
+        if: ${{ inputs.test_set != 'glean' }}
         run: |
           uv sync;
           uv run python -m scripts.choose_test_split
@@ -362,7 +376,7 @@ jobs:
         if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
-            steps.select.conclusion == 'success' &&
+            (steps.select.conclusion == 'success' || inputs.test_set == 'glean') &&
             inputs.dry_run != true
           }}
         env:
@@ -377,6 +391,7 @@ jobs:
           ${{
             steps.install-fx.conclusion == 'success' &&
             steps.select.conclusion == 'success' &&
+            inputs.test_set != 'glean' &&
             inputs.dry_run != true
           }}
         env:
@@ -387,41 +402,30 @@ jobs:
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
-      - name: Skip Telemetry for most PRs
-        if: |-
-          ${{
-            steps.setup.conclusion == 'success' &&
-            inputs.dry_run != true &&
-            inputs.is_pull_request == true &&
-            always()
-          }}
-        run: |
-          export ORIGIN=$(git merge-base origin/main HEAD)
-          export DIFF=$(git --no-pager diff --name-only $ORIGIN)
-          echo "${DIFF}"
-          if ! [[ "${DIFF}" =~ "/glean/" ]]; then echo "SKIP_GLEAN=true" >> $GITHUB_ENV; fi
-
-      - name: Run Telemetry Tests in MacOS
+      - name: Run Glean Tests in MacOS
         if: |-
           ${{
             steps.install-fx.conclusion == 'success' &&
-            inputs.dry_run != true &&
-            always()
+            inputs.test_set == 'glean' &&
+            inputs.dry_run != true
           }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: ${{ !inputs.is_pull_request }}
         run: |
           "$FX_EXECUTABLE" --version
-          split="${STARFOX_SPLIT:-smoke}"
-          if [[ $split != "smoke" || $SKIP_GLEAN = "true" ]]; then exit 0; fi
-          # Prefixed, not exported: routes results to the dedicated Glean plan
-          STARFOX_SPLIT=glean uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
       - name: Run Tests in MacOS (Headed)
-        if: ${{ steps.install-fx.conclusion == 'success' && always() && inputs.dry_run != true }}
+        if: |-
+          ${{
+            steps.install-fx.conclusion == 'success' &&
+            inputs.test_set != 'glean' &&
+            always() &&
+            inputs.dry_run != true
+          }}
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: true
@@ -434,10 +438,10 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
-          name: artifacts-mac
+          name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-mac
 
   Smoke-Linux:
@@ -534,6 +538,13 @@ jobs:
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
 
+      - name: Upload artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
+          path: artifacts
+
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
@@ -559,13 +570,13 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
-          name: artifacts-win
+          name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
 
       - name: Download MacOS artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
-          name: artifacts-mac
+          name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-mac
 
       - name: List downloaded Windows files
