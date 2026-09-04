@@ -1525,6 +1525,33 @@ class AboutPrefs(BasePage):
         self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
+    def open_manage_exceptions_dialog(self) -> BasePage:
+        """
+        Open the ETP "Manage Exceptions" dialog and switch into its popup iframe.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        After calling this method, subsequent element interactions happen within
+        the dialog's iframe context. Call ``self.switch_to_default_frame()``
+        afterward to return to the main page.
+        """
+        # hack to know if the current iframe is the default browser one or not
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+        self.js_click_on("manage-exceptions-button")
+        iframe = self.get_element("browser-popup")
+        self.switch_to_iframe_context(iframe)
+        return self
+
+    def remove_all_exceptions_and_save(self) -> BasePage:
+        """
+        From inside the ETP "Manage Exceptions" dialog iframe, remove every
+        exception entry and save the changes. Returns to the default frame.
+        """
+        self.click_on("remove-all-websites-button")
+        self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:

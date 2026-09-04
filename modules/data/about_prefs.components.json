@@ -1565,5 +1565,55 @@
       "description": "The \"Firefox Home (Default)\" option inside the New tabs dropdown in About Preferences Home section",
       "location": "About Preferences - Home - Homepage section"
     }
+  },
+  "manage-exceptions-button": {
+    "selectorData": "etpManageExceptionsButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Manage Exceptions\" button on the privacy pane; opens the tracking protection exceptions dialog listing sites where ETP is disabled",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "exceptions-dialog-shadow-root": {
+    "selectorData": "dialog[buttons='accept,cancel']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Exceptions for Enhanced Tracking Protection dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "remove-all-websites-button": {
+    "selectorData": "removeAllPermissions",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Remove all websites\" button; clears all ETP exception entries",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "remove-website-button": {
+    "selectorData": "removePermission",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Remove Website\" button; removes the currently selected ETP exception entry",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "exceptions-save-changes-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "exceptions-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Exceptions dialog \"Save Changes\" button",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
   }
 }
