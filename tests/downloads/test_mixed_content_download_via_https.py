@@ -18,10 +18,15 @@ def delete_files_regex_string():
 MIXED_CONTENT_DOWNLOAD_URL = (
     "https://file-examples.com/wp-content/storage/2017/10/file-sample_100kB.odt"
 )
-MAX_CHECKS = 30
 
 
-# This test has been found to be unstable in CI
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -30,9 +35,8 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
     nav = Navigation(driver)
 
-    # Wait for the test website to wake up and download the content
+    # Open the page and trigger the mixed content download
     web_page.open()
-    web_page.wait.until(lambda _: nav.element_visible("download-target-element"))
 
     # Verify download name matches expected pattern
     nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")

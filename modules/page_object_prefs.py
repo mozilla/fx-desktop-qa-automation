@@ -1662,10 +1662,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select actually wrote through to the backing pref —
         # asserting .value alone would be tautological since we just set it.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 
