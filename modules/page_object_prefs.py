@@ -1054,14 +1054,24 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
+    def _dismiss_open_prefs_dialog(self) -> None:
+        """
+        Close any prefs sub-dialog already showing in the popup iframe.
+
+        The ``browser-popup`` (``.dialogFrame``) element exists even when no
+        dialog is open; a dialog that is actually visible has a positive x
+        offset. This is a fragile heuristic, kept in one place so the
+        popup-dialog helpers don't diverge.
+        """
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that
         triggers a popup
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
@@ -1525,6 +1535,30 @@ class AboutPrefs(BasePage):
         self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
+    def open_manage_exceptions_dialog(self) -> BasePage:
+        """
+        Open the ETP "Manage Exceptions" dialog and switch into its popup iframe.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        After calling this method, subsequent element interactions happen within
+        the dialog's iframe context. Call ``self.switch_to_default_frame()``
+        afterward to return to the main page.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("manage-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def remove_all_exceptions_and_save(self) -> BasePage:
+        """
+        From inside the ETP "Manage Exceptions" dialog iframe, remove every
+        exception entry and save the changes. Returns to the default frame.
+        """
+        self.click_on("remove-all-websites-button")
+        self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
@@ -1662,10 +1696,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select actually wrote through to the backing pref —
         # asserting .value alone would be tautological since we just set it.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 
