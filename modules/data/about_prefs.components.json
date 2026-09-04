@@ -1427,6 +1427,11 @@
     "strategy": "id",
     "groups": []
   },
+  "ai-control-smart-window-select": {
+    "selectorData": "aiControlSmartWindowSelect",
+    "strategy": "id",
+    "groups": []
+  },
   "doh-advanced-button": {
     "selectorData": "dohAdvancedButton",
     "strategy": "id",

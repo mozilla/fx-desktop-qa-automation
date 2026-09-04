@@ -205,6 +205,24 @@
       "location": "Hamburger menu"
     }
   },
+  "panel-ui-new-smart-window": {
+    "selectorData": "appMenu-new-ai-window-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "New Smart Window, shown only in a Classic Window",
+      "location": "Hamburger menu"
+    }
+  },
+  "panel-ui-new-classic-window": {
+    "selectorData": "appMenu-new-classic-window-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "New Classic Window, shown only in a Smart Window",
+      "location": "Hamburger menu"
+    }
+  },
   "recent-history-content": {
     "selectorData": "#appMenu_historyMenu .toolbarbutton-text",
     "strategy": "css",

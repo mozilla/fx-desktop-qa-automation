@@ -1,0 +1,67 @@
+{
+  "context": "chrome",
+  "do-not-cache": true,
+  "window-switcher-button": {
+    "selectorData": "ai-window-toggle",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Switch Windows button, opens the Classic/Smart switcher panel",
+      "location": "Tabs toolbar"
+    }
+  },
+  "window-switcher-view": {
+    "selectorData": "ai-window-toggle-view",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Panel view holding the Classic and Smart switch buttons",
+      "location": "Switch Windows panel"
+    }
+  },
+  "switch-to-classic": {
+    "selectorData": "ai-window-switch-classic",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Switches the current window to a Classic Window",
+      "location": "Switch Windows panel"
+    }
+  },
+  "switch-to-smart": {
+    "selectorData": "ai-window-switch-ai",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Switches the current window to a Smart Window",
+      "location": "Switch Windows panel"
+    }
+  },
+  "smart-window-ask-button": {
+    "selectorData": "smartwindow-ask-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "ASK button, toggles the AI chat sidebar. Smart Window only",
+      "location": "Toolbox"
+    }
+  },
+  "smart-window-box": {
+    "selectorData": "ai-window-box",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Container for the AI chat sidebar. Smart Window only",
+      "location": "Browser window"
+    }
+  },
+  "context-open-link-in-smart-window": {
+    "selectorData": "context-openlinksmartwindow",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Open Link in Smart Window context menu item",
+      "location": "Link context menu"
+    }
+  }
+}

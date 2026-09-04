@@ -1892,6 +1892,35 @@ sidebar:
     result: pass
     splits:
     - smoke
+smart_window:
+  test_c3248785_switch_to_smart_window_prompts_signin:
+    result: pass
+    splits:
+    - functional1
+  test_c3248786_switch_to_classic_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3309849_switch_windows_while_visiting_website:
+    result: pass
+    splits:
+    - functional1
+  test_c3309851_smart_window_missing_in_private_browsing:
+    result: pass
+    splits:
+    - functional1
+  test_c3309853_open_private_window_from_smart_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3309854_open_classic_window_from_smart_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3310319_block_smart_window_from_ai_controls:
+    result: pass
+    splits:
+    - functional1
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
