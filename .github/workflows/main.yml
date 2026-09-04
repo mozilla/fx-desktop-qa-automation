@@ -286,6 +286,14 @@ jobs:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
 
+      - name: DLL Interceptor tests
+        id: dll
+        if: ${{ always() && !inputs.win_installer_link && inputs.dry_run != true && inputs.is_pull_request != true }}
+        env:
+          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
+        run: |
+          uv run python dll_check/check_dll_interceptors.py
+
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-26
