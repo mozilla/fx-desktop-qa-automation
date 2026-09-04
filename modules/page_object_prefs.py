@@ -1054,14 +1054,24 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
+    def _dismiss_open_prefs_dialog(self) -> None:
+        """
+        Close any prefs sub-dialog already showing in the popup iframe.
+
+        The ``browser-popup`` (``.dialogFrame``) element exists even when no
+        dialog is open; a dialog that is actually visible has a positive x
+        offset. This is a fragile heuristic, kept in one place so the
+        popup-dialog helpers don't diverge.
+        """
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that
         triggers a popup
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
@@ -1534,12 +1544,9 @@ class AboutPrefs(BasePage):
         the dialog's iframe context. Call ``self.switch_to_default_frame()``
         afterward to return to the main page.
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.js_click_on("manage-exceptions-button")
-        iframe = self.get_element("browser-popup")
-        self.switch_to_iframe_context(iframe)
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
     def remove_all_exceptions_and_save(self) -> BasePage:

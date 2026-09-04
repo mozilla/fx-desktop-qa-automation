@@ -42,7 +42,7 @@ def test_tp_enabled_after_website_removed_from_exceptions(
     about_prefs.open_etp_settings()
     about_prefs.open_manage_exceptions_dialog()
 
-    # Click on the "Remove Website" button from the dialog and save changes
+    # Click on the "Remove all Website" button from the dialog and save changes
     about_prefs.remove_all_exceptions_and_save()
 
     # Access again https://edition.cnn.com/ in a new tab
