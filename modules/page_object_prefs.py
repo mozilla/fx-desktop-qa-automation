@@ -1669,6 +1669,47 @@ class AboutPrefs(BasePage):
         )
         return self
 
+    def get_ai_smart_window_state(self) -> str:
+        """
+        Get the current state of the Smart Window AI feature.
+
+        Returns:
+            str: Current state ("available", "enabled" or "blocked")
+        """
+        return self.get_element("ai-control-smart-window-select").get_attribute("value")
+
+    def set_ai_smart_window(self, state: str) -> BasePage:
+        """
+        Set the Smart Window feature state from AI Controls.
+
+        Uses the same value-assign-plus-events approach as
+        set_ai_translations, because ai-control-smart-window-select is also a
+        `moz-select` custom element rather than a native <select>.
+
+        Arguments:
+            state: "available", "enabled" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-smart-window-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        # Confirm the moz-select wrote through to the backing pref rather than
+        # just holding the value we assigned.
+        self.expect(
+            lambda _: self.driver.execute_script(
+                "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+            )
+            == state
+        )
+        return self
+
     def cancel_ai_killswitch_click(self) -> BasePage:
         """
         Click the AI killswitch toggle and dismiss the confirmation dialog with
