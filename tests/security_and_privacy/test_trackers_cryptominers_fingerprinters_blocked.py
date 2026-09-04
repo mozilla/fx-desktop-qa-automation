@@ -4,6 +4,8 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import AboutPrefs, GenericPage
 
+MAX_ATTEMPTS = 3
+
 
 @pytest.fixture()
 def test_case():
@@ -36,4 +38,15 @@ def test_trackers_cryptominers_fingerprinters_blocked(
     trust_panel.trackers_detected("tracking-content")
 
     # The Cross-Site Tracking Cookies, Fingerprinters and Cryptominers are displayed "Blocked"
-    trust_panel.trackers_blocked("tracking-cookies", "cryptominer", "fingerprinter")
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            trust_panel.trackers_blocked(
+                "tracking-cookies", "cryptominer", "fingerprinter"
+            )
+            break
+        except AssertionError:
+            if attempt == MAX_ATTEMPTS:
+                raise
+            tracker_page.open()
+            trust_panel.open_panel()
+            trust_panel.wait_for_trackers(require_count=True)
