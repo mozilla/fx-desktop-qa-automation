@@ -1054,14 +1054,24 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
+    def _dismiss_open_prefs_dialog(self) -> None:
+        """
+        Close any prefs sub-dialog already showing in the popup iframe.
+
+        The ``browser-popup`` (``.dialogFrame``) element exists even when no
+        dialog is open; a dialog that is actually visible has a positive x
+        offset. This is a fragile heuristic, kept in one place so the
+        popup-dialog helpers don't diverge.
+        """
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that
         triggers a popup
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
@@ -1525,6 +1535,30 @@ class AboutPrefs(BasePage):
         self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
+    def open_manage_exceptions_dialog(self) -> BasePage:
+        """
+        Open the ETP "Manage Exceptions" dialog and switch into its popup iframe.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        After calling this method, subsequent element interactions happen within
+        the dialog's iframe context. Call ``self.switch_to_default_frame()``
+        afterward to return to the main page.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("manage-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def remove_all_exceptions_and_save(self) -> BasePage:
+        """
+        From inside the ETP "Manage Exceptions" dialog iframe, remove every
+        exception entry and save the changes. Returns to the default frame.
+        """
+        self.click_on("remove-all-websites-button")
+        self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
@@ -1567,6 +1601,135 @@ class AboutPrefs(BasePage):
             else:
                 self.element_attribute_is_not(key, "disabled", "")
         return self
+
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
+        """
+        Verify that the three always-present AI Controls elements are visible
+        (the killswitch toggle, the translations select, and the chatbot select).
+        """
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation. Pass False when enterprise
+                    policies hide those controls.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        # The toggle reports its state through the aria-pressed attribute (the
+        # same signal expect_ai_killswitch_state waits on); "true" means blocked.
+        return (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "true"
+        )
+
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Note: this writes the pref directly and does NOT run the UI toggle's
+        side effects (e.g. flipping extensions.ml.enabled). Use
+        toggle_ai_killswitch_click when those side effects must be exercised
+        (see C3341331).
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        if block != self.get_ai_killswitch_state():
+            self.driver.execute_script(
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
+            )
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+
+        Returns:
+            str: Current state ("available" or "blocked")
+        """
+        return self.get_element("ai-control-translations-select").get_attribute("value")
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+
+        Note: ai-control-translations-select is a `moz-select` custom element
+        (not a native <select>), so selenium.webdriver.support.ui.Select does
+        not apply and there is no plain-Selenium equivalent for value-setting.
+        We assign .value and dispatch input/change events the way the moz-select
+        internals do to trigger the same pref-write path a user click would.
+
+        Arguments:
+            state: "available" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        # Confirm the moz-select actually wrote through to the backing pref —
+        # asserting .value alone would be tautological since we just set it.
+        self.expect(
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+                )
+                == state
+            )
+        )
+        return self
+
+    def cancel_ai_killswitch_click(self) -> BasePage:
+        """
+        Click the AI killswitch toggle and dismiss the confirmation dialog with
+        its "Cancel" button, leaving AI unblocked. Mirrors
+        toggle_ai_killswitch_click but exercises the cancel path of the
+        "Block all AI enhancements?" prompt.
+        """
+        self.click_on("ai-controls-toggle")
+        self.element_visible("ai-controls-disable-dialog-button")
+        buttons = self.get_elements("ai-controls-disable-dialog-button")
+        cancel = [el for el in buttons if el.get_attribute("label") == "Cancel"]
+        assert cancel, "Cancel button not found in block-AI confirmation dialog"
+        cancel[0].click()
+        return self
+
+    def get_extensions_ml_enabled(self) -> bool:
+        """
+        Read the extensions.ml.enabled pref, which the AI killswitch flips off
+        while blocking. Returns True when the WebExtensions ML API is enabled.
+        """
+        return bool(
+            self.driver.execute_script(
+                "return Services.prefs.getBoolPref('extensions.ml.enabled', false);"
+            )
+        )
 
 
 class AboutAddons(BasePage):

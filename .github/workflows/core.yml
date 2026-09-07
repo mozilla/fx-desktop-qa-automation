@@ -16,7 +16,7 @@ on:
         type: string
 
       mac_installer_link:
-        description: 'The link to the macOS installer for the Fx under test'
+        description: 'The link to the MacOS installer for the Fx under test'
         required: false
         type: string
 
@@ -122,17 +122,17 @@ jobs:
             exit 1
           fi
 
-          mapfile -t splits < <(
+          splits="$(
             grep -oE 'functional[0-9]+' "$manifest_path" | sort -Vu
-          )
+          )"
 
-          if [[ "${#splits[@]}" -eq 0 ]]; then
+          if [[ -z "$splits" ]]; then
             echo "::error::No functional splits found in $manifest_path."
             exit 1
           fi
 
           test_sets="$(
-            printf '%s\n' "${splits[@]}" glean | jq -Rc . | jq -sc .
+            printf '%s\n' "$splits" glean | jq -Rc . | jq -sc .
           )"
 
           echo "test_sets=$test_sets" >> "$GITHUB_OUTPUT"
@@ -406,7 +406,7 @@ jobs:
           }
 
   Test-MacOS:
-    name: macOS (${{ matrix.test_set }})
+    name: MacOS (${{ matrix.test_set }})
     needs: Preflight
     if: ${{ needs.Preflight.outputs.run_macos == 'true' }}
     runs-on: macos-26
@@ -447,7 +447,10 @@ jobs:
             uv run python -m scripts.choose_test_split
           fi
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           if [[ "${#tests[@]}" -eq 0 ]]; then
             echo "::error::No tests were selected for $STARFOX_SPLIT."
@@ -460,7 +463,7 @@ jobs:
       - name: Dry-run summary
         if: ${{ env.DRY_RUN == 'true' }}
         run: |
-          count="$(grep -cve '^[[:space:]]*$' selected_tests)"
+          count="$(grep -cve '^[[:space:]]*$' selected_tests || true)"
 
           echo "DRY_RUN enabled."
           echo "Test set: $STARFOX_SPLIT"
@@ -508,7 +511,10 @@ jobs:
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -538,7 +544,10 @@ jobs:
           uv run python scripts/switch_config.py ci_headed
           uv sync
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -554,16 +563,16 @@ jobs:
 
           exit "$exit_code"
 
-      - name: Upload macOS artifacts
+      - name: Upload MacOS artifacts
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
-          name: macos-${{ matrix.test_set }}-${{ github.run_id }}
+          name: Macos-${{ matrix.test_set }}-${{ github.run_id }}
           path: test-artifacts
           if-no-files-found: error
           retention-days: 14
 
-      - name: Set macOS job result
+      - name: Set MacOS job result
         if: ${{ !cancelled() && env.DRY_RUN != 'true' }}
         env:
           VERIFY_RESULT: ${{ steps.verify.outcome }}
@@ -644,7 +653,10 @@ jobs:
             uv run python -m scripts.choose_test_split
           fi
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           if [[ "${#tests[@]}" -eq 0 ]]; then
             echo "::error::No tests were selected for $STARFOX_SPLIT."
@@ -657,7 +669,7 @@ jobs:
       - name: Dry-run summary
         if: ${{ env.DRY_RUN == 'true' }}
         run: |
-          count="$(grep -cve '^[[:space:]]*$' selected_tests)"
+          count="$(grep -cve '^[[:space:]]*$' selected_tests || true)"
 
           echo "DRY_RUN enabled."
           echo "Test set: $STARFOX_SPLIT"
@@ -696,7 +708,10 @@ jobs:
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
         continue-on-error: true
         run: |
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -729,7 +744,10 @@ jobs:
           uv run python scripts/switch_config.py ci_xvfb_headed
           uv sync
 
-          mapfile -t tests < <(grep -vE '^[[:space:]]*$' selected_tests)
+          tests=()
+          while IFS= read -r line; do
+            tests+=("$line")
+          done < <(grep -vE '^[[:space:]]*$' selected_tests)
 
           exit_code=0
 
@@ -815,7 +833,7 @@ jobs:
             echo "| platform | result |"
             echo "|---|---|"
             echo "| Windows | \`$WINDOWS_RESULT\` |"
-            echo "| macOS | \`$MACOS_RESULT\` |"
+            echo "| MacOS | \`$MACOS_RESULT\` |"
             echo "| Linux | \`$LINUX_RESULT\` |"
           } >> "$GITHUB_STEP_SUMMARY"
 

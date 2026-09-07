@@ -88,6 +88,9 @@ This should show you all the documentation pertaining to the helper functions an
 created. If we make new ones, replace `modules` with the name of any other folder you would
 like to have documentation on.
 
+The Glean telemetry suite follows its own dataset-driven pattern, documented in
+[GLEAN.md](GLEAN.md).
+
 ### IDE Pycharm Configuration
 Note: you may need to install Rust for PyCharm to work properly.
 

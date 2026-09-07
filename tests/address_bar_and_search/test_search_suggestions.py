@@ -7,9 +7,9 @@ from modules.page_object_prefs import AboutPrefs
 from modules.util import BrowserActions
 
 # Constants
-SEARCH_TERM_SPONSORED = "xbox one"
-SEARCH_TERM_NON_SPONSORED = "wiki"
-RETRY_LIMIT = 10
+SEARCH_TERM_SPONSORED = "amazon"
+SEARCH_TERM_NON_SPONSORED = "california"
+RETRY_LIMIT = 5
 
 
 @pytest.fixture()
@@ -22,6 +22,7 @@ def add_to_prefs_list():
     return [
         ("browser.urlbar.quicksuggest.enabled", True),
         ("browser.urlbar.suggest.quicksuggest.sponsored", True),
+        ("browser.urlbar.suggest.quicksuggest.nonsponsored", True),
     ]
 
 
@@ -54,6 +55,7 @@ def test_search_suggests_enabled(driver: Firefox):
     retries = 0
 
     while not found_sponsored and retries < RETRY_LIMIT:
+        nav.clear_awesome_bar()
         actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
         try:
             nav.wait_for_suggestions_present()
@@ -71,10 +73,10 @@ def test_search_suggests_enabled(driver: Firefox):
     found_non_sponsored = False
     retries = 0
     while not found_non_sponsored and retries < RETRY_LIMIT:
+        nav.clear_awesome_bar()
         actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
         try:
             nav.wait_for_suggestions_present()
-            nav.get_element("firefox-suggest")
             entries = nav.get_elements("firefox-suggest")
             found_non_sponsored = any("Wikipedia" in entry.text for entry in entries)
         except (NoSuchElementException, TimeoutException):

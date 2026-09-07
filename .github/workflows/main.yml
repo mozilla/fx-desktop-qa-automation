@@ -280,7 +280,7 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
@@ -438,7 +438,7 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
@@ -537,6 +537,13 @@ jobs:
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
           exit $TEST_EXIT_CODE
+
+      - name: Upload artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
+          path: artifacts
 
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' }}
