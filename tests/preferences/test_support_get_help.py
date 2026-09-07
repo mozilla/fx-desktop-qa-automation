@@ -30,6 +30,9 @@ def test_support_get_help(driver: Firefox, about_prefs: AboutPrefs):
     """
     about_prefs.open()
 
+    # The card can sit below the fold on shorter viewports.
+    about_prefs.scroll_to_element("support-get-help")
+
     # Hovering changes the background color of the link, so compare it before and after.
     default_color = about_prefs.get_element(
         "support-get-help-button"

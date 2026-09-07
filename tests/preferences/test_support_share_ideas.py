@@ -30,6 +30,9 @@ def test_support_share_ideas(driver: Firefox, about_prefs: AboutPrefs):
     """
     about_prefs.open()
 
+    # The card can sit below the fold on shorter viewports.
+    about_prefs.scroll_to_element("support-share-ideas")
+
     # Hovering changes the background color of the link, so compare it before and after.
     default_color = about_prefs.get_element(
         "support-share-ideas-button"
