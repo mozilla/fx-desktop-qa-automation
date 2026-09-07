@@ -15,7 +15,7 @@ FONTS_TO_TRY = 3
 
 @pytest.fixture()
 def about_prefs_category():
-    # The Fonts section lives in Settings > Accessibility.
+    # The Fonts section lives in the Accessibility settings.
     return "accessibility"
 
 
@@ -70,15 +70,14 @@ def test_change_font_family(
 
     custom_width = _text_width(test_page, "custom-font-text")
     reference_width = _text_width(test_page, "reference-font-text")
-    # The reference text has no font of its own, so it shows the default font.
+    # The reference text has no font, so it shows the generic default, serif.
     default_font = test_page.get_element("reference-font-text").value_of_css_property(
         "font-family"
     )
 
     about_prefs.open()
     font_select = Select(about_prefs.get_element("font-family-select"))
-    # Skip the generic names Linux lists as fonts: picking one of those would
-    # not change how the page looks.
+    # Skip the generic names Linux lists, they would not change the page.
     candidates = list(
         islice(
             (
@@ -90,20 +89,21 @@ def test_change_font_family(
             FONTS_TO_TRY,
         )
     )
+    assert candidates, "The font family dropdown lists only generic fonts"
 
-    # Two fonts can share their letter widths, so try a few.
+    # Two fonts can share letter widths, so try a few. Settings is open now.
     chosen_font = None
     for candidate in candidates:
-        about_prefs.open()
         Select(about_prefs.get_element("font-family-select")).select_by_value(candidate)
         test_page.open()
         # The reference text is drawn in the chosen font now.
         if _text_width(test_page, "reference-font-text") != reference_width:
             chosen_font = candidate
             break
+        about_prefs.open()
 
     assert chosen_font, f"None of {candidates} redrew the reference text"
-    # Pages are still allowed their own fonts, so the page's font is kept.
+    # Pages can still choose their own fonts, so the page font is kept.
     page_font = test_page.get_element("custom-font-text").value_of_css_property(
         "font-family"
     )
