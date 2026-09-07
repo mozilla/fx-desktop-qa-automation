@@ -76,6 +76,9 @@ def candidate_download_url(version: str, build: int, platform: str) -> str:
         "macos": ("mac/en-US/", f"Firefox {version}.dmg"),
         "linux": ("linux-x86_64/en-US/", f"firefox-{version}.tar.xz"),
     }
+    if platform not in platform_parts:
+        expected = ", ".join(platform_parts)
+        raise ValueError(f"Unknown platform {platform!r}; expected one of: {expected}.")
     directory, filename = platform_parts[platform]
     return urljoin(base_url, f"{directory}{quote(filename)}")
 

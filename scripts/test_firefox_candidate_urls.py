@@ -58,6 +58,10 @@ class FirefoxCandidateUrlTests(unittest.TestCase):
                     candidate_download_url("155.0.1", 2, platform), expected_url
                 )
 
+    def test_unknown_platform_raises_clear_error(self):
+        with self.assertRaisesRegex(ValueError, "Unknown platform 'android'"):
+            candidate_download_url("155.0.1", 2, "android")
+
     def test_override_environment_does_not_fetch_a_build(self):
         self.assertEqual(
             github_environment("155.0.1", "windows", "https://example.com/firefox.exe"),
