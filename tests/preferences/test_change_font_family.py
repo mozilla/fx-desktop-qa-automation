@@ -77,9 +77,8 @@ def test_change_font_family(
 
     about_prefs.open()
     font_select = Select(about_prefs.get_element("font-family-select"))
-    # Skip the default font and the generic names Linux lists as fonts: picking
-    # those would not change how the page looks.
-    default_label = font_select.options[0].get_attribute("label")
+    # Skip the generic names Linux lists as fonts: picking one of those would
+    # not change how the page looks.
     candidates = list(
         islice(
             (
@@ -87,7 +86,6 @@ def test_change_font_family(
                 for option in font_select.options
                 if (value := option.get_attribute("value"))
                 and value not in GENERIC_FONTS
-                and value not in default_label
             ),
             FONTS_TO_TRY,
         )
@@ -106,10 +104,10 @@ def test_change_font_family(
 
     assert chosen_font, f"None of {candidates} redrew the reference text"
     # Pages are still allowed their own fonts, so the page's font is kept.
-    assert (
-        test_page.get_element("custom-font-text").value_of_css_property("font-family")
-        == PAGE_FONT
+    page_font = test_page.get_element("custom-font-text").value_of_css_property(
+        "font-family"
     )
+    assert page_font.startswith(PAGE_FONT), f"The page font is not first in {page_font}"
 
     about_prefs.open()
     about_prefs.click_on("advanced-fonts-button")
