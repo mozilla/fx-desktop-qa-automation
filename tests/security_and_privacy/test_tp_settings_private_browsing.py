@@ -21,7 +21,6 @@ def test_tp_settings_private_browsing(
 
     # Instantiate objects
     test_page = GenericPage(driver, url=TEST_URL)
-    private_trust_panel = TrustPanel(driver)
 
     # Access test website in a new tab
     panel_ui.open_and_switch_to_new_window("tab")
@@ -34,8 +33,8 @@ def test_tp_settings_private_browsing(
     test_page.open()
 
     # The shield icon is displayed (the "✓" one)
-    private_trust_panel.element_visible("shield-icon")
-    private_trust_panel.element_not_visible("shield-icon-disabled")
+    trust_panel.element_visible("shield-icon")
+    trust_panel.element_not_visible("shield-icon-disabled")
 
     # Switch off tracking protection in normal window for the site via toggle button
     driver.switch_to.window(normal_window)
@@ -44,21 +43,25 @@ def test_tp_settings_private_browsing(
 
     # Tracking protection is switched off in normal window, shield icon has an "x" in it
     trust_panel.element_visible("shield-icon-disabled")
+    trust_panel.open_panel()
+    trust_panel.trustpanel_status("off")
 
     # Refresh the https://edition.cnn.com/ website from private window
     driver.switch_to.window(private_window)
     nav.click_on("refresh-button")
 
     # TP is ON, shield icon has a "✓" in it
-    private_trust_panel.element_visible("shield-icon")
-    private_trust_panel.element_not_visible("shield-icon-disabled")
+    trust_panel.element_visible("shield-icon")
+    trust_panel.element_not_visible("shield-icon-disabled")
 
     # Switch off tracking protection in private window via toggle button
-    private_trust_panel.open_panel()
-    private_trust_panel.trustpanel_toggle_on_off()
+    trust_panel.open_panel()
+    trust_panel.trustpanel_toggle_on_off()
 
     # Shield icon has a "x" inside
-    private_trust_panel.element_visible("shield-icon-disabled")
+    trust_panel.element_visible("shield-icon-disabled")
+    trust_panel.open_panel()
+    trust_panel.trustpanel_status("off")
 
     # Refresh the https://edition.cnn.com/ website from normal window
     driver.switch_to.window(normal_window)
@@ -66,3 +69,5 @@ def test_tp_settings_private_browsing(
 
     # TP is OFF, shield icon has a "x" inside
     trust_panel.element_visible("shield-icon-disabled")
+    trust_panel.open_panel()
+    trust_panel.trustpanel_status("off")
