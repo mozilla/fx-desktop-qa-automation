@@ -1,3 +1,4 @@
+from itertools import islice
 from shutil import copyfile
 
 import pytest
@@ -8,6 +9,8 @@ from modules.page_object import AboutPrefs, GenericPage
 
 LOCAL_HTML = "font_settings_page.html"
 PAGE_FONT = "Pacifico"
+GENERIC_FONTS = ("serif", "sans-serif", "monospace", "cursive", "fantasy")
+FONTS_TO_TRY = 3
 
 
 @pytest.fixture()
@@ -74,20 +77,34 @@ def test_change_font_family(
 
     about_prefs.open()
     font_select = Select(about_prefs.get_element("font-family-select"))
-    # The first option is the default font, so pick another one by name.
+    # Skip the default font and the generic names Linux lists as fonts: picking
+    # those would not change how the page looks.
     default_label = font_select.options[0].get_attribute("label")
-    chosen_font = next(
-        value
-        for option in font_select.options
-        if (value := option.get_attribute("value")) and value not in default_label
+    candidates = list(
+        islice(
+            (
+                value
+                for option in font_select.options
+                if (value := option.get_attribute("value"))
+                and value not in GENERIC_FONTS
+                and value not in default_label
+            ),
+            FONTS_TO_TRY,
+        )
     )
-    font_select.select_by_value(chosen_font)
 
-    test_page.open()
-    # The reference text is drawn in the chosen font now.
-    assert _text_width(test_page, "reference-font-text") != reference_width, (
-        f"The reference text was not redrawn in {chosen_font}"
-    )
+    # Two fonts can share their letter widths, so try a few.
+    chosen_font = None
+    for candidate in candidates:
+        about_prefs.open()
+        Select(about_prefs.get_element("font-family-select")).select_by_value(candidate)
+        test_page.open()
+        # The reference text is drawn in the chosen font now.
+        if _text_width(test_page, "reference-font-text") != reference_width:
+            chosen_font = candidate
+            break
+
+    assert chosen_font, f"None of {candidates} redrew the reference text"
     # Pages are still allowed their own fonts, so the page's font is kept.
     assert (
         test_page.get_element("custom-font-text").value_of_css_property("font-family")

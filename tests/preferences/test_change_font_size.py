@@ -7,6 +7,7 @@ from selenium.webdriver.support.select import Select
 from modules.page_object import AboutPrefs, GenericPage
 
 LOCAL_HTML = "font_settings_page.html"
+# Any size other than the default works here, and the test checks that below.
 NEW_FONT_SIZE = "20"
 PAGE_FONT_SIZE = "28px"
 
