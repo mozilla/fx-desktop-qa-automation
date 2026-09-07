@@ -799,6 +799,52 @@
       "location": "about:preferences#about"
     }
   },
+  "support-get-help": {
+    "selectorData": "supportGetHelp",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox support > \"Get help\" link, opens a SUMO article",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-get-help-button": {
+    "selectorData": ".button",
+    "strategy": "css",
+    "shadowParent": "support-get-help",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Hover-styled inner box of \"Get help\", a in Fx155, div in Fx156+",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-share-ideas": {
+    "selectorData": "supportShareIdeas",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox support > \"Share ideas and feedback\" link",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-share-ideas-button": {
+    "selectorData": ".button",
+    "strategy": "css",
+    "shadowParent": "support-share-ideas",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Hover-styled inner box of \"Share ideas\", a in Fx155, div in Fx156+",
+      "location": "about:preferences#about"
+    }
+  },
   "update_available_button": {
     "selectorData": "[data-l10n-id='update-updateButton']",
     "strategy": "css",
