@@ -1636,5 +1636,86 @@
       "description": "The Exceptions dialog \"Save Changes\" button",
       "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
     }
+  },
+  "font-family-dropdown": {
+    "selectorData": "defaultFont",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Font family moz-select",
+      "location": "about:preferences#accessibility - Fonts section"
+    }
+  },
+  "font-family-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "font-family-dropdown",
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> of the Font family moz-select, option values are font names",
+      "location": "about:preferences#accessibility - Fonts section"
+    }
+  },
+  "font-size-dropdown": {
+    "selectorData": "defaultFontSize",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The Font size moz-select",
+      "location": "about:preferences#accessibility - Fonts section"
+    }
+  },
+  "font-size-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "font-size-dropdown",
+    "groups": [],
+    "comment": {
+      "description": "Inner native <select> of the Font size moz-select, option values are sizes in px",
+      "location": "about:preferences#accessibility - Fonts section"
+    }
+  },
+  "advanced-fonts-button": {
+    "selectorData": "advancedFonts",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Advanced settings\" button in the Fonts section, opens the Fonts dialog",
+      "location": "about:preferences#accessibility - Fonts section"
+    }
+  },
+  "allow-page-fonts-checkbox": {
+    "selectorData": "useDocumentFonts",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The \"Allow pages to choose their own fonts\" checkbox",
+      "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
+    }
+  },
+  "fonts-dialog-shadow-root": {
+    "selectorData": "FontsDialog",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Fonts dialog root (is a shadow root), hosts the accept/cancel buttons",
+      "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
+    }
+  },
+  "fonts-dialog-accept-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "fonts-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Fonts dialog OK button",
+      "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
+    }
   }
 }
