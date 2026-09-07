@@ -36,8 +36,12 @@ def test_tp_settings_private_browsing(
     trust_panel.element_visible("shield-icon")
     trust_panel.element_not_visible("shield-icon-disabled")
 
-    # Switch off tracking protection in normal window for the site via toggle button
+    # TP is ON in the normal window as well, shield icon has a "✓" in it
     driver.switch_to.window(normal_window)
+    trust_panel.element_visible("shield-icon")
+    trust_panel.element_not_visible("shield-icon-disabled")
+
+    # Switch off tracking protection in normal window for the site via toggle button
     trust_panel.open_panel()
     trust_panel.trustpanel_toggle_on_off()
 
