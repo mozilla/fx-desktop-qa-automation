@@ -185,8 +185,22 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def click_see_all(self) -> BasePage:
-        """Clicks the "See All" button in the trackers panel"""
-        self.js_click_on("see-all-trackers")
+        """
+        Click the "See All" button in the trackers panel and wait for the detailed
+        list to show. A click that lands while the panel is still opening is
+        dropped, so click again until the main view is no longer the one showing.
+        """
+
+        def _detail_view_showing(_):
+            if (
+                self.get_element("trustpanel").get_attribute("mainviewshowing")
+                != "true"
+            ):
+                return True
+            self.js_click_on("see-all-trackers")
+            return False
+
+        self.expect(_detail_view_showing)
         return self
 
     @BasePage.context_chrome
@@ -215,6 +229,16 @@ class TrustPanel(BasePage):
         self.element_visible("not-blocking-category", labels=[category.title()])
         return self
 
+    @staticmethod
+    def _category_labels(category: str) -> list[str]:
+        """
+        Build the data-l10n-id label for a tracker category button.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        canonical = category.strip().lower().replace(" ", "-")
+        return [f"trustpanel-list-label-{canonical}"]
+
     @BasePage.context_chrome
     def open_detected_category(self, category: str):
         """
@@ -222,14 +246,8 @@ class TrustPanel(BasePage):
 
         Canonical input format: hyphenated singular (e.g. "tracking-content")
         """
-        canonical = category.strip().lower().replace(" ", "-")
-        locator = (
-            "detected-category",
-            [f"trustpanel-list-label-{canonical}"],
-        )
-
         sleep(0.5)
-        self.js_click_on(*locator)
+        self.js_click_on("detected-category", self._category_labels(category))
         return self
 
     @BasePage.context_chrome
@@ -359,11 +377,5 @@ class TrustPanel(BasePage):
 
         Canonical input format: hyphenated singular (e.g. "tracking-content")
         """
-        canonical = category.strip().lower().replace(" ", "-")
-        locator = (
-            "detected-category",
-            [f"trustpanel-list-label-{canonical}"],
-        )
-
-        self.element_visible(*locator)
+        self.element_visible("detected-category", self._category_labels(category))
         return self

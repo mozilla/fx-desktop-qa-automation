@@ -1,10 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TrustPanel
-from modules.browser_object_tabbar import TabBar
-from modules.page_object import GenericPage
-from modules.page_object_prefs import AboutPrefs
+from modules.browser_object import TabBar, TrustPanel
+from modules.page_object import AboutPrefs, GenericPage
 
 FINGERPRINTERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining_and_cookies.html"
 
@@ -32,15 +30,14 @@ def test_etp_panel_displayed_when_trackers_detected(
     test_page = GenericPage(driver, url=FINGERPRINTERS_URL)
     tracking_page = GenericPage(driver, url=TRACKING_URL)
 
-    # Use Standard ETP mode
+    # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
     about_prefs_privacy.open()
-    about_prefs_privacy.open_etp_advanced_settings()
     about_prefs_privacy.select_etp_level("standard")
 
     # Open test page and click on the shield icon
     test_page.open()
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
 
     # Click on the "See All" button
     trust_panel.click_see_all()
@@ -64,13 +61,13 @@ def test_etp_panel_displayed_when_trackers_detected(
     # The blocked fingerprinter is displayed inside the subpanel
     assert trust_panel.has_detected_tracking_sites(DETECTED_FINGERPRINTER)
 
-    # Open tracking test page
+    # Open tracking test page in a new tab
     tabs.open_and_switch_to_new_tab()
     tracking_page.open()
 
     # Click on the shield icon -> "See All" button
     trust_panel.open_panel()
-    trust_panel.wait_for_trackers()
+    trust_panel.wait_for_trackers(require_count=True)
     trust_panel.click_see_all()
 
     # The trackers blocked on the page are listed under the section "Firefox blocked these things for you:",

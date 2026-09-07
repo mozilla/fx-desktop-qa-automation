@@ -180,7 +180,9 @@
   "detected-category": {
     "selectorData": "moz-button.moz-button-subviewbutton-nav[data-l10n-id='{}']",
     "strategy": "css",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Detected tracker category from the protections panel",
       "location": "Trustpanel - Detected tracker category from the protections panel"
