@@ -1714,6 +1714,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
+  test_tp_settings_private_browsing:
+    result: pass
+    splits:
+    - functional3
   test_trackers_counted_correctly_in_panel:
     result: pass
     splits:
