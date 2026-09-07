@@ -778,6 +778,27 @@
       "description": "shadow root for update state elements"
     }
   },
+  "update-info-root": {
+    "selectorData": "updateAppInfo",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "shadow root for the update-information element (Firefox Updates > version line)",
+      "location": "about:preferences#about"
+    }
+  },
+  "whats-new-link": {
+    "selectorData": "#releasenotes",
+    "strategy": "css",
+    "shadowParent": "update-info-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"What's new\" link, opens the release notes",
+      "location": "about:preferences#about"
+    }
+  },
   "update_available_button": {
     "selectorData": "[data-l10n-id='update-updateButton']",
     "strategy": "css",
