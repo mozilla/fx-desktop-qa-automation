@@ -35,12 +35,11 @@ def test_trackers_cryptominers_fingerprinters_blocked(
     trust_panel.wait_for_trackers(require_count=True)
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        try:
-            # The Tracking Content is NOT blocked
-            trust_panel.trackers_detected("tracking-content")
+        # The Tracking Content is NOT blocked. Not retried: a failure is a regression.
+        trust_panel.trackers_detected("tracking-content")
 
-            # The Cross-Site Tracking Cookies, Fingerprinters and Cryptominers
-            # are displayed "Blocked"
+        # The Cross-Site Tracking Cookies, Fingerprinters and Cryptominers are "Blocked"
+        try:
             trust_panel.trackers_blocked(
                 "tracking-cookies", "cryptominer", "fingerprinter"
             )
