@@ -89,6 +89,37 @@
       "location": "Firefox menu"
     }
   },
+  "help-and-report": {
+    "selectorData": "appMenu-help-button2",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Help and Report button",
+      "location": "Firefox menu"
+    }
+  },
+  "panel-multi-view": {
+    "selectorData": "appMenu-multiView",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Multiview hosting the Firefox menu and its subviews; carries transitioning=true while a subview slides in",
+      "location": "Firefox menu"
+    }
+  },
+  "report-broken-site": {
+    "selectorData": "appMenu_help_reportBrokenSite",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Report broken site item, cloned into the Help subview when it opens",
+      "location": "Firefox menu > Help and Report"
+    }
+  },
   "customize-toolbar": {
     "selectorData": "overflowMenu-customize-button",
     "strategy": "id",

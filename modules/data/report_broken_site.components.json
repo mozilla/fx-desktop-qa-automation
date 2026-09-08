@@ -1,0 +1,84 @@
+{
+  "context": "chrome",
+  "report-broken-site-main-view": {
+    "selectorData": "report-broken-site-popup-mainView",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The Report Broken Site main view",
+      "location": "Hamburger menu > Help and Report > Report broken site"
+    }
+  },
+  "panel-multi-view": {
+    "selectorData": "appMenu-multiView",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "Multiview hosting this panel when it is opened from the Firefox menu; carries transitioning=true while a view slides in",
+      "location": "Firefox menu"
+    }
+  },
+  "report-broken-site-reason": {
+    "selectorData": "moz-box-button#report-broken-site-popup-reason-{}",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "A reason option from the \"What's broken\" section",
+      "location": "Report Broken Site main view"
+    }
+  },
+  "report-broken-site-details-view": {
+    "selectorData": "report-broken-site-popup-detailsView",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The Report Broken Site details subpanel, shown after picking a reason",
+      "location": "Report Broken Site details view"
+    }
+  },
+  "report-broken-site-description": {
+    "selectorData": "report-broken-site-popup-description",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The free-text description textarea",
+      "location": "Report Broken Site details view"
+    }
+  },
+  "report-broken-site-send-button": {
+    "selectorData": "report-broken-site-popup-send-button",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The \"Send Report\" button",
+      "location": "Report Broken Site details view"
+    }
+  },
+  "report-broken-site-sent-view": {
+    "selectorData": "report-broken-site-popup-reportSentView",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The confirmation view shown after the report is sent",
+      "location": "Report Broken Site report sent view"
+    }
+  },
+  "report-broken-site-sent-message": {
+    "selectorData": "report-broken-site-panel-report-sent-text",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The \"Thank you\" confirmation text",
+      "location": "Report Broken Site report sent view"
+    }
+  },
+  "report-broken-site-okay-button": {
+    "selectorData": "report-broken-site-popup-okay-button",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The \"Okay\" button that dismisses the confirmation view",
+      "location": "Report Broken Site report sent view"
+    }
+  }
+}
