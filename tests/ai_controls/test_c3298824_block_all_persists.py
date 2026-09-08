@@ -30,10 +30,12 @@ def test_block_all_ai_features_option_persists(about_prefs: AboutPrefs):
         "Services.prefs.setStringPref('browser.ai.control.translations', 'available');"
     )
     about_prefs.expect(
-        lambda _: about_prefs.driver.execute_script(
-            "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+        lambda _: (
+            about_prefs.driver.execute_script(
+                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            )
+            == "available"
         )
-        == "available"
     )
 
     # Enabling an individual feature must NOT clear the global Block-all toggle.

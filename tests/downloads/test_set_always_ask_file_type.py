@@ -1,44 +1,36 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs
 
 
 @pytest.fixture()
 def test_case():
-    return "1756752"
+    return "4108462"
 
 
-@pytest.fixture()
-def delete_files_regex_string():
-    return r"pdf-example-bookmarks.pdf"
-
-
-CONTENT_DISPOSITION_ATTACHMENT_URL = (
-    "https://download.novapdf.com/download/samples/pdf-example-bookmarks.pdf"
-)
-
-
-def test_set_always_ask_file_type(driver: Firefox, delete_files):
+def test_set_always_ask_file_type(driver: Firefox, fillable_pdf_url: str):
     """
-    C1756752 - Ensure that the Always ask option in Firefox Applications settings
-    leads to a dialog asking "What should Firefox do with this file?" when the file type
-    is downloaded.
+    C4108462 - Verify that setting PDF handling to "Always ask" makes a PDF
+    download show the "What should Firefox do with this file?" dialog.
     """
 
-    # Initialize page objects
+    # Instantiate objects
     nav = Navigation(driver)
-    # Moved the Applications file-handlers list
-    # from the General pane to about:preferences#downloads.
+    tabs = TabBar(driver)
+    # The settings redesign (bug 2043378) moved file handlers to this pane
     about_prefs = AboutPrefs(driver, category="downloads")
 
     # Set PDF handling to "Always ask"
     about_prefs.open()
     about_prefs.set_pdf_handling_to_always_ask()
 
-    # Navigate to download URL and verify dialog appears
-    nav.search(CONTENT_DISPOSITION_ATTACHMENT_URL)
+    # Download the PDF again from a new tab
+    tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
+    driver.switch_to.window(driver.window_handles[-1])
+    nav.search(fillable_pdf_url)
 
-    # Wait for and handle the unknown content type dialog
+    # The dialog opens in its own window, Escape cancels out of it
     about_prefs.handle_unknown_content_dialog()
