@@ -1242,6 +1242,10 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_draw_style_properties:
+    result: pass
+    splits:
+    - functional2
   test_pdf_dropdown_functionality:
     result: pass
     splits:
