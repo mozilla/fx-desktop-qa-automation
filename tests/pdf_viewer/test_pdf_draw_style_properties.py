@@ -58,5 +58,7 @@ def test_pdf_draw_color_thickness_and_opacity(pdf_viewer: GenericPdf):
     updated_style = pdf_viewer.get_drawing_style()
 
     assert updated_style["color"] == UPDATED_COLOR
-    assert updated_style["thickness"] != initial_style["thickness"]
+    assert float(updated_style["thickness"]) == pytest.approx(
+        float(initial_style["thickness"]) * UPDATED_THICKNESS / INITIAL_THICKNESS
+    )
     assert float(updated_style["opacity"]) == UPDATED_OPACITY
