@@ -472,8 +472,7 @@ downloads:
     splits:
     - functional1
   test_add_zip_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_change_download_folder:
@@ -599,6 +598,10 @@ find_toolbar:
     result: pass
     splits:
     - functional1
+  test_find_on_page_with_rtl_language:
+    result: pass
+    splits:
+    - functional1
   test_find_text_on_buttons:
     result: pass
     splits:
@@ -608,6 +611,10 @@ find_toolbar:
     splits:
     - smoke
     - ci-extended
+  test_find_toolbar_persists_after_back_forward:
+    result: pass
+    splits:
+    - functional1
   test_find_toolbar_search:
     result: pass
     splits:
@@ -618,6 +625,10 @@ find_toolbar:
     splits:
     - functional1
   test_find_word_with_special_characters_2:
+    result: pass
+    splits:
+    - functional1
+  test_search_again_after_navigation:
     result: pass
     splits:
     - functional1
@@ -1347,6 +1358,22 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_support_get_help:
+    result: pass
+    splits:
+    - functional1
+  test_support_share_ideas:
+    result: pass
+    splits:
+    - functional1
+  test_website_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_whats_new_link:
+    result: pass
+    splits:
+    - functional1
 printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
@@ -1687,6 +1714,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
+  test_tcp_option_carries_over_private_window:
+    result: pass
+    splits:
+    - functional3
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:
@@ -1695,6 +1726,14 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_tp_enabled_after_website_removed_from_exceptions:
+    result: pass
+    splits:
+    - functional3
+  test_tp_settings_private_browsing:
+    result: pass
+    splits:
+    - functional3
   test_trackers_counted_correctly_in_panel:
     result: pass
     splits:
