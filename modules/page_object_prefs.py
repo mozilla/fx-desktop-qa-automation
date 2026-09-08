@@ -275,6 +275,30 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def add_website_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the Website language card on the Languages pane.
+
+        The Add language dropdown fills its options asynchronously, so wait for
+        the target option to show up before selecting it.
+
+        Args:
+            lang_code: The language code to add (e.g. 'fr', 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "website-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("website-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("website-language-picker", "value", lang_code)
+        self.click_on("website-language-add-button")
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
