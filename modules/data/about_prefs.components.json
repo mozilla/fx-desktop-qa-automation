@@ -999,6 +999,28 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "website-language-remove-button": {
+    "selectorData": "moz-button[locale='{code}'][action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on one accepted website language row, found by locale code",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-remove-buttons": {
+    "selectorData": "moz-button[action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Every website language row's delete button, in list order (locale attribute holds the code)",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
