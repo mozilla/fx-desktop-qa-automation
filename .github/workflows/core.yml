@@ -167,7 +167,7 @@ jobs:
         test_set: ${{ fromJSON(needs.Preflight.outputs.test_sets) }}
     env:
       STARFOX_SPLIT: ${{ matrix.test_set }}
-      FX_EXECUTABLE: C:\Program Files\Custom Firefox\firefox.exe
+      FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
 
     steps:
       - name: Checkout repository
@@ -239,7 +239,6 @@ jobs:
         shell: pwsh
         env:
           WIN_INSTALLER_LINK: ${{ inputs.win_installer_link }}
-          FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         run: |
           if ($env:WIN_INSTALLER_LINK.Contains(".zip")) {
             Write-Host "Downloading and extracting Firefox..."
