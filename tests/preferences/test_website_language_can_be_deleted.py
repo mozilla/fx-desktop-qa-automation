@@ -36,6 +36,8 @@ def test_website_language_can_be_deleted(driver: Firefox, about_prefs: AboutPref
         about_prefs.element_visible("website-language-item", labels=[language])
 
     # Each Delete button removes only its own row.
-    for language in LANGUAGES:
+    for i, language in enumerate(LANGUAGES):
         about_prefs.remove_website_language(language)
         about_prefs.element_not_visible("website-language-item", labels=[language])
+        for remaining in LANGUAGES[i + 1 :]:
+            about_prefs.element_visible("website-language-item", labels=[remaining])
