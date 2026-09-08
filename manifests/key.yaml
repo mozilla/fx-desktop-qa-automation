@@ -1710,6 +1710,10 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
+  test_tcp_option_carries_over_private_window:
+    result: pass
+    splits:
+    - functional3
   test_third_party_content_blocked_private_browsing:
     result: pass
     splits:

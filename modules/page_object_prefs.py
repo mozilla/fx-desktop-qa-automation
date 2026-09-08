@@ -473,7 +473,9 @@ class AboutPrefs(BasePage):
         """
         if level not in self.ETP_LEVEL_RADIOS:
             raise ValueError(f"Unknown ETP level: {level!r}")
-        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        # Native click lands on dead space for "custom" and is silently dropped,
+        # leaving the pref unchanged, so click the moz-radio host directly.
+        self.js_click_on(self.ETP_LEVEL_RADIOS[level])
         return self
 
     def select_etp_level(self, level: str) -> BasePage:
@@ -483,6 +485,25 @@ class AboutPrefs(BasePage):
         """
         self.open_etp_settings()
         self.set_etp_level(level)
+        return self
+
+    def verify_etp_level(self, level: str) -> BasePage:
+        """
+        Assert which Enhanced Tracking Protection level is selected on
+        about:preferences#etp. level: standard|strict|custom.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+
+        def _level_is_checked(_):
+            radio = self.get_element(self.ETP_LEVEL_RADIOS[level])
+            return bool(
+                self.driver.execute_script("return !!arguments[0].checked;", radio)
+            )
+
+        self.expect(_level_is_checked)
         return self
 
     def open_etp_customize(self) -> BasePage:
