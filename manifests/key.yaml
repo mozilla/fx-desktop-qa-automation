@@ -195,10 +195,11 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_suggestions:
-    result: hanging
+    result: pass
     splits:
     - smoke
     - ci-extended
+    - no_nightly
   test_search_suggestions_can_be_disabled:
     result: pass
     splits:
@@ -771,6 +772,7 @@ language_packs:
     splits:
     - smoke
     - ci-extended
+    - no_nightly
 menus:
   test_copy_paste_actions:
     result: pass
@@ -1750,6 +1752,7 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+    - no_nightly
   test_tracking_content_custom_mode:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
     result: fx-change
@@ -2113,6 +2116,7 @@ theme_and_toolbar:
     splits:
     - smoke
     - no_xvfb
+    - no_nightly
   test_installed_theme_enabled:
     result: pass
     splits:

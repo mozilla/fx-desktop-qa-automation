@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       test_sets:
-        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"functional\", \"glean\"]' "
+        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"nightly\"]' "
         default: '["smoke"]'
         type: string
 
@@ -100,3 +100,4 @@ jobs:
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}
       dry_run: ${{ inputs.dry_run }}
+      run_type: nightly
