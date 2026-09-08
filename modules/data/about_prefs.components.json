@@ -971,7 +971,9 @@
     "selectorData": "select",
     "strategy": "css",
     "shadowParent": "website-language-picker",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: website-language-picker)",
       "location": "about:preferences#languages Website language section"
