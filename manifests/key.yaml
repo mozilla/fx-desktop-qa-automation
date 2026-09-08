@@ -1696,6 +1696,7 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
+    - nightly
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:

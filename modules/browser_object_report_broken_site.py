@@ -51,7 +51,7 @@ class ReportBrokenSite(BasePage):
 
     @BasePage.context_chrome
     def send_report(self) -> BasePage:
-        """Click "Send Report" and wait for the confirmation view."""
+        """Click the Send Report button."""
         self.element_clickable("report-broken-site-send-button")
         self.js_click_on("report-broken-site-send-button")
         return self
