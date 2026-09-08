@@ -30,46 +30,47 @@ def test_etp_panel_displayed_when_trackers_detected(
     test_page = GenericPage(driver, url=FINGERPRINTERS_URL)
     tracking_page = GenericPage(driver, url=TRACKING_URL)
 
-    # Make sure that the "Standard" option is selected from the ETP section in about:preferences#privacy
+    # Select the "Standard" ETP level
     about_prefs_privacy.open()
     about_prefs_privacy.select_etp_level("standard")
 
-    # Open test page and click on the shield icon
+    # Open test page and the shield panel
     test_page.open()
     trust_panel.open_panel()
     trust_panel.wait_for_trackers(require_count=True)
 
-    # Click on the "See All" button
+    # Click "See All"
     trust_panel.click_see_all()
 
-    # The trackers blocked on the page are listed under the section "Firefox blocked these things for you:"
-    # which includes: "x Cross-site tracking cookies", "x Fingerprinters" and "x Cryptominer"
+    # Cookies, fingerprinters and cryptominers are listed as blocked
     trust_panel.detected_category_visible("cryptominer")
     trust_panel.detected_category_visible("fingerprinter")
     trust_panel.detected_category_visible("tracking cookies")
 
-    # Tracking content is not blocked and is shown separately under the section "Firefox allowed these things so sites
-    # don't break:", which includes: "Tracking content"
+    # Tracking content is listed separately as allowed
     trust_panel.detected_category_visible("tracking content")
 
-    # Click on "Fingerprinter"
+    # Open the "Fingerprinter" category
     trust_panel.open_detected_category("fingerprinter")
 
     # "Fingerprinters Blocked" title is displayed in the subpanel
     trust_panel.blocked_trackers_title_displayed_in_subpanel("fingerprinters")
 
-    # The blocked fingerprinter is displayed inside the subpanel
+    # The blocked fingerprinter is listed in the subpanel
     assert trust_panel.has_detected_tracking_sites(DETECTED_FINGERPRINTER)
 
-    # Open tracking test page in a new tab
+    # Open the tracking test page in a new tab
     tabs.open_and_switch_to_new_tab()
     tracking_page.open()
 
-    # Click on the shield icon -> "See All" button
+    # Open the shield panel -> "See All"
     trust_panel.open_panel()
     trust_panel.wait_for_trackers(require_count=True)
     trust_panel.click_see_all()
 
-    # The trackers blocked on the page are listed under the section "Firefox blocked these things for you:",
-    # which includes: "x Cross-site tracking cookies"
+    # Only cookies are listed as blocked on this page
     trust_panel.detected_category_visible("tracking cookies")
+
+    # Detections are per-page: no fingerprinters or cryptominers here
+    trust_panel.detected_category_not_visible("fingerprinter")
+    trust_panel.detected_category_not_visible("cryptominer")

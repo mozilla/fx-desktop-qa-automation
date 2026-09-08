@@ -371,11 +371,21 @@ class TrustPanel(BasePage):
             return 0
 
     @BasePage.context_chrome
-    def detected_category_visible(self, category: str):
+    def detected_category_visible(self, category: str) -> BasePage:
         """
         Verify a detected tracker category is visible in the protections panel.
 
         Canonical input format: hyphenated singular (e.g. "tracking-content")
         """
         self.element_visible("detected-category", self._category_labels(category))
+        return self
+
+    @BasePage.context_chrome
+    def detected_category_not_visible(self, category: str) -> BasePage:
+        """
+        Verify a detected tracker category is not listed in the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        self.element_not_visible("detected-category", self._category_labels(category))
         return self
