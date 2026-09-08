@@ -4,13 +4,8 @@ Reads the ``report.json`` / ``report_headed.json`` files produced by
 pytest-json-report and appends one row per test result to a BigQuery table.
 
 Two properties are deliberate:
-
-* **This script never fails the calling CI job.** Analytics must not break a
-  test run, so every error is logged and the process still exits 0.
-* **Data auto-expires after one year.** The destination table is day
-  partitioned on ``run_started_at`` with a 365 day partition expiration, so
-  BigQuery drops each partition a year after the run it describes. There is
-  no cleanup job to schedule or maintain.
+    - This script never fails the calling CI job.
+    - Data auto-expires after one year.
 
 """
 
@@ -104,8 +99,6 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
     """Flatten one JSON report into per-test BigQuery rows."""
     ingested_at = datetime.now(timezone.utc).isoformat()
 
-    # GitHub only exposes the run start time via the workflow context, so the
-    # workflow has to pass it through. Fall back to "now" when absent.
     run_started_at = env("GITHUB_RUN_STARTED_AT") or ingested_at
 
     headed = "headed" in os.path.basename(report_path).lower()

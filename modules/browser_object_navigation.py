@@ -1385,6 +1385,15 @@ class Navigation(BasePage):
         self.get_element("back-button").click()
 
     @BasePage.context_chrome
+    def click_forward_button(self) -> None:
+        """
+        Click the 'Forward' button.
+        Waits until the button is clickable, it is disabled without forward history.
+        """
+        self.element_clickable("forward-button")
+        self.get_element("forward-button").click()
+
+    @BasePage.context_chrome
     def get_library_recently_closed_urls(self, history_open: bool = False):
         """
         Navigate through Library > History > Recently Closed Tabs and extract URLs. This navigates a chain of nested

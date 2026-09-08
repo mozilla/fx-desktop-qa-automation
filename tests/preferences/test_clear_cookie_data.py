@@ -31,6 +31,6 @@ def test_clear_cookie_data(driver: Firefox, about_prefs: AboutPrefs):
     # Clear cookies and site data: open the dialog again, wait for iframe, click clear
     about_prefs.open_clear_cookie_site_and_clear_data()
 
-    # Wait until the dialog reports 0 (reopen/poll via helper)
+    # Reopen the dialog and confirm it now reports 0
     cookie_value = about_prefs.open_clear_cookie_site_and_get_data()
     assert cookie_value == 0, f"Expected 0 after clearing, got {cookie_value}"

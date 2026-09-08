@@ -778,6 +778,73 @@
       "description": "shadow root for update state elements"
     }
   },
+  "update-info-root": {
+    "selectorData": "updateAppInfo",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "shadow root for the update-information element (Firefox Updates > version line)",
+      "location": "about:preferences#about"
+    }
+  },
+  "whats-new-link": {
+    "selectorData": "#releasenotes",
+    "strategy": "css",
+    "shadowParent": "update-info-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"What's new\" link, opens the release notes",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-get-help": {
+    "selectorData": "supportGetHelp",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox support > \"Get help\" link, opens a SUMO article",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-get-help-button": {
+    "selectorData": ".button",
+    "strategy": "css",
+    "shadowParent": "support-get-help",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Hover-styled inner box of \"Get help\", a in Fx155, div in Fx156+",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-share-ideas": {
+    "selectorData": "supportShareIdeas",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox support > \"Share ideas and feedback\" link",
+      "location": "about:preferences#about"
+    }
+  },
+  "support-share-ideas-button": {
+    "selectorData": ".button",
+    "strategy": "css",
+    "shadowParent": "support-share-ideas",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Hover-styled inner box of \"Share ideas\", a in Fx155, div in Fx156+",
+      "location": "about:preferences#about"
+    }
+  },
   "update_available_button": {
     "selectorData": "[data-l10n-id='update-updateButton']",
     "strategy": "css",
@@ -880,6 +947,78 @@
     "comment": {
       "description": "Browser language card heading (label attribute is locale-translated, used to verify language switch)",
       "location": "about:preferences#paneLanguages Browser language section"
+    }
+  },
+  "website-language-heading": {
+    "selectorData": "moz-fieldset[data-l10n-id='website-language-heading']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Website language card heading (Settings redesign)",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-picker": {
+    "selectorData": "websiteLanguagePicker",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select on the Website language card",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "website-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: website-language-picker)",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-add-button": {
+    "selectorData": "websiteLanguageAddLanguage",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-item": {
+    "selectorData": "moz-box-item:has(moz-button[locale='{code}'][action='remove'])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one accepted website language, found by locale code (label reads 'French [fr]')",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-remove-button": {
+    "selectorData": "moz-button[locale='{code}'][action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on one accepted website language row, found by locale code",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-remove-buttons": {
+    "selectorData": "moz-button[action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Every website language row's delete button, in list order (locale attribute holds the code)",
+      "location": "about:preferences#languages Website language section"
     }
   },
   "search-suggestion-in-private-windows": {
@@ -1564,6 +1703,56 @@
     "comment": {
       "description": "The \"Firefox Home (Default)\" option inside the New tabs dropdown in About Preferences Home section",
       "location": "About Preferences - Home - Homepage section"
+    }
+  },
+  "manage-exceptions-button": {
+    "selectorData": "etpManageExceptionsButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Manage Exceptions\" button on the privacy pane; opens the tracking protection exceptions dialog listing sites where ETP is disabled",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "exceptions-dialog-shadow-root": {
+    "selectorData": "dialog[buttons='accept,cancel']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Exceptions for Enhanced Tracking Protection dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "remove-all-websites-button": {
+    "selectorData": "removeAllPermissions",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Remove all websites\" button; clears all ETP exception entries",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "remove-website-button": {
+    "selectorData": "removePermission",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Remove Website\" button; removes the currently selected ETP exception entry",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "exceptions-save-changes-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "exceptions-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Exceptions dialog \"Save Changes\" button",
+      "location": "about:preferences#etp (Manage Exceptions dialog, inside browser-popup iframe)"
     }
   }
 }

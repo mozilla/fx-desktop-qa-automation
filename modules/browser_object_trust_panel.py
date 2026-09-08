@@ -30,6 +30,7 @@ class TrustPanel(BasePage):
     @BasePage.context_chrome
     def open_panel(self) -> BasePage:
         self.click_on("shield-icon")
+        self.element_visible("trustpanel-connection-button")
         return self
 
     @BasePage.context_chrome

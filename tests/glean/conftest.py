@@ -1,3 +1,10 @@
+"""
+Glean suite fixtures.
+
+A `pytest.skip` here reports as TestRail Blocked, not Untested (see `GLEAN_SUITE_ID` in
+`organize_entries`). Only skip for a confirmed external condition a rerun could clear.
+"""
+
 import pytest
 
 

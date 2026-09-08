@@ -11,19 +11,22 @@ from modules.page_object_generics import GenericPage
 FIRST_FILE_REGEX = r"sample-3s(\s\(\d+\))?\.mp3$"
 SECOND_FILE_REGEX = r"sample-6s(\s\(\d+\))?\.mp3$"
 
-# Downloads panel value (chrome) often contains full filename; allow duplicates.
-MP3_PANEL_NAME_REGEX = r".*\.mp3(\s\(\d+\))?$"
 MP3_DOWNLOAD_PAGE = "mp3_download.html"
+DOWNLOADS_PANEL = "downloadsPanel"
 
 
 @pytest.fixture()
 def add_to_prefs_list():
-    return [("media.play-stand-alone", False)]
+    return [
+        ("media.play-stand-alone", False),
+        # Auto-opened panel covers the content area and eats the next download click.
+        ("browser.download.alwaysOpenPanel", False),
+    ]
 
 
 @pytest.fixture()
 def test_case():
-    return "1756771"
+    return "1756713"
 
 
 @pytest.fixture()
@@ -88,11 +91,10 @@ def test_change_download_folder(
     page.open()
     page.click_on("link-3s")
 
-    nav.click_file_download_warning_panel()
-
+    nav.open_download_panel()
     nav.element_visible("download-target-element")
-    nav.wait_for_download_completion()
-    nav.verify_download_name(MP3_PANEL_NAME_REGEX)
+    nav.verify_download_name(FIRST_FILE_REGEX)
+    nav.hide_popup(DOWNLOADS_PANEL)
 
     first_pattern = re.compile(FIRST_FILE_REGEX)
 
@@ -110,11 +112,10 @@ def test_change_download_folder(
     # Download another file (should land in new folder)
     page.click_on("link-6s")
 
-    nav.click_file_download_warning_panel()
-
+    nav.open_download_panel()
     nav.element_visible("download-target-element")
-    nav.wait_for_download_completion()
-    nav.verify_download_name(MP3_PANEL_NAME_REGEX)
+    nav.verify_download_name(SECOND_FILE_REGEX)
+    nav.hide_popup(DOWNLOADS_PANEL)
 
     second_pattern = re.compile(SECOND_FILE_REGEX)
 

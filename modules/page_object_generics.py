@@ -1,6 +1,7 @@
 import logging
 from time import sleep
 
+from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -15,6 +16,26 @@ class GenericPage(BasePage):
     """
 
     URL_TEMPLATE = "{url}"
+
+    # Anti-bot interstitials by provider. Only add markers seen in a real run:
+    # a guessed one turns a real failure into a silent Blocked.
+    BOT_CHALLENGE_TITLE_MARKERS = {
+        "Cloudflare": "just a moment",
+    }
+
+    @BasePage.context_content
+    def bot_challenge_reason(self) -> str | None:
+        """
+        Check whether an anti-bot interstitial replaced the page.
+
+        Returns:
+            str: Provider and page title, or None if the page looks normal.
+        """
+        title = self.driver.title or ""
+        for provider, marker in self.BOT_CHALLENGE_TITLE_MARKERS.items():
+            if marker in title.lower():
+                return f"{provider} ({title!r})"
+        return None
 
     def navigate_dialog_to_location(
         self, location: str, filename="test.txt"
@@ -146,6 +167,57 @@ class GenericPage(BasePage):
 
         # Click PDF Document (.pdf)
         self.click_on("gdoc-file-download-pdf")
+
+    def dismiss_facebook_cookies_if_present(self):
+        """
+        Dismiss the Facebook cookie consent dialog if it appears.
+
+        Prefers the "decline"/"essential only" option when available,
+        falling back to "allow all" if no decline option is present.
+
+        Returns:
+            GenericPage: The current page object.
+        """
+        try:
+            self.element_visible("facebook-cookie-dialog")
+        except TimeoutException:
+            return self
+
+        try:
+            self.custom_wait(timeout=5).until(
+                lambda _: (
+                    self.get_elements("facebook-cookie-decline")
+                    or self.get_elements("facebook-cookie-allow")
+                )
+            )
+        except TimeoutException:
+            return self
+
+        decline_buttons = self.get_elements("facebook-cookie-decline")
+        if decline_buttons:
+            self.click_on(decline_buttons[0])
+        else:
+            allow_buttons = self.get_elements("facebook-cookie-allow")
+            if allow_buttons:
+                self.click_on(allow_buttons[0])
+            else:
+                return self
+
+        self.wait.until(lambda _: len(self.get_elements("facebook-cookie-dialog")) == 0)
+        return self
+
+    def open_facebook_login(self):
+        """
+        Opens the Facebook login page (using the page's configured URL)
+        and dismisses the cookie consent dialog if present.
+        """
+        self.open()
+
+        self.dismiss_facebook_cookies_if_present()
+
+        self.element_visible("facebook-username-field")
+        self.element_visible("facebook-password-field")
+        return self
 
 
 class GenericPdf(BasePage):

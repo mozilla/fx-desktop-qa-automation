@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver import Firefox, Keys
 
 from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
@@ -8,6 +9,9 @@ SEARCH_TERM = "firefox"
 # Spaces get URL-encoded, so match only the first token when checking the SERP URL.
 RELATED_SEARCH_TERM = "women shoes"
 RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
+# High-intent commercial query, so the SERP serves the text ads that withads and
+# serp.adImpression need. SEARCH_TERM returns no ads.
+AD_SEARCH_TERM = "car insurance quotes"
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
 
@@ -508,6 +512,22 @@ def _action_click_non_ads_link(driver: Firefox, params: dict = None):
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
+
+def block_if_bot_challenge(driver: Firefox) -> None:
+    """
+    Skip as Blocked when an anti-bot interstitial caused the failure.
+
+    Call from a test's except block. No recognized challenge leaves the original failure
+    to propagate, so a case that passes through a challenge stays Passed.
+    """
+    try:
+        reason = GenericPage(driver).bot_challenge_reason()
+    except Exception:
+        # A broken diagnostic must not replace the failure it was inspecting.
+        return
+    if reason:
+        pytest.skip(f"Blocked by an external bot challenge: {reason}")
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):

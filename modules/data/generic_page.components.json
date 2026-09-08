@@ -347,5 +347,60 @@
       "description": "A related-search link in the Ecosia SERP related-searches component; ctrl/cmd+clicked to open the refined SERP in a new tab (serp.impression source='opened_in_new_tab')",
       "location": "ecosia.org SERP"
     }
+  },
+  "facebook-username-field": {
+    "selectorData": "input[name='email']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The username/email input field on the Facebook login form; used to trigger focus, autofill, and the autocomplete credentials dropdown.",
+      "location": "facebook.com login page"
+    }
+  },
+  "facebook-password-field": {
+    "selectorData": "input[name='pass']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The password input field on the Facebook login form; used to verify autofill behavior alongside the username field.",
+      "location": "facebook.com login page"
+    }
+  },
+  "facebook-cookie-dialog": {
+    "selectorData": "//div[@role='dialog'][.//text()[contains(.,'cookies') or contains(.,'Cookies')]]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The cookie consent dialog shown on Facebook on first visit or when no consent cookie is set; must be dismissed before interacting with the login form to avoid it intercepting clicks/focus.",
+      "location": "facebook.com (cookie consent overlay)"
+    }
+  },
+  "facebook-cookie-decline": {
+    "selectorData": "//div[@role='dialog']//*[self::button or @role='button'][contains(normalize-space(.),'Decline optional cookies') or contains(normalize-space(.),'Only allow essential cookies')]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The 'decline optional cookies' / 'only allow essential cookies' button within the Facebook cookie consent dialog; preferred dismissal action when present.",
+      "location": "facebook.com (cookie consent overlay)"
+    }
+  },
+  "facebook-cookie-allow": {
+    "selectorData": "//div[@role='dialog']//*[self::button or @role='button'][contains(normalize-space(.),'Allow all cookies') or contains(normalize-space(.),'Accept all cookies')]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The 'allow all cookies' / 'accept all cookies' button within the Facebook cookie consent dialog; fallback dismissal action used only when a decline option is not present.",
+      "location": "facebook.com (cookie consent overlay)"
+    }
   }
 }

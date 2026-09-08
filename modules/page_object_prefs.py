@@ -275,6 +275,66 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def add_website_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the Website language card on the Languages pane.
+
+        The Add language dropdown fills its options asynchronously, so wait for
+        the target option to show up before selecting it.
+
+        Args:
+            lang_code: The language code to add (e.g. 'fr', 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "website-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("website-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("website-language-picker", "value", lang_code)
+        self.click_on("website-language-add-button")
+        return self
+
+    def get_website_language_order(self) -> List[str]:
+        """Returns the locale codes on the Website language card, in list order."""
+        return [
+            button.get_attribute("locale")
+            for button in self.get_elements("website-language-remove-buttons")
+        ]
+
+    def move_website_language(
+        self, lang_code: str, direction: Literal["up", "down"]
+    ) -> BasePage:
+        """Moves a language up or down on the Website language card.
+
+        The list is a reorderable moz-box-group: Ctrl+Shift+ArrowUp/ArrowDown is
+        the Move Up / Move Down action, and the row itself has to be focused for
+        the group to pick the keypress up.
+
+        Args:
+            lang_code: The language code to move (e.g. 'fr')
+            direction: 'up' or 'down'
+        """
+        self.click_on("website-language-item", labels=[lang_code])
+        arrow = Keys.ARROW_UP if direction == "up" else Keys.ARROW_DOWN
+        self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+            arrow
+        ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+        return self
+
+    def remove_website_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the Website language card.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'fr')
+        """
+        self.click_on("website-language-remove-button", labels=[lang_code])
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -331,9 +391,12 @@ class AboutPrefs(BasePage):
     def verify_doh_provider(self, provider_name: str) -> BasePage:
         """Wait until the DoH status box reports the given provider name."""
         self.custom_wait(timeout=30).until(
-            lambda _: provider_name
-            in (
-                self.get_element("doh-status-box").get_attribute("data-l10n-args") or ""
+            lambda _: (
+                provider_name
+                in (
+                    self.get_element("doh-status-box").get_attribute("data-l10n-args")
+                    or ""
+                )
             )
         )
         return self
@@ -470,7 +533,9 @@ class AboutPrefs(BasePage):
         """
         if level not in self.ETP_LEVEL_RADIOS:
             raise ValueError(f"Unknown ETP level: {level!r}")
-        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        # Native click lands on dead space for "custom" and is silently dropped,
+        # leaving the pref unchanged, so click the moz-radio host directly.
+        self.js_click_on(self.ETP_LEVEL_RADIOS[level])
         return self
 
     def select_etp_level(self, level: str) -> BasePage:
@@ -480,6 +545,25 @@ class AboutPrefs(BasePage):
         """
         self.open_etp_settings()
         self.set_etp_level(level)
+        return self
+
+    def verify_etp_level(self, level: str) -> BasePage:
+        """
+        Assert which Enhanced Tracking Protection level is selected on
+        about:preferences#etp. level: standard|strict|custom.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+
+        def _level_is_checked(_):
+            radio = self.get_element(self.ETP_LEVEL_RADIOS[level])
+            return bool(
+                self.driver.execute_script("return !!arguments[0].checked;", radio)
+            )
+
+        self.expect(_level_is_checked)
         return self
 
     def open_etp_customize(self) -> BasePage:
@@ -1051,26 +1135,58 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
+    def _dismiss_open_prefs_dialog(self) -> None:
+        """
+        Close any prefs sub-dialog already showing in the popup iframe.
+
+        The ``browser-popup`` (``.dialogFrame``) element exists even when no
+        dialog is open; a dialog that is actually visible has a positive x
+        offset. This is a fragile heuristic, kept in one place so the
+        popup-dialog helpers don't diverge.
+        """
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that
         triggers a popup
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
 
-    def clear_cookies_and_get_dialog_iframe(self):
+    def switch_to_clear_data_dialog(self) -> BasePage:
         """
-        Returns the iframe object for the dialog panel in the popup after pressing the clear site
-        data button.
+        Press the clear site data button and switch into the dialog panel's iframe.
+
+        The .dialogFrame element exists before the dialog loads, so switch from the top
+        and retry until the dialog's own content is reachable.
         """
         self.scroll_to_element("clear-site-data-button")
         self.click_on("clear-site-data-button")
-        return self.get_element("browser-popup")
+
+        def _switched_into_loaded_dialog(_) -> bool:
+            self.switch_to_default_frame()
+            for frame in self.get_elements("browser-popup"):
+                try:
+                    self.switch_to_iframe_context(frame)
+                    if self.get_elements("cookies-data-checkbox"):
+                        return True
+                except WebDriverException:
+                    pass
+                self.switch_to_default_frame()
+            return False
+
+        # Don't pay the implicit wait on every miss
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.wait.until(_switched_into_loaded_dialog)
+        finally:
+            self.driver.implicitly_wait(original)
+        return self
 
     def switch_to_saved_addresses_popup_iframe(self) -> BasePage:
         """
@@ -1182,8 +1298,6 @@ class AboutPrefs(BasePage):
         The <memory used> value for no cookies is '0 bytes', otherwise values are
         '### MB', or '### KB'
         """
-        # Find the dialog option elements containing the checkbox label
-        self.element_exists("clear-data-dialog-options")
         cookies_checkbox = self.get_element("cookies-data-checkbox")
         self.element_has_attribute(cookies_checkbox, "data-l10n-args")
         cookies_object = cookies_checkbox.get_attribute("data-l10n-args")
@@ -1408,14 +1522,12 @@ class AboutPrefs(BasePage):
                 self.element_has_text(locator, text_value)
         return self
 
-    def open_clear_cookie_site_and_get_data(self):
+    def open_clear_cookie_site_and_get_data(self) -> int:
         """
-        Open about:preferences#privacy, show the 'Clear Data' dialog, switch into its iframe,
-        wait for its option container to be present, read the value, then switch back.
+        Open about:preferences#privacy and read the cookies and site data value.
         """
         self.open()
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.switch_to_clear_data_dialog()
         val = self.get_cookie_site_data_value()
         self.switch_to_default_frame()
         self.close_dialog_box()
@@ -1425,8 +1537,8 @@ class AboutPrefs(BasePage):
         """
         Open about:preferences#privacy and clear cookies and site data.
         """
-        iframe = self.clear_cookies_and_get_dialog_iframe()
-        self.switch_to_iframe_context(iframe)
+        self.open()
+        self.switch_to_clear_data_dialog()
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
@@ -1504,6 +1616,30 @@ class AboutPrefs(BasePage):
         self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
+    def open_manage_exceptions_dialog(self) -> BasePage:
+        """
+        Open the ETP "Manage Exceptions" dialog and switch into its popup iframe.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        After calling this method, subsequent element interactions happen within
+        the dialog's iframe context. Call ``self.switch_to_default_frame()``
+        afterward to return to the main page.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("manage-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def remove_all_exceptions_and_save(self) -> BasePage:
+        """
+        From inside the ETP "Manage Exceptions" dialog iframe, remove every
+        exception entry and save the changes. Returns to the default frame.
+        """
+        self.click_on("remove-all-websites-button")
+        self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
@@ -1546,6 +1682,135 @@ class AboutPrefs(BasePage):
             else:
                 self.element_attribute_is_not(key, "disabled", "")
         return self
+
+    def verify_ai_controls_core_elements_visible(self) -> BasePage:
+        """
+        Verify that the three always-present AI Controls elements are visible
+        (the killswitch toggle, the translations select, and the chatbot select).
+        """
+        self.element_visible("ai-controls-toggle")
+        self.element_visible("ai-control-translations-select")
+        self.element_visible("ai-control-sidebar-chatbot-select")
+        return self
+
+    def navigate_to_ai_controls(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the AI Controls preference page.
+
+        Arguments:
+            verify: If True (default), assert the three core elements are
+                    visible after navigation. Pass False when enterprise
+                    policies hide those controls.
+        """
+        self.driver.get("about:preferences#ai")
+        if verify:
+            self.verify_ai_controls_core_elements_visible()
+        return self
+
+    def get_ai_killswitch_state(self) -> bool:
+        """
+        Get the current state of the AI killswitch toggle.
+
+        Returns:
+            bool: True if AI features are blocked, False otherwise.
+        """
+        # The toggle reports its state through the aria-pressed attribute (the
+        # same signal expect_ai_killswitch_state waits on); "true" means blocked.
+        return (
+            self.get_element("ai-controls-toggle").get_attribute("aria-pressed")
+            == "true"
+        )
+
+    def set_ai_blocking(self, block: bool) -> BasePage:
+        """
+        Set the global AI blocking (killswitch) toggle in AI Controls.
+
+        Note: this writes the pref directly and does NOT run the UI toggle's
+        side effects (e.g. flipping extensions.ml.enabled). Use
+        toggle_ai_killswitch_click when those side effects must be exercised
+        (see C3341331).
+
+        Arguments:
+            block: True to block AI enhancements, False to allow them.
+        """
+        if block != self.get_ai_killswitch_state():
+            self.driver.execute_script(
+                "Services.prefs.setStringPref('browser.ai.control.default', arguments[0]);",
+                "blocked" if block else "available",
+            )
+            self.expect(lambda _: self.get_ai_killswitch_state() == block)
+        return self
+
+    def get_ai_translations_state(self) -> str:
+        """
+        Get the current state of the AI Translations feature.
+
+        Returns:
+            str: Current state ("available" or "blocked")
+        """
+        return self.get_element("ai-control-translations-select").get_attribute("value")
+
+    def set_ai_translations(self, state: str) -> BasePage:
+        """
+        Set the AI Translations feature state.
+
+        Note: ai-control-translations-select is a `moz-select` custom element
+        (not a native <select>), so selenium.webdriver.support.ui.Select does
+        not apply and there is no plain-Selenium equivalent for value-setting.
+        We assign .value and dispatch input/change events the way the moz-select
+        internals do to trigger the same pref-write path a user click would.
+
+        Arguments:
+            state: "available" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-translations-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        # Confirm the moz-select actually wrote through to the backing pref —
+        # asserting .value alone would be tautological since we just set it.
+        self.expect(
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+                )
+                == state
+            )
+        )
+        return self
+
+    def cancel_ai_killswitch_click(self) -> BasePage:
+        """
+        Click the AI killswitch toggle and dismiss the confirmation dialog with
+        its "Cancel" button, leaving AI unblocked. Mirrors
+        toggle_ai_killswitch_click but exercises the cancel path of the
+        "Block all AI enhancements?" prompt.
+        """
+        self.click_on("ai-controls-toggle")
+        self.element_visible("ai-controls-disable-dialog-button")
+        buttons = self.get_elements("ai-controls-disable-dialog-button")
+        cancel = [el for el in buttons if el.get_attribute("label") == "Cancel"]
+        assert cancel, "Cancel button not found in block-AI confirmation dialog"
+        cancel[0].click()
+        return self
+
+    def get_extensions_ml_enabled(self) -> bool:
+        """
+        Read the extensions.ml.enabled pref, which the AI killswitch flips off
+        while blocking. Returns True when the WebExtensions ML API is enabled.
+        """
+        return bool(
+            self.driver.execute_script(
+                "return Services.prefs.getBoolPref('extensions.ml.enabled', false);"
+            )
+        )
 
 
 class AboutAddons(BasePage):
