@@ -949,6 +949,56 @@
       "location": "about:preferences#paneLanguages Browser language section"
     }
   },
+  "website-language-heading": {
+    "selectorData": "moz-fieldset[data-l10n-id='website-language-heading']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Website language card heading (Settings redesign)",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-picker": {
+    "selectorData": "websiteLanguagePicker",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select on the Website language card",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "website-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: website-language-picker)",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-add-button": {
+    "selectorData": "websiteLanguageAddLanguage",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
+  "website-language-item": {
+    "selectorData": "moz-box-item:has(moz-button[locale='{code}'][action='remove'])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one accepted website language, found by locale code (label reads 'French [fr]')",
+      "location": "about:preferences#languages Website language section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
