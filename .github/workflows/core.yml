@@ -271,6 +271,7 @@ jobs:
 
           Start-Process -FilePath $env:FX_EXECUTABLE -ArgumentList "--version" -Wait -NoNewWindow
 
+
       - name: Download Geckodriver
         id: download-geckodriver
         if: ${{ env.DRY_RUN != 'true' && steps.install-fx.outcome == 'success' }}
