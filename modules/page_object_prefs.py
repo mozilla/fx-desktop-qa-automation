@@ -299,6 +299,42 @@ class AboutPrefs(BasePage):
         self.click_on("website-language-add-button")
         return self
 
+    def get_website_language_order(self) -> List[str]:
+        """Returns the locale codes on the Website language card, in list order."""
+        return [
+            button.get_attribute("locale")
+            for button in self.get_elements("website-language-remove-buttons")
+        ]
+
+    def move_website_language(
+        self, lang_code: str, direction: Literal["up", "down"]
+    ) -> BasePage:
+        """Moves a language up or down on the Website language card.
+
+        The list is a reorderable moz-box-group: Ctrl+Shift+ArrowUp/ArrowDown is
+        the Move Up / Move Down action, and the row itself has to be focused for
+        the group to pick the keypress up.
+
+        Args:
+            lang_code: The language code to move (e.g. 'fr')
+            direction: 'up' or 'down'
+        """
+        self.click_on("website-language-item", labels=[lang_code])
+        arrow = Keys.ARROW_UP if direction == "up" else Keys.ARROW_DOWN
+        self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+            arrow
+        ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+        return self
+
+    def remove_website_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the Website language card.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'fr')
+        """
+        self.click_on("website-language-remove-button", labels=[lang_code])
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
