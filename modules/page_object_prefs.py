@@ -306,7 +306,9 @@ class AboutPrefs(BasePage):
             for button in self.get_elements("website-language-remove-buttons")
         ]
 
-    def move_website_language(self, lang_code: str, direction: str) -> BasePage:
+    def move_website_language(
+        self, lang_code: str, direction: Literal["up", "down"]
+    ) -> BasePage:
         """Moves a language up or down on the Website language card.
 
         The list is a reorderable moz-box-group: Ctrl+Shift+ArrowUp/ArrowDown is
