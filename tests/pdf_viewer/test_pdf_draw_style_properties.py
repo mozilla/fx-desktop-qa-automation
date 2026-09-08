@@ -49,6 +49,10 @@ def test_pdf_draw_color_thickness_and_opacity(pdf_viewer: GenericPdf):
     pdf_viewer.draw_on_pdf_page()
     initial_style = pdf_viewer.get_drawing_style()
     assert initial_style["color"] == INITIAL_COLOR
+    # The helper verifies the toolbar value. PDF.js scales the rendered SVG stroke,
+    # so establish a positive baseline and verify the proportional change below.
+    initial_thickness = float(initial_style["thickness"])
+    assert initial_thickness > 0
     assert float(initial_style["opacity"]) == INITIAL_OPACITY
 
     # Step 7: Select the drawing, change its style, and verify the update.
@@ -59,6 +63,6 @@ def test_pdf_draw_color_thickness_and_opacity(pdf_viewer: GenericPdf):
 
     assert updated_style["color"] == UPDATED_COLOR
     assert float(updated_style["thickness"]) == pytest.approx(
-        float(initial_style["thickness"]) * UPDATED_THICKNESS / INITIAL_THICKNESS
+        initial_thickness * UPDATED_THICKNESS / INITIAL_THICKNESS
     )
     assert float(updated_style["opacity"]) == UPDATED_OPACITY
