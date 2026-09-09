@@ -162,8 +162,8 @@ def table_schema():
 
 def ensure_table(client, table_id: str):
     """Create the table if absent, and enforce the one year partition expiry."""
-    from google.cloud import bigquery
     from google.api_core.exceptions import NotFound
+    from google.cloud import bigquery
 
     partitioning = bigquery.TimePartitioning(
         type_=bigquery.TimePartitioningType.DAY,
