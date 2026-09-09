@@ -290,7 +290,7 @@ jobs:
         continue-on-error: true
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
-          credentials_json: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
@@ -585,7 +585,7 @@ jobs:
         continue-on-error: true
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
-          credentials_json: ${{ secrets.GCP_BQ_CREDENTIAL }}
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
@@ -597,6 +597,14 @@ jobs:
           BQ_WORKFLOW_FILE: main.yml
           BQ_JOB_NAME: Smoke-Linux
         run: uv run python scripts/upload_results_to_bq.py
+
+      - name: Upload artifacts
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
+          path: artifacts
+
 
   Use-Artifacts:
     if: ${{ github.event_name != 'workflow_dispatch' }}
