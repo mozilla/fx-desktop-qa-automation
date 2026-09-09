@@ -203,7 +203,7 @@ jobs:
         env:
           RUN_TYPE: ${{ inputs.run_type }}
         run: |
-          if ("$RUN_TYPE" -eq "nightly") {
+          if ($env:RUN_TYPE -eq "nightly") {
             Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=no_nightly"
           }
 
