@@ -31,8 +31,8 @@ on:
         default: "false"
         type: string
 
-      run_type:
-        description: "Type of run: beta, nightly, devedition, etc..."
+      fx_channel:
+        description: "Channel to test: beta, nightly, devedition, etc..."
         required: false
         default: "beta"
         type: string
@@ -197,15 +197,13 @@ jobs:
           uv run python scripts/switch_config.py ci
           uv sync
 
-      - name: Set run-type variables
-        id: run-type-setup
+      - name: Channel-based setup
+        id: channel-setup
         shell: pwsh
         env:
-          RUN_TYPE: ${{ inputs.run_type }}
+          FX_CHANNEL: ${{ inputs.fx_channel }}
         run: |
-          if ($env:RUN_TYPE -eq "nightly") {
-            Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=no_nightly"
-          }
+          Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=exclude_$FX_CHANNEL"
 
       - name: Select tests
         id: select
@@ -448,14 +446,12 @@ jobs:
           uv run python scripts/switch_config.py ci
           uv sync
 
-      - name: Set run-type variables
-        id: run-type-setup
+      - name: Channel-based setup
+        id: channel-setup
         env:
-          RUN_TYPE: ${{ inputs.run_type }}
+          FX_CHANNEL: ${{ inputs.fx_channel }}
         run: |
-          if [[ "$RUN_TYPE" == "nightly" ]]; then
-            echo "STARFOX_EXCLUDE=no_nightly" >> "$GITHUB_ENV"
-          fi
+          echo "STARFOX_EXCLUDE=exclude_$FX_CHANNEL" >> "$GITHUB_ENV"
 
       - name: Select tests
         id: select
@@ -658,16 +654,12 @@ jobs:
           uv run python scripts/switch_config.py ci_xvfb
           uv sync
 
-      - name: Set run-type variables
-        id: run-type-setup
+      - name: Channel-based setup
+        id: channel-setup
         env:
-          RUN_TYPE: ${{ inputs.run_type }}
+          FX_CHANNEL: ${{ inputs.fx_channel }}
         run: |
-          if [[ "$RUN_TYPE" == "nightly" ]]; then
-            echo "STARFOX_EXCLUDE=no_nightly,no_xvfb" >> "$GITHUB_ENV"
-          else
-            echo "STARFOX_EXCLUDE=no_xvfb" >> "$GITHUB_ENV"
-          fi
+          echo "STARFOX_EXCLUDE=exclude_xvfb,exclude_$FX_CHANNEL" >> "$GITHUB_ENV"
 
       - name: Select tests
         id: select

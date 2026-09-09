@@ -168,10 +168,13 @@ if __name__ == "__main__":
         exclusions = os.environ.get("STARFOX_EXCLUDE")
         if exclusions:
             for excluded_split in exclusions.split(","):
-                print(f"Excluding tests from split: {excluded_split}...")
+                print(f"Excluding tests from split: {excluded_split}...", end="")
+                exclude_count = 0
                 for exclude in dedupe(manifest.gather_split(excluded_split)):
                     if exclude in run_list:
+                        exclude_count += 1
                         run_list.remove(exclude)
+                print(f"excluded {exclude_count} entries.")
 
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))

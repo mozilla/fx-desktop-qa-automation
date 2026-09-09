@@ -100,4 +100,4 @@ jobs:
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}
       dry_run: ${{ inputs.dry_run }}
-      run_type: nightly
+      fx_channel: nightly
