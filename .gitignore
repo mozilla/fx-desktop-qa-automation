@@ -201,3 +201,10 @@ testrail_credentials.env
 # Do not ignore
 !data/goomy.png
 !tests/downloads
+
+# Cached mozilla-central tree listing used by manual_tests/analysis (regenerable)
+.fxtree/
+
+# TestRail manual-case export (~30MB) consumed by manual_tests/analysis/.
+# Re-export from TestRail rather than committing it - see manual_tests/analysis/README.md
+manual_tests/all_cases.json
