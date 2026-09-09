@@ -511,7 +511,7 @@ jobs:
         run: |
           uv run python -m scripts.choose_test_split
         env:
-          STARFOX_EXCLUDE: no_xvfb
+          STARFOX_EXCLUDE: exclude_xvfb
 
       - name: Run Smoke Tests in Ubuntu
         if: ${{ steps.select.conclusion == 'success' && inputs.dry_run != true }}

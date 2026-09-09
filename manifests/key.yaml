@@ -199,6 +199,7 @@ address_bar_and_search:
     splits:
     - smoke
     - ci-extended
+    - exclude_nightly
   test_search_suggestions_can_be_disabled:
     result: pass
     splits:
@@ -683,23 +684,23 @@ form_autofill:
   test_delete_cc_profile:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_edit_credit_card:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_enable_disable_autofill:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_form_autofill_suggestions:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_name_autofill_attribute:
     result: pass
     splits:
@@ -707,8 +708,8 @@ form_autofill:
   test_private_mode_info_not_saved:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_telephone_autofill_attribute:
     result: pass
     splits:
@@ -717,13 +718,13 @@ form_autofill:
   test_updating_address:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
   test_updating_credit_card:
     result: pass
     splits:
-    - functional1
     - nightly
+    - functional1
 geolocation:
   test_geolocation_shared_via_html5:
     result: pass
@@ -771,6 +772,7 @@ language_packs:
     splits:
     - smoke
     - ci-extended
+    - exclude_nightly
 menus:
   test_copy_paste_actions:
     result: pass
@@ -1068,7 +1070,7 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_navigation_to_about_logins_from_autocomplete:
     result: pass
     splits:
@@ -1159,7 +1161,7 @@ password_manager:
     splits:
     - functional2
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_update_login_via_doorhanger:
     result: pass
     splits:
@@ -1353,6 +1355,7 @@ preferences:
     result: pass
     splits:
     - smoke
+    - exclude_xvfb
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
@@ -1361,27 +1364,27 @@ preferences:
   test_support_get_help:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_support_share_ideas:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_website_language_can_be_added:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_website_language_can_be_deleted:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_website_language_can_be_reordered:
     result: pass
     splits:
-    - functional1
+    - functional2
   test_whats_new_link:
     result: pass
     splits:
-    - functional1
+    - functional2
 printing_ui:
   test_page_number_indicator_print_preview:
     result: pass
@@ -1451,12 +1454,12 @@ security_and_privacy:
   test_add_bookmark_via_private_browsing_visible_in_regular_browsing:
     result: pass
     splits:
-    - functional3
     - nightly
+    - functional2
   test_blocking_cryptominers:
     result: deprecated
     splits:
-    - functional3
+    - functional2
   test_blocking_fingerprinters:
     result: pass
     splits:
@@ -1750,6 +1753,7 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+    - exclude_nightly
   test_tracking_content_custom_mode:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2057258
     result: fx-change
@@ -1883,7 +1887,7 @@ sidebar:
     splits:
     - functional3
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_summarize_page_via_ai_chat_panel:
     result: pass
     splits:
@@ -1961,7 +1965,7 @@ tabs:
     - ci
     - functional3
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_display_customize_button:
     result: pass
     splits:
@@ -2005,7 +2009,7 @@ tabs:
     splits:
     - functional3
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_navigation_multiple_tabs:
     result: pass
     splits:
@@ -2052,7 +2056,7 @@ tabs:
     splits:
     - functional3
     - nightly
-    - no_xvfb
+    - exclude_xvfb
   test_reload_multiselected_tabs:
     result: pass
     splits:
@@ -2112,7 +2116,8 @@ theme_and_toolbar:
     result: pass
     splits:
     - smoke
-    - no_xvfb
+    - exclude_xvfb
+    - exclude_nightly
   test_installed_theme_enabled:
     result: pass
     splits:
