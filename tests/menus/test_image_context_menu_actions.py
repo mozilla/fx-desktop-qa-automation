@@ -25,7 +25,7 @@ LINK_IMAGE_URL = (
 )
 # The thumbnail host varies (upload/thumb) and may have a query string.
 LOADED_IMAGE_URL = (
-    r"https://[\w-]+\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px"
+    r"https://[a-zA-Z0-9-]+\.wikimedia\.org/wikipedia/commons/thumb/a/a0/Firefox_logo%2C_2019\.svg/\d+px"
     r"-Firefox_logo%2C_2019\.svg\.png"
 )
 # Match the saved file by stem; the served format varies (.webp/.png).
