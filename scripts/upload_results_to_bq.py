@@ -1,12 +1,6 @@
-"""Upload pytest JSON reports to BigQuery for long-term analytics.
-
-Reads the ``report.json`` / ``report_headed.json`` files produced by
-pytest-json-report and appends one row per test result to a BigQuery table.
-
-Two properties are deliberate:
-    - This script never fails the calling CI job.
-    - Data auto-expires after one year.
-
+"""
+Upload pytest JSON reports to BigQuery for long-term analytics,
+storing one row per test for one year. Upload failures never fail the CI job.
 """
 
 import glob
@@ -15,14 +9,13 @@ import logging
 import os
 import sys
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from google.auth.exceptions import DefaultCredentialsError
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-# Where pytest may have left a report, depending on whether the job has
-# already renamed artifacts/ to its per-platform name.
+
 REPORT_GLOBS = [
     "artifacts/report*.json",
     "artifacts-win/report*.json",
@@ -32,12 +25,8 @@ REPORT_GLOBS = [
 
 REQUIRED_VARS = ("BQ_PROJECT", "BQ_DATASET")
 
-# One year, in milliseconds. BigQuery deletes a partition this long after the
-# date it covers, which is what gives us the 1 year retention guarantee.
-PARTITION_EXPIRATION_MS = 365 * 24 * 60 * 60 * 1000
 
-# Long tracebacks are not worth storing in full; keep enough to triage.
-MAX_ERROR_CHARS = 4000
+PARTITION_EXPIRATION_MS = 365 * 24 * 60 * 60 * 1000
 
 
 def env(name: str, default: str = "") -> str:
@@ -69,30 +58,17 @@ def find_reports() -> List[str]:
     return sorted(set(os.path.abspath(p) for p in paths))
 
 
-def stage_duration(test: Dict[str, Any]) -> Optional[float]:
-    """Sum the setup/call/teardown durations.
-
-    pytest-json-report puts duration on each stage, not on the test item, so
-    there is no single top-level field to read.
-    """
-    total = 0.0
-    found = False
-    for stage in ("setup", "call", "teardown"):
-        value = (test.get(stage) or {}).get("duration")
-        if isinstance(value, (int, float)):
-            total += float(value)
-            found = True
-    return total if found else None
-
-
-def error_message(test: Dict[str, Any]) -> Optional[str]:
-    """Return the first failure text across the three stages, truncated."""
-    for stage in ("call", "setup", "teardown"):
-        data = test.get(stage) or {}
-        text = data.get("longrepr") or (data.get("crash") or {}).get("message")
-        if text:
-            return str(text)[:MAX_ERROR_CHARS]
-    return None
+def test_duration(test: dict[str, Any]) -> float | None:
+    """Return total setup, call, and teardown duration."""
+    durations = [
+        duration
+        for stage in ("setup", "call", "teardown")
+        if isinstance(
+            duration := (test.get(stage) or {}).get("duration"),
+            (int, float),
+        )
+    ]
+    return sum(durations) if durations else None
 
 
 def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]:
@@ -134,8 +110,6 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
                 "event_name": env("GITHUB_EVENT_NAME") or None,
                 "platform": platform_name(),
                 "headed": headed,
-                # main.yml puts the split in STARFOX_SPLIT; main-l10n.yml has no
-                # split concept, so its steps pass BQ_TEST_SET explicitly.
                 "test_set": env("BQ_TEST_SET") or env("STARFOX_SPLIT") or None,
                 "fx_channel": env("FX_CHANNEL") or None,
                 "fx_version": metadata.get("fx_version"),
@@ -144,8 +118,7 @@ def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]
                 "test_case": str(test_case) if test_case is not None else None,
                 "test_nodeid": nodeid,
                 "outcome": outcome,
-                "duration": stage_duration(test),
-                "error_message": error_message(test),
+                "duration": test_duration(test),
             }
         )
 
@@ -184,7 +157,6 @@ def table_schema():
         field("test_nodeid", "STRING", "REQUIRED"),
         field("outcome", "STRING", "REQUIRED"),
         field("duration", "FLOAT64"),
-        field("error_message", "STRING"),
     ]
 
 
@@ -231,8 +203,6 @@ def upload(rows: List[Dict[str, Any]]) -> None:
     table = env("BQ_TABLE", "test_results")
     table_id = f"{project}.{dataset}.{table}"
 
-    # Credentials come from Application Default Credentials, which the
-    # "Auth to Google Cloud" step provides via google-github-actions/auth.
     client = bigquery.Client(project=project)
     ensure_table(client, table_id)
 
