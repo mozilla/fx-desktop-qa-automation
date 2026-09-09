@@ -181,7 +181,7 @@ jobs:
           FX_EXECUTABLE: 'C:\Program Files\Custom Firefox\firefox.exe'
         shell: pwsh
         run: |
-          if ($env:MANUAL_DOWNLOAD_LINK.Contains(".zip")) {
+          if ($env:MANUAL_DOWNLOAD_LINK -and $env:MANUAL_DOWNLOAD_LINK.Contains(".zip")) {
             Write-Host "Downloading and unzipping file..."
             Invoke-WebRequest -Uri "$env:MANUAL_DOWNLOAD_LINK" -OutFile "firefox.zip"
             Expand-Archive -Path firefox.zip -PassThru
