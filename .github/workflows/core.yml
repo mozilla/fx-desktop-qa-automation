@@ -199,15 +199,17 @@ jobs:
 
       - name: Set run-type variables
         id: run-type-setup
+        shell: pwsh
         env:
           RUN_TYPE: ${{ inputs.run_type }}
         run: |
           if ("$RUN_TYPE" -eq "nightly") {
-            echo "env:STARFOX_EXCLUDE=no_nightly" >> "$GITHUB_ENV"
+            Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=no_nightly"
           }
 
       - name: Select tests
         id: select
+        if: ${{ steps.run-type-setup.outcome == 'success' }}
         shell: pwsh
         run: |
           if ($env:STARFOX_SPLIT -eq "glean") {
@@ -458,6 +460,7 @@ jobs:
 
       - name: Select tests
         id: select
+        if: ${{ steps.run-type-setup.outcome == 'success' }}
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests
@@ -670,6 +673,7 @@ jobs:
 
       - name: Select tests
         id: select
+        if: ${{ steps.run-type-setup.outcome == 'success' }}
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests
