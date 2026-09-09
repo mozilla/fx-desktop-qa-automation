@@ -788,10 +788,7 @@ menus:
     - smoke
   test_image_context_menu_actions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2049603
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: unstable
     splits:
     - functional2
     - nightly
