@@ -275,6 +275,66 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def add_website_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the Website language card on the Languages pane.
+
+        The Add language dropdown fills its options asynchronously, so wait for
+        the target option to show up before selecting it.
+
+        Args:
+            lang_code: The language code to add (e.g. 'fr', 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "website-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("website-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("website-language-picker", "value", lang_code)
+        self.click_on("website-language-add-button")
+        return self
+
+    def get_website_language_order(self) -> List[str]:
+        """Returns the locale codes on the Website language card, in list order."""
+        return [
+            button.get_attribute("locale")
+            for button in self.get_elements("website-language-remove-buttons")
+        ]
+
+    def move_website_language(
+        self, lang_code: str, direction: Literal["up", "down"]
+    ) -> BasePage:
+        """Moves a language up or down on the Website language card.
+
+        The list is a reorderable moz-box-group: Ctrl+Shift+ArrowUp/ArrowDown is
+        the Move Up / Move Down action, and the row itself has to be focused for
+        the group to pick the keypress up.
+
+        Args:
+            lang_code: The language code to move (e.g. 'fr')
+            direction: 'up' or 'down'
+        """
+        self.click_on("website-language-item", labels=[lang_code])
+        arrow = Keys.ARROW_UP if direction == "up" else Keys.ARROW_DOWN
+        self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+            arrow
+        ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+        return self
+
+    def remove_website_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the Website language card.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'fr')
+        """
+        self.click_on("website-language-remove-button", labels=[lang_code])
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -473,7 +533,9 @@ class AboutPrefs(BasePage):
         """
         if level not in self.ETP_LEVEL_RADIOS:
             raise ValueError(f"Unknown ETP level: {level!r}")
-        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        # Native click lands on dead space for "custom" and is silently dropped,
+        # leaving the pref unchanged, so click the moz-radio host directly.
+        self.js_click_on(self.ETP_LEVEL_RADIOS[level])
         return self
 
     def select_etp_level(self, level: str) -> BasePage:
@@ -483,6 +545,25 @@ class AboutPrefs(BasePage):
         """
         self.open_etp_settings()
         self.set_etp_level(level)
+        return self
+
+    def verify_etp_level(self, level: str) -> BasePage:
+        """
+        Assert which Enhanced Tracking Protection level is selected on
+        about:preferences#etp. level: standard|strict|custom.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+
+        def _level_is_checked(_):
+            radio = self.get_element(self.ETP_LEVEL_RADIOS[level])
+            return bool(
+                self.driver.execute_script("return !!arguments[0].checked;", radio)
+            )
+
+        self.expect(_level_is_checked)
         return self
 
     def open_etp_customize(self) -> BasePage:

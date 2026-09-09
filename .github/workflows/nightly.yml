@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       test_sets:
-        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"functional\", \"glean\"]' "
+        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"nightly\"]' "
         default: '["smoke"]'
         type: string
 

@@ -198,7 +198,7 @@
   "trustpanel-toggle-parent": {
     "selectorData": "trustpanel-toggle",
     "strategy": "id",
-    "groups": [],
+    "groups": ["doNotCache"],
     "comment": {
       "description": "Trust toggle button parent",
       "location": "Trustpanel"
@@ -207,7 +207,7 @@
   "trustpanel-toggle-button": {
     "selectorData": "input",
     "strategy": "id",
-    "groups": [],
+    "groups": ["doNotCache"],
     "shadowParent": "trustpanel-toggle-parent",
     "comment": {
       "description": "Trustpanel toggle button",
@@ -217,7 +217,7 @@
   "trustpanel-etp-off": {
     "selectorData": "//*[@id='trustpanel-header' and text()='You turned off protections']",
     "strategy": "xpath",
-    "groups": [],
+    "groups": ["doNotCache"],
     "comment": {
       "description": "Trust Panel ETP status",
       "location": "Trustpanel"
@@ -226,7 +226,7 @@
   "trustpanel-etp-on": {
     "selectorData": "//*[@id='trustpanel-header' and text()='Firefox is on guard']",
     "strategy": "xpath",
-    "groups": [],
+    "groups": ["doNotCache"],
     "comment": {
       "description": "Trust Panel ETP status when turned on",
       "location": "Trustpanel"
@@ -244,7 +244,7 @@
   "trustpanel-connection-button": {
     "selectorData": "trustpanel-connection-label",
     "strategy": "id",
-    "groups": [],
+    "groups": ["doNotCache"],
     "comment": {
       "description": "Conection secure/not secure button",
       "location": "Trustpanel"
