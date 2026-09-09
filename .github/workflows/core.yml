@@ -209,7 +209,6 @@ jobs:
 
       - name: Select tests
         id: select
-        if: ${{ steps.run-type-setup.outcome == 'success' }}
         shell: pwsh
         run: |
           if ($env:STARFOX_SPLIT -eq "glean") {
@@ -460,7 +459,6 @@ jobs:
 
       - name: Select tests
         id: select
-        if: ${{ steps.run-type-setup.outcome == 'success' }}
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests
@@ -673,7 +671,6 @@ jobs:
 
       - name: Select tests
         id: select
-        if: ${{ steps.run-type-setup.outcome == 'success' }}
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests
