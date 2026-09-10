@@ -1,3 +1,4 @@
+from pathlib import Path
 from shutil import copyfile
 
 import pytest
@@ -30,10 +31,11 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def local_doc_path(tmp_path):
-    loc = tmp_path / LOCAL_HTML
-    copyfile(f"data/pages/{LOCAL_HTML}", loc)
-    return f"file://{loc}"
+def local_doc_path(tmp_path: Path) -> str:
+    source = Path("data/pages") / LOCAL_HTML
+    destination = tmp_path / LOCAL_HTML
+    copyfile(source, destination)
+    return destination.as_uri()
 
 
 @pytest.fixture()
