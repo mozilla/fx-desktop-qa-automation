@@ -40,7 +40,7 @@ on:
         required: false
       GCP_CREDENTIAL:
         required: false
-      GCP_BQ_CREDENTIAL:
+      credentials_json:
         required: false
       BQ_PROJECT:
         required: false
