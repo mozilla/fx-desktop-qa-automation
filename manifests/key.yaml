@@ -1246,6 +1246,7 @@ pdf_viewer:
     result: pass
     splits:
     - functional2
+    - nightly
   test_pdf_dropdown_functionality:
     result: pass
     splits:
