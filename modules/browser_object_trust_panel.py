@@ -107,16 +107,24 @@ class TrustPanel(BasePage):
         blocker_section = "trustpanel-blocker-section"
 
         def _check_trustpanel(driver):
-            count = self.get_element_args(blocker_section).get("count")
-            if count:
-                return True
+            try:
+                count = self.get_element_args(blocker_section).get("count")
+                if count:
+                    return True
 
-            nav.click_on("refresh-button")
+                nav.click_on("refresh-button")
 
-            self.open_panel()
-            if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
+                self.open_panel()
+                if (
+                    self.get_parent_of(blocker_section).get_attribute("hidden")
+                    == "true"
+                ):
+                    return False
+                return not require_count
+            except StaleElementReferenceException:
+                # A reload or a panel reopen can invalidate references mid-check.
+                # Retry on the next poll.
                 return False
-            return not require_count
 
         if require_count:
             self.custom_wait(
@@ -192,12 +200,17 @@ class TrustPanel(BasePage):
         """
 
         def _detail_view_showing(_):
-            if (
-                self.get_element("trustpanel").get_attribute("mainviewshowing")
-                != "true"
-            ):
-                return True
-            self.js_click_on("see-all-trackers")
+            try:
+                if (
+                    self.get_element("trustpanel").get_attribute("mainviewshowing")
+                    != "true"
+                ):
+                    return True
+                self.js_click_on("see-all-trackers")
+            except StaleElementReferenceException:
+                # The panel rebuilds its bindings while animating, so a reference
+                # fetched a moment ago can go stale. Retry on the next poll.
+                pass
             return False
 
         self.expect(_detail_view_showing)
