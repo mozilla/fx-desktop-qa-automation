@@ -279,8 +279,15 @@ class AboutPrefs(BasePage):
         """Returns the locale codes already downloaded, in Preferred language order.
 
         The dropdown lists the installed locales first, then an <hr>, then the
-        locales that are still only available to download.
+        locales that are still only available to download. The <hr> is the only
+        marker splitting the two, and the download-only half is fetched
+        asynchronously, so wait for it instead of reading a half-built list.
         """
+        self.wait.until(
+            lambda _: self.get_element(
+                "browser-language-preferred-select"
+            ).find_elements(By.TAG_NAME, "hr")
+        )
         codes = []
         for option in self.get_element(
             "browser-language-preferred-select"
