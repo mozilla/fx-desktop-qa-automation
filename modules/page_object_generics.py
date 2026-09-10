@@ -366,11 +366,13 @@ class GenericPdf(BasePage):
         self.element_attribute_contains(tool, "class", "toggled")
         return self
 
-    def draw_on_pdf_page(self, page_number: str = "1") -> BasePage:
+    def draw_on_pdf_page(
+        self, page_number: str = "1", x_offset: int = 150, y_offset: int = 150
+    ) -> BasePage:
         """Draw a short line on the selected PDF page."""
         page = self.get_element("pdf-page", labels=[page_number])
         (
-            self.actions.move_to_element_with_offset(page, 150, 150)
+            self.actions.move_to_element_with_offset(page, x_offset, y_offset)
             .click_and_hold()
             .move_by_offset(80, 30)
             .release()

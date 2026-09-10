@@ -1278,6 +1278,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_zoom_edited_content:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_zoom_in_text_fields:
     result: pass
     splits:
