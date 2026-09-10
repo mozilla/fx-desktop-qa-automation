@@ -275,6 +275,21 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def get_installed_browser_languages(self) -> List[str]:
+        """Returns the locale codes already downloaded, in Preferred language order.
+
+        The dropdown lists the installed locales first, then an <hr>, then the
+        locales that are still only available to download.
+        """
+        codes = []
+        for option in self.get_element(
+            "browser-language-preferred-select"
+        ).find_elements(By.CSS_SELECTOR, "option, hr"):
+            if option.tag_name == "hr":
+                break
+            codes.append(option.get_attribute("value"))
+        return codes
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 

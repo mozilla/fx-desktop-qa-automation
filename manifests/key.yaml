@@ -1361,6 +1361,10 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_preferred_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
