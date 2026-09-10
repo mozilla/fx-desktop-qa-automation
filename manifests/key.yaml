@@ -839,6 +839,10 @@ networking:
     result: pass
     splits:
     - smoke
+  test_doh_failure_falls_back_to_dns:
+    result: pass
+    splits:
+    - functional1
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
@@ -1239,12 +1243,12 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
-  test_pdf_drawing_area_actions:
+  test_pdf_draw_style_properties:
     result: pass
     splits:
     - functional2
     - nightly
-  test_pdf_draw_style_properties:
+  test_pdf_drawing_area_actions:
     result: pass
     splits:
     - functional2
