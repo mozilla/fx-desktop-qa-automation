@@ -1,5 +1,5 @@
-import os
 import re
+from pathlib import Path
 
 import pytest
 from selenium.webdriver import Firefox
@@ -36,6 +36,13 @@ SAVED_IMAGE_FILENAME = f"{SAVED_IMAGE_STEM}.png"
 SAVE_TIMEOUT_SECONDS = 15
 
 
+def new_tab_handle(driver: Firefox, original_handles: set[str]) -> str:
+    """Return the handle of the tab opened since original_handles was taken."""
+    new_handles = set(driver.window_handles) - original_handles
+    assert len(new_handles) == 1, f"Expected exactly one new tab, got {new_handles}"
+    return new_handles.pop()
+
+
 def test_open_image_in_new_tab(driver: Firefox):
     """
     C2637622.1: open an image in a new tab
@@ -52,12 +59,15 @@ def test_open_image_in_new_tab(driver: Firefox):
     image_logo = wiki_image_page.get_element("mediawiki-image")
     wiki_image_page.context_click(image_logo)
 
+    # note the open tabs so we can pick out the new one
+    original_handles = set(driver.window_handles)
+
     # open in a new tab
     image_context_menu.click_and_hide_menu("context-menu-open-image-in-new-tab")
 
-    # switch to the second tab and verify the URL
+    # switch to the new tab and verify the URL
     tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(new_tab_handle(driver, original_handles))
     wiki_image_page.wait_for_page_to_load()
     wiki_image_page.verify_opened_image_url("wikimedia", LOADED_IMAGE_URL)
 
@@ -77,8 +87,8 @@ def test_save_image_as(driver: Firefox, downloads_folder, delete_files):
     wiki_image_page.context_click(image_logo)
 
     # mock the native save dialog, which CI cannot drive reliably
-    saved_image_location = os.path.join(downloads_folder, SAVED_IMAGE_FILENAME)
-    wiki_image_page.install_mock_file_picker(saved_image_location)
+    saved_image_location = Path(downloads_folder) / SAVED_IMAGE_FILENAME
+    wiki_image_page.install_mock_file_picker(str(saved_image_location))
     try:
         # Save the image
         image_context_menu.click_and_hide_menu("context-menu-save-image-as")
@@ -88,8 +98,8 @@ def test_save_image_as(driver: Firefox, downloads_folder, delete_files):
 
     # verify a non-empty file was written
     wiki_image_page.custom_wait(timeout=SAVE_TIMEOUT_SECONDS).until(
-        lambda _: os.path.exists(saved_image_location)
-        and os.path.getsize(saved_image_location) > 0,
+        lambda _: saved_image_location.exists()
+        and saved_image_location.stat().st_size > 0,
         message=f"No non-empty saved image at {saved_image_location}",
     )
 
@@ -114,10 +124,11 @@ def test_copy_image_link(driver: Firefox):
     # copy the link
     image_context_menu.click_and_hide_menu("context-menu-copy-image-link")
 
-    # open a new tab
+    # open a new tab and switch to it
+    original_handles = set(driver.window_handles)
     tabs.new_tab_by_button()
     tabs.wait_for_num_tabs(2)
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(new_tab_handle(driver, original_handles))
 
     # context click and paste
     search_bar = nav.get_awesome_bar()
