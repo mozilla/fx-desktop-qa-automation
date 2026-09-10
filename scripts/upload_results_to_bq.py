@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List
 
 from google.auth.exceptions import DefaultCredentialsError
+from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -23,6 +24,7 @@ REPORT_GLOBS = [
     "artifacts-linux/report*.json",
 ]
 
+DEFAULT_BQ_TABLE = "test_results"
 REQUIRED_VARS = ("BQ_PROJECT", "BQ_DATASET")
 
 
@@ -50,12 +52,14 @@ def platform_name() -> str:
     return "linux"
 
 
-def find_reports() -> List[str]:
-    paths: List[str] = []
-    for pattern in REPORT_GLOBS:
-        paths.extend(glob.glob(pattern))
-
-    return sorted(set(os.path.abspath(p) for p in paths))
+def find_reports() -> list[Path]:
+    return sorted(
+        {
+            path.resolve()
+            for pattern in REPORT_GLOBS
+            for path in Path().glob(pattern)
+        }
+    )
 
 
 def test_duration(test: dict[str, Any]) -> float | None:
@@ -71,53 +75,64 @@ def test_duration(test: dict[str, Any]) -> float | None:
     return sum(durations) if durations else None
 
 
-def build_rows(report: Dict[str, Any], report_path: str) -> List[Dict[str, Any]]:
-    """Flatten one JSON report into per-test BigQuery rows."""
+def build_rows(
+    report: dict[str, Any],
+    report_path: str,
+) -> list[dict[str, Any]]:
+    """Flatten one pytest JSON report into per-test BigQuery rows."""
     ingested_at = datetime.now(timezone.utc).isoformat()
 
-    run_started_at = env("GITHUB_RUN_STARTED_AT") or ingested_at
+    common = {
+        "ingested_at": ingested_at,
+        "run_started_at": env("GITHUB_RUN_STARTED_AT") or ingested_at,
+        "repo": env("GITHUB_REPOSITORY") or None,
+        "workflow": env("GITHUB_WORKFLOW") or None,
+        "workflow_file": env("BQ_WORKFLOW_FILE") or None,
+        "job": env("GITHUB_JOB") or None,
+        "job_name": env("BQ_JOB_NAME") or None,
+        "run_id": int(env("GITHUB_RUN_ID", "0")) or None,
+        "run_number": int(env("GITHUB_RUN_NUMBER", "0")) or None,
+        "run_attempt": int(env("GITHUB_RUN_ATTEMPT", "0")) or None,
+        "actor": env("GITHUB_ACTOR") or None,
+        "ref_name": env("GITHUB_REF_NAME") or None,
+        "commit_sha": env("GITHUB_SHA") or None,
+        "event_name": env("GITHUB_EVENT_NAME") or None,
+        "platform": platform_name(),
+        "headed": "headed" in os.path.basename(report_path).lower(),
+        "test_set": env("BQ_TEST_SET") or env("STARFOX_SPLIT") or None,
+        "fx_channel": env("FX_CHANNEL") or None,
+    }
 
-    headed = "headed" in os.path.basename(report_path).lower()
+    rows = []
 
-    rows: List[Dict[str, Any]] = []
-
-    for test in report.get("tests") or []:
+    for test in report.get("tests", []):
         nodeid = test.get("nodeid")
-        outcome = (test.get("outcome") or "").lower()
+        outcome = test.get("outcome")
+
         if not nodeid or not outcome:
             continue
 
         metadata = test.get("metadata") or {}
         suite_id = metadata.get("suite_id") or []
-        suite_name = suite_id[1] if len(suite_id) > 1 else None
-        test_case = metadata.get("test_case")
 
         rows.append(
-            {
-                "ingested_at": ingested_at,
-                "run_started_at": run_started_at,
-                "repo": env("GITHUB_REPOSITORY"),
-                "workflow": env("GITHUB_WORKFLOW"),
-                "workflow_file": env("BQ_WORKFLOW_FILE") or None,
-                "job": env("GITHUB_JOB"),
-                "job_name": env("BQ_JOB_NAME") or None,
-                "run_id": int(env("GITHUB_RUN_ID", "0")) or None,
-                "run_number": int(env("GITHUB_RUN_NUMBER", "0")) or None,
-                "run_attempt": int(env("GITHUB_RUN_ATTEMPT", "0")) or None,
-                "actor": env("GITHUB_ACTOR") or None,
-                "ref_name": env("GITHUB_REF_NAME") or None,
-                "commit_sha": env("GITHUB_SHA") or None,
-                "event_name": env("GITHUB_EVENT_NAME") or None,
-                "platform": platform_name(),
-                "headed": headed,
-                "test_set": env("BQ_TEST_SET") or env("STARFOX_SPLIT") or None,
-                "fx_channel": env("FX_CHANNEL") or None,
+            common
+            | {
                 "fx_version": metadata.get("fx_version"),
                 "machine_config": metadata.get("machine_config"),
-                "suite_name": suite_name,
-                "test_case": str(test_case) if test_case is not None else None,
+                "suite_name": (
+                    suite_id[1]
+                    if isinstance(suite_id, (list, tuple))
+                    and len(suite_id) > 1
+                    else None
+                ),
+                "test_case": (
+                    str(metadata["test_case"])
+                    if metadata.get("test_case") is not None
+                    else None
+                ),
                 "test_nodeid": nodeid,
-                "outcome": outcome,
+                "outcome": outcome.lower(),
                 "duration": test_duration(test),
             }
         )
@@ -200,7 +215,7 @@ def upload(rows: List[Dict[str, Any]]) -> None:
 
     project = os.environ["BQ_PROJECT"]
     dataset = os.environ["BQ_DATASET"]
-    table = env("BQ_TABLE", "test_results")
+    table = env("BQ_TABLE", DEFAULT_BQ_TABLE)
     table_id = f"{project}.{dataset}.{table}"
 
     client = bigquery.Client(project=project)
@@ -237,9 +252,10 @@ def main() -> int:
             return 0
 
         rows: List[Dict[str, Any]] = []
+
         for path in reports:
             try:
-                with open(path, encoding="utf-8", errors="replace") as handle:
+                with path.open(encoding="utf-8", errors="replace") as handle:
                     report = json.load(handle)
             except (OSError, ValueError) as exc:
                 logging.warning("Could not read %s: %s", path, exc)
