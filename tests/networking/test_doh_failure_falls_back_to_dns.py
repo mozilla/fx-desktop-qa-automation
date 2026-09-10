@@ -6,7 +6,7 @@ from modules.page_object import AboutNetworking, GenericPage
 
 TEST_URL = "https://www.wikipedia.org/"
 TEST_HOST = "www.wikipedia.org"
-UNREACHABLE_DOH_UR = "https://127.0.0.1:1/dns-query"
+UNREACHABLE_DOH_URL = "https://127.0.0.1:1/dns-query"
 
 
 @pytest.fixture()
@@ -18,7 +18,7 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("network.trr.mode", 2),
-        ("network.trr.uri", UNREACHABLE_DOH_UR),
+        ("network.trr.uri", UNREACHABLE_DOH_URL),
     ]
 
 
