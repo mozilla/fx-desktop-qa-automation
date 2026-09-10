@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import TabBar
-from modules.page_object import AboutNetworking, GenericPage
+from modules.page_object import AboutNetworking
 
 TEST_URL = "https://www.wikipedia.org/"
 TEST_HOST = "www.wikipedia.org"
@@ -28,12 +28,11 @@ def test_doh_failure_falls_back_to_dns(driver: Firefox):
     are successfully handled by the DNS server instead.
     """
     # Instantiate objects
-    test_page = GenericPage(driver, url=TEST_URL)
     networking = AboutNetworking(driver)
     tabs = TabBar(driver)
 
     # Trigger a DNS request while the configured DoH server is unreachable
-    test_page.open()
+    driver.get(TEST_URL)
 
     # Verify that Firefox falls back to the native DNS resolver
     tabs.open_and_switch_to_new_tab()
