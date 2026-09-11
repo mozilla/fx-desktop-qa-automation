@@ -155,7 +155,7 @@ def main(args):
             while True:
                 (major, _) = this_devedition.split(".")
                 major = int(major)
-                this_devedition = f"{major + 1}.0b5"
+                this_devedition = f"{major + 1}.0b3"
                 next_candidate = (
                     "https://archive.mozilla.org/pub/devedition/releases/"
                     f"{this_devedition}/"

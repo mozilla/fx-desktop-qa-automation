@@ -366,6 +366,73 @@ class GenericPdf(BasePage):
         self.element_attribute_contains(tool, "class", "toggled")
         return self
 
+    def set_draw_style(self, color: str, thickness: int, opacity: float) -> BasePage:
+        """Set the color, thickness, and opacity used by the PDF Draw tool."""
+        if thickness <= 0:
+            raise ValueError("Draw thickness must be greater than zero.")
+        if not 0 <= opacity <= 1:
+            raise ValueError("Draw opacity must be between zero and one.")
+
+        color_control = self.get_element("draw-color")
+        opacity_control = None
+        if color_control.get_attribute("alpha") is not None:
+            color = self.driver.execute_script(
+                """
+                const color = arguments[0];
+                const opacity = arguments[1];
+                const channels = [1, 3, 5].map(
+                    index => parseInt(color.slice(index, index + 2), 16) / 255
+                );
+                return `color(srgb ${channels.join(" ")} / ${opacity})`;
+                """,
+                color,
+                opacity,
+            )
+        else:
+            opacity_control = self.get_element("draw-opacity")
+
+        draw_style = [
+            (color_control, "draw-color", color),
+            (self.get_element("draw-thickness"), "draw-thickness", thickness),
+        ]
+        if opacity_control:
+            draw_style.append((opacity_control, "draw-opacity", opacity))
+
+        for control, control_name, value in draw_style:
+            updated_value, expected_value = self.driver.execute_script(
+                """
+                const control = arguments[0];
+                const requestedValue = arguments[1];
+                const normalizeExpectedValue = arguments[2];
+                let expectedValue = requestedValue;
+                if (normalizeExpectedValue) {
+                    const expectedControl = control.cloneNode();
+                    expectedControl.value = requestedValue;
+                    expectedValue = expectedControl.value;
+                }
+                control.value = requestedValue;
+                control.dispatchEvent(new Event("input", { bubbles: true }));
+                return [control.value, expectedValue];
+                """,
+                control,
+                str(value),
+                control_name == "draw-color",
+            )
+            assert updated_value == expected_value, (
+                f"Expected {control_name} to be {value}, got {updated_value}."
+            )
+
+        return self
+
+    def get_drawing_style(self) -> dict[str, str | None]:
+        """Return the rendered color, thickness, and opacity of the drawing."""
+        drawing_area = self.get_drawing_area()
+        return {
+            "color": drawing_area.get_attribute("stroke"),
+            "thickness": drawing_area.get_attribute("stroke-width"),
+            "opacity": drawing_area.get_attribute("stroke-opacity"),
+        }
+
     def draw_on_pdf_page(
         self, page_number: str = "1", x_offset: int = 150, y_offset: int = 150
     ) -> BasePage:
