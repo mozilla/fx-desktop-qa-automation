@@ -129,6 +129,17 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-enabled-engine": {
+    "selectorData": "#engineList moz-box-item:has(moz-toggle[pressed])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An enabled engine row in the Search shortcuts list (Settings redesign)",
+      "location": "about:preferences#search"
+    }
+  },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
