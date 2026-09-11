@@ -6,7 +6,9 @@ from modules.page_object import AboutNetworking
 
 TEST_URL = "https://www.wikipedia.org/"
 TEST_HOST = "www.wikipedia.org"
-UNREACHABLE_DOH_URL = "https://127.0.0.1:1/dns-query"
+# Use a high, non-restricted local port so Firefox attempts the DoH connection
+# instead of rejecting the URL before any network connection is made.
+UNREACHABLE_DOH_URL = "https://127.0.0.1:65535/dns-query"
 
 
 @pytest.fixture()
