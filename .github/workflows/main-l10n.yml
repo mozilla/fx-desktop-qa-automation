@@ -137,6 +137,25 @@ jobs:
           fi
           exit $SCRIPT_EXIT_CODE;
 
+      - name: Auth to Google Cloud
+        if: ${{ always() && inputs.dry_run != true }}
+        #continue-on-error: true
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+          BQ_WORKFLOW_FILE: main-l10n.yml
+          BQ_JOB_NAME: L10N-MacOS
+          BQ_TEST_SET: l10n
+        run: uv run python scripts/upload_results_to_bq.py
+
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
@@ -239,6 +258,25 @@ jobs:
             exit $EXIT_CODE;
           fi
           exit $SCRIPT_EXIT_CODE;
+
+      - name: Auth to Google Cloud
+        if: ${{ always() && inputs.dry_run != true }}
+        #continue-on-error: true
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+          BQ_WORKFLOW_FILE: main-l10n.yml
+          BQ_JOB_NAME: L10N-Linux
+          BQ_TEST_SET: l10n
+        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -385,6 +423,25 @@ jobs:
           }
 
           exit $env:SCRIPT_EXIT_CODE
+
+      - name: Auth to Google Cloud
+        if: ${{ always() && inputs.dry_run != true }}
+        #continue-on-error: true
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Upload results to BigQuery
+        if: ${{ always() && inputs.dry_run != true }}
+        env:
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+          BQ_TABLE: test_results
+          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
+          BQ_WORKFLOW_FILE: main-l10n.yml
+          BQ_JOB_NAME: L10N-Windows
+          BQ_TEST_SET: l10n
+        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}

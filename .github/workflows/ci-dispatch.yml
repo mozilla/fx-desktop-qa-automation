@@ -109,6 +109,8 @@ jobs:
       SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-Glean-Mac:
     needs: Select-Test-Type
@@ -130,6 +132,8 @@ jobs:
       SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-L10n-Win:
     needs: Select-Test-Type

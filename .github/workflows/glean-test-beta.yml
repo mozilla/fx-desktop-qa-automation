@@ -77,6 +77,8 @@ jobs:
       SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-Mac-Glean:
     needs: Check-Beta-Version
@@ -92,3 +94,5 @@ jobs:
       SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
