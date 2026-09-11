@@ -63,6 +63,7 @@ jobs:
           echo "Resolved Firefox $FIREFOX_VERSION build$build"
           gh workflow run main.yml \
             --ref "$GITHUB_REF_NAME" \
+            --field firefox_version="${FIREFOX_VERSION}-build${build}" \
             --field win_installer_link="$win_url" \
             --field mac_installer_link="$mac_url" \
             --field linux_tarball_link="$linux_url" \
