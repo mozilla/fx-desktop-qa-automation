@@ -9,10 +9,10 @@ import logging
 import os
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List
 
 from google.auth.exceptions import DefaultCredentialsError
-from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -54,11 +54,7 @@ def platform_name() -> str:
 
 def find_reports() -> list[Path]:
     return sorted(
-        {
-            path.resolve()
-            for pattern in REPORT_GLOBS
-            for path in Path().glob(pattern)
-        }
+        {path.resolve() for pattern in REPORT_GLOBS for path in Path().glob(pattern)}
     )
 
 
@@ -122,8 +118,7 @@ def build_rows(
                 "machine_config": metadata.get("machine_config"),
                 "suite_name": (
                     suite_id[1]
-                    if isinstance(suite_id, (list, tuple))
-                    and len(suite_id) > 1
+                    if isinstance(suite_id, (list, tuple)) and len(suite_id) > 1
                     else None
                 ),
                 "test_case": (
