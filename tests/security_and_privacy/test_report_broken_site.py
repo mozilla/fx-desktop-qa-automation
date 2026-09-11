@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import PanelUi, ReportBrokenSite
 from modules.page_object import GenericPage
 
-TEST_URL = "https://9gag.com/"
+TEST_URL = "https://example.com/"
 
 REASON = "slow"
 DESCRIPTION = "The page takes a very long time to load."
@@ -17,10 +17,11 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    """Report Broken Site is only enabled when data reporting upload is on."""
+    """A negative FOG port drops the report ping, so no site is actually reported."""
     return [
         ("datareporting.healthreport.uploadEnabled", True),
         ("ui.new-webcompat-reporter.enabled", True),
+        ("telemetry.fog.test.localhost_port", -1),
     ]
 
 
