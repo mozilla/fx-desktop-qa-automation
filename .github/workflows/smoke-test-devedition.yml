@@ -56,7 +56,12 @@ jobs:
       channel: "devedition"
       job_to_run: Test-Windows
       test_set: smoke
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
 
   Run-Mac-Smoke:
     needs: Check-DevEdition-Version
@@ -70,4 +75,9 @@ jobs:
       channel: "devedition"
       job_to_run: Test-MacOS
       test_set: smoke
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
