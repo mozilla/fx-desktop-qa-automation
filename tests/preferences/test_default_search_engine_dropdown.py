@@ -29,10 +29,12 @@ def test_default_search_engine_dropdown(
     """
     C4105787 - The Default search engine drop-down works as expected.
     """
+    # Step 1: Open about:preferences#search.
     about_prefs.open()
 
     # Step 2: Every enabled engine from Search shortcuts is offered in the dropdown.
     enabled_engines = about_prefs.get_enabled_search_engines()
+    assert enabled_engines, "No enabled engines found in the Search shortcuts list"
     options = about_prefs.get_default_engine_dropdown_options()
     assert set(enabled_engines) == set(options), (
         f"Dropdown shows {options}, expected the enabled engines {enabled_engines}"
