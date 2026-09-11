@@ -38,16 +38,16 @@ jobs:
 
           candidate_root="https://archive.mozilla.org/pub/firefox/candidates/${FIREFOX_VERSION}-candidates"
           listing="$(curl --fail --location --silent --show-error --max-time 30 "$candidate_root/")"
-          # Archive listings expose candidate directories as /buildN/ links.
+          # Archive listings expose candidate directories as buildN/ links.
           build="$(
-            grep -oE '/build[1-9][0-9]*/' <<< "$listing" |
+            grep -oE 'build[1-9][0-9]*/' <<< "$listing" |
               grep -oE '[1-9][0-9]*' |
               sort -n |
               tail -1 || true
           )"
 
           if [[ -z "$build" ]]; then
-            echo "No candidate builds found for Firefox $FIREFOX_VERSION" >&2
+            echo "No buildN/ links found at $candidate_root/" >&2
             exit 1
           fi
 
