@@ -55,6 +55,10 @@ on:
         description: 'The link to the Linux tarball (linux-x86_64) for the Fx under test'
         required: false
         type: string
+      firefox_version:
+        description: 'Optional Firefox version metadata for a manual run'
+        required: false
+        type: string
       test_set:
         description: 'Test set to run'
         default: "smoke"
@@ -62,6 +66,7 @@ on:
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
+  FX_VERSION: ${{ inputs.firefox_version }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
