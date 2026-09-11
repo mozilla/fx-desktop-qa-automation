@@ -231,45 +231,55 @@ def upload(rows: list[dict[str, Any]]) -> None:
     logging.info("Loaded %d rows into %s", len(rows), table_id)
 
 
+def collect_rows() -> list[dict[str, Any]]:
+    """Finds reports, reads them, and builds the combined list of BigQuery rows."""
+    reports = find_reports()
+
+    if not reports:
+        logging.info("No pytest JSON report found; nothing to upload.")
+        return []
+
+    rows: list[dict[str, Any]] = []
+
+    for path in reports:
+        try:
+            with path.open(encoding="utf-8", errors="replace") as handle:
+                report = json.load(handle)
+        except (OSError, ValueError) as exc:
+            logging.warning("Could not read %s: %s", path, exc)
+            continue
+
+        report_rows = build_rows(report, str(path))
+        logging.info("%s -> %d rows", path, len(report_rows))
+        rows.extend(report_rows)
+
+    if not rows:
+        logging.info("Reports contained no test results; nothing to upload.")
+
+    return rows
+
+
+def missing_configuration() -> list[str]:
+    """Returns a list of missing environment-variable names, for example: missing = ["BQ_PROJECT"]."""
+    return [name for name in REQUIRED_VARS if not env(name)]
+
+
 def main() -> int:
-    missing = [name for name in REQUIRED_VARS if not env(name)]
+    missing = missing_configuration()
     if missing:
         logging.info(
-            "Skipping BigQuery upload; not configured (%s)", ", ".join(missing)
+            "Not configured (%s), skipping BigQuery upload.",
+            ", ".join(missing),
         )
         return 0
 
     try:
-        reports = find_reports()
-        if not reports:
-            logging.info("No pytest JSON report found; nothing to upload.")
-            return 0
-
-        rows: list[dict[str, Any]] = []
-
-        for path in reports:
-            try:
-                with path.open(encoding="utf-8", errors="replace") as handle:
-                    report = json.load(handle)
-            except (OSError, ValueError) as exc:
-                logging.warning("Could not read %s: %s", path, exc)
-                continue
-
-            report_rows = build_rows(report, path)
-            logging.info("%s -> %d rows", path, len(report_rows))
-            rows.extend(report_rows)
-
-        if not rows:
-            logging.info("Reports contained no test results; nothing to upload.")
-            return 0
-
-        upload(rows)
-
+        if rows := collect_rows():
+            upload(rows)
     except DefaultCredentialsError:
-        logging.info("Skipping BigQuery upload; no Google credentials available.")
-
-    except Exception as exc:
-        logging.error("BigQuery upload failed, continuing anyway: %s", exc)
+        logging.info("No Google credentials available, skipping BigQuery upload.")
+    except Exception:
+        logging.exception("BigQuery upload failed!")
 
     return 0
 
