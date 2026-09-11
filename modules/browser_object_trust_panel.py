@@ -107,16 +107,24 @@ class TrustPanel(BasePage):
         blocker_section = "trustpanel-blocker-section"
 
         def _check_trustpanel(driver):
-            count = self.get_element_args(blocker_section).get("count")
-            if count:
-                return True
+            try:
+                count = self.get_element_args(blocker_section).get("count")
+                if count:
+                    return True
 
-            nav.click_on("refresh-button")
+                nav.click_on("refresh-button")
 
-            self.open_panel()
-            if self.get_parent_of(blocker_section).get_attribute("hidden") == "true":
+                self.open_panel()
+                if (
+                    self.get_parent_of(blocker_section).get_attribute("hidden")
+                    == "true"
+                ):
+                    return False
+                return not require_count
+            except StaleElementReferenceException:
+                # A reload or a panel reopen can invalidate references mid-check.
+                # Retry on the next poll.
                 return False
-            return not require_count
 
         if require_count:
             self.custom_wait(
@@ -185,8 +193,27 @@ class TrustPanel(BasePage):
 
     @BasePage.context_chrome
     def click_see_all(self) -> BasePage:
-        """Clicks the "See All" button in the trackers panel"""
-        self.js_click_on("see-all-trackers")
+        """
+        Click the "See All" button in the trackers panel and wait for the detailed
+        list to show. A click that lands while the panel is still opening is
+        dropped, so click again until the main view is no longer the one showing.
+        """
+
+        def _detail_view_showing(_):
+            try:
+                if (
+                    self.get_element("trustpanel").get_attribute("mainviewshowing")
+                    != "true"
+                ):
+                    return True
+                self.js_click_on("see-all-trackers")
+            except StaleElementReferenceException:
+                # The panel rebuilds its bindings while animating, so a reference
+                # fetched a moment ago can go stale. Retry on the next poll.
+                pass
+            return False
+
+        self.expect(_detail_view_showing)
         return self
 
     @BasePage.context_chrome
@@ -215,6 +242,16 @@ class TrustPanel(BasePage):
         self.element_visible("not-blocking-category", labels=[category.title()])
         return self
 
+    @staticmethod
+    def _category_labels(category: str) -> list[str]:
+        """
+        Build the data-l10n-id label for a tracker category button.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        canonical = category.strip().lower().replace(" ", "-")
+        return [f"trustpanel-list-label-{canonical}"]
+
     @BasePage.context_chrome
     def open_detected_category(self, category: str):
         """
@@ -222,14 +259,8 @@ class TrustPanel(BasePage):
 
         Canonical input format: hyphenated singular (e.g. "tracking-content")
         """
-        canonical = category.strip().lower().replace(" ", "-")
-        locator = (
-            "detected-category",
-            [f"trustpanel-list-label-{canonical}"],
-        )
-
         sleep(0.5)
-        self.js_click_on(*locator)
+        self.js_click_on("detected-category", self._category_labels(category))
         return self
 
     @BasePage.context_chrome
@@ -351,3 +382,23 @@ class TrustPanel(BasePage):
             )
         except (TypeError, NoSuchElementException):
             return 0
+
+    @BasePage.context_chrome
+    def detected_category_visible(self, category: str) -> BasePage:
+        """
+        Verify a detected tracker category is visible in the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        self.element_visible("detected-category", self._category_labels(category))
+        return self
+
+    @BasePage.context_chrome
+    def detected_category_not_visible(self, category: str) -> BasePage:
+        """
+        Verify a detected tracker category is not listed in the protections panel.
+
+        Canonical input format: hyphenated singular (e.g. "tracking-content")
+        """
+        self.element_not_visible("detected-category", self._category_labels(category))
+        return self

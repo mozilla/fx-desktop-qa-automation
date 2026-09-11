@@ -35,7 +35,22 @@
   "find-more-themes-button": {
     "selectorData": "button[data-l10n-id='find-more-themes']",
     "strategy": "css",
-    "groups": []
+    "groups": [],
+    "comment": {
+      "description": "Find more themes footer button. CSS hides it under browser.nova.enabled, the default from Fx157 on",
+      "location": "about:addons Themes view footer"
+    }
+  },
+  "find-more-themes-promo-button": {
+    "selectorData": "moz-button[data-l10n-id='find-more-themes-promo-open-amo-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Explore themes button, which replaces find-more-themes-button under browser.nova.enabled (Fx157+)",
+      "location": "about:addons Themes view, promo card at the bottom"
+    }
   },
   "install-theme-button": {
     "selectorData": "button[data-l10n-id='install-theme-button']",
