@@ -134,6 +134,38 @@ class AboutPrefs(BasePage):
         button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
         return button.text
 
+    def get_default_engine_dropdown_options(self) -> list[str]:
+        """Open the Default search engine dropdown, return option labels, close it.
+
+        In the Settings redesign the dropdown is a moz-select whose options are
+        panel-items inside its shadow root, so they can only be reached through
+        the shadow DOM.
+        """
+        root = self.get_element("search-engine-dropdown-root")
+        root.click()
+        # Get the option list out of the moz-select shadow root.
+        panel = self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('panel-list')", root
+            )
+        )
+        options = [
+            option.get_attribute("textContent").strip()
+            for option in panel.find_elements(By.TAG_NAME, "panel-item")
+            if option.is_displayed()
+        ]
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        return options
+
+    def get_enabled_search_engines(self) -> list[str]:
+        """Return the names of the enabled engines in the Search shortcuts list."""
+        return [
+            engine.get_attribute("label")
+            for engine in self.get_element(
+                "search-shortcuts-enabled-engine", multiple=True
+            )
+        ]
+
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
