@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Page for Fonts</title>
+    <style>
+      /* The page picks its own font family and size. Pacifico does not need to
+         be installed: the tests check the font family Firefox picks, not the
+         glyphs. The text sits in spans so its width follows the font in use. */
+      .custom-font {
+        font-family: Pacifico;
+        font-size: 28px;
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <p><span class="custom-font">Custom font + custom size</span></p>
+    <p><span class="reference-font">Reference text</span></p>
+  </body>
+</html>

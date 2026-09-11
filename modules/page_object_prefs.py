@@ -1895,6 +1895,25 @@ class AboutAddons(BasePage):
             else:
                 return background_color
 
+    def click_find_more_themes(self) -> BasePage:
+        """Clicks the control that opens the AMO themes page in a new tab.
+
+        Under browser.nova.enabled, the default from Fx157 on, CSS hides the
+        footer button and the promo card's Explore themes button takes over.
+        Older builds show the footer button, so click whichever one this build
+        actually displays.
+        """
+
+        def displayed_button(_):
+            for name in ("find-more-themes-promo-button", "find-more-themes-button"):
+                for button in self.get_elements(name):
+                    if button.is_displayed():
+                        return button
+            return False
+
+        self.wait.until(displayed_button).click()
+        return self
+
     def is_devedition(self):
         active_theme_el = self.driver.find_element(
             By.CSS_SELECTOR, ".card.addon[active] h3.addon-name"
