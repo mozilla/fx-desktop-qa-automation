@@ -1,16 +1,15 @@
 """
 Upload pytest JSON reports to BigQuery for long-term analytics,
-storing one row per test for one year. Upload failures never fail the CI job.
+storing one row per test for one year.
 """
 
-import glob
 import json
 import logging
 import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from google.auth.exceptions import DefaultCredentialsError
 
@@ -246,7 +245,7 @@ def main() -> int:
             logging.info("No pytest JSON report found; nothing to upload.")
             return 0
 
-        rows: List[Dict[str, Any]] = []
+        rows: list[dict[str, Any]] = []
 
         for path in reports:
             try:
