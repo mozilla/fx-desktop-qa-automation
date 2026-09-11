@@ -31,7 +31,7 @@ PARTITION_EXPIRATION_MS = 365 * 24 * 60 * 60 * 1000
 
 
 def env(name: str, default: str = "") -> str:
-    return os.environ.get(name, default) or default
+    return os.environ.get(name) or default
 
 
 def platform_name() -> str:
@@ -204,7 +204,7 @@ def ensure_table(client, table_id: str):
     return table
 
 
-def upload(rows: List[Dict[str, Any]]) -> None:
+def upload(rows: list[dict[str, Any]]) -> None:
     from google.cloud import bigquery
 
     project = os.environ["BQ_PROJECT"]
