@@ -66,6 +66,18 @@ class PanelUi(BasePage):
         self.click_on("more-tools")
         self.click_on("customize-toolbar")
 
+    @BasePage.context_chrome
+    def navigate_to_report_broken_site(self) -> BasePage:
+        """
+        On the hamburger menu > Help and Report > Report broken site
+        """
+        self.open_panel_menu()
+        self.click_on("help-and-report")
+        self.element_does_not_have_attribute("panel-multi-view", "transitioning")
+        self.element_clickable("report-broken-site")
+        self.click_on("report-broken-site")
+        return self
+
     def click_sync_sign_in_button(self) -> BasePage:
         """
         Click FxA sync button.

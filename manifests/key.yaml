@@ -1721,6 +1721,11 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_report_broken_site:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
