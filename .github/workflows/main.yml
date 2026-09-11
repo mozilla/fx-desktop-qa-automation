@@ -305,7 +305,7 @@ jobs:
         run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
@@ -482,7 +482,7 @@ jobs:
         run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
@@ -602,7 +602,7 @@ jobs:
         run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
-        if: ${{ always() && github.event_name == 'pull_request' && inputs.dry_run != true }}
+        if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
