@@ -1594,6 +1594,25 @@
       "location": "about:preferences#privacy (shadow DOM of dohRadioCustom)"
     }
   },
+  "doh-fallback-checkbox": {
+    "selectorData": "dohFallbackIfCustom",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "moz-checkbox host for \"Always warn me if secure DNS isn't available\", nested under the Custom DoH radio option",
+      "location": "about:preferences#privacy - DNS over HTTPS advanced section (Custom mode)"
+    }
+  },
+  "doh-fallback-checkbox-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "groups": [],
+    "shadowParent": "doh-fallback-checkbox",
+    "comment": {
+      "description": "Inner <input type=\"checkbox\"> inside the dohFallbackIfCustom shadow root",
+      "location": "about:preferences#privacy (shadow DOM of dohFallbackIfCustom)"
+    }
+  },
   "doh-provider-select": {
     "selectorData": "dohProviderSelect",
     "strategy": "id",

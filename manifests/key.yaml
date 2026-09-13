@@ -826,6 +826,10 @@ networking:
     splits:
     - functional2
     - nightly
+  test_custom_doh_fallback_sets_trr_mode_to_2:
+    result: pass
+    splits:
+    - functional1
   test_custom_doh_provider:
     result: pass
     splits:
