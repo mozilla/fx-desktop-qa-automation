@@ -22,6 +22,10 @@ class GenericPage(BasePage):
     BOT_CHALLENGE_TITLE_MARKERS = {
         "Cloudflare": "just a moment",
     }
+    # Google's reCAPTCHA page titles itself with the blocked URL, so it needs a body match.
+    BOT_CHALLENGE_BODY_MARKERS = {
+        "Google": "detected unusual traffic",
+    }
 
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
@@ -34,6 +38,10 @@ class GenericPage(BasePage):
         title = self.driver.title or ""
         for provider, marker in self.BOT_CHALLENGE_TITLE_MARKERS.items():
             if marker in title.lower():
+                return f"{provider} ({title!r})"
+        source = (self.driver.page_source or "").lower()
+        for provider, marker in self.BOT_CHALLENGE_BODY_MARKERS.items():
+            if marker in source:
                 return f"{provider} ({title!r})"
         return None
 

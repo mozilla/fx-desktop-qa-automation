@@ -7,6 +7,10 @@ A `pytest.skip` here reports as TestRail Blocked, not Untested (see `GLEAN_SUITE
 
 import pytest
 
+# The CI console window can fully occlude Fx, which throttles visibility-driven work and drops
+# the ad-visibility metrics. Windows-only pref, inert elsewhere.
+OCCLUSION_PREFS = [("widget.windows.window_occlusion_tracking.enabled", False)]
+
 
 @pytest.fixture()
 def suite_id():
@@ -15,7 +19,7 @@ def suite_id():
 
 @pytest.fixture()
 def prefs_list(add_to_prefs_list):
-    prefs = []
+    prefs = list(OCCLUSION_PREFS)
     prefs.extend(add_to_prefs_list)
     return prefs
 
