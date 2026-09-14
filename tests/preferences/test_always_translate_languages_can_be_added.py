@@ -39,15 +39,16 @@ def add_to_prefs_list():
 
 
 @pytest.fixture()
-def german_page(tmp_path) -> Path:
+def german_page(tmp_path: Path) -> str:
     """A page in a language other than the browser's."""
-    loc = tmp_path / LOCAL_HTML
-    copyfile(f"data/pages/{LOCAL_HTML}", loc)
-    return loc
+    source = Path("data/pages") / LOCAL_HTML
+    destination = tmp_path / LOCAL_HTML
+    copyfile(source, destination)
+    return destination.as_uri()
 
 
 def test_always_translate_languages_can_be_added(
-    driver: Firefox, about_prefs: AboutPrefs, german_page: Path
+    driver: Firefox, about_prefs: AboutPrefs, german_page: str
 ):
     """
     C3399163 - Languages can be added to the 'Always translate these languages' section.
@@ -62,7 +63,7 @@ def test_always_translate_languages_can_be_added(
     about_prefs.element_visible("always-translate-item", labels=[DROPDOWN_LANGUAGE])
 
     # Add a second language from a page written in it, via the panel gear menu.
-    nav.search(str(german_page))
+    nav.search(german_page)
     translations_panel.open_panel()
     translations_panel.check_always_translate_language()
 
