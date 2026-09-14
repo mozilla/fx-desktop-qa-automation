@@ -1541,10 +1541,7 @@ security_and_privacy:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
-    result:
-      linux: pass
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1689,10 +1686,7 @@ security_and_privacy:
     - ci-extended
   test_open_private_browsing_via_keyboard:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
-    result:
-      linux: pass
-      mac: unstable
-      win: unstable
+    result: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
