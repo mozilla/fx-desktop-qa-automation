@@ -64,8 +64,7 @@ def temp_selectors():
 
 
 def enter_iframe(page: GenericPage, iframe: str) -> None:
-    """Enter one of the top level iframes, starting from the main document.
-    """
+    """Enter one of the top level iframes, starting from the main document."""
     page.switch_to_default_frame()
     page.switch_to_iframe_context(page.get_element(iframe))
 
@@ -84,7 +83,7 @@ def test_remember_decision_permissions_prompt(
     driver: Firefox, nav: Navigation, temp_selectors: dict
 ):
     """
-    C602566 - Bug 1604813 - Remember this decision from a top level document permissions prompt does not keep the decision    """
+    C602566 - Bug 1604813 - Remember this decision from a top level document permissions prompt does not keep the decision"""
 
     page = GenericPage(driver, url=TEST_URL).open()
     page.elements |= temp_selectors
