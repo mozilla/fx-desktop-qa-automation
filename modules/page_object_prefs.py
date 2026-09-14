@@ -149,22 +149,28 @@ class AboutPrefs(BasePage):
                 "return arguments[0].shadowRoot.querySelector('panel-list')", root
             )
         )
-        options = [
+        # The options render once the search service is ready, so wait them out.
+        options = self.wait.until(
+            lambda _: panel.find_elements(By.TAG_NAME, "panel-item")
+        )
+        labels = [
             option.get_attribute("textContent").strip()
-            for option in panel.find_elements(By.TAG_NAME, "panel-item")
+            for option in options
             if option.is_displayed()
         ]
         self.actions.send_keys(Keys.ESCAPE).perform()
-        return options
+        return labels
 
     def get_enabled_search_engines(self) -> list[str]:
-        """Return the names of the enabled engines in the Search shortcuts list."""
-        return [
-            engine.get_attribute("label")
-            for engine in self.get_element(
-                "search-shortcuts-enabled-engine", multiple=True
-            )
-        ]
+        """Return the names of the enabled engines in the Search shortcuts list.
+
+        The list is filled in once the search service is ready, so wait for it
+        rather than reading whatever has rendered so far.
+        """
+        engines = self.wait.until(
+            lambda _: self.get_elements("search-shortcuts-enabled-engine")
+        )
+        return [engine.get_attribute("label") for engine in engines]
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
