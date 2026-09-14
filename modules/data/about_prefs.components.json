@@ -1071,6 +1071,17 @@
       "location": "about:preferences#translations - Automatic translation section"
     }
   },
+  "always-translate-remove-button": {
+    "selectorData": "moz-button.translations-always-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on an always-translate language row, found by language tag",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
