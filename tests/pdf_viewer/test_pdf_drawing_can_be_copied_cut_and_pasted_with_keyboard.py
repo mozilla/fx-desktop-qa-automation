@@ -26,6 +26,7 @@ def add_to_prefs_list():
     return [("pdfjs.annotationEditorMode", 0)]
 
 
+@pytest.mark.headed
 def test_pdf_drawing_can_be_copied_cut_and_pasted_with_keyboard(
     pdf_viewer: GenericPdf,
 ):
