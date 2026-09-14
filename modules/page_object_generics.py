@@ -42,7 +42,7 @@ class GenericPage(BasePage):
         source = (self.driver.page_source or "").lower()
         for provider, marker in self.BOT_CHALLENGE_BODY_MARKERS.items():
             if marker in source:
-                return f"{provider} ({title!r})"
+                return f"{provider} (body match: {marker!r})"
         return None
 
     def navigate_dialog_to_location(
