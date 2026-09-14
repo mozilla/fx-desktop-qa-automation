@@ -335,6 +335,37 @@ class AboutPrefs(BasePage):
         self.click_on("website-language-remove-button", labels=[lang_code])
         return self
 
+    def open_more_translation_settings(self) -> BasePage:
+        """Opens the Translations sub-pane from the Languages pane.
+
+        The moz-box-button host is not clickable, so use a JS click.
+        """
+        self.js_click_on("translations-more-settings-button")
+        return self
+
+    def add_always_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Always translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "always-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("always-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("always-translate-picker", "value", lang_code)
+        self.click_on("always-translate-add-button")
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
