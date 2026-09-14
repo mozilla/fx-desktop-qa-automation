@@ -1540,6 +1540,7 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
     result:
       linux: pass
       mac: unstable
@@ -1687,6 +1688,7 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
     result:
       linux: pass
       mac: unstable
