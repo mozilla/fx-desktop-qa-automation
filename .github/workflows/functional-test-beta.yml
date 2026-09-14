@@ -120,4 +120,9 @@ jobs:
     with:
       job_to_run: ${{ matrix.job_to_run }}
       test_set: ${{ matrix.split }}
-    secrets: inherit
+    secrets:
+      TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      SLACK_KEY: ${{ secrets.SLACK_KEY }}
+      GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
