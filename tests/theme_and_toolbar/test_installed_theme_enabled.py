@@ -21,7 +21,7 @@ def test_find_more_themes(driver: Firefox) -> None:
     """
     about_addons = AboutAddons(driver).open()
     about_addons.choose_sidebar_option("theme")
-    about_addons.get_element("find-more-themes-button").click()
+    about_addons.click_find_more_themes()
 
     driver.switch_to.window(driver.window_handles[-1])
 

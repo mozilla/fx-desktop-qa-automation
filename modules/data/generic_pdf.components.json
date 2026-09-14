@@ -240,6 +240,26 @@
     "strategy": "id",
     "groups": []
   },
+  "draw-options": {
+    "selectorData": "editorInkParamsToolbar",
+    "strategy": "id",
+    "groups": []
+  },
+  "draw-color": {
+    "selectorData": "editorInkColor",
+    "strategy": "id",
+    "groups": []
+  },
+  "draw-thickness": {
+    "selectorData": "editorInkThickness",
+    "strategy": "id",
+    "groups": []
+  },
+  "draw-opacity": {
+    "selectorData": "editorInkOpacity",
+    "strategy": "id",
+    "groups": []
+  },
   "toolbar-text": {
     "selectorData": "editorFreeTextButton",
     "strategy": "id",
