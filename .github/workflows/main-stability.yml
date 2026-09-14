@@ -21,6 +21,17 @@ on:
         required: true
         default: "pass"
         type: string
+    secrets:
+      TESTRAIL_BASE_URL:
+        required: false
+      TESTRAIL_API_KEY:
+        required: false
+      TESTRAIL_USERNAME:
+        required: false
+      SLACK_KEY:
+        required: false
+      GCP_CREDENTIAL:
+        required: false
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   STARFOX_CATEGORY: ${{ inputs.test_category }}
