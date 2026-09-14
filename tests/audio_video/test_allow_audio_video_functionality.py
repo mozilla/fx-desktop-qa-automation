@@ -1,6 +1,5 @@
 import pytest
 from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
 
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
