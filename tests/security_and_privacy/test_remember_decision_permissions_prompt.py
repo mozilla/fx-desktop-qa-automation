@@ -4,7 +4,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import Navigation
 from modules.page_object import GenericPage
 
-
 TEST_URL = "https://jan-ivar.github.io/dummy/iframe_iframe_gum_starcross2.html"
 
 
