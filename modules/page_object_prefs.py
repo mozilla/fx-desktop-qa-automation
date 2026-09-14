@@ -366,6 +366,15 @@ class AboutPrefs(BasePage):
         self.click_on("always-translate-add-button")
         return self
 
+    def remove_always_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Always translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("always-translate-remove-button", labels=[lang_code])
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
