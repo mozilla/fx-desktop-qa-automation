@@ -2,7 +2,11 @@ import json
 from time import sleep
 from typing import List, Literal
 
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -164,13 +168,23 @@ class AboutPrefs(BasePage):
     def get_enabled_search_engines(self) -> list[str]:
         """Return the names of the enabled engines in the Search shortcuts list.
 
-        The list is filled in once the search service is ready, so wait for it
-        rather than reading whatever has rendered so far.
+        The rows appear before their labels and toggles are filled in, so wait
+        until every row is named rather than reading a half-built list.
         """
-        engines = self.wait.until(
-            lambda _: self.get_elements("search-shortcuts-enabled-engine")
-        )
-        return [engine.get_attribute("label") for engine in engines]
+
+        def engines_named(_):
+            try:
+                rows = self.get_elements("search-shortcuts-engine")
+                return bool(rows) and all(row.get_attribute("label") for row in rows)
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        self.wait.until(engines_named)
+        return [
+            engine.get_attribute("label")
+            for engine in self.get_elements("search-shortcuts-enabled-engine")
+        ]
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
