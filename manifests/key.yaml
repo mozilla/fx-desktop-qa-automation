@@ -835,6 +835,10 @@ networking:
     result: pass
     splits:
     - smoke
+  test_doh_failure_falls_back_to_dns:
+    result: pass
+    splits:
+    - functional1
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
@@ -1284,6 +1288,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_zoom_edited_content:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_zoom_in_text_fields:
     result: pass
     splits:
@@ -1604,6 +1613,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_etp_panel_displayed_when_protection_off:
+    result: pass
+    splits:
+    - functional3
+    - nightly
+  test_etp_panel_displayed_when_trackers_detected:
     result: pass
     splits:
     - functional3
