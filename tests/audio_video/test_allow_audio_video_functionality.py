@@ -1,5 +1,6 @@
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
 
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
@@ -11,26 +12,37 @@ def test_case():
     return "330155"
 
 
+
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
-# Test is unstable in Windows GHA because audio playback is not allowed
+@pytest.fixture()
+def firefox_options() -> Options:
+    """
+    Muting the browser prevents audio playback issues on Windows GHA runners
+    while still allowing the video to play.
+    """
+    options = Options()
+    options.set_preference("media.volume_scale", "0.0")
+    return options
+
+
 @pytest.mark.audio
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
     """
-    C330155: 'Allow Audio and Video' functionality
+    C330155: 'Allow Audio and Video' functionality.
     """
-    # Instantiate objects
     about_prefs = AboutPrefs(driver, category="permissionsData")
     tabs = TabBar(driver)
     page = GenericPage(driver, url=TEST_URL)
 
-    # Open privacy and security preferences and set 'Allow Audio and Video' for autoplay
+    # Allow websites to autoplay audio and video.
     about_prefs.set_autoplay_setting_in_preferences("allow-audio-video")
 
-    # Open the website in a new tab and check if the video starts playing with sound
+    # Open the test website and verify that the video starts playing.
     tabs.new_tab_by_button()
     tabs.switch_to_new_tab()
     page.open()
+
     tabs.expect_tab_sound_status(2, tabs.MEDIA_STATUS.PLAYING)
