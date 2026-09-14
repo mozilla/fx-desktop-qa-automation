@@ -1,5 +1,9 @@
 import pytest
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object_tabbar import TabBar
 from modules.page_object_generics import GenericPage
@@ -23,6 +27,44 @@ def add_to_prefs_list():
     return [("media.volume_scale", "0.0")]
 
 
+def video_is_playing(driver: Firefox) -> bool:
+    """
+    Return True when an unmuted video has started playback.
+    """
+    try:
+        videos = driver.find_elements(By.TAG_NAME, "video")
+
+        for video in videos:
+            state = driver.execute_script(
+                """
+                const video = arguments[0];
+
+                return {
+                    paused: video.paused,
+                    muted: video.muted,
+                    volume: video.volume,
+                    currentTime: video.currentTime,
+                    readyState: video.readyState
+                };
+                """,
+                video,
+            )
+
+            if (
+                not state["paused"]
+                and not state["muted"]
+                and state["volume"] > 0
+                and state["currentTime"] > 0
+                and state["readyState"] >= 2
+            ):
+                return True
+
+    except StaleElementReferenceException:
+        return False
+
+    return False
+
+
 @pytest.mark.audio
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
@@ -41,4 +83,8 @@ def test_allow_audio_video_functionality(driver: Firefox):
     tabs.switch_to_new_tab()
     page.open()
 
-    tabs.expect_tab_sound_status(2, tabs.MEDIA_STATUS.PLAYING)
+    # Verify that an unmuted video starts playing.
+    WebDriverWait(driver, 30).until(
+        video_is_playing,
+        message="The video did not begin unmuted playback within 30 seconds.",
+    )
