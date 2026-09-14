@@ -153,13 +153,22 @@ class AboutPrefs(BasePage):
                 "return arguments[0].shadowRoot.querySelector('panel-list')", root
             )
         )
-        # The options render once the search service is ready, so wait them out.
-        options = self.wait.until(
-            lambda _: panel.find_elements(By.TAG_NAME, "panel-item")
-        )
+
+        def options_named(_):
+            try:
+                options = panel.find_elements(By.TAG_NAME, "panel-item")
+                return bool(options) and all(
+                    option.get_attribute("textContent").strip() for option in options
+                )
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        # The options are named once the search service is ready, so wait them out.
+        self.wait.until(options_named)
         labels = [
             option.get_attribute("textContent").strip()
-            for option in options
+            for option in panel.find_elements(By.TAG_NAME, "panel-item")
             if option.is_displayed()
         ]
         self.actions.send_keys(Keys.ESCAPE).perform()
