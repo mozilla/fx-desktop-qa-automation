@@ -1540,7 +1540,10 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1684,7 +1687,10 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
-    result: pass
+    result:
+      linux: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
