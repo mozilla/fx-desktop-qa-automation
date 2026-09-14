@@ -84,8 +84,8 @@ def test_remember_decision_permissions_prompt(
     """
     C602566 - Bug 1604813 - Remember this decision from a top level document permissions prompt does not keep the decision
     """
-    C602566 - Bug 1604813 - Remember this decision from a top level document permissions prompt does not keep the decision
-    """
+
+    page = GenericPage(driver, url=TEST_URL).open()
 
     page = GenericPage(driver, url=TEST_URL).open()
     page.elements |= temp_selectors
