@@ -44,20 +44,13 @@ class SmartWindow(BasePage):
     @BasePage.context_chrome
     def activate_smart_window(self) -> BasePage:
         """
-        Put the current window into the Smart Window state.
-
-        TEST HARNESS ONLY. This calls AIWindow.toggleAIWindow directly, which
-        is the same call the product makes *after* it has authorized the user.
-        Going through the UI instead (the Switch Windows button, the hamburger
-        menu, the AI settings link) routes through
-        AIWindowAccountAuth.ensureAIWindowAccess, which needs a live FxA
-        account and so cannot run in this suite.
-
-        Use this to reach Smart Window surfaces whose *behaviour* is under
-        test. Do not use it in a test whose subject is the entry point itself
-        -- assert the sign-in redirect instead (see C3248785).
+        Put the current window into the Smart Window state (test harness only,
+        bypasses the FxA sign-in gate). Do not use where the entry point itself
+        is under test -- assert the sign-in redirect (see C3248785).
         """
         logging.info("Activating Smart Window state via AIWindow.toggleAIWindow")
+        # Call AIWindow.toggleAIWindow directly: same call the product makes
+        # after auth, without routing through AIWindowAccountAuth.
         self.driver.execute_script(
             f"""
             const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
@@ -135,32 +128,6 @@ class SmartWindow(BasePage):
         self.click_on("switch-to-smart")
         return self
 
-    @BasePage.context_chrome
-    def switcher_button_available(self) -> bool:
-        """
-        Report whether the Switch Windows button is offered in this window.
-
-        Checks visibility, not merely existence. The three ways Smart Window
-        can be unavailable do not look alike in the DOM:
-
-        - Private Browsing window -> the widget is never built (no element)
-        - browser.smartwindow.enabled=false -> element exists with hidden=true
-        - blocked in AI Controls -> the widget is destroyed (no element)
-
-        An existence-only check would call the middle case "available", which
-        would let a test pass with the feature switched off.
-
-        Drops the implicit wait so an absent button returns immediately rather
-        than costing a full timeout.
-        """
-        original = self.driver.timeouts.implicit_wait
-        self.driver.implicitly_wait(0)
-        try:
-            elements = self.get_elements("window-switcher-button")
-            return bool(elements) and elements[0].is_displayed()
-        finally:
-            self.driver.implicitly_wait(original)
-
     # ── Tabs ─────────────────────────────────────────────────────────────
 
     @BasePage.context_chrome
@@ -182,31 +149,3 @@ class SmartWindow(BasePage):
         """
         self.expect(lambda _: fragment in self.get_selected_tab_url())
         return self
-
-    # ── Windows ──────────────────────────────────────────────────────────
-
-    def wait_for_new_window(self, known_handles: set[str]) -> str:
-        """
-        Wait for a window outside `known_handles` to open, and return its handle.
-
-        Deliberately waits with self.wait rather than self.expect: expect is
-        wrapped in context_of_model, and window_handles is context-sensitive --
-        chrome context lists browser windows, content context lists tabs.
-        Diffing a chrome-context list against a content-context baseline
-        returns a handle for the wrong window, so this stays in whichever
-        context the caller captured `known_handles` in.
-
-        Arguments
-        ---------
-        known_handles: set[str]
-            driver.window_handles captured before the action that opens a window.
-        """
-        opened: set[str] = set()
-
-        def _new_window(driver) -> bool:
-            nonlocal opened
-            opened = set(driver.window_handles) - known_handles
-            return bool(opened)
-
-        self.wait.until(_new_window)
-        return opened.pop()

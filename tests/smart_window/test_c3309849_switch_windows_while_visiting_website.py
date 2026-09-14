@@ -31,11 +31,11 @@ def test_switch_windows_while_visiting_website(
     smart_window.activate_smart_window()
 
     # The page the user was on survives the switch to Smart.
-    assert driver.current_url == URL
+    smart_window.url_contains(URL)
     tabs.expect_title_contains("Gort")
 
     smart_window.switch_to_classic_window()
 
     # ...and the switch back to Classic.
-    assert driver.current_url == URL
+    smart_window.url_contains(URL)
     tabs.expect_title_contains("Gort")

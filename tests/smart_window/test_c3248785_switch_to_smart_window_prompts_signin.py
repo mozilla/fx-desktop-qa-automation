@@ -29,9 +29,8 @@ def test_switch_to_smart_window_prompts_signin(smart_window: SmartWindow):
     # Sign-in is required first: the FxA flow opens in a new tab, tagged with
     # the Smart Window entrypoint.
     smart_window.expect_selected_tab_url_contains(FXA_SIGN_IN_HOST)
-    signin_url = smart_window.get_selected_tab_url()
-    assert "entrypoint=smartwindow" in signin_url, signin_url
-    assert "service=smartwindow" in signin_url, signin_url
+    smart_window.expect_selected_tab_url_contains("entrypoint=smartwindow")
+    smart_window.expect_selected_tab_url_contains("service=smartwindow")
 
     # The window itself stays Classic until sign-in completes.
-    assert not smart_window.is_smart_window_active()
+    smart_window.expect_smart_window_active(False)

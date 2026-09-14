@@ -25,11 +25,11 @@ def test_block_smart_window_from_ai_controls(driver: Firefox):
     about_prefs.navigate_to_ai_controls()
 
     # The feature starts available, so the window switcher is offered.
-    assert about_prefs.get_ai_smart_window_state() == "available"
-    assert smart_window.switcher_button_available()
+    about_prefs.expect_ai_smart_window_state("available")
+    smart_window.element_visible("window-switcher-button")
 
     about_prefs.set_ai_smart_window("blocked")
-    smart_window.expect(lambda _: not smart_window.switcher_button_available())
+    smart_window.element_does_not_exist("window-switcher-button")
 
     about_prefs.set_ai_smart_window("available")
-    smart_window.expect(lambda _: smart_window.switcher_button_available())
+    smart_window.element_visible("window-switcher-button")

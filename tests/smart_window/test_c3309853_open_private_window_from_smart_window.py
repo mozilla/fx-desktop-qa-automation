@@ -24,25 +24,25 @@ def test_open_private_window_from_smart_window(
     """
     panel_ui = PanelUi(driver)
     smart_handle = driver.current_window_handle
-    existing_handles = set(driver.window_handles)
+    existing_count = len(driver.window_handles)
 
     panel_ui.open_panel_menu()
     panel_ui.element_visible("panel-ui-new-private-window")
     panel_ui.click_on("panel-ui-new-private-window")
 
-    new_handle = active_smart_window.wait_for_new_window(existing_handles)
-    driver.switch_to.window(new_handle)
+    active_smart_window.wait_for_num_windows(existing_count + 1)
+    active_smart_window.switch_to_new_window()
 
     private_window = SmartWindow(driver)
-    private_window.is_private()  # waits and asserts; raises on timeout
+    private_window.is_private()
 
     # Private Browsing never carries the Smart Window state.
     private_window.expect_smart_window_active(False)
-    assert not private_window.switcher_button_available()
+    private_window.element_does_not_exist("window-switcher-button")
 
-    # Positive control: the window we opened it from is still a Smart Window,
-    # so the assertions above reflect Private Browsing being exempt rather
-    # than Smart Window being unavailable in this profile.
+    # Positive control: the origin window is still a Smart Window, so the
+    # negatives above reflect Private Browsing being exempt rather than Smart
+    # Window being unavailable in this profile.
     driver.switch_to.window(smart_handle)
     active_smart_window.expect_smart_window_active(True)
-    assert active_smart_window.switcher_button_available()
+    active_smart_window.element_visible("window-switcher-button")

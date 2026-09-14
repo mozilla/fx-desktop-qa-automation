@@ -23,19 +23,19 @@ def test_smart_window_missing_in_private_browsing(
     C3309851 - Smart Window option missing in Private Browsing
     """
     # Baseline: the normal window offers the Smart option.
-    assert smart_window.switcher_button_available()
+    smart_window.element_visible("window-switcher-button")
     smart_window.open_window_switcher()
     smart_window.element_visible("switch-to-smart")
     smart_window.close_window_switcher()
 
     panel_ui = PanelUi(driver)
-    existing_handles = set(driver.window_handles)
+    existing_count = len(driver.window_handles)
     panel_ui.open_private_window()
-    driver.switch_to.window(smart_window.wait_for_new_window(existing_handles))
+    smart_window.wait_for_num_windows(existing_count + 1)
+    smart_window.switch_to_new_window()
 
     private_window = SmartWindow(driver)
-    private_window.is_private()  # waits and asserts; raises on timeout
+    private_window.is_private()
 
-    # The Switch Windows button is not built at all in a private window, so
-    # there is no entry point to a Smart Window.
-    assert not private_window.switcher_button_available()
+    # No Switch Windows button in a private window: entry point never built.
+    private_window.element_does_not_exist("window-switcher-button")

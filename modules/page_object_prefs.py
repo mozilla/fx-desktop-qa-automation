@@ -1678,6 +1678,13 @@ class AboutPrefs(BasePage):
         """
         return self.get_element("ai-control-smart-window-select").get_attribute("value")
 
+    def expect_ai_smart_window_state(self, state: str) -> BasePage:
+        """
+        Wait until the Smart Window select reports `state`.
+        """
+        self.expect(lambda _: self.get_ai_smart_window_state() == state)
+        return self
+
     def set_ai_smart_window(self, state: str) -> BasePage:
         """
         Set the Smart Window feature state from AI Controls.

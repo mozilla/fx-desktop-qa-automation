@@ -29,14 +29,14 @@ def test_open_classic_window_from_smart_window(
     panel_ui.element_not_visible("panel-ui-new-smart-window")
     panel_ui.element_visible("panel-ui-new-classic-window")
 
-    existing_handles = set(driver.window_handles)
+    existing_count = len(driver.window_handles)
     panel_ui.click_on("panel-ui-new-classic-window")
 
-    new_handle = active_smart_window.wait_for_new_window(existing_handles)
-    driver.switch_to.window(new_handle)
+    active_smart_window.wait_for_num_windows(existing_count + 1)
+    active_smart_window.switch_to_new_window()
 
     new_window = SmartWindow(driver)
-    new_window.is_not_private()  # waits and asserts; raises on timeout
+    new_window.is_not_private()
 
     # The window is briefly created in the Smart state before being toggled to
     # Classic, so poll for the settled state rather than reading it once.
