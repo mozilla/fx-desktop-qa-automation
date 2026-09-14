@@ -12,19 +12,16 @@ def test_case():
     return "330155"
 
 
-
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
 
 
 @pytest.fixture()
-def firefox_options() -> Options:
+def add_to_prefs_list():
     """
     Muting the browser prevents audio playback issues on Windows GHA runners
     while still allowing the video to play.
     """
-    options = Options()
-    options.set_preference("media.volume_scale", "0.0")
-    return options
+    return [("media.volume_scale", "0.0")]
 
 
 @pytest.mark.audio
