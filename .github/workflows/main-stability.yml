@@ -35,7 +35,6 @@ on:
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   STARFOX_CATEGORY: ${{ inputs.test_category }}
-  SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
 
 jobs:
   Test-Windows:
