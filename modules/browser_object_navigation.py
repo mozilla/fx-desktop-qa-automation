@@ -742,17 +742,28 @@ class Navigation(BasePage):
         self.perform_key_combo(mod_key, Keys.SHIFT, "r")
         return self
 
-    def handle_geolocation_prompt(
+    def handle_permission_prompt(
         self, button_type="primary", remember_this_decision=False
     ):
         """
-        Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
+        Answer a permission doorhanger (geolocation, camera, microphone, ...) by
+        clicking either the 'Allow' or the 'Block' button, and wait for it to close.
         """
         button_selector = f"popup-notification-{button_type}-button"
         self.element_clickable(button_selector)
         if remember_this_decision:
             self.click_on("checkbox-remember-this-decision")
         self.js_click_on(button_selector)
+        self.element_not_visible("popup-notification")
+        return self
+
+    def handle_geolocation_prompt(
+        self, button_type="primary", remember_this_decision=False
+    ):
+        """
+        Handles geolocation prompt by clicking either the 'Allow' or 'Block' button based on the button_type provided
+        """
+        return self.handle_permission_prompt(button_type, remember_this_decision)
 
     def open_searchmode_switcher_settings(self):
         """Open search settings from searchmode switcher in awesome bar"""
