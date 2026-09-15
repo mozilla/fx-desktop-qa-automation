@@ -1249,6 +1249,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_drawing_can_be_copied_cut_and_pasted_with_keyboard:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_dropdown_functionality:
     result: pass
     splits:
