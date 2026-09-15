@@ -31,6 +31,12 @@ on:
         default: "false"
         type: string
 
+      fx_channel:
+        description: "Channel to test: beta, nightly, devedition, etc..."
+        required: false
+        default: "beta"
+        type: string
+
 permissions:
   contents: read
 
@@ -190,6 +196,14 @@ jobs:
           uv sync
           uv run python scripts/switch_config.py ci
           uv sync
+
+      - name: Channel-based setup
+        id: channel-setup
+        shell: pwsh
+        env:
+          FX_CHANNEL: ${{ inputs.fx_channel }}
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=exclude_$FX_CHANNEL"
 
       - name: Select tests
         id: select
@@ -432,6 +446,13 @@ jobs:
           uv run python scripts/switch_config.py ci
           uv sync
 
+      - name: Channel-based setup
+        id: channel-setup
+        env:
+          FX_CHANNEL: ${{ inputs.fx_channel }}
+        run: |
+          echo "STARFOX_EXCLUDE=exclude_$FX_CHANNEL" >> "$GITHUB_ENV"
+
       - name: Select tests
         id: select
         run: |
@@ -633,13 +654,15 @@ jobs:
           uv run python scripts/switch_config.py ci_xvfb
           uv sync
 
+      - name: Channel-based setup
+        id: channel-setup
+        env:
+          FX_CHANNEL: ${{ inputs.fx_channel }}
+        run: |
+          echo "STARFOX_EXCLUDE=exclude_xvfb,exclude_$FX_CHANNEL" >> "$GITHUB_ENV"
+
       - name: Select tests
         id: select
-        env:
-          # The no_xvfb split holds tests that cannot run under Xvfb. They are
-          # not marked with @pytest.mark.noxvfb, so the config's -m filter does
-          # not catch them; excluding them here is the only thing that does.
-          STARFOX_EXCLUDE: no_xvfb
         run: |
           if [[ "$STARFOX_SPLIT" == "glean" ]]; then
             echo "tests/glean" > selected_tests

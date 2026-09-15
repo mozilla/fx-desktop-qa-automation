@@ -23,6 +23,8 @@ class FindToolbar(BasePage):
         self.panel_ui.open_panel_menu()
         self.panel_ui.click_on("find-in-page")
         self.wait_for_page_to_load()
+        # the toolbar is in the DOM before it opens, so wait for it to show
+        self.element_visible("find-toolbar-input")
         return self
 
     @BasePage.context_chrome
@@ -34,6 +36,8 @@ class FindToolbar(BasePage):
             mod_key = Keys.CONTROL
         self.perform_key_combo(mod_key, "f")
         self.wait_for_page_to_load()
+        # the toolbar is in the DOM before it opens, so wait for it to show
+        self.element_visible("find-toolbar-input")
         return self
 
     @BasePage.context_chrome

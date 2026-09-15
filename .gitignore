@@ -19,6 +19,7 @@ html_dump/
 Test*.html
 geckodriver.log
 env
+pyrightconfig.json
 *.png
 *.dmg
 *.tar
