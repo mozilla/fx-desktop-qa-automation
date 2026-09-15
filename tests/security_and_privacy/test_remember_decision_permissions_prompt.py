@@ -7,6 +7,8 @@ from modules.page_object import GenericPage
 TEST_URL = "https://jan-ivar.github.io/dummy/iframe_iframe_gum_starcross2.html"
 
 
+# The stream's tracks and their state only exist on the <video> element's
+# srcObject property, so there is nothing in the DOM to assert on.
 STREAM_IS_LIVE = """
 const stream = document.getElementById("video").srcObject;
 if (!stream) {
@@ -84,8 +86,6 @@ def test_remember_decision_permissions_prompt(
     """
     C602566 - Bug 1604813 - Remember this decision from a top level document permissions prompt does not keep the decision
     """
-
-    page = GenericPage(driver, url=TEST_URL).open()
 
     page = GenericPage(driver, url=TEST_URL).open()
     page.elements |= temp_selectors
