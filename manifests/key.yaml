@@ -1548,7 +1548,8 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
+    result: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1692,7 +1693,8 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
+    result: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
@@ -1734,6 +1736,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
+    result: pass
+    splits:
+    - functional3
+    - nightly
+  test_report_broken_site:
     result: pass
     splits:
     - functional3
