@@ -23,11 +23,13 @@ class GenericPage(BasePage):
         "Cloudflare": "just a moment",
     }
     # Google's reCAPTCHA page titles itself with the blocked URL, so it needs a body match.
+    # Cloudflare's token survives in the page as a referer link after it leaves the URL.
     BOT_CHALLENGE_BODY_MARKERS = {
         "Google": "detected unusual traffic",
+        "Cloudflare": "__cf_chl_tk",
     }
     # Cloudflare appends this token once the challenge clears, leaving a normal-looking SERP
-    # that no title or body marker can catch.
+    # that no title marker can catch.
     BOT_CHALLENGE_URL_MARKERS = {
         "Cloudflare": "__cf_chl_tk",
     }

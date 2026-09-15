@@ -35,7 +35,7 @@
 
     {"id": "3255446", "entry": "urlbar_persisted", "action": null, "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "urlbar_persisted", "tagged": "true"}},
     {"id": "3255461", "entry": "urlbar_persisted", "action": null, "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "urlbar_persisted", "tagged": "true"}},
-    {"id": "3255476", "entry": "urlbar_persisted", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "urlbar_persisted", "tagged": "true"}, "unstable": "Search term persistence does not engage on CI even though the Ecosia SERP URL is clean"},
+    {"id": "3255476", "entry": "urlbar_persisted", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "urlbar_persisted", "tagged": "true"}},
     {"id": "3255491", "entry": "urlbar_persisted", "action": null, "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant", "partner_code": "brz-moz", "source": "urlbar_persisted", "tagged": "true"}},
 
     {"id": "3255447", "entry": "follow_on_from_refine_on_incontent_search", "action": null, "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "follow_on_from_refine_on_incontent_search", "tagged": "true"}, "unstable": {"win": "Windows-only: Bing SERP telemetry does not record on the CI runner"}},
@@ -60,7 +60,7 @@
 
     {"id": "3255452", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "opened_in_new_tab", "tagged": "true"}, "unstable": {"win": "Windows-only: Bing SERP telemetry does not record on the CI runner"}},
     {"id": "3255467", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "opened_in_new_tab", "tagged": "true"}},
-    {"id": "3255482", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "", "source": "opened_in_new_tab", "tagged": "false"}, "unstable": "Ecosia related-search click times out on CI"},
+    {"id": "3255482", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "", "source": "opened_in_new_tab", "tagged": "false"}},
 
     {"id": "3255501", "entry": "urlbar", "action": null, "params": {"engine": "Google", "is_private": true}, "prefs": [], "expected": {"provider": "google", "partner_code": "firefox-b-d", "source": "urlbar", "tagged": "true", "is_private": "true"}}
   ]
