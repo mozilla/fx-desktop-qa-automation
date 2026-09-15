@@ -358,6 +358,20 @@ class AboutPrefs(BasePage):
             codes.append(option.get_attribute("value"))
         return codes
 
+    def get_fallback_language_options(self) -> List[str]:
+        """Returns the locale codes offered by the Fallback language dropdown.
+
+        The dropdown lists every downloaded locale, but hides the one already
+        picked as the Preferred language, so skip the hidden options.
+        """
+        return [
+            option.get_attribute("value")
+            for option in self.get_element(
+                "browser-language-fallback-select"
+            ).find_elements(By.TAG_NAME, "option")
+            if not option.get_attribute("hidden")
+        ]
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 
