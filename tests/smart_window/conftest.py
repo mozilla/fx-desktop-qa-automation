@@ -1,6 +1,6 @@
 import pytest
 
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object import SmartWindow
 
 
 @pytest.fixture()

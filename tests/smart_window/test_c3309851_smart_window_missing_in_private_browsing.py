@@ -7,8 +7,7 @@ Window, while the normal window it was opened from still does.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object import PanelUi, SmartWindow
 
 
 @pytest.fixture()

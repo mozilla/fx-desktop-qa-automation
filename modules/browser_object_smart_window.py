@@ -79,6 +79,7 @@ class SmartWindow(BasePage):
         self.element_not_visible("window-switcher-view")
         return self
 
+    @BasePage.context_of_model
     def get_switcher_selection(self) -> str:
         """
         Return which entry the Switch Windows panel shows as current.

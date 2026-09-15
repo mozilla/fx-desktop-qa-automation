@@ -6,7 +6,7 @@ the FxA sign-in flow rather than switching the window.
 
 import pytest
 
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object import SmartWindow
 
 FXA_SIGN_IN_HOST = "accounts.firefox.com"
 

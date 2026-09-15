@@ -7,7 +7,7 @@ button, and that unblocking it brings the button back.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object import SmartWindow
 from modules.page_object_prefs import AboutPrefs
 
 
@@ -16,11 +16,12 @@ def test_case():
     return "3310319"
 
 
-def test_block_smart_window_from_ai_controls(driver: Firefox):
+def test_block_smart_window_from_ai_controls(
+    driver: Firefox, smart_window: SmartWindow
+):
     """
     C3310319 - Enable/Block Smart Window from AI controls
     """
-    smart_window = SmartWindow(driver)
     about_prefs = AboutPrefs(driver, category="ai")
     about_prefs.navigate_to_ai_controls()
 

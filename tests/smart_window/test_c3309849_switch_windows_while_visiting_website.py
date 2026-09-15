@@ -7,8 +7,7 @@ page loaded.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object import SmartWindow, TabBar
 
 URL = "about:robots"
 
