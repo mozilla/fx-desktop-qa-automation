@@ -692,6 +692,17 @@
     "strategy": "css",
     "groups": []
   },
+  "downloads-panel": {
+    "selectorData": "downloadsPanel",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Downloads panel anchored to the toolbar button",
+      "location": "Toolbar"
+    }
+  },
   "download-target-element": {
     "selectorData": "downloadTarget",
     "strategy": "class",

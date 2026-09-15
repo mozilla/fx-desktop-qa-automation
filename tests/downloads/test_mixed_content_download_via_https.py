@@ -10,18 +10,27 @@ def test_case():
     return "1756722"
 
 
-@pytest.fixture()
-def delete_files_regex_string():
-    return r"\bdownload\b"
-
-
 MIXED_CONTENT_DOWNLOAD_URL = (
     "https://file-examples.com/wp-content/storage/2017/10/file-sample_100kB.odt"
 )
-MAX_CHECKS = 30
+
+# Firefox suffixes "(1)", "(2)"... when the file is already in the Downloads folder
+DOWNLOAD_NAME_REGEX = r"file-sample_100kB(\(\d+\))?\.odt"
 
 
-# This test has been found to be unstable in CI
+@pytest.fixture()
+def delete_files_regex_string():
+    """Delete the downloaded file, including any copies left by earlier runs."""
+    return rf"{DOWNLOAD_NAME_REGEX}(\.part)?$"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.download.alwaysOpenPanel", True),
+    ]
+
+
 def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     """
     C1756722: Verify that the user can download mixed content via HTTPS
@@ -30,12 +39,14 @@ def test_mixed_content_download_via_https(driver: Firefox, delete_files):
     web_page = GenericPage(driver, url=MIXED_CONTENT_DOWNLOAD_URL)
     nav = Navigation(driver)
 
-    # Wait for the test website to wake up and download the content
+    # Open the page and trigger the mixed content download
     web_page.open()
-    web_page.wait.until(lambda _: nav.element_visible("download-target-element"))
+
+    # Wait for the download entry to show up in the Downloads panel
+    nav.wait_for_download_entry()
 
     # Verify download name matches expected pattern
-    nav.verify_download_name(r"file-sample_100kB(\(\d+\))?.odt$")
+    nav.verify_download_name(rf"{DOWNLOAD_NAME_REGEX}$")
 
     # Wait for download completion
     nav.wait_for_download_completion()

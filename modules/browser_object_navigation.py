@@ -693,6 +693,35 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_download_entry(self, timeout: int = 60) -> BasePage:
+        """
+        Wait for an entry to show up in the Downloads panel.
+        """
+
+        def _entry_visible(_):
+            if any(
+                element.is_displayed()
+                for element in self.get_elements("download-target-element")
+            ):
+                return True
+            if self.get_element("downloads-panel").get_attribute("panelopen") != "true":
+                buttons = self.get_elements("downloads-button")
+                if buttons and buttons[0].is_displayed():
+                    self.js_click_on("downloads-button")
+            return False
+
+        original_timeout = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.custom_wait(timeout=timeout, poll_frequency=0.5).until(
+                _entry_visible,
+                message="No entry appeared in the Downloads panel.",
+            )
+        finally:
+            self.driver.implicitly_wait(original_timeout)
+        return self
+
+    @BasePage.context_chrome
     def verify_download_name(self, expected_pattern: str) -> BasePage:
         """
         Verify download name matches expected pattern.
