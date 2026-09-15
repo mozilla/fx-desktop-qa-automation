@@ -2,7 +2,11 @@ import json
 from time import sleep
 from typing import List, Literal
 
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -133,6 +137,63 @@ class AboutPrefs(BasePage):
         """
         button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
         return button.text
+
+    def get_default_engine_dropdown_options(self) -> list[str]:
+        """Open the Default search engine dropdown, return option labels, close it.
+
+        In the Settings redesign the dropdown is a moz-select whose options are
+        panel-items inside its shadow root, so they can only be reached through
+        the shadow DOM.
+        """
+        root = self.get_element("search-engine-dropdown-root")
+        root.click()
+        # Get the option list out of the moz-select shadow root.
+        panel = self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('panel-list')", root
+            )
+        )
+
+        def options_named(_):
+            try:
+                options = panel.find_elements(By.TAG_NAME, "panel-item")
+                return bool(options) and all(
+                    option.get_attribute("textContent").strip() for option in options
+                )
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        # The options are named once the search service is ready, so wait them out.
+        self.wait.until(options_named)
+        labels = [
+            option.get_attribute("textContent").strip()
+            for option in panel.find_elements(By.TAG_NAME, "panel-item")
+            if option.is_displayed()
+        ]
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        return labels
+
+    def get_enabled_search_engines(self) -> list[str]:
+        """Return the names of the enabled engines in the Search shortcuts list.
+
+        The rows appear before their labels and toggles are filled in, so wait
+        until every row is named rather than reading a half-built list.
+        """
+
+        def engines_named(_):
+            try:
+                rows = self.get_elements("search-shortcuts-engine")
+                return bool(rows) and all(row.get_attribute("label") for row in rows)
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        self.wait.until(engines_named)
+        return [
+            engine.get_attribute("label")
+            for engine in self.get_elements("search-shortcuts-enabled-engine")
+        ]
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
