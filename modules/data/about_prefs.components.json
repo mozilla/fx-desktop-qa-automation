@@ -129,6 +129,28 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine": {
+    "selectorData": "#engineList moz-box-item",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An engine row in the Search shortcuts list (Settings redesign)",
+      "location": "about:preferences#search"
+    }
+  },
+  "search-shortcuts-enabled-engine": {
+    "selectorData": "#engineList moz-box-item:has(moz-toggle[pressed])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An enabled engine row in the Search shortcuts list (Settings redesign)",
+      "location": "about:preferences#search"
+    }
+  },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
@@ -940,6 +962,27 @@
       "location": "about:preferences#paneLanguages Browser language section"
     }
   },
+  "browser-language-fallback": {
+    "selectorData": "browserLanguageFallback",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Fallback language moz-select on the Languages pane, only shown once a non-default Preferred language is set",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
+  },
+  "browser-language-fallback-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "browser-language-fallback",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Fallback language moz-select shadow DOM (shadowParent: browser-language-fallback)",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
+  },
   "browser-language-heading": {
     "selectorData": "moz-fieldset[data-l10n-id='browser-language-heading']",
     "strategy": "css",
@@ -1068,6 +1111,17 @@
     ],
     "comment": {
       "description": "Row for one always-translate language, found by language tag",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "always-translate-remove-button": {
+    "selectorData": "moz-button.translations-always-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on an always-translate language row, found by language tag",
       "location": "about:preferences#translations - Automatic translation section"
     }
   },
@@ -1613,6 +1667,11 @@
   },
   "ai-control-sidebar-chatbot-select": {
     "selectorData": "aiControlSidebarChatbotSelect",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-control-smart-window-select": {
+    "selectorData": "aiControlSmartWindowSelect",
     "strategy": "id",
     "groups": []
   },

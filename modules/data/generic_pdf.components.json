@@ -272,6 +272,13 @@
       "doNotCache"
     ]
   },
+  "drawing-area": {
+    "selectorData": ".canvasWrapper svg.draw",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "added-text": {
     "selectorData": ".freeTextEditor",
     "strategy": "css",

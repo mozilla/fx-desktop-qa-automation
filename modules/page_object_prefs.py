@@ -2,7 +2,11 @@ import json
 from time import sleep
 from typing import List, Literal
 
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -133,6 +137,63 @@ class AboutPrefs(BasePage):
         """
         button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
         return button.text
+
+    def get_default_engine_dropdown_options(self) -> list[str]:
+        """Open the Default search engine dropdown, return option labels, close it.
+
+        In the Settings redesign the dropdown is a moz-select whose options are
+        panel-items inside its shadow root, so they can only be reached through
+        the shadow DOM.
+        """
+        root = self.get_element("search-engine-dropdown-root")
+        root.click()
+        # Get the option list out of the moz-select shadow root.
+        panel = self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('panel-list')", root
+            )
+        )
+
+        def options_named(_):
+            try:
+                options = panel.find_elements(By.TAG_NAME, "panel-item")
+                return bool(options) and all(
+                    option.get_attribute("textContent").strip() for option in options
+                )
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        # The options are named once the search service is ready, so wait them out.
+        self.wait.until(options_named)
+        labels = [
+            option.get_attribute("textContent").strip()
+            for option in panel.find_elements(By.TAG_NAME, "panel-item")
+            if option.is_displayed()
+        ]
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        return labels
+
+    def get_enabled_search_engines(self) -> list[str]:
+        """Return the names of the enabled engines in the Search shortcuts list.
+
+        The rows appear before their labels and toggles are filled in, so wait
+        until every row is named rather than reading a half-built list.
+        """
+
+        def engines_named(_):
+            try:
+                rows = self.get_elements("search-shortcuts-engine")
+                return bool(rows) and all(row.get_attribute("label") for row in rows)
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        self.wait.until(engines_named)
+        return [
+            engine.get_attribute("label")
+            for engine in self.get_elements("search-shortcuts-enabled-engine")
+        ]
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
@@ -275,6 +336,42 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def get_installed_browser_languages(self) -> List[str]:
+        """Returns the locale codes already downloaded, in Preferred language order.
+
+        The dropdown lists the installed locales first, then an <hr>, then the
+        locales that are still only available to download. The <hr> is the only
+        marker splitting the two, and the download-only half is fetched
+        asynchronously, so wait for it instead of reading a half-built list.
+        """
+        self.wait.until(
+            lambda _: self.get_element(
+                "browser-language-preferred-select"
+            ).find_elements(By.TAG_NAME, "hr")
+        )
+        codes = []
+        for option in self.get_element(
+            "browser-language-preferred-select"
+        ).find_elements(By.CSS_SELECTOR, "option, hr"):
+            if option.tag_name == "hr":
+                break
+            codes.append(option.get_attribute("value"))
+        return codes
+
+    def get_fallback_language_options(self) -> List[str]:
+        """Returns the locale codes offered by the Fallback language dropdown.
+
+        The dropdown lists every downloaded locale, but hides the one already
+        picked as the Preferred language, so skip the hidden options.
+        """
+        return [
+            option.get_attribute("value")
+            for option in self.get_element(
+                "browser-language-fallback-select"
+            ).find_elements(By.TAG_NAME, "option")
+            if not option.get_attribute("hidden")
+        ]
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 
@@ -364,6 +461,15 @@ class AboutPrefs(BasePage):
         )
         self.element_attribute_is("always-translate-picker", "value", lang_code)
         self.click_on("always-translate-add-button")
+        return self
+
+    def remove_always_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Always translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("always-translate-remove-button", labels=[lang_code])
         return self
 
     def open_doh_advanced(self) -> BasePage:
@@ -1814,6 +1920,54 @@ class AboutPrefs(BasePage):
                 )
                 == state
             )
+        )
+        return self
+
+    def get_ai_smart_window_state(self) -> str:
+        """
+        Get the current state of the Smart Window AI feature.
+
+        Returns:
+            str: Current state ("available", "enabled" or "blocked")
+        """
+        return self.get_element("ai-control-smart-window-select").get_attribute("value")
+
+    def expect_ai_smart_window_state(self, state: str) -> BasePage:
+        """
+        Wait until the Smart Window select reports `state`.
+        """
+        self.expect(lambda _: self.get_ai_smart_window_state() == state)
+        return self
+
+    def set_ai_smart_window(self, state: str) -> BasePage:
+        """
+        Set the Smart Window feature state from AI Controls.
+
+        Uses the same value-assign-plus-events approach as
+        set_ai_translations, because ai-control-smart-window-select is also a
+        `moz-select` custom element rather than a native <select>.
+
+        Arguments:
+            state: "available", "enabled" or "blocked"
+        """
+        select_elem = self.get_element("ai-control-smart-window-select")
+        self.driver.execute_script(
+            """
+            const el = arguments[0];
+            el.value = arguments[1];
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            """,
+            select_elem,
+            state,
+        )
+        # Confirm the moz-select wrote through to the backing pref rather than
+        # just holding the value we assigned.
+        self.expect(
+            lambda _: self.driver.execute_script(
+                "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+            )
+            == state
         )
         return self
 

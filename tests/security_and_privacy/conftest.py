@@ -5,7 +5,14 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import MenuBar, Navigation, PanelUi, TabBar, TrustPanel
+from modules.browser_object import (
+    MenuBar,
+    Navigation,
+    PanelUi,
+    ReportBrokenSite,
+    TabBar,
+    TrustPanel,
+)
 from modules.page_object import AboutCache, AboutDownloads, AboutPrefs, GenericPage
 from modules.util import BrowserActions
 
@@ -52,6 +59,11 @@ def trust_panel(driver):
 @pytest.fixture()
 def panel_ui(driver):
     return PanelUi(driver)
+
+
+@pytest.fixture()
+def report_broken_site(driver):
+    return ReportBrokenSite(driver)
 
 
 @pytest.fixture()
