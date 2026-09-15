@@ -282,11 +282,7 @@ ai_controls:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
     - nightly
