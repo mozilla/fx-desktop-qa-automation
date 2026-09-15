@@ -22,19 +22,36 @@ class GenericPage(BasePage):
     BOT_CHALLENGE_TITLE_MARKERS = {
         "Cloudflare": "just a moment",
     }
+    # Google's reCAPTCHA page titles itself with the blocked URL, so it needs a body match.
+    BOT_CHALLENGE_BODY_MARKERS = {
+        "Google": "detected unusual traffic",
+    }
+    # Cloudflare appends this token once the challenge clears, leaving a normal-looking SERP
+    # that no title or body marker can catch.
+    BOT_CHALLENGE_URL_MARKERS = {
+        "Cloudflare": "__cf_chl_tk",
+    }
 
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
         """
-        Check whether an anti-bot interstitial replaced the page.
+        Check whether an anti-bot challenge hit the page, by title, URL or body.
 
         Returns:
-            str: Provider and page title, or None if the page looks normal.
+            str: Provider and what matched, or None if the page looks normal.
         """
         title = self.driver.title or ""
         for provider, marker in self.BOT_CHALLENGE_TITLE_MARKERS.items():
             if marker in title.lower():
                 return f"{provider} ({title!r})"
+        url = self.driver.current_url or ""
+        for provider, marker in self.BOT_CHALLENGE_URL_MARKERS.items():
+            if marker in url:
+                return f"{provider} (url match: {marker!r})"
+        source = (self.driver.page_source or "").lower()
+        for provider, marker in self.BOT_CHALLENGE_BODY_MARKERS.items():
+            if marker in source:
+                return f"{provider} (body match: {marker!r})"
         return None
 
     def navigate_dialog_to_location(

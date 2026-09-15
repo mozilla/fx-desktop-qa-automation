@@ -1329,6 +1329,14 @@ pocket:
       result: pass
       splits: []
 preferences:
+  test_always_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_always_translate_languages_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
   test_change_font_family:
     result: pass
     splits:
@@ -1350,6 +1358,10 @@ preferences:
       win: unstable
     splits:
     - smoke
+  test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_firefox_home_new_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
     result: unstable
@@ -1379,6 +1391,10 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_preferred_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1540,7 +1556,8 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
+    result: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1684,7 +1701,8 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
+    result: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
@@ -1726,6 +1744,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_protection_report_displays_blocked_trackers_after_opening_tab:
+    result: pass
+    splits:
+    - functional3
+    - nightly
+  test_report_broken_site:
     result: pass
     splits:
     - functional3

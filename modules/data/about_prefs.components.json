@@ -129,6 +129,28 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine": {
+    "selectorData": "#engineList moz-box-item",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An engine row in the Search shortcuts list (Settings redesign)",
+      "location": "about:preferences#search"
+    }
+  },
+  "search-shortcuts-enabled-engine": {
+    "selectorData": "#engineList moz-box-item:has(moz-toggle[pressed])",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An enabled engine row in the Search shortcuts list (Settings redesign)",
+      "location": "about:preferences#search"
+    }
+  },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
@@ -1019,6 +1041,67 @@
     "comment": {
       "description": "Every website language row's delete button, in list order (locale attribute holds the code)",
       "location": "about:preferences#languages Website language section"
+    }
+  },
+  "translations-more-settings-button": {
+    "selectorData": "translationsManageButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"More translation settings\" moz-box-button; navigates to the Translations sub-pane",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "always-translate-picker": {
+    "selectorData": "translationsAlwaysTranslateLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select in the \"Always translate these languages\" list",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "always-translate-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "always-translate-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: always-translate-picker)",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "always-translate-add-button": {
+    "selectorData": "translationsAlwaysTranslateLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "always-translate-item": {
+    "selectorData": "moz-box-item.translations-always-translate-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one always-translate language, found by language tag",
+      "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "always-translate-remove-button": {
+    "selectorData": "moz-button.translations-always-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on an always-translate language row, found by language tag",
+      "location": "about:preferences#translations - Automatic translation section"
     }
   },
   "search-suggestion-in-private-windows": {

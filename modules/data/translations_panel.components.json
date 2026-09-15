@@ -1,0 +1,39 @@
+{
+  "context": "chrome",
+  "translations-urlbar-button": {
+    "selectorData": "translations-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Translations icon in the URL bar, shown once Firefox detects a translatable page",
+      "location": "URL bar"
+    }
+  },
+  "translations-panel": {
+    "selectorData": "full-page-translations-panel",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The full page translations panel",
+      "location": "Panel anchored to the URL bar translations button"
+    }
+  },
+  "settings-gear-button": {
+    "selectorData": "translations-panel-settings",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Settings wheel gear in the translations panel header",
+      "location": "Translations panel header"
+    }
+  },
+  "always-translate-menuitem": {
+    "selectorData": "translations-panel-settings-always-translate",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Always translate <language>\" checkbox menuitem",
+      "location": "Menu opened by the translations panel settings gear"
+    }
+  }
+}
