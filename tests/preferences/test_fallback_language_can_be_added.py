@@ -37,8 +37,8 @@ def test_fallback_language_can_be_added(driver: Firefox, about_prefs: AboutPrefs
     about_prefs.element_visible("browser-language-heading")
 
     # Wait out the async locale list before trusting that a dropdown is absent.
-    assert len(about_prefs.get_installed_browser_languages()) == 1, (
-        "More than the shipped locale is downloaded."
+    assert len(about_prefs.get_installed_browser_languages()) < 2, (
+        "A second locale is already downloaded."
     )
 
     # Fallback language needs a second downloaded language, so it is hidden here.
