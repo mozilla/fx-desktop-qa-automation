@@ -43,6 +43,11 @@ on:
 
   workflow_dispatch:
     inputs:
+      channel:
+        description: 'Firefox channel for the supplied candidate'
+        default: 'beta'
+        required: false
+        type: string
       win_installer_link:
         description: 'The link to the Windows installer (win64) for the Fx under test'
         required: false
