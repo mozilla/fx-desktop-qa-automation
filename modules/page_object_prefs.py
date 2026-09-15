@@ -1983,11 +1983,13 @@ class AboutAddons(BasePage):
             lang_code: The language code to delete (e.g. 'fr')
         """
         addon_id = f"langpack-{lang_code}@firefox.mozilla.org"
-        self.js_click_on("addon-card-more-options-button", labels=[addon_id])
+        self.click_on("addon-card-more-options-button", labels=[addon_id])
         self.element_clickable("addon-card-remove-menu-item", labels=[addon_id])
         self.click_on("addon-card-remove-menu-item", labels=[addon_id])
         # Removing a language pack asks for confirmation in a native prompt.
         self.get_alert().accept()
+        # Wait for the card to leave the page before removing the next one.
+        self.element_does_not_exist("addon-card-more-options-button", labels=[addon_id])
         return self
 
     def activate_theme(
