@@ -41,7 +41,6 @@ class SmartWindow(BasePage):
         self.expect(lambda _: self.is_smart_window_active() == active)
         return self
 
-    @BasePage.context_chrome
     def activate_smart_window(self) -> BasePage:
         """
         Put the current window into the Smart Window state (test harness only,
@@ -49,14 +48,17 @@ class SmartWindow(BasePage):
         is under test -- assert the sign-in redirect (see C3248785).
         """
         logging.info("Activating Smart Window state via AIWindow.toggleAIWindow")
-        # Call AIWindow.toggleAIWindow directly: same call the product makes
-        # after auth, without routing through AIWindowAccountAuth.
-        self.driver.execute_script(
-            f"""
-            const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
-            AIWindow.toggleAIWindow(window, true, "other");
-            """
-        )
+        # Scope chrome to just the execute_script; expect_smart_window_active
+        # handles its own context via self.expect (@context_of_model).
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # Call AIWindow.toggleAIWindow directly: same call the product makes
+            # after auth, without routing through AIWindowAccountAuth.
+            self.driver.execute_script(
+                f"""
+                const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+                AIWindow.toggleAIWindow(window, true, "other");
+                """
+            )
         self.expect_smart_window_active(True)
         return self
 
