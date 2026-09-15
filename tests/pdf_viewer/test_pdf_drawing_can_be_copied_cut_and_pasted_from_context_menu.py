@@ -45,13 +45,15 @@ def test_pdf_drawing_can_be_copied_cut_and_pasted_from_context_menu(
     pdf_page = pdf_viewer.get_element("pdf-page", labels=["1"])
     pdf_viewer.context_click(pdf_page)
     context_menu.click_and_hide_menu("pdfjs-paste")
-    pdf_viewer.wait_for_drawing_area_count(2)
+    pdf_viewer.wait_for_drawing_path_count(2)
 
     drawing_area = pdf_viewer.select_drawing_area()
     pdf_viewer.context_click(drawing_area)
     context_menu.click_and_hide_menu("pdfjs-cut")
-    pdf_viewer.wait_for_drawing_area_count(1)
+    pdf_viewer.wait_for_drawing_path_count(1)
 
+    pdf_viewer.clear_cache()
+    pdf_page = pdf_viewer.get_element("pdf-page", labels=["1"])
     pdf_viewer.context_click(pdf_page)
     context_menu.click_and_hide_menu("pdfjs-paste")
-    pdf_viewer.wait_for_drawing_area_count(2)
+    pdf_viewer.wait_for_drawing_path_count(2)

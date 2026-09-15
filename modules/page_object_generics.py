@@ -509,8 +509,8 @@ class GenericPdf(BasePage):
 
         return drawing_area
 
-    def wait_for_drawing_area_count(self, expected_count: int) -> BasePage:
-        """Wait until the expected number of drawing areas exists."""
+    def wait_for_drawing_path_count(self, expected_count: int) -> BasePage:
+        """Wait until the expected number of drawing paths exists."""
         self.expect(lambda _: len(self.get_elements("added-drawing")) == expected_count)
         return self
 

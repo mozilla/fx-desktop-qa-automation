@@ -38,10 +38,10 @@ def test_pdf_drawing_can_be_copied_cut_and_pasted_with_keyboard(
     pdf_viewer.select_drawing_area()
     pdf_viewer.perform_key_combo(Keys.CONTROL, "c")
     pdf_viewer.perform_key_combo(Keys.CONTROL, "v")
-    pdf_viewer.wait_for_drawing_area_count(2)
+    pdf_viewer.wait_for_drawing_path_count(2)
 
     pdf_viewer.perform_key_combo(Keys.CONTROL, "x")
-    pdf_viewer.wait_for_drawing_area_count(1)
+    pdf_viewer.wait_for_drawing_path_count(1)
 
     pdf_viewer.perform_key_combo(Keys.CONTROL, "v")
-    pdf_viewer.wait_for_drawing_area_count(2)
+    pdf_viewer.wait_for_drawing_path_count(2)
