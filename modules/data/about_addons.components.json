@@ -66,5 +66,27 @@
     "selectorData": "addon-card",
     "strategy": "tag",
     "groups": []
+  },
+  "addon-card-more-options-button": {
+    "selectorData": "addon-card[addon-id='{id}'] moz-button.more-options-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Three-dot menu button on one add-on card, found by add-on id",
+      "location": "about:addons add-on card"
+    }
+  },
+  "addon-card-remove-menu-item": {
+    "selectorData": "addon-card[addon-id='{id}'] panel-item[action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Remove item in one add-on card's three-dot menu, found by add-on id",
+      "location": "about:addons add-on card three-dot menu"
+    }
   }
 }
