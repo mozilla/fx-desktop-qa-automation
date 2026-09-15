@@ -1362,6 +1362,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_fallback_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_firefox_home_new_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
     result: unstable

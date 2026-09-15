@@ -962,6 +962,27 @@
       "location": "about:preferences#paneLanguages Browser language section"
     }
   },
+  "browser-language-fallback": {
+    "selectorData": "browserLanguageFallback",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Fallback language moz-select on the Languages pane, only shown once a non-default Preferred language is set",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
+  },
+  "browser-language-fallback-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "browser-language-fallback",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Fallback language moz-select shadow DOM (shadowParent: browser-language-fallback)",
+      "location": "about:preferences#paneLanguages Browser language section"
+    }
+  },
   "browser-language-heading": {
     "selectorData": "moz-fieldset[data-l10n-id='browser-language-heading']",
     "strategy": "css",
