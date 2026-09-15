@@ -1249,6 +1249,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_drawing_can_be_copied_cut_and_pasted_with_keyboard:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_dropdown_functionality:
     result: pass
     splits:
@@ -1358,6 +1363,14 @@ preferences:
       win: unstable
     splits:
     - smoke
+  test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_firefox_home_new_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
     result: unstable
@@ -1548,7 +1561,8 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
+    result: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1692,7 +1706,8 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
+    result: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
@@ -1738,6 +1753,15 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_report_broken_site:
+    result: pass
+    splits:
+    - functional3
+    - nightly
+  test_remember_decision_permissions_prompt:
+    result: pass
+    splits:
+    - functional1
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:

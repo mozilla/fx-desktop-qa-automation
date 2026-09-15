@@ -22,6 +22,17 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      TESTRAIL_BASE_URL:
+        required: false
+      TESTRAIL_API_KEY:
+        required: false
+      TESTRAIL_USERNAME:
+        required: false
+      SLACK_KEY:
+        required: false
+      GCP_CREDENTIAL:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -42,7 +53,6 @@ env:
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-  SVC_ACCT_DECRYPT: ${{ secrets.SVC_ACCT_DECRYPT }}
   FX_L10N: true
 
 jobs:

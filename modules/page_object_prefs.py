@@ -2,7 +2,11 @@ import json
 from time import sleep
 from typing import List, Literal
 
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -133,6 +137,63 @@ class AboutPrefs(BasePage):
         """
         button = self.wait.until(lambda _: self.get_element("select-wrapper-button"))
         return button.text
+
+    def get_default_engine_dropdown_options(self) -> list[str]:
+        """Open the Default search engine dropdown, return option labels, close it.
+
+        In the Settings redesign the dropdown is a moz-select whose options are
+        panel-items inside its shadow root, so they can only be reached through
+        the shadow DOM.
+        """
+        root = self.get_element("search-engine-dropdown-root")
+        root.click()
+        # Get the option list out of the moz-select shadow root.
+        panel = self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return arguments[0].shadowRoot.querySelector('panel-list')", root
+            )
+        )
+
+        def options_named(_):
+            try:
+                options = panel.find_elements(By.TAG_NAME, "panel-item")
+                return bool(options) and all(
+                    option.get_attribute("textContent").strip() for option in options
+                )
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        # The options are named once the search service is ready, so wait them out.
+        self.wait.until(options_named)
+        labels = [
+            option.get_attribute("textContent").strip()
+            for option in panel.find_elements(By.TAG_NAME, "panel-item")
+            if option.is_displayed()
+        ]
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        return labels
+
+    def get_enabled_search_engines(self) -> list[str]:
+        """Return the names of the enabled engines in the Search shortcuts list.
+
+        The rows appear before their labels and toggles are filled in, so wait
+        until every row is named rather than reading a half-built list.
+        """
+
+        def engines_named(_):
+            try:
+                rows = self.get_elements("search-shortcuts-engine")
+                return bool(rows) and all(row.get_attribute("label") for row in rows)
+            except StaleElementReferenceException:
+                # The list re-renders while it fills in; retry on the next poll.
+                return False
+
+        self.wait.until(engines_named)
+        return [
+            engine.get_attribute("label")
+            for engine in self.get_elements("search-shortcuts-enabled-engine")
+        ]
 
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
@@ -273,6 +334,142 @@ class AboutPrefs(BasePage):
             self.custom_wait(timeout=15).until(
                 lambda _: self.driver.title != current_title
             )
+        return self
+
+    def get_installed_browser_languages(self) -> List[str]:
+        """Returns the locale codes already downloaded, in Preferred language order.
+
+        The dropdown lists the installed locales first, then an <hr>, then the
+        locales that are still only available to download. The <hr> is the only
+        marker splitting the two, and the download-only half is fetched
+        asynchronously, so wait for it instead of reading a half-built list.
+        """
+        self.wait.until(
+            lambda _: self.get_element(
+                "browser-language-preferred-select"
+            ).find_elements(By.TAG_NAME, "hr")
+        )
+        codes = []
+        for option in self.get_element(
+            "browser-language-preferred-select"
+        ).find_elements(By.CSS_SELECTOR, "option, hr"):
+            if option.tag_name == "hr":
+                break
+            codes.append(option.get_attribute("value"))
+        return codes
+
+    def get_fallback_language_options(self) -> List[str]:
+        """Returns the locale codes offered by the Fallback language dropdown.
+
+        The dropdown lists every downloaded locale, but hides the one already
+        picked as the Preferred language, so skip the hidden options.
+        """
+        return [
+            option.get_attribute("value")
+            for option in self.get_element(
+                "browser-language-fallback-select"
+            ).find_elements(By.TAG_NAME, "option")
+            if not option.get_attribute("hidden")
+        ]
+
+    def add_website_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the Website language card on the Languages pane.
+
+        The Add language dropdown fills its options asynchronously, so wait for
+        the target option to show up before selecting it.
+
+        Args:
+            lang_code: The language code to add (e.g. 'fr', 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "website-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("website-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("website-language-picker", "value", lang_code)
+        self.click_on("website-language-add-button")
+        return self
+
+    def get_website_language_order(self) -> List[str]:
+        """Returns the locale codes on the Website language card, in list order."""
+        return [
+            button.get_attribute("locale")
+            for button in self.get_elements("website-language-remove-buttons")
+        ]
+
+    def move_website_language(
+        self, lang_code: str, direction: Literal["up", "down"]
+    ) -> BasePage:
+        """Moves a language up or down on the Website language card.
+
+        The list is a reorderable moz-box-group: Ctrl+Shift+ArrowUp/ArrowDown is
+        the Move Up / Move Down action, and the row itself has to be focused for
+        the group to pick the keypress up.
+
+        Args:
+            lang_code: The language code to move (e.g. 'fr')
+            direction: 'up' or 'down'
+        """
+        self.click_on("website-language-item", labels=[lang_code])
+        arrow = Keys.ARROW_UP if direction == "up" else Keys.ARROW_DOWN
+        self.actions.key_down(Keys.CONTROL).key_down(Keys.SHIFT).send_keys(
+            arrow
+        ).key_up(Keys.SHIFT).key_up(Keys.CONTROL).perform()
+        return self
+
+    def remove_website_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the Website language card.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'fr')
+        """
+        self.click_on("website-language-remove-button", labels=[lang_code])
+        return self
+
+    def open_more_translation_settings(self) -> BasePage:
+        """Opens the Translations sub-pane from the Languages pane.
+
+        The moz-box-button host is not clickable, so use a JS click.
+        """
+        self.js_click_on("translations-more-settings-button")
+        return self
+
+    def add_always_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Always translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "always-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("always-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("always-translate-picker", "value", lang_code)
+        self.click_on("always-translate-add-button")
+        return self
+
+    def remove_always_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Always translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("always-translate-remove-button", labels=[lang_code])
         return self
 
     def open_doh_advanced(self) -> BasePage:
@@ -473,7 +670,9 @@ class AboutPrefs(BasePage):
         """
         if level not in self.ETP_LEVEL_RADIOS:
             raise ValueError(f"Unknown ETP level: {level!r}")
-        self.click_on(self.ETP_LEVEL_RADIOS[level])
+        # Native click lands on dead space for "custom" and is silently dropped,
+        # leaving the pref unchanged, so click the moz-radio host directly.
+        self.js_click_on(self.ETP_LEVEL_RADIOS[level])
         return self
 
     def select_etp_level(self, level: str) -> BasePage:
@@ -483,6 +682,25 @@ class AboutPrefs(BasePage):
         """
         self.open_etp_settings()
         self.set_etp_level(level)
+        return self
+
+    def verify_etp_level(self, level: str) -> BasePage:
+        """
+        Assert which Enhanced Tracking Protection level is selected on
+        about:preferences#etp. level: standard|strict|custom.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        """
+        if level not in self.ETP_LEVEL_RADIOS:
+            raise ValueError(f"Unknown ETP level: {level!r}")
+
+        def _level_is_checked(_):
+            radio = self.get_element(self.ETP_LEVEL_RADIOS[level])
+            return bool(
+                self.driver.execute_script("return !!arguments[0].checked;", radio)
+            )
+
+        self.expect(_level_is_checked)
         return self
 
     def open_etp_customize(self) -> BasePage:
@@ -1054,14 +1272,24 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
+    def _dismiss_open_prefs_dialog(self) -> None:
+        """
+        Close any prefs sub-dialog already showing in the popup iframe.
+
+        The ``browser-popup`` (``.dialogFrame``) element exists even when no
+        dialog is open; a dialog that is actually visible has a positive x
+        offset. This is a fragile heuristic, kept in one place so the
+        popup-dialog helpers don't diverge.
+        """
+        if self.get_iframe().location["x"] > 0:
+            self.click_on("close-dialog")
+
     def press_button_get_popup_dialog_iframe(self, button_label: str) -> WebElement:
         """
         Returns the iframe object for the dialog panel in the popup after pressing some button that
         triggers a popup
         """
-        # hack to know if the current iframe is the default browser one or not
-        if self.get_iframe().location["x"] > 0:
-            self.click_on("close-dialog")
+        self._dismiss_open_prefs_dialog()
         self.click_on("prefs-button", labels=[button_label])
         iframe = self.get_element("browser-popup")
         return iframe
@@ -1525,6 +1753,30 @@ class AboutPrefs(BasePage):
         self.js_click_on("homepage-new-tabs-firefox-home-option")
         return self
 
+    def open_manage_exceptions_dialog(self) -> BasePage:
+        """
+        Open the ETP "Manage Exceptions" dialog and switch into its popup iframe.
+
+        Must be called from about:preferences#etp (see ``open_etp_settings``).
+        After calling this method, subsequent element interactions happen within
+        the dialog's iframe context. Call ``self.switch_to_default_frame()``
+        afterward to return to the main page.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("manage-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def remove_all_exceptions_and_save(self) -> BasePage:
+        """
+        From inside the ETP "Manage Exceptions" dialog iframe, remove every
+        exception entry and save the changes. Returns to the default frame.
+        """
+        self.click_on("remove-all-websites-button")
+        self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
@@ -1662,10 +1914,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select actually wrote through to the backing pref —
         # asserting .value alone would be tautological since we just set it.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.translations', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 
@@ -1803,6 +2057,25 @@ class AboutAddons(BasePage):
                 assert background_color == intended_color
             else:
                 return background_color
+
+    def click_find_more_themes(self) -> BasePage:
+        """Clicks the control that opens the AMO themes page in a new tab.
+
+        Under browser.nova.enabled, the default from Fx157 on, CSS hides the
+        footer button and the promo card's Explore themes button takes over.
+        Older builds show the footer button, so click whichever one this build
+        actually displays.
+        """
+
+        def displayed_button(_):
+            for name in ("find-more-themes-promo-button", "find-more-themes-button"):
+                for button in self.get_elements(name):
+                    if button.is_displayed():
+                        return button
+            return False
+
+        self.wait.until(displayed_button).click()
+        return self
 
     def is_devedition(self):
         active_theme_el = self.driver.find_element(

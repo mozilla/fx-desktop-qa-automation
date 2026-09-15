@@ -1,0 +1,296 @@
+name: Promote Firefox train branches
+
+on:
+  workflow_dispatch:
+    inputs:
+      released_major:
+        description: Major version on main; checked against releaseNNN history
+        required: true
+        type: string
+      retention:
+        description: Number of release branches to keep
+        default: 2
+        required: false
+        type: number
+      dry_run:
+        description: Show the planned changes without updating branches
+        default: true
+        required: false
+        type: boolean
+
+permissions: {}
+
+concurrency:
+  group: firefox-train-promotion
+  cancel-in-progress: false
+
+jobs:
+  approve_live:
+    name: Approve live Firefox train promotion
+    if: inputs.dry_run != true
+    runs-on: ubuntu-latest
+    # Configure this environment with required reviewers before live use.
+    environment:
+      name: firefox-branch-promotion
+    steps:
+      - name: Confirm approval
+        run: echo "Live Firefox train promotion approved."
+
+  promote:
+    name: Plan or promote Firefox train branches
+    needs: approve_live
+    if: >-
+      always() &&
+      (inputs.dry_run == true || needs.approve_live.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # Create, update, and delete Firefox train branches.
+      pull-requests: read # List PRs that will be affected by moving main.
+    env:
+      RELEASED_MAJOR: ${{ inputs.released_major }}
+      RETENTION: ${{ inputs.retention }}
+      DRY_RUN: ${{ inputs.dry_run }}
+
+    steps:
+      - name: Validate promotion source
+        if: >-
+          github.ref != 'refs/heads/main' &&
+          inputs.dry_run != true
+        shell: bash
+        run: |
+          echo "::error::Live promotions must run from main. Select main or enable dry_run."
+          exit 1
+
+      - name: Check out the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Configure Git authentication
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh auth setup-git
+
+      - name: List open pull requests targeting main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          {
+            echo "### Open pull requests targeting main"
+            echo
+            echo "A live promotion will change the commit behind main for these pull requests."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if open_prs="$(gh pr list \
+            --base main \
+            --state open \
+            --limit 1000 \
+            --json number,title,author \
+            --template '{{range .}}- #{{.number}} {{.title}}{{with .author}}{{if .login}} (@{{.login}}){{end}}{{end}}{{"\n"}}{{end}}')"; then
+            if [[ -n "$open_prs" ]]; then
+              echo "$open_prs" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "None." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "::warning::Could not list open pull requests targeting main."
+            echo "The promotion will continue without the PR list." \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Rotate Firefox train branches
+        id: rotate
+        env:
+          GH_TOKEN: ${{ inputs.dry_run != true && github.token || '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          released_major="$RELEASED_MAJOR"
+          retention="$RETENTION"
+          dry_run="$DRY_RUN"
+
+          if [[ ! "$released_major" =~ ^[1-9][0-9]*$ ]]; then
+            echo "released_major must be a positive integer." >&2
+            exit 1
+          fi
+          # GitHub enforces type: number; this additionally rejects zero,
+          # negative values, and fractions.
+          if [[ ! "$retention" =~ ^[1-9][0-9]*$ ]]; then
+            echo "retention must be a positive integer." >&2
+            exit 1
+          fi
+
+          release_branch="release${released_major}"
+          for required_branch in main nightly; do
+            if ! git ls-remote --exit-code --heads origin \
+              "refs/heads/$required_branch" > /dev/null; then
+              echo "Required branch '$required_branch' does not exist on origin." >&2
+              exit 1
+            fi
+          done
+
+          git fetch --no-tags origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/nightly:refs/remotes/origin/nightly'
+          main_sha="$(git rev-parse refs/remotes/origin/main)"
+          nightly_sha="$(git rev-parse refs/remotes/origin/nightly)"
+          release_refs="$(git ls-remote --heads origin 'refs/heads/release*')"
+
+          declare -A release_shas=()
+          while read -r sha ref; do
+            if [[ "$ref" =~ ^refs/heads/(release[0-9]+)$ ]]; then
+              release_shas["${BASH_REMATCH[1]}"]="$sha"
+            fi
+          done <<< "$release_refs"
+
+          if [[ -n "${release_shas[$release_branch]:-}" ]]; then
+            release_exists=true
+          else
+            release_exists=false
+          fi
+
+          latest_release_major="$(
+            awk '$2 ~ /^refs\/heads\/release[0-9]+$/ {
+              sub("refs/heads/release", "", $2)
+              if ($2 > latest) latest = $2
+            } END { if (latest) print latest }' <<< "$release_refs"
+          )"
+          if [[ "$release_exists" == "false" ]]; then
+            if [[ -z "$latest_release_major" ]]; then
+              # First-run bootstrap: no releaseNNN history exists to verify the
+              # operator input. A live run still requires environment approval.
+              echo \
+                "No release branch history; treating release${released_major}" \
+                "as the bootstrap promotion."
+            else
+              # By convention, main is one train newer than the latest
+              # releaseNNN branch.
+              expected_released_major=$((latest_release_major + 1))
+              if ((released_major != expected_released_major)); then
+                echo \
+                  "Expected release${expected_released_major} after" \
+                  "release${latest_release_major}, got release${released_major}." \
+                  >&2
+                echo "Refusing a stale or out-of-order promotion." >&2
+                exit 1
+              fi
+            fi
+          fi
+
+          mapfile -t release_majors < <(
+            {
+              printf '%s\n' "$release_refs"
+              if [[ "$release_exists" == "false" ]]; then
+                echo "planned refs/heads/$release_branch"
+              fi
+            } |
+              awk '$2 ~ /^refs\/heads\/release[0-9]+$/ {
+                sub("refs/heads/release", "", $2)
+                print $2
+              }' |
+              sort -nru
+          )
+
+          old_branches=()
+          for ((index = retention; index < ${#release_majors[@]}; index++)); do
+            old_branches+=("release${release_majors[$index]}")
+          done
+
+          if [[ "$release_exists" == "true" ]]; then
+            # An existing target marks a repeated event. Do not move main again;
+            # only enforce retention across the numerically sorted release list.
+            action="already-promoted"
+            push_args=()
+          else
+            action="promote"
+            push_args=(
+              "$main_sha:refs/heads/$release_branch"
+              "$nightly_sha:refs/heads/main"
+            )
+          fi
+
+          delete_lease_options=()
+          # Retention cleanup also runs after a repeated promotion event.
+          for branch in "${old_branches[@]}"; do
+            branch_sha="${release_shas[$branch]:-}"
+            if [[ -z "$branch_sha" ]]; then
+              echo "Could not determine the discovered SHA for $branch." >&2
+              exit 1
+            fi
+            push_args+=(":refs/heads/$branch")
+            delete_lease_options+=(
+              "--force-with-lease=refs/heads/$branch:$branch_sha"
+            )
+          done
+
+          echo "action=$action" >> "$GITHUB_OUTPUT"
+          echo "release_branch=$release_branch" >> "$GITHUB_OUTPUT"
+          echo "main_sha=$main_sha" >> "$GITHUB_OUTPUT"
+          echo "nightly_sha=$nightly_sha" >> "$GITHUB_OUTPUT"
+          echo "dry_run=$dry_run" >> "$GITHUB_OUTPUT"
+
+          echo "Action: $action"
+          echo "Release branch: $release_branch"
+          if [[ "$action" == "promote" ]]; then
+            echo "Archive main SHA: $main_sha"
+            echo "Promote nightly SHA to main: $nightly_sha"
+          else
+            echo "Promotion already completed; only retention cleanup will run."
+          fi
+          echo "Release branches to delete: ${old_branches[*]:-none}"
+
+          push_options=(--atomic "${delete_lease_options[@]}")
+          if [[ "$action" == "promote" ]]; then
+            # The lease prevents overwriting a main update made after discovery.
+            push_options+=("--force-with-lease=refs/heads/main:$main_sha")
+          fi
+
+          if ((${#push_args[@]} > 0)); then
+            printf 'Planned command:'
+            printf ' %q' git push "${push_options[@]}" origin "${push_args[@]}"
+            printf '\n'
+          else
+            echo "No git push is required."
+          fi
+
+          if [[ "$dry_run" == "true" ]]; then
+            echo "Dry run: no branches were changed."
+            exit 0
+          fi
+
+          if ((${#push_args[@]} == 0)); then
+            echo "Nothing to change."
+            exit 0
+          fi
+
+          # The refspecs archive old main, point main at nightly, and prune old releases.
+          # A changed or missing release branch intentionally aborts the atomic
+          # transaction; a rerun will discover the new state and make a new plan.
+          # --atomic makes this one transaction; a failed ref update or lease changes nothing.
+          git push "${push_options[@]}" origin "${push_args[@]}"
+
+      - name: Write summary
+        if: steps.rotate.outcome == 'success'
+        env:
+          ACTION: ${{ steps.rotate.outputs.action }}
+          RELEASE_BRANCH: ${{ steps.rotate.outputs.release_branch }}
+          MAIN_SHA: ${{ steps.rotate.outputs.main_sha }}
+          NIGHTLY_SHA: ${{ steps.rotate.outputs.nightly_sha }}
+          SUMMARY_DRY_RUN: ${{ steps.rotate.outputs.dry_run }}
+        shell: bash
+        run: |
+          {
+            echo "### Firefox train promotion"
+            echo
+            echo "- Result: \`$ACTION\`"
+            echo "- Release branch: \`$RELEASE_BRANCH\`"
+            echo "- Main SHA at start: \`$MAIN_SHA\`"
+            echo "- Nightly SHA at start: \`$NIGHTLY_SHA\`"
+            echo "- Dry run: \`$SUMMARY_DRY_RUN\`"
+          } >> "$GITHUB_STEP_SUMMARY"
