@@ -59,6 +59,8 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-Mac-Glean:
     needs: Check-RC-Version
@@ -75,3 +77,5 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
