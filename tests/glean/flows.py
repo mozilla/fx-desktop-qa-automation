@@ -354,6 +354,18 @@ def _action_tabhistory(driver: Firefox, params: dict = None):
 # ===========================================================================
 
 
+def _remember_bot_challenge(driver: Firefox) -> None:
+    """Record a challenge while the SERP is still on screen.
+
+    The abandonment flows close the tab or navigate away, so nothing is left to inspect
+    by the time the failure is classified.
+    """
+    try:
+        driver._bot_challenge_reason = GenericPage(driver).bot_challenge_reason()
+    except Exception:
+        driver._bot_challenge_reason = None
+
+
 @_abandonment("tab_close")
 def _abandonment_tab_close(driver: Firefox, search_term: str, params: dict = None):
     """Open a SERP in a new tab and close it without engaging, so Firefox records a
@@ -373,6 +385,7 @@ def _abandonment_tab_close(driver: Firefox, search_term: str, params: dict = Non
     # before Firefox categorizes the SERP records no abandonment
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    _remember_bot_challenge(driver)
 
     # Close the SERP tab without engaging -> serp.abandonment reason='tab_close', then return
     # focus to the remaining tab so the metric can be read
@@ -399,6 +412,7 @@ def _abandonment_navigation(driver: Firefox, search_term: str, params: dict = No
     # before Firefox categorizes the SERP records no abandonment
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    _remember_bot_challenge(driver)
 
     # Navigate away from the SERP in the same tab via the address bar -> serp.abandonment
     # reason='navigation'
@@ -426,6 +440,7 @@ def _abandonment_back_navigation(
     # before Firefox categorizes the SERP records no abandonment
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    _remember_bot_challenge(driver)
 
     # Leave the SERP via the back button -> serp.abandonment reason='navigation'
     nav.click_back_button()
@@ -452,6 +467,7 @@ def _abandonment_refresh_navigation(
     # before Firefox categorizes the SERP records no abandonment
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    _remember_bot_challenge(driver)
 
     # Refresh the SERP in the same tab -> serp.abandonment reason='navigation'
     nav.refresh_page()
@@ -476,6 +492,7 @@ def _abandonment_window_close(driver: Firefox, search_term: str, params: dict = 
     # before Firefox categorizes the SERP records no abandonment
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    _remember_bot_challenge(driver)
 
     # Close the window without engaging
     driver.close()
@@ -519,13 +536,15 @@ def block_if_bot_challenge(driver: Firefox) -> None:
     Skip as Blocked when an anti-bot interstitial caused the failure.
 
     Call from a test's except block. No recognized challenge leaves the original failure
-    to propagate, so a case that passes through a challenge stays Passed.
+    to propagate, so a case that passes through a challenge stays Passed. Falls back to
+    what `_remember_bot_challenge` saw, for flows that leave the SERP before failing.
     """
     try:
         reason = GenericPage(driver).bot_challenge_reason()
     except Exception:
         # A broken diagnostic must not replace the failure it was inspecting.
-        return
+        reason = None
+    reason = reason or getattr(driver, "_bot_challenge_reason", None)
     if reason:
         pytest.skip(f"Blocked by an external bot challenge: {reason}")
 

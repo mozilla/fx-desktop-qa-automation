@@ -282,11 +282,7 @@ ai_controls:
     - functional1
 audio_video:
   test_allow_audio_video_functionality:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2034560
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -1253,6 +1249,16 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_drawing_can_be_copied_cut_and_pasted_from_context_menu:
+    result: pass
+    splits:
+    - functional2
+    - nightly
+  test_pdf_drawing_can_be_copied_cut_and_pasted_with_keyboard:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_dropdown_functionality:
     result: pass
     splits:
@@ -1283,6 +1289,11 @@ pdf_viewer:
     - functional2
     - nightly
   test_pdf_zoom_checkboxes:
+    result: pass
+    splits:
+    - functional2
+    - nightly
+  test_pdf_zoom_edited_content:
     result: pass
     splits:
     - functional2
@@ -1328,6 +1339,14 @@ pocket:
       result: pass
       splits: []
 preferences:
+  test_always_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_always_translate_languages_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
   test_change_font_family:
     result: pass
     splits:
@@ -1349,6 +1368,14 @@ preferences:
       win: unstable
     splits:
     - smoke
+  test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_firefox_home_new_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
     result: unstable
@@ -1378,6 +1405,10 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_preferred_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1539,7 +1570,8 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
+    result: unstable
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -1683,7 +1715,8 @@ security_and_privacy:
     - smoke
     - ci-extended
   test_open_private_browsing_via_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
+    result: unstable
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
@@ -1729,6 +1762,15 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_report_broken_site:
+    result: pass
+    splits:
+    - functional3
+    - nightly
+  test_remember_decision_permissions_prompt:
+    result: pass
+    splits:
+    - functional1
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
@@ -1954,6 +1996,35 @@ sidebar:
     result: pass
     splits:
     - smoke
+smart_window:
+  test_c3248785_switch_to_smart_window_prompts_signin:
+    result: pass
+    splits:
+    - functional1
+  test_c3248786_switch_to_classic_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3309849_switch_windows_while_visiting_website:
+    result: pass
+    splits:
+    - functional1
+  test_c3309851_smart_window_missing_in_private_browsing:
+    result: pass
+    splits:
+    - functional1
+  test_c3309853_open_private_window_from_smart_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3309854_open_classic_window_from_smart_window:
+    result: pass
+    splits:
+    - functional1
+  test_c3310319_block_smart_window_from_ai_controls:
+    result: pass
+    splits:
+    - functional1
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362

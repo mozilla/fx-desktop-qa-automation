@@ -98,8 +98,9 @@ def test_save_image_as(driver: Firefox, downloads_folder, delete_files):
 
     # verify a non-empty file was written
     wiki_image_page.custom_wait(timeout=SAVE_TIMEOUT_SECONDS).until(
-        lambda _: saved_image_location.exists()
-        and saved_image_location.stat().st_size > 0,
+        lambda _: (
+            saved_image_location.exists() and saved_image_location.stat().st_size > 0
+        ),
         message=f"No non-empty saved image at {saved_image_location}",
     )
 

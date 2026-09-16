@@ -20,7 +20,7 @@
     {"id": "3255523", "entry": "urlbar", "action": "back_navigation", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"reason": "navigation"}},
 
     {"id": "3255505", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "Google"}, "prefs": [], "expected": {"reason": "navigation"}},
-    {"id": "3255510", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "Bing"}, "prefs": [], "expected": {"reason": "navigation"}},
+    {"id": "3255510", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "Bing"}, "prefs": [], "expected": {"reason": "navigation"}, "unstable": {"win": "Windows-only: Bing SERP telemetry does not record on the CI runner"}},
     {"id": "3255515", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "DuckDuckGo"}, "prefs": [], "expected": {"reason": "navigation"}},
     {"id": "3255519", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"reason": "navigation"}},
     {"id": "3255524", "entry": "urlbar", "action": "refresh_navigation", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"reason": "navigation"}},

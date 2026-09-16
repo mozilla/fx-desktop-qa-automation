@@ -22,19 +22,38 @@ class GenericPage(BasePage):
     BOT_CHALLENGE_TITLE_MARKERS = {
         "Cloudflare": "just a moment",
     }
+    # Google's reCAPTCHA page titles itself with the blocked URL, so it needs a body match.
+    # Cloudflare's token survives in the page as a referer link after it leaves the URL.
+    BOT_CHALLENGE_BODY_MARKERS = {
+        "Google": "detected unusual traffic",
+        "Cloudflare": "__cf_chl_tk",
+    }
+    # Cloudflare appends this token once the challenge clears, leaving a normal-looking SERP
+    # that no title marker can catch.
+    BOT_CHALLENGE_URL_MARKERS = {
+        "Cloudflare": "__cf_chl_tk",
+    }
 
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
         """
-        Check whether an anti-bot interstitial replaced the page.
+        Check whether an anti-bot challenge hit the page, by title, URL or body.
 
         Returns:
-            str: Provider and page title, or None if the page looks normal.
+            str: Provider and what matched, or None if the page looks normal.
         """
         title = self.driver.title or ""
         for provider, marker in self.BOT_CHALLENGE_TITLE_MARKERS.items():
             if marker in title.lower():
                 return f"{provider} ({title!r})"
+        url = self.driver.current_url or ""
+        for provider, marker in self.BOT_CHALLENGE_URL_MARKERS.items():
+            if marker in url:
+                return f"{provider} (url match: {marker!r})"
+        source = (self.driver.page_source or "").lower()
+        for provider, marker in self.BOT_CHALLENGE_BODY_MARKERS.items():
+            if marker in source:
+                return f"{provider} (body match: {marker!r})"
         return None
 
     def navigate_dialog_to_location(
@@ -433,11 +452,13 @@ class GenericPdf(BasePage):
             "opacity": drawing_area.get_attribute("stroke-opacity"),
         }
 
-    def draw_on_pdf_page(self, page_number: str = "1") -> BasePage:
+    def draw_on_pdf_page(
+        self, page_number: str = "1", x_offset: int = 150, y_offset: int = 150
+    ) -> BasePage:
         """Draw a short line on the selected PDF page."""
         page = self.get_element("pdf-page", labels=[page_number])
         (
-            self.actions.move_to_element_with_offset(page, 150, 150)
+            self.actions.move_to_element_with_offset(page, x_offset, y_offset)
             .click_and_hold()
             .move_by_offset(80, 30)
             .release()
@@ -489,6 +510,11 @@ class GenericPdf(BasePage):
         self.actions.move_to_element(drawing_area).click().perform()
 
         return drawing_area
+
+    def wait_for_drawing_path_count(self, expected_count: int) -> BasePage:
+        """Wait until the expected number of drawing paths exists."""
+        self.expect(lambda _: len(self.get_elements("added-drawing")) == expected_count)
+        return self
 
     def get_drawing_resize_handle(self, drawing_area: WebElement) -> WebElement:
         """
