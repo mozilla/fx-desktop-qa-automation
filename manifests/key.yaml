@@ -1335,6 +1335,10 @@ pocket:
       result: pass
       splits: []
 preferences:
+  test_add_search_engine_option:
+    result: pass
+    splits:
+    - functional1
   test_always_translate_languages_can_be_added:
     result: pass
     splits:

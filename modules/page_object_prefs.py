@@ -195,6 +195,27 @@ class AboutPrefs(BasePage):
             for engine in self.get_elements("search-shortcuts-enabled-engine")
         ]
 
+    def add_search_engine(self, name: str, url: str, keyword: str) -> BasePage:
+        """Add an engine through the Add Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        form, and switch back out. The Add Engine button stays disabled until
+        the URL passes validation, so wait for it.
+        """
+        self.click_on("add-search-engine-button")
+        self.get_and_switch_iframe()
+        self.get_element("add-engine-name-input").send_keys(name)
+        self.get_element("add-engine-url-input").send_keys(url)
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
+        self.expect(
+            lambda _: not self.get_element("add-engine-accept-button").get_attribute(
+                "disabled"
+            )
+        )
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
