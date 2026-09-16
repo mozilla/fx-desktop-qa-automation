@@ -1064,6 +1064,29 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "offer-translations-checkbox": {
+    "selectorData": "offerTranslations",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Offer full page translation\" moz-checkbox; the checked attribute tracks browser.translations.automaticallyPopup",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "offer-translations-checkbox-input": {
+    "selectorData": "input",
+    "strategy": "id",
+    "shadowParent": "offer-translations-checkbox",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner <input type=\"checkbox\"> inside the offerTranslations shadow root; used to click the checkbox",
+      "location": "about:preferences#languages (shadow DOM of offerTranslations)"
+    }
+  },
   "translations-more-settings-button": {
     "selectorData": "translationsManageButton",
     "strategy": "id",
