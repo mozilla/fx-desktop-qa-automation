@@ -1818,6 +1818,11 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_verify_etp_section_display:
+    result: pass
+    splits:
+    - functional3
+    - nightly
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass
