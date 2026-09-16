@@ -203,7 +203,7 @@ jobs:
         env:
           FX_CHANNEL: ${{ inputs.fx_channel }}
         run: |
-          Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=exclude_$FX_CHANNEL"
+          Add-Content -Path $env:GITHUB_ENV -Value "STARFOX_EXCLUDE=exclude_$env:FX_CHANNEL"
 
       - name: Select tests
         id: select
