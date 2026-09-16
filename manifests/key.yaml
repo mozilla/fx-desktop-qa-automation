@@ -1719,7 +1719,7 @@ security_and_privacy:
     - ci-extended
   test_open_private_browsing_via_keyboard:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071792
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_passwords_appear_in_firefox_lockwise:
