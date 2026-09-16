@@ -1075,18 +1075,6 @@
       "location": "about:preferences#languages - Translations section"
     }
   },
-  "offer-translations-checkbox-input": {
-    "selectorData": "input",
-    "strategy": "id",
-    "shadowParent": "offer-translations-checkbox",
-    "groups": [
-      "doNotCache"
-    ],
-    "comment": {
-      "description": "Inner <input type=\"checkbox\"> inside the offerTranslations shadow root; used to click the checkbox",
-      "location": "about:preferences#languages (shadow DOM of offerTranslations)"
-    }
-  },
   "translations-more-settings-button": {
     "selectorData": "translationsManageButton",
     "strategy": "id",
