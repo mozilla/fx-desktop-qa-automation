@@ -64,6 +64,6 @@ def test_add_search_engine_option(
     nav.type_in_awesome_bar(SEARCH_TERM + Keys.ENTER, reset=False)
 
     # The engine's URL was used, with the term in place of %s.
-    results_page = GenericPage(driver, url=engine_url.replace("%s", SEARCH_TERM))
+    results_page = GenericPage(driver)
     results_page.url_contains(f"q={SEARCH_TERM}")
     results_page.element_has_text("page-body", RESULTS_TEXT)

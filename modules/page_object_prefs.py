@@ -208,9 +208,10 @@ class AboutPrefs(BasePage):
         self.get_element("add-engine-url-input").send_keys(url)
         self.get_element("add-engine-keyword-input").send_keys(keyword)
         self.expect(
-            lambda _: not self.get_element("add-engine-accept-button").get_attribute(
+            lambda _: self.get_element("add-engine-accept-button").get_attribute(
                 "disabled"
             )
+            is None
         )
         self.click_on("add-engine-accept-button")
         self.switch_to_default_frame()
