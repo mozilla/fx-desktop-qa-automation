@@ -16,7 +16,6 @@ on:
 permissions:
   actions: write
   contents: read
-  actions: write
 
 jobs:
   dispatch:
