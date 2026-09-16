@@ -656,7 +656,7 @@ def close_file_manager(sys_platform):
     yield
     if sys_platform == "Windows":
         run(["taskkill", "/F", "/IM", "explorer.exe"], check=True)
-        run(["start", "explorer.exe"], shell=True)
+        run(["start", "explorer.exe"])
     elif sys_platform == "Darwin":
         applescript = """
         tell application "Finder"
