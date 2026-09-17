@@ -43,6 +43,13 @@
 
     {"id": "3255560", "entry": "contextmenu_visual", "params": {"engine": "Google"}, "prefs": [], "expected": {"provider_id": "google", "source": "contextmenu_visual"}},
 
+    {"id": "3255568", "entry": "newtab_searchbar", "params": {"engine": "Google"}, "prefs": [], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "google", "source": "newtab_searchbar"}},
+    {"id": "3255580", "entry": "newtab_searchbar", "params": {"engine": "Bing"}, "prefs": [], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "bing", "source": "newtab_searchbar"}},
+    {"id": "3255592", "entry": "newtab_searchbar", "params": {"engine": "DuckDuckGo"}, "prefs": [], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "ddg", "source": "newtab_searchbar"}},
+    {"id": "3255603", "entry": "newtab_searchbar", "params": {"engine": "Perplexity"}, "prefs": [], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "perplexity", "source": "newtab_searchbar"}},
+    {"id": "3255613", "entry": "newtab_searchbar", "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "qwant", "source": "newtab_searchbar"}},
+    {"id": "3255633", "entry": "newtab_searchbar", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "unstable": "MCAB (newtab_searchbar) ships in 158; Beta 157 has no newtab search bar", "expected": {"provider_id": "ecosia", "source": "newtab_searchbar"}},
+
     {"id": "3255557", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "DE"]], "expected": {"partner_code": "firefox-b-d", "provider_id": "google", "provider_name": "Google"}},
     {"id": "3255558", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "CA"]], "expected": {"partner_code": "firefox-b-d", "provider_id": "google", "provider_name": "Google"}},
     {"id": "3255559", "entry": "urlbar", "params": {"engine": "Google"}, "prefs": [["browser.search.region", "US"]], "expected": {"partner_code": "firefox-b-1-d", "provider_id": "google", "provider_name": "Google"}},

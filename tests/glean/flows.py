@@ -20,6 +20,9 @@ ENTRY_PREFS: dict[str, list[tuple]] = {
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
         ("browser.startup.page", 1),
     ],
+    "newtab_searchbar": [
+        ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+    ],
     "urlbar_persisted": [
         ("browser.urlbar.showSearchTerms.enabled", True),
     ],
@@ -160,6 +163,20 @@ def _entry_urlbar_handoff(driver: Firefox, search_term: str, params: dict = None
     newtab.click_on("incontent-search-input")
     nav.set_awesome_bar()
     nav.type_in_awesome_bar(search_term + Keys.ENTER, reset=False)
+
+
+@_entry("newtab_searchbar")
+def _entry_newtab_searchbar(driver: Firefox, search_term: str, params: dict = None):
+    """Search from the newtab page's own search bar (MCAB), which Firefox tags as
+    source='newtab_searchbar'. Unlike handoff, this bar submits the search itself
+    rather than passing focus to the toolbar urlbar."""
+    # Instantiate objects
+    newtab = AboutNewtab(driver)
+    tabs = TabBar(driver)
+
+    # Open a new tab and search from its in-page search bar
+    tabs.open_and_switch_to_new_tab()
+    newtab.fill("newtab-searchbar-input", search_term)
 
 
 @_entry("urlbar_background_tab")
