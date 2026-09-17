@@ -4,7 +4,7 @@ name: Nightly Tests
 run-name: Nightly smoke tests triggered by ${{ github.actor }}
 
 # Dispatch only, that runs smoke tests every day on the morning generated nightly build
-# or the functional and glean tests on the first and last day of the cycle, in addition
+# or the functional+smoke  tests on the first and last day of the cycle, in addition
 # to the first Thursday morning.
 
 on:

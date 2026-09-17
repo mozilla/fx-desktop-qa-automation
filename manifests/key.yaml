@@ -768,7 +768,8 @@ language_packs:
     - exclude_nightly
 menus:
   test_copy_paste_actions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2072726
+    result: unstable
     splits:
     - smoke
     - ci
