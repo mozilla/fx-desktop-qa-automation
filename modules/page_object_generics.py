@@ -252,6 +252,7 @@ class GenericPdf(BasePage):
         self.html_body = self.get_element("html-body")
         self.pdf_body = self.get_element("pdf-body")
         self.max_page = int(self.get_element("page-input").get_attribute("max"))
+        self._last_pdf_text_point: dict[str, float] | None = None
 
     def get_green_highlighted_text(self) -> str:
         return self.get_element("highlighted-text").get_attribute("innerText")
@@ -467,13 +468,62 @@ class GenericPdf(BasePage):
         self.element_exists("added-drawing")
         return self
 
-    def add_text_to_pdf_page(self, text: str, page_number: str = "1") -> BasePage:
+    def add_text_to_pdf_page(
+        self,
+        text: str,
+        page_number: str = "1",
+        x_offset: int = 150,
+        y_offset: int = 220,
+    ) -> BasePage:
         """Add text to the selected PDF page."""
         page = self.get_element("pdf-page", labels=[page_number])
-        self.actions.move_to_element_with_offset(page, 150, 220).click().perform()
+        # Match ActionChains offsets to the element's in-view center.
+        self._last_pdf_text_point = self.driver.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            const left = Math.max(0, Math.min(rect.left, rect.right));
+            const right = Math.min(window.innerWidth, Math.max(rect.left, rect.right));
+            const top = Math.max(0, Math.min(rect.top, rect.bottom));
+            const bottom = Math.min(window.innerHeight, Math.max(rect.top, rect.bottom));
+            return {
+                x: Math.floor((left + right) / 2) + arguments[1],
+                y: Math.floor((top + bottom) / 2) + arguments[2],
+            };
+            """,
+            page,
+            x_offset,
+            y_offset,
+        )
+        self.actions.move_to_element_with_offset(
+            page, x_offset, y_offset
+        ).click().perform()
         self.actions.send_keys(text).perform()
         self.element_visible("added-text")
         self.element_has_text("added-text", text)
+        return self
+
+    def expect_text_at_pdf_page_location(
+        self,
+        tolerance: int = 5,
+    ) -> BasePage:
+        """Verify the text editor contains the point selected on the PDF page."""
+        assert self._last_pdf_text_point is not None, (
+            "Expected text to be added before checking its location."
+        )
+        selected_point = self._last_pdf_text_point
+
+        def text_contains_selected_point(_):
+            text_rect = self.get_element_rect(self.get_element("added-text"))
+            return (
+                text_rect["x"] - tolerance
+                <= selected_point["x"]
+                <= text_rect["x"] + text_rect["width"] + tolerance
+                and text_rect["y"] - tolerance
+                <= selected_point["y"]
+                <= text_rect["y"] + text_rect["height"] + tolerance
+            )
+
+        self.expect(text_contains_selected_point)
         return self
 
     def get_element_rect(self, element: WebElement) -> dict[str, float]:

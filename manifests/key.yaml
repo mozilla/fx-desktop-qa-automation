@@ -1284,6 +1284,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_text_location:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
