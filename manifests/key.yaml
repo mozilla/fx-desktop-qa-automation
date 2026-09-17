@@ -86,7 +86,6 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - nightly
   test_dont_show_search_suggestions_in_private_window:
     result: pass
     splits:
@@ -218,12 +217,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-    - nightly
   test_server_not_found_error_pb:
     result: pass
     splits:
     - functional1
-    - nightly
   test_suggestion_engine_selection:
     result: pass
     splits:
@@ -1044,7 +1041,6 @@ password_manager:
     result: pass
     splits:
     - functional2
-    - nightly
   test_edit_generated_password_triggers_autosave:
     result: pass
     splits:
@@ -1339,6 +1335,10 @@ pocket:
       result: pass
       splits: []
 preferences:
+  test_add_search_engine_option:
+    result: pass
+    splits:
+    - functional1
   test_always_translate_languages_can_be_added:
     result: pass
     splits:
@@ -1405,6 +1405,10 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_offer_full_page_translation_enabled:
+    result: pass
+    splits:
+    - functional1
   test_preferred_language_can_be_added:
     result: pass
     splits:
@@ -1659,7 +1663,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
-    - nightly
   test_etp_toggle_on_off_behavior:
     result: pass
     splits:
@@ -1773,7 +1776,6 @@ security_and_privacy:
     result: pass
     splits:
     - functional3
-    - nightly
   test_remember_decision_permissions_prompt:
     result: pass
     splits:

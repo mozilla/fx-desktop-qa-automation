@@ -1,5 +1,7 @@
 from modules.page_base import BasePage
 
+TRANSLATIONS_PARENT_MODULE = "resource://gre/actors/TranslationsParent.sys.mjs"
+
 
 class TranslationsPanel(BasePage):
     """
@@ -7,6 +9,25 @@ class TranslationsPanel(BasePage):
     """
 
     URL_TEMPLATE = ""
+
+    @BasePage.context_chrome
+    def allow_automatic_popup(self) -> BasePage:
+        """
+        Let the panel open on its own when Firefox offers a translation.
+
+        TranslationsParent suppresses the automatic popup whenever Marionette
+        is running, so the test flag has to be set to get the real behaviour.
+        """
+        # Flip the product's own test flag; there is no pref for this.
+        self.driver.execute_script(
+            f"""
+            const {{ TranslationsParent }} = ChromeUtils.importESModule(
+                "{TRANSLATIONS_PARENT_MODULE}"
+            );
+            TranslationsParent.testAutomaticPopup = true;
+            """
+        )
+        return self
 
     def open_panel(self) -> BasePage:
         """
