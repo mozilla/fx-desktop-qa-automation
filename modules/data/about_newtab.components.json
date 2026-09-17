@@ -25,6 +25,15 @@
       "location": "The about:newtab page"
     }
   },
+  "newtab-searchbar-input": {
+    "selectorData": ".urlbar-input-container input.urlbar-input",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The MCAB search input; searching from it tags the SERP as source='newtab_searchbar'",
+      "location": "The about:newtab page"
+    }
+  },
   "card-by-index": {
     "selectorData": "article-ds-card",
     "strategy": "css",
