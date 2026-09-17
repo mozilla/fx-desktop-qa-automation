@@ -22,14 +22,5 @@ def test_open_private_browsing_via_keyboard(driver: Firefox, nav: Navigation):
     # Verify the Private Browsing window is opened
     nav.is_private()
 
-    # Verify the purple mask (private browsing indicator icon) is displayed
-    with driver.context(driver.CONTEXT_CHROME):
-        WebDriverWait(driver, 10).until(
-            lambda browser: any(
-                icon.is_displayed()
-                for icon in browser.find_elements(
-                    By.CLASS_NAME, "private-browsing-indicator-icon"
-                )
-            ),
-            "No visible private browsing indicator in the current window",
-        )
+    # Verify the private browsing indicator icon is displayed
+    nav.any_element_visible("private-browsing-icon")
