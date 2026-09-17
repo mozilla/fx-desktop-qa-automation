@@ -1153,7 +1153,7 @@
   },
   "offer-translations-checkbox-input": {
     "selectorData": "input",
-    "strategy": "id",
+    "strategy": "tag",
     "shadowParent": "offer-translations-checkbox",
     "groups": [
       "doNotCache"
