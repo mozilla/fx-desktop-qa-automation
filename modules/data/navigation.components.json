@@ -303,11 +303,24 @@
     }
   },
   "addon-suggestion": {
-    "selectorData": "urlbarView-row-body",
-    "strategy": "class",
-    "groups": [],
+    "selectorData": "#urlbar-results div.urlbarView-row[type='rust_amo']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "Addon suggestion in the URL bar search results",
+      "description": "Addon suggestion (Firefox Suggest AMO result) in the URL bar search results",
+      "location": "URL bar search results"
+    }
+  },
+  "addon-suggestion-title": {
+    "selectorData": "#urlbar-results div.urlbarView-row[type='rust_amo'] .urlbarView-title",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Title (add-on name) of the add-on suggestion row",
       "location": "URL bar search results"
     }
   },
