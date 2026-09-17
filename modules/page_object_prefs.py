@@ -208,10 +208,10 @@ class AboutPrefs(BasePage):
         self.get_element("add-engine-url-input").send_keys(url)
         self.get_element("add-engine-keyword-input").send_keys(keyword)
         self.expect(
-            lambda _: self.get_element("add-engine-accept-button").get_attribute(
-                "disabled"
+            lambda _: (
+                self.get_element("add-engine-accept-button").get_attribute("disabled")
+                is None
             )
-            is None
         )
         self.click_on("add-engine-accept-button")
         self.switch_to_default_frame()
@@ -1997,10 +1997,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select wrote through to the backing pref rather than
         # just holding the value we assigned.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 
