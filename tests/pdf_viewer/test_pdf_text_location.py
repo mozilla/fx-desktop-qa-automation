@@ -31,19 +31,13 @@ def test_user_can_select_location_for_pdf_text(pdf_viewer):
     C1938265: Verify that the user can select a location for writing text
     over the PDF document.
     """
-    # Step 1: PDF is opened and the Text/Draw toolbar buttons are available.
     pdf_viewer.element_visible("toolbar-text")
     pdf_viewer.element_visible("toolbar-draw")
 
-    # Steps 2-3: Select Text and add text at a location on the PDF document.
     pdf_viewer.select_editor_tool("toolbar-text")
     pdf_viewer.add_text_to_pdf_page(
         TEXT_TO_ADD,
         x_offset=TEXT_X_OFFSET,
         y_offset=TEXT_Y_OFFSET,
     )
-    pdf_viewer.expect_text_at_pdf_page_location(
-        "1",
-        TEXT_X_OFFSET,
-        TEXT_Y_OFFSET,
-    )
+    pdf_viewer.expect_text_at_pdf_page_location()
