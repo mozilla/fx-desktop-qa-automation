@@ -1632,21 +1632,6 @@
       "location": "about:preferences#privacy"
     }
   },
-  "show-sidebar-checkbox": {
-    "selectorData": "browserLayoutShowSidebar",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "Checkbox to toggle \"Show sidebar\"",
-      "location": "about:preferences (Browser Layout)"
-    }
-  },
-  "show-sidebar-shadow-box": {
-    "selectorData": "input",
-    "strategy": "id",
-    "groups": [],
-    "shadowParent": "show-sidebar-checkbox"
-  },
   "change-primary-password": {
     "selectorData": "changePrimaryPassword",
     "strategy": "id",

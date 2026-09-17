@@ -1712,13 +1712,6 @@ class AboutPrefs(BasePage):
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
-    def enable_show_sidebar(self):
-        """Enable the Show Sidebar checkbox in Tabs and browsing > Browser layout."""
-        if self.get_element("show-sidebar-checkbox").get_attribute("checked") is None:
-            self.click_on("show-sidebar-shadow-box")
-        self.element_has_attribute("show-sidebar-checkbox", "checked")
-        return self
-
     def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
         """Wait until the UI reflects the selected default search engine."""
         self.wait.until(
