@@ -1,6 +1,8 @@
 from modules.page_base import BasePage
 
 TRANSLATIONS_PARENT_MODULE = "resource://gre/actors/TranslationsParent.sys.mjs"
+# First run downloads the language model, which is slow.
+TRANSLATION_TIMEOUT = 120
 
 
 class TranslationsPanel(BasePage):
@@ -38,6 +40,21 @@ class TranslationsPanel(BasePage):
         self.element_visible("translations-urlbar-button")
         self.click_on("translations-urlbar-button")
         self.element_visible("translations-panel")
+        return self
+
+    @BasePage.context_chrome
+    def translate_page(self) -> BasePage:
+        """
+        Press Translate in the panel and wait until the page is translated.
+        """
+        self.click_on("panel-translate-button")
+
+        # The language badge only shows up once the engine is done.
+        self.custom_wait(timeout=TRANSLATION_TIMEOUT).until(
+            lambda _: self.get_element(
+                "translations-urlbar-button-locale"
+            ).is_displayed()
+        )
         return self
 
     def check_always_translate_language(self) -> BasePage:

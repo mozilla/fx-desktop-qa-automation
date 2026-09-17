@@ -9,6 +9,15 @@
       "location": "URL bar"
     }
   },
+  "translations-urlbar-button-locale": {
+    "selectorData": "translations-button-locale",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Language tag badge on the URL bar button, shown once the page is translated",
+      "location": "URL bar"
+    }
+  },
   "translations-panel": {
     "selectorData": "full-page-translations-panel",
     "strategy": "id",
@@ -16,6 +25,15 @@
     "comment": {
       "description": "The full page translations panel",
       "location": "Panel anchored to the URL bar translations button"
+    }
+  },
+  "panel-translate-button": {
+    "selectorData": "full-page-translations-panel-translate",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Translate\" button in the translations panel footer",
+      "location": "Translations panel footer"
     }
   },
   "settings-gear-button": {
