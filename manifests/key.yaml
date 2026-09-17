@@ -1405,7 +1405,15 @@ preferences:
     result: unstable
     splits:
     - functional2
+  test_offer_full_page_translation_disabled:
+    result: pass
+    splits:
+    - functional1
   test_offer_full_page_translation_enabled:
+    result: pass
+    splits:
+    - functional1
+  test_pages_can_be_translated_with_offer_disabled:
     result: pass
     splits:
     - functional1
