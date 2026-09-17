@@ -217,6 +217,20 @@ class AboutPrefs(BasePage):
         self.switch_to_default_frame()
         return self
 
+    def edit_search_engine_keyword(self, engine_id: str, keyword: str) -> BasePage:
+        """Add a keyword to an engine through its Edit Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        keyword, and switch back out.
+        """
+        self.click_on("edit-search-engine-button", labels=[engine_id])
+        self.get_and_switch_iframe()
+        self.element_visible("add-engine-keyword-input")
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
