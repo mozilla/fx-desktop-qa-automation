@@ -151,6 +151,82 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-added-engine": {
+    "selectorData": "#engineList moz-box-item[label='{name}'][description='{keyword}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A user-added engine row in the Search shortcuts list, matched by its name and keyword",
+      "location": "about:preferences#search"
+    }
+  },
+  "add-search-engine-button": {
+    "selectorData": "addEngineButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The \"Add search engine\" button under Additional search engines",
+      "location": "about:preferences#search"
+    }
+  },
+  "add-engine-name-input": {
+    "selectorData": "engineName",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The \"Search engine name\" field",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-url-input": {
+    "selectorData": "engineUrl",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The URL field, takes %s in place of the search term",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-keyword-input": {
+    "selectorData": "engineAlias",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The optional Keyword field",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-dialog-shadow-root": {
+    "selectorData": "add-engine-dialog",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Add Search Engine dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-accept-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "add-engine-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Add Search Engine dialog \"Add Engine\" button",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
   "find-in-settings": {
     "selectorData": "searchInput",
     "strategy": "id",
