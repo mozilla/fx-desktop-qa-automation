@@ -50,9 +50,9 @@ class TranslationsPanel(BasePage):
 
         # autocheck="false", so Firefox adds the attribute once the pref is set.
         self.expect(
-            lambda _: self.get_element("always-translate-menuitem").get_attribute(
-                "checked"
+            lambda _: (
+                self.get_element("always-translate-menuitem").get_attribute("checked")
+                is not None
             )
-            is not None
         )
         return self

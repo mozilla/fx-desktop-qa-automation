@@ -45,8 +45,9 @@ def test_preferred_language_can_be_added(driver: Firefox, about_prefs: AboutPref
     for language in LANGUAGES:
         about_prefs.set_alternative_language(language)
         about_prefs.expect(
-            lambda _, lang=language: lang
-            in about_prefs.get_installed_browser_languages()
+            lambda _, lang=language: (
+                lang in about_prefs.get_installed_browser_languages()
+            )
         )
 
     # Reopening the pane still lists every downloaded language.
