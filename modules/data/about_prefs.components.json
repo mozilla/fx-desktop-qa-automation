@@ -1064,6 +1064,17 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "offer-translations-checkbox": {
+    "selectorData": "offerTranslations",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Offer full page translation\" moz-checkbox; the checked attribute tracks browser.translations.automaticallyPopup",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
   "translations-more-settings-button": {
     "selectorData": "translationsManageButton",
     "strategy": "id",
