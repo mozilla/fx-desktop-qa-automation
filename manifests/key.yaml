@@ -1512,6 +1512,10 @@ security_and_privacy:
     splits:
     - nightly
     - functional2
+  test_always_denied_permission:
+    result: pass
+    splits:
+    - functional1
   test_blocking_cryptominers:
     result: deprecated
     splits:
@@ -1770,15 +1774,15 @@ security_and_privacy:
     splits:
     - functional3
     - nightly
+  test_remember_decision_permissions_prompt:
+    result: pass
+    splits:
+    - functional1
   test_report_broken_site:
     result: pass
     splits:
     - functional3
     - nightly
-  test_remember_decision_permissions_prompt:
-    result: pass
-    splits:
-    - functional1
   test_secure_domain_certificate_messaging_panel:
     result: pass
     splits:
