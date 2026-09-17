@@ -225,7 +225,6 @@ class AboutPrefs(BasePage):
         """
         self.click_on("edit-search-engine-button", labels=[engine_id])
         self.get_and_switch_iframe()
-        self.element_visible("add-engine-keyword-input")
         self.get_element("add-engine-keyword-input").send_keys(keyword)
         self.click_on("add-engine-accept-button")
         self.switch_to_default_frame()
