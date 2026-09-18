@@ -67,7 +67,7 @@ def test_never_translate_languages_can_be_added(
     translations_panel.open_panel()
     translations_panel.check_never_translate_language()
 
-    # The page is left alone, so the translated language badge never shows up.
+    # Nothing requested a translation, so the locale badge should stay absent.
     translations_panel.element_not_visible("translations-urlbar-button-locale")
 
     # Both languages are listed back on the Translations sub-pane.
