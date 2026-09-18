@@ -562,7 +562,9 @@ class GenericPdf(BasePage):
             font_size_control,
             str(font_size),
         )
-        assert updated_size == str(font_size)
+        assert updated_size == str(font_size), (
+            f"Expected PDF text font size to be {font_size}, got {updated_size}."
+        )
         self.expect(
             lambda _: text_content.value_of_css_property("font-size") != initial_size
         )
