@@ -16,7 +16,6 @@ def add_to_prefs_list():
     return [
         ("browser.search.region", "RU"),
         ("doh-rollout.home-region", "RU"),
-        ("browser.aboutConfig.showWarning", False),
     ]
 
 

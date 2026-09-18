@@ -16,7 +16,6 @@ def add_to_prefs_list():
     return [
         ("browser.search.region", "UA"),
         ("doh-rollout.home-region", "UA"),
-        ("browser.aboutConfig.showWarning", False),
     ]
 
 
