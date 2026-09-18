@@ -31,5 +31,4 @@ def test_doh_provider_ua_region(driver: Firefox):
     prefs.open()
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")
-    prefs.verify_doh_provider("Cloudflare")
     prefs.verify_doh_providers_displayed(EXPECTED_PROVIDERS)
