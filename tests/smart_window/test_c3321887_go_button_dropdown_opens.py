@@ -45,7 +45,10 @@ def test_go_button_dropdown_opens(active_smart_window: SmartWindow, driver):
     ):
         assert expected in items, f"{expected} missing from action menu: {items}"
 
-    # The Search With… submenu lists the available engines.
+    # Step 2: the Search With… submenu lists the available engines. Its
+    # panel-items are rendered eagerly rather than on expand -- verified by
+    # reading them without expanding, over five consecutive runs. Driving the
+    # submenu open via its own toggle() was tried and is unreliable (1/5).
     engines = bar.get_search_with_items()
     assert "Google" in engines, f"expected Google among engines, got {engines}"
     assert len(engines) > 1, f"expected several engines, got {engines}"

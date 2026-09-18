@@ -147,17 +147,18 @@ class SmartBar(BasePage):
 
     def open_action_menu(self) -> BasePage:
         """
-        Open the CTA's Go/Ask action menu.
+        Open the CTA's Go/Ask action menu, leaving it open if already shown.
 
         The CTA is a moz-button with type="split"; its menu portion is not a
         separate element that can be clicked directly, so the panel-list is
         opened through its own toggle(), which is the same entry point the
-        split button uses.
+        split button uses. toggle() flips state, so an already-open menu is
+        left alone rather than being closed.
         """
         opened = self._script(
             "const l = ctaLists()[0];"
             "if (!l) return false;"
-            "l.toggle(new MouseEvent('click'));"
+            "if (!l.open) l.toggle(new MouseEvent('click'));"
             "return true;"
         )
         if not opened:
