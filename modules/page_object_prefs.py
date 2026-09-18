@@ -217,6 +217,19 @@ class AboutPrefs(BasePage):
         self.switch_to_default_frame()
         return self
 
+    def edit_search_engine_keyword(self, engine_id: str, keyword: str) -> BasePage:
+        """Add a keyword to an engine through its Edit Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        keyword, and switch back out.
+        """
+        self.click_on("edit-search-engine-button", labels=[engine_id])
+        self.get_and_switch_iframe()
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
@@ -394,6 +407,20 @@ class AboutPrefs(BasePage):
             if not option.get_attribute("hidden")
         ]
 
+    def set_fallback_language(self, lang_code: str) -> BasePage:
+        """Sets the Fallback language via the moz-select on the Languages pane.
+
+        Args:
+            lang_code: The language code to set (e.g. 'de')
+        """
+        # The fallback options are filled in asynchronously, so wait for ours.
+        self.wait.until(lambda _: lang_code in self.get_fallback_language_options())
+        Select(self.get_element("browser-language-fallback-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("browser-language-fallback", "value", lang_code)
+        return self
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 
@@ -492,6 +519,29 @@ class AboutPrefs(BasePage):
             lang_code: The language code to delete (e.g. 'es')
         """
         self.click_on("always-translate-remove-button", labels=[lang_code])
+        return self
+
+    def add_never_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Never translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "never-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("never-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("never-translate-picker", "value", lang_code)
+        self.click_on("never-translate-add-button")
         return self
 
     def open_doh_advanced(self) -> BasePage:

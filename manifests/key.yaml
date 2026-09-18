@@ -1284,6 +1284,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_text_area_can_be_deleted_moved_and_resized:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:
@@ -1377,7 +1382,19 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_edit_installed_engines:
+    result: pass
+    splits:
+    - functional1
   test_fallback_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_changed:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1405,6 +1422,10 @@ preferences:
     splits:
     - smoke
     - exclude_xvfb
+  test_never_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
