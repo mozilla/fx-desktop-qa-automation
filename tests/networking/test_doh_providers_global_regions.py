@@ -4,32 +4,24 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutPrefs
 
 EXPECTED_PROVIDERS = ["Cloudflare", "NextDNS"]
-REGION_CASE_IDS = {
-    "RO": "2180318.1",
-    "UK": "2180318.2",
-    "SE": "2180318.3",
-}
-
-
-@pytest.fixture(params=REGION_CASE_IDS.keys())
-def region(request):
-    return request.param
+REGIONS = ["RO", "UK", "SE"]
 
 
 @pytest.fixture()
-def test_case(region):
-    return REGION_CASE_IDS[region]
+def test_case():
+    return "2180318"
 
 
 @pytest.fixture()
-def add_to_prefs_list(region):
+def add_to_prefs_list(region: str):
     return [
         ("browser.search.region", region),
         ("doh-rollout.home-region", region),
     ]
 
 
-def test_doh_providers_ro_uk_se_regions(driver: Firefox):
+@pytest.mark.parametrize("region", REGIONS)
+def test_doh_providers_global_regions(driver: Firefox, region: str):
     """
     C2180318 - Verify the Cloudflare and NextDNS providers are displayed for RO, UK, SE regions.
     """
