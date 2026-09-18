@@ -1289,6 +1289,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_text_uses_selected_font_size_and_color:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_zoom_checkboxes:
     result: pass
     splits:

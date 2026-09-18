@@ -526,6 +526,44 @@ class GenericPdf(BasePage):
         self.expect(text_contains_selected_point)
         return self
 
+    def select_pdf_text_area(self) -> WebElement:
+        """Finish editing and select the added text area."""
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        text_area = self.get_element("added-text")
+        self.actions.move_to_element(text_area).click().perform()
+        return text_area
+
+    def set_pdf_text_style(self, color: str, font_size: int) -> BasePage:
+        """Set the Text tool's defaults or update the selected text area."""
+        for control_name, value in [
+            ("text-color", color),
+            ("text-font-size", str(font_size)),
+        ]:
+            control = self.get_element(control_name)
+            # Native color dialogs and range sliders aren't portable through WebDriver.
+            updated_value = self.driver.execute_script(
+                """
+                const control = arguments[0];
+                control.value = arguments[1];
+                control.dispatchEvent(new Event("input", { bubbles: true }));
+                return control.value;
+                """,
+                control,
+                value,
+            )
+            assert updated_value == value, (
+                f"Expected {control_name} to be {value}, got {updated_value}."
+            )
+        return self
+
+    def get_pdf_text_style(self) -> dict[str, str]:
+        """Return the text area's rendered color and font size."""
+        text_content = self.get_element("added-text-content")
+        return {
+            "color": text_content.value_of_css_property("color"),
+            "font_size": text_content.value_of_css_property("font-size"),
+        }
+
     def get_element_rect(self, element: WebElement) -> dict[str, float]:
         """Return the element bounding client rect."""
         return self.driver.execute_script(
