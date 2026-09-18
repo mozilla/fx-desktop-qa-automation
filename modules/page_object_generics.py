@@ -526,12 +526,12 @@ class GenericPdf(BasePage):
         self.expect(text_contains_selected_point)
         return self
 
-    def select_pdf_text_area(self) -> WebElement:
+    def select_pdf_text_area(self) -> BasePage:
         """Finish editing and select the added text area."""
         self.actions.send_keys(Keys.ESCAPE).perform()
         text_area = self.get_element("added-text")
         self.actions.move_to_element(text_area).click().perform()
-        return text_area
+        return self
 
     def set_pdf_text_style(self, color: str, font_size: int) -> BasePage:
         """Set the Text tool's defaults or update the selected text area."""
