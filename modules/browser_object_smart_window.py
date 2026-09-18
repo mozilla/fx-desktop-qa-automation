@@ -189,6 +189,14 @@ class SmartWindow(BasePage):
         shadow roots down, which the components.json selector system cannot
         traverse, so the walk runs in privileged JS. Matched on its
         data-l10n-id so the lookup does not depend on the UI locale.
+
+        Raises
+        ------
+        AssertionError
+            On two separate paths, not just the caught timeout: the sidebar
+            stayed open until the wait expired, or the JS walk was cut off by
+            its depth cap. The second propagates out of the predicate without
+            touching the `except` below, since retrying cannot resolve it.
         """
 
         # NOTE: this expect() predicate has a side effect -- it clicks. That
@@ -208,9 +216,16 @@ class SmartWindow(BasePage):
                 return True
             result = self._click_sidebar_close_button()
             if result == "truncated":
+                # Deliberately does not claim the button is nested too deep:
+                # the flag only says some branch was cut off, which may not be
+                # the branch the button is on. All that is known is that the
+                # walk was incomplete, so "not found" is not trustworthy.
                 raise AssertionError(
-                    "shadow walk hit its depth cap before finding the sidebar "
-                    "close button -- aiWindow.html nesting has grown past 12"
+                    "the walk for the sidebar close button stopped at its "
+                    "depth cap of 12 without finding it, so the button is "
+                    "either absent or below the cap -- this cannot be told "
+                    "apart from here. Retrying will not help; raise the cap "
+                    "in _click_sidebar_close_button to distinguish them."
                 )
             clicked_at_least_once |= bool(result)
             return False
