@@ -1,4 +1,5 @@
 import pytest
+from selenium.webdriver.support.color import Color
 
 from modules.page_object import GenericPdf
 
@@ -30,6 +31,17 @@ def add_to_prefs_list():
     return [("pdfjs.annotationEditorMode", 0)]
 
 
+def _assert_text_style(pdf_viewer: GenericPdf, color: str, font_size: int) -> None:
+    style = pdf_viewer.get_pdf_text_style()
+    scale = float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
+    assert Color.from_string(style["color"]).hex == color, (
+        f"Expected PDF text color {color}, got {style['color']}."
+    )
+    assert float(style["font_size"].removesuffix("px")) == pytest.approx(
+        font_size * scale, abs=0.01
+    ), f"Expected PDF text size {font_size}, got {style['font_size']}."
+
+
 def test_pdf_text_uses_selected_font_size_and_color(pdf_viewer: GenericPdf):
     """C1938269: New and existing PDF text use the selected font size and color."""
     pdf_viewer.element_visible("toolbar-text")
@@ -39,28 +51,12 @@ def test_pdf_text_uses_selected_font_size_and_color(pdf_viewer: GenericPdf):
     pdf_viewer.set_pdf_text_style(INITIAL_COLOR, INITIAL_FONT_SIZE)
 
     pdf_viewer.add_text_to_pdf_page(TEXT_TO_ADD)
-    scale = float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
-    initial_style = pdf_viewer.get_pdf_text_style()
-    assert initial_style["color"] == "rgb(0, 96, 223)", (
-        f"Expected new PDF text to use {INITIAL_COLOR}, got {initial_style['color']}."
-    )
-    assert float(initial_style["font_size"].removesuffix("px")) == pytest.approx(
-        INITIAL_FONT_SIZE * scale, abs=0.01
-    ), (
-        f"Expected new PDF text size {INITIAL_FONT_SIZE}, got {initial_style['font_size']}."
-    )
+    _assert_text_style(pdf_viewer, INITIAL_COLOR, INITIAL_FONT_SIZE)
 
     pdf_viewer.select_pdf_text_area()
+    pdf_viewer.element_visible("text-options")
     pdf_viewer.set_pdf_text_style(UPDATED_COLOR, UPDATED_FONT_SIZE)
-    updated_style = pdf_viewer.get_pdf_text_style()
-    assert updated_style["color"] == "rgb(255, 0, 57)", (
-        f"Expected selected PDF text to use {UPDATED_COLOR}, got {updated_style['color']}."
-    )
-    assert float(updated_style["font_size"].removesuffix("px")) == pytest.approx(
-        UPDATED_FONT_SIZE * scale, abs=0.01
-    ), (
-        f"Expected selected PDF text size {UPDATED_FONT_SIZE}, got {updated_style['font_size']}."
-    )
+    _assert_text_style(pdf_viewer, UPDATED_COLOR, UPDATED_FONT_SIZE)
     assert pdf_viewer.get_element("added-text-content").text == TEXT_TO_ADD, (
         "Changing PDF text style must preserve the written text."
     )
