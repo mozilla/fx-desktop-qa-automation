@@ -153,6 +153,7 @@ class SmartBar(BasePage):
         if not before:
             raise ValueError("no tagged sites to delete")
         self._focus_editor()
+        # Two presses are expected (space, then chip); 4 gives safety headroom.
         for _ in range(4):
             self.actions.send_keys(Keys.BACKSPACE).perform()
             if len(self.get_tagged_sites()) < before:
@@ -172,8 +173,7 @@ class SmartBar(BasePage):
         empty. Empty list once the field has text.
         """
         return self._script(
-            "const e = editor();"
-            "const pm = e.shadowRoot.querySelector('div.ProseMirror');"
-            "return Array.from(pm.querySelectorAll('.placeholder-hints li'))"
-            "  .map(li => li.textContent.trim());"
+            "const p = prosemirror();"
+            "return p ? Array.from(p.querySelectorAll('.placeholder-hints li'))"
+            "  .map(li => li.textContent.trim()) : [];"
         )
