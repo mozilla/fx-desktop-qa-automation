@@ -190,11 +190,15 @@ class SmartWindow(BasePage):
         data-l10n-id so the lookup does not depend on the UI locale.
         """
 
-        # The container becomes visible before the document inside
-        # ai-window-browser finishes loading, and a click landing during that
-        # window is dropped. Poll on the outcome -- clicking again each time
-        # the sidebar is still open -- rather than clicking once and hoping.
-        # The X is close-only, not a toggle, so a repeat click cannot reopen.
+        # NOTE: this expect() predicate has a side effect -- it clicks. That
+        # is deliberate but unusual; predicates elsewhere in this BOM are pure
+        # observers. Do NOT copy this shape for a toggle control: repeated
+        # clicks would flip it back and forth and never settle. It is only
+        # safe here because the X is close-only, so a repeat click is a no-op.
+        #
+        # The retry is needed because the container becomes visible before the
+        # document inside ai-window-browser finishes loading, and a click
+        # landing in that window is silently dropped (observed 9/10 without).
         def _closed(_) -> bool:
             if not self.ai_sidebar_open():
                 return True
@@ -213,8 +217,7 @@ class SmartWindow(BasePage):
         on sidebar state instead of this value -- what matters here is that a
         miss is a side-effect-free no-op, which is what makes retrying safe.
         """
-        return bool(
-            self.driver.execute_script("""
+        return self.driver.execute_script("""
                 const br = document.getElementById("ai-window-browser");
                 const doc = br && br.contentDocument;
                 if (!doc) return false;
@@ -235,8 +238,7 @@ class SmartWindow(BasePage):
                         }
                     }
                 })(doc, 0);
-                if (!hit) return false;
-                hit.click();
-                return true;
-            """)
-        )
+            if (!hit) return false;
+            hit.click();
+            return true;
+        """)
