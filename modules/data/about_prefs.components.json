@@ -1431,6 +1431,47 @@
       "location": "about:preferences#translations - Automatic translation section"
     }
   },
+  "never-translate-picker": {
+    "selectorData": "translationsNeverTranslateLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select in the \"Never translate these languages\" list",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "never-translate-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: never-translate-picker)",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-add-button": {
+    "selectorData": "translationsNeverTranslateLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-item": {
+    "selectorData": "moz-box-item.translations-never-translate-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate language, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",
