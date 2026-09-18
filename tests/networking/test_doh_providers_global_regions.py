@@ -14,6 +14,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list(region: str):
+    # region is injected via the test's @pytest.mark.parametrize below
     return [
         ("browser.search.region", region),
         ("doh-rollout.home-region", region),
