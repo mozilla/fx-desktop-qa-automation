@@ -177,5 +177,13 @@
   "tests/preferences/test_never_remember_history.py": "Agree",
   "tests/preferences/test_notifications_change_set.py": "Agree",
   "tests/printing_ui/test_print_preview.py": "Agree",
-  "tests/printing_ui/test_print_to_pdf.py": "Agree"
+  "tests/printing_ui/test_print_to_pdf.py": "Agree",
+  "tests/reader_view/test_improved_type_control_panel.py": "tree lacks this coverage",
+  "tests/reader_view/test_reader_view_location_bar.py": "Agree",
+  "tests/scrolling_panning_zooming/test_default_zoom_persists.py": "Agree",
+  "tests/scrolling_panning_zooming/test_mouse_wheel_zoom.py": "Agree",
+  "tests/scrolling_panning_zooming/test_zoom_from_menu_bar.py": "main menu zoom controls are not tested in tree",
+  "tests/scrolling_panning_zooming/test_zoom_menu_correlation.py": "no Firefox menu zoom controls tests in tree",
+  "tests/scrolling_panning_zooming/test_zoom_text_only.py": "tree tests don't actually check text change",
+  "tests/security_and_privacy/test_cache_is_cleared_via_end_private_session_button.py": "Agree"
 }
