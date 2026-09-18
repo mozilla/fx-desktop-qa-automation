@@ -207,8 +207,11 @@ class SmartWindow(BasePage):
     @BasePage.context_chrome
     def _click_sidebar_close_button(self) -> bool:
         """
-        Click the sidebar's X button if it is present yet; report whether it
-        was. Safe to poll -- a miss is a no-op.
+        Click the sidebar's X button if it is present yet.
+
+        Returns whether the click landed. close_ai_sidebar deliberately polls
+        on sidebar state instead of this value -- what matters here is that a
+        miss is a side-effect-free no-op, which is what makes retrying safe.
         """
         return bool(
             self.driver.execute_script("""
@@ -216,6 +219,9 @@ class SmartWindow(BasePage):
                 const doc = br && br.contentDocument;
                 if (!doc) return false;
                 let hit = null;
+                // aiWindow.html nests a few shadow roots deep to reach the
+                // close button; 12 is headroom against further nesting while
+                // still bounding a walk that would otherwise not terminate.
                 (function walk(node, depth) {
                     if (!node || depth > 12) return;
                     for (const el of node.querySelectorAll("*")) {
