@@ -1,5 +1,6 @@
 import logging
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -199,17 +200,35 @@ class SmartWindow(BasePage):
         # The retry is needed because the container becomes visible before the
         # document inside ai-window-browser finishes loading, and a click
         # landing in that window is silently dropped (observed 9/10 without).
+        clicked_at_least_once = False
+
         def _closed(_) -> bool:
+            nonlocal clicked_at_least_once
             if not self.ai_sidebar_open():
                 return True
-            if self._click_sidebar_close_button() == "truncated":
+            result = self._click_sidebar_close_button()
+            if result == "truncated":
                 raise AssertionError(
                     "shadow walk hit its depth cap before finding the sidebar "
                     "close button -- aiWindow.html nesting has grown past 12"
                 )
+            clicked_at_least_once |= bool(result)
             return False
 
-        self.expect(_closed)
+        try:
+            self.expect(_closed)
+        except TimeoutException:
+            # A bare TimeoutException here cannot distinguish "the button was
+            # never reachable" from "it was clicked and the sidebar ignored
+            # it", which are different bugs. Say which one happened.
+            raise AssertionError(
+                "AI chat sidebar did not close: "
+                + (
+                    "the X button was clicked but the sidebar stayed open"
+                    if clicked_at_least_once
+                    else "the X button never appeared inside ai-window-browser"
+                )
+            ) from None
         return self
 
     @BasePage.context_chrome
@@ -230,30 +249,30 @@ class SmartWindow(BasePage):
         outcome retrying cannot fix, so the caller raises on it.
         """
         return self.driver.execute_script("""
-                const br = document.getElementById("ai-window-browser");
-                const doc = br && br.contentDocument;
-                if (!doc) return false;
-                let hit = null;
-                let truncated = false;
-                // aiWindow.html nests a few shadow roots deep to reach the
-                // close button; 12 is headroom against further nesting while
-                // still bounding a walk that would otherwise not terminate.
-                // Bailing on depth is reported separately so it cannot be
-                // mistaken for the button simply being absent.
-                (function walk(node, depth) {
-                    if (!node) return;
-                    if (depth > 12) { truncated = true; return; }
-                    for (const el of node.querySelectorAll("*")) {
-                        if (el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
-                            hit = el;
-                            return;
-                        }
-                        if (el.shadowRoot) {
-                            walk(el.shadowRoot, depth + 1);
-                            if (hit) return;
-                        }
+            const br = document.getElementById("ai-window-browser");
+            const doc = br && br.contentDocument;
+            if (!doc) return false;
+            let hit = null;
+            let truncated = false;
+            // aiWindow.html nests a few shadow roots deep to reach the close
+            // button; 12 is headroom against further nesting while still
+            // bounding a walk that would otherwise not terminate. Bailing on
+            // depth is reported separately so it cannot be mistaken for the
+            // button simply being absent.
+            (function walk(node, depth) {
+                if (!node) return;
+                if (depth > 12) { truncated = true; return; }
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
+                        hit = el;
+                        return;
                     }
-                })(doc, 0);
+                    if (el.shadowRoot) {
+                        walk(el.shadowRoot, depth + 1);
+                        if (hit) return;
+                    }
+                }
+            })(doc, 0);
             if (!hit) return truncated ? "truncated" : false;
             hit.click();
             return true;
