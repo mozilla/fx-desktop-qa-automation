@@ -108,8 +108,13 @@ class SmartBar(BasePage):
     # ── Text ─────────────────────────────────────────────────────────────
 
     def get_smart_bar_text(self) -> str:
-        """Return the Smart Bar's current text."""
-        return self._script("return editor().value;")
+        """
+        Return the Smart Bar's current text, or "" before it is available.
+
+        Returning a value rather than throwing lets expect() poll this during
+        the window where the editor has not finished loading.
+        """
+        return self._script("const e = editor(); return e ? e.value : '';")
 
     def set_smart_bar_text(self, text: str) -> BasePage:
         """
@@ -135,13 +140,13 @@ class SmartBar(BasePage):
 
     # ── Go / Ask action menu ─────────────────────────────────────────────
 
-    def action_menu_open(self) -> bool:
+    def is_action_menu_open(self) -> bool:
         """Report whether the CTA's Go/Ask action menu is open."""
         return bool(self._script("const l = ctaLists()[0]; return !!(l && l.open);"))
 
     def expect_action_menu_open(self, is_open: bool = True) -> BasePage:
         """Wait until the Go/Ask action menu is (or is not) open."""
-        self.expect(lambda _: self.action_menu_open() == is_open)
+        self.expect(lambda _: self.is_action_menu_open() == is_open)
         return self
 
     def open_action_menu(self) -> BasePage:

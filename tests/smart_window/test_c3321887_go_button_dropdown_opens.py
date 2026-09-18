@@ -6,11 +6,12 @@ Search with the default engine, and Search with…, plus the engine submenu.
 
 import pytest
 
-from modules.browser_object import SmartBar, SmartWindow
-from modules.browser_object_smart_bar import (
+from modules.browser_object import (
     ACTION_MENU_GO_TO_SITE,
     ACTION_MENU_SEARCH_WITH,
     ACTION_MENU_SEARCH_WITH_DEFAULT,
+    SmartBar,
+    SmartWindow,
 )
 
 QUERY = "what is the superbowl"
