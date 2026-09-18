@@ -127,7 +127,18 @@ class SmartBar(BasePage):
         clears the field.
         """
         logging.info("Setting Smart Bar text to %r", text)
-        self._script("editor().value = arguments[0];", text)
+        # Guarded like get_smart_bar_text: an unguarded assignment throws an
+        # opaque "Cannot set properties of null" if this is ever called
+        # without open_smart_bar() having run first.
+        assigned = self._script(
+            "const e = editor();"
+            "if (!e) return false;"
+            "e.value = arguments[0];"
+            "return true;",
+            text,
+        )
+        if not assigned:
+            raise AssertionError("Smart Bar editor is not available to write to")
         self.expect_smart_bar_text(text)
         return self
 
