@@ -189,10 +189,29 @@ class SmartWindow(BasePage):
         traverse, so the walk runs in privileged JS. Matched on its
         data-l10n-id so the lookup does not depend on the UI locale.
         """
-        # Scope chrome to just the click; expect_ai_sidebar_open handles its
-        # own context and should not poll inside a nested chrome block.
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            found = self.driver.execute_script("""
+
+        # The container becomes visible before the document inside
+        # ai-window-browser finishes loading, and a click landing during that
+        # window is dropped. Poll on the outcome -- clicking again each time
+        # the sidebar is still open -- rather than clicking once and hoping.
+        # The X is close-only, not a toggle, so a repeat click cannot reopen.
+        def _closed(_) -> bool:
+            if not self.ai_sidebar_open():
+                return True
+            self._click_sidebar_close_button()
+            return False
+
+        self.expect(_closed)
+        return self
+
+    @BasePage.context_chrome
+    def _click_sidebar_close_button(self) -> bool:
+        """
+        Click the sidebar's X button if it is present yet; report whether it
+        was. Safe to poll -- a miss is a no-op.
+        """
+        return bool(
+            self.driver.execute_script("""
                 const br = document.getElementById("ai-window-browser");
                 const doc = br && br.contentDocument;
                 if (!doc) return false;
@@ -214,7 +233,4 @@ class SmartWindow(BasePage):
                 hit.click();
                 return true;
             """)
-        if not found:
-            raise AssertionError("sidebar close button not found")
-        self.expect_ai_sidebar_open(False)
-        return self
+        )

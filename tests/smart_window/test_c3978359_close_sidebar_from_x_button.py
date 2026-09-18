@@ -19,6 +19,10 @@ def test_close_sidebar_from_x_button(active_smart_window: SmartWindow):
     """
     smart_window = active_smart_window
 
+    # Explicit precondition: a freshly activated Smart Window has the sidebar
+    # closed. Stated rather than assumed, so fixture drift fails here.
+    smart_window.expect_ai_sidebar_open(False)
+
     smart_window.toggle_ai_sidebar()
     smart_window.expect_ai_sidebar_open(True)
 
