@@ -162,6 +162,28 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine-row": {
+    "selectorData": "#engineList moz-box-item[label='{name}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
+  "edit-search-engine-button": {
+    "selectorData": "editEngine-{engine}",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Edit button on an engine row in the Search shortcuts list",
+      "location": "about:preferences#search"
+    }
+  },
   "add-search-engine-button": {
     "selectorData": "addEngineButton",
     "strategy": "id",
