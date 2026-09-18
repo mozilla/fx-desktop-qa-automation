@@ -32,14 +32,27 @@ def add_to_prefs_list():
 
 
 def _assert_text_style(pdf_viewer: GenericPdf, color: str, font_size: int) -> None:
-    style = pdf_viewer.get_pdf_text_style()
     scale = float(pdf_viewer.pdf_body.value_of_css_property("--scale-factor"))
+    expected_size = pytest.approx(font_size * scale, abs=0.01)
+
+    def text_style_matches(_):
+        current_style = pdf_viewer.get_pdf_text_style()
+        return (
+            Color.from_string(current_style["color"]).hex == color
+            and float(current_style["font_size"].removesuffix("px")) == expected_size
+        )
+
+    pdf_viewer.wait.until(
+        text_style_matches,
+        message=f"Expected PDF text color {color} and rendered size {font_size * scale}px.",
+    )
+    style = pdf_viewer.get_pdf_text_style()
     assert Color.from_string(style["color"]).hex == color, (
         f"Expected PDF text color {color}, got {style['color']}."
     )
-    assert float(style["font_size"].removesuffix("px")) == pytest.approx(
-        font_size * scale, abs=0.01
-    ), f"Expected PDF text size {font_size}, got {style['font_size']}."
+    assert float(style["font_size"].removesuffix("px")) == expected_size, (
+        f"Expected PDF text size {font_size}, got {style['font_size']}."
+    )
 
 
 def test_pdf_text_uses_selected_font_size_and_color(pdf_viewer: GenericPdf):
