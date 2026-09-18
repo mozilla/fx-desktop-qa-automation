@@ -1,7 +1,5 @@
 import logging
 
-from selenium.webdriver.common.keys import Keys
-
 from modules.page_base import BasePage
 
 # The Smart Bar renders inside <browser id="ai-window-browser">, whose document
@@ -27,11 +25,43 @@ function prosemirror() {
   const e = editor();
   return e && e.shadowRoot ? e.shadowRoot.querySelector("div.ProseMirror") : null;
 }
-function inlineChips() {
-  const p = prosemirror();
-  return p ? Array.from(p.querySelectorAll("ai-website-chip")) : [];
+// Walk from the document: input-cta is not inside ai-window's own shadow
+// root, so starting the search there misses it entirely.
+function cta() {
+  const d = aiDoc();
+  if (!d) return null;
+  let hit = null;
+  (function walk(node, depth) {
+    if (!node || depth > 12 || hit) return;
+    for (const el of node.querySelectorAll("*")) {
+      // Match with CSS, not tagName: these are HTML-namespaced elements in a
+      // XUL document, so tagName reads back as "html:input-cta".
+      if (el.matches && el.matches("input-cta")) { hit = el; return; }
+      if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+    }
+  })(d, 0);
+  return hit;
+}
+// The CTA is a split button: [0] is its actions menu, [1] the Search With submenu.
+function ctaLists() {
+  const c = cta();
+  return c && c.shadowRoot ? Array.from(c.shadowRoot.querySelectorAll("panel-list")) : [];
+}
+function menuItemIds(list) {
+  return list
+    ? Array.from(list.querySelectorAll("panel-item"))
+        .map(i => i.getAttribute("data-l10n-id"))
+        .filter(Boolean)
+    : [];
 }
 """
+
+# panel-item data-l10n-ids in the CTA's actions menu. Matching on l10n id
+# rather than visible text keeps these locale-independent.
+ACTION_MENU_ASK = "aiwindow-input-cta-menu-label-chat"
+ACTION_MENU_GO_TO_SITE = "aiwindow-input-cta-menu-label-navigate"
+ACTION_MENU_SEARCH_WITH_DEFAULT = "aiwindow-input-cta-menu-label-search"
+ACTION_MENU_SEARCH_WITH = "aiwindow-input-cta-menu-label-search-with"
 
 
 class SmartBar(BasePage):
@@ -104,66 +134,53 @@ class SmartBar(BasePage):
         self.expect(lambda _: self.get_smart_bar_text() == text)
         return self
 
-    # ── Tagging open tabs (@-mention) ────────────────────────────────────
+    # ── Go / Ask action menu ─────────────────────────────────────────────
 
-    def _focus_editor(self) -> None:
-        # _script is already chrome-scoped.
-        self._script("prosemirror().focus();")
+    def action_menu_open(self) -> bool:
+        """Report whether the CTA's Go/Ask action menu is open."""
+        return bool(self._script("const l = ctaLists()[0]; return !!(l && l.open);"))
 
-    @BasePage.context_chrome
-    def tag_tab_via_mention(self, filter_text: str = "") -> BasePage:
-        """
-        Tag an open tab by typing "@" and accepting the first suggestion.
-
-        Must use real keystrokes: assigning MultilineEditor.value renders the
-        mention popup but never runs the tab query, so it returns "No results
-        found". Only genuine input events trigger the lookup.
-
-        Arguments:
-            filter_text: typed after "@" to narrow the suggestions. Without it
-                         the first tab in the list is taken.
-        """
-        before = len(self.get_tagged_sites())
-        self._focus_editor()
-        self.actions.send_keys(f"@{filter_text}").perform()
-        self.actions.send_keys(Keys.ARROW_DOWN).perform()
-        self.actions.send_keys(Keys.ENTER).perform()
-        self.expect(lambda _: len(self.get_tagged_sites()) == before + 1)
+    def expect_action_menu_open(self, is_open: bool = True) -> BasePage:
+        """Wait until the Go/Ask action menu is (or is not) open."""
+        self.expect(lambda _: self.action_menu_open() == is_open)
         return self
 
-    def get_tagged_sites(self) -> list[dict]:
+    def open_action_menu(self) -> BasePage:
         """
-        Return the inline tagged sites as [{"label": ..., "href": ...}], in
-        document order.
+        Open the CTA's Go/Ask action menu.
+
+        The CTA is a moz-button with type="split"; its menu portion is not a
+        separate element that can be clicked directly, so the panel-list is
+        opened through its own toggle(), which is the same entry point the
+        split button uses.
+        """
+        opened = self._script(
+            "const l = ctaLists()[0];"
+            "if (!l) return false;"
+            "l.toggle(new MouseEvent('click'));"
+            "return true;"
+        )
+        if not opened:
+            raise AssertionError("CTA action menu not found")
+        self.expect_action_menu_open(True)
+        return self
+
+    def get_action_menu_items(self) -> list[str]:
+        """Return the action menu's panel-item data-l10n-ids, in order."""
+        return self._script("return menuItemIds(ctaLists()[0]);")
+
+    def get_search_with_items(self) -> list[str]:
+        """
+        Return the Search With submenu's entries as visible text, in order.
+
+        Engine names are not localised strings with l10n ids, so these are
+        read as text.
         """
         return self._script(
-            "return inlineChips().map(c => ({label: c.label, href: c.href}));"
+            "const l = ctaLists()[1];"
+            "return l ? Array.from(l.querySelectorAll('panel-item'))"
+            "  .map(i => (i.textContent || '').trim()).filter(t => t) : [];"
         )
-
-    @BasePage.context_chrome
-    def delete_last_tag(self) -> BasePage:
-        """
-        Remove the last inline tag with the backspace key.
-
-        Sends backspace until the tag count actually drops: the first press
-        consumes the trailing space the editor inserts after a mention, and
-        only the second removes the chip.
-        """
-        before = len(self.get_tagged_sites())
-        if not before:
-            raise ValueError("no tagged sites to delete")
-        self._focus_editor()
-        # Two presses are expected (space, then chip); 4 gives safety headroom.
-        for _ in range(4):
-            self.actions.send_keys(Keys.BACKSPACE).perform()
-            if len(self.get_tagged_sites()) < before:
-                return self
-        raise AssertionError(f"backspace did not remove a tag (still {before})")
-
-    def expect_tagged_sites(self, count: int) -> BasePage:
-        """Wait until exactly `count` sites are tagged inline."""
-        self.expect(lambda _: len(self.get_tagged_sites()) == count)
-        return self
 
     # ── Placeholder hints ────────────────────────────────────────────────
 
