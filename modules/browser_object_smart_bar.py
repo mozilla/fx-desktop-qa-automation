@@ -154,13 +154,13 @@ class SmartBar(BasePage):
         split button uses. toggle() flips state, so an already-open menu is
         left alone rather than being closed.
         """
-        opened = self._script(
+        found = self._script(
             "const l = ctaLists()[0];"
             "if (!l) return false;"
             "if (!l.open) l.toggle(new MouseEvent('click'));"
             "return true;"
         )
-        if not opened:
+        if not found:
             raise AssertionError("CTA action menu not found")
         self.expect_action_menu_open(True)
         return self
