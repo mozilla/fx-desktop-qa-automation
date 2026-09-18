@@ -507,6 +507,29 @@ class AboutPrefs(BasePage):
         self.click_on("always-translate-remove-button", labels=[lang_code])
         return self
 
+    def add_never_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Never translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "never-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("never-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("never-translate-picker", "value", lang_code)
+        self.click_on("never-translate-add-button")
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
