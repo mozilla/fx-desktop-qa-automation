@@ -1284,6 +1284,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_text_area_can_be_deleted_moved_and_resized:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:
@@ -1379,6 +1384,10 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_edit_installed_engines:
     result: pass
     splits:
     - functional1

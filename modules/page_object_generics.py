@@ -564,6 +564,49 @@ class GenericPdf(BasePage):
             "font_size": text_content.value_of_css_property("font-size"),
         }
 
+    def move_pdf_text_area(self, text_area: WebElement) -> BasePage:
+        """Move a text area and verify its position changed."""
+        initial_rect = self.get_element_rect(text_area)
+        self.actions.drag_and_drop_by_offset(text_area, 80, 50).perform()
+
+        def text_area_moved(_):
+            rect = self.get_element_rect(text_area)
+            return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
+
+        self.expect(text_area_moved)
+        return self
+
+    def set_pdf_text_font_size(self, font_size: int) -> BasePage:
+        """Change the selected text area's font size and verify it renders."""
+        text_content = self.get_element("added-text-content")
+        initial_size = text_content.value_of_css_property("font-size")
+        font_size_control = self.get_element("text-font-size")
+
+        # PDF.js applies the size after the control emits an input event.
+        updated_size = self.driver.execute_script(
+            """
+            const control = arguments[0];
+            control.value = arguments[1];
+            control.dispatchEvent(new Event("input", { bubbles: true }));
+            return control.value;
+            """,
+            font_size_control,
+            str(font_size),
+        )
+        assert updated_size == str(font_size), (
+            f"Expected PDF text font size to be {font_size}, got {updated_size}."
+        )
+        self.expect(
+            lambda _: text_content.value_of_css_property("font-size") != initial_size
+        )
+        return self
+
+    def delete_selected_pdf_text_area(self) -> BasePage:
+        """Delete the selected text area."""
+        self.actions.send_keys(Keys.DELETE).perform()
+        self.element_does_not_exist("added-text")
+        return self
+
     def get_element_rect(self, element: WebElement) -> dict[str, float]:
         """Return the element bounding client rect."""
         return self.driver.execute_script(
