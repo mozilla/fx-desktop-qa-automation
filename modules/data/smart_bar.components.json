@@ -1,0 +1,22 @@
+{
+  "context": "chrome",
+  "do-not-cache": true,
+  "ai-window-browser": {
+    "selectorData": "ai-window-browser",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Chrome browser element hosting aiWindow.html, created when the Ask button is clicked. The Smart Bar lives inside its contentDocument, behind two shadow roots, so its internals are reached via the SmartBar BOM's scripted accessors rather than selectors here.",
+      "location": "Smart Window chrome"
+    }
+  },
+  "smart-window-ask-button": {
+    "selectorData": "smartwindow-ask-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Opens the Smart Bar surface. Smart Window only",
+      "location": "Smart Window toolbar"
+    }
+  }
+}
