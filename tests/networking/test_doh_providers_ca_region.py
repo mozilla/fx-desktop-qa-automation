@@ -20,14 +20,14 @@ def add_to_prefs_list():
     ]
 
 
-def test_doh_provider_ca_region(driver: Firefox):
+def test_doh_providers_ca_region(driver: Firefox):
     """
-    C2180317 - Verify all 3 providers cira-CA, cloudflare-global and nextdns-global are displayed in ca region.
+    C2180317 - Verify all 3 providers cira-CA, cloudflare-global and nextdns-global are displayed in CA region.
     """
     # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
 
-    # Select Custom DoH mode and verify there 3 expected providers displayed
+    # Select Custom DoH mode and verify there are 3 expected providers displayed
     prefs.open()
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")

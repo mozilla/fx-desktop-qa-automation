@@ -20,9 +20,9 @@ def add_to_prefs_list():
     ]
 
 
-def test_doh_provider_ru_region(driver: Firefox):
+def test_doh_providers_ru_region(driver: Firefox):
     """
-    C2180315 - Verify only Cloudflare provider is displayed in ru region.
+    C2180315 - Verify only Cloudflare provider is displayed in RU region.
     """
     # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
