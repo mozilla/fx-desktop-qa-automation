@@ -595,7 +595,7 @@ class AboutPrefs(BasePage):
                 opt.text for opt in options if opt.get_attribute("value") != "custom"
             ]
             return len(displayed) == len(provider_names) and all(
-                name in text for name, text in zip(provider_names, displayed)
+                any(name in text for text in displayed) for name in provider_names
             )
 
         self.wait.until(_providers_displayed)

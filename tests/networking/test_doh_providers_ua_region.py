@@ -22,7 +22,7 @@ def add_to_prefs_list():
 
 def test_doh_provider_ua_region(driver: Firefox):
     """
-    C2180316 - Verify only Cloudflare provider is display in UA region.
+    C2180316 - Verify only Cloudflare provider is displayed in UA region.
     """
     # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
