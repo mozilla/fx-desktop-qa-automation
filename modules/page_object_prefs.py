@@ -584,6 +584,23 @@ class AboutPrefs(BasePage):
         )
         return self
 
+    def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
+        """Verify the Custom-mode provider menu offers exactly the given providers."""
+
+        def _providers_displayed(_):
+            options = self.get_element("doh-provider-select-inner").find_elements(
+                By.TAG_NAME, "option"
+            )
+            displayed = [
+                opt.text for opt in options if opt.get_attribute("value") != "custom"
+            ]
+            return len(displayed) == len(provider_names) and all(
+                name in text for name, text in zip(provider_names, displayed)
+            )
+
+        self.wait.until(_providers_displayed)
+        return self
+
     def open_connection_advanced(self) -> BasePage:
         """Open Connection and software security > Advanced settings sub-pane.
 
