@@ -155,26 +155,17 @@ class SmartWindow(BasePage):
 
     # ── AI chat sidebar ──────────────────────────────────────────────────
 
-    @BasePage.context_chrome
+    @BasePage.context_of_model
     def ai_sidebar_open(self) -> bool:
         """
         Report whether the AI chat sidebar is open.
 
-        Measures the rendered size of #ai-window-box rather than its `hidden`
-        attribute: the container is present but collapsed before the sidebar
-        has ever been opened, and collapses again on close without the
-        attribute changing.
+        Measures rendered geometry rather than the `hidden` attribute: the
+        container is present but collapsed before the sidebar has ever been
+        opened, and collapses again on close, without `hidden` ever changing.
         """
-        return bool(
-            self.driver.execute_script(
-                """
-                const box = document.getElementById("ai-window-box");
-                if (!box) return false;
-                const r = box.getBoundingClientRect();
-                return r.width > 0 && r.height > 0;
-                """
-            )
-        )
+        rect = self.get_element("smart-window-box").rect
+        return rect["width"] > 0 and rect["height"] > 0
 
     def expect_ai_sidebar_open(self, is_open: bool = True) -> BasePage:
         """Wait until the AI chat sidebar is (or is not) open."""
@@ -189,35 +180,40 @@ class SmartWindow(BasePage):
         self.click_on("smart-window-ask-button")
         return self
 
-    @BasePage.context_chrome
     def close_ai_sidebar(self) -> BasePage:
         """
         Close the AI chat sidebar with its own X button.
 
         The button lives inside <browser id="ai-window-browser">, several
-        shadow roots down, so it is reached by walking the shadow tree in
-        privileged JS. Matched on its data-l10n-id so the lookup does not
-        depend on the UI locale.
+        shadow roots down, which the components.json selector system cannot
+        traverse, so the walk runs in privileged JS. Matched on its
+        data-l10n-id so the lookup does not depend on the UI locale.
         """
-        found = self.driver.execute_script("""
-            const br = document.getElementById("ai-window-browser");
-            const doc = br && br.contentDocument;
-            if (!doc) return false;
-            let hit = null;
-            (function walk(node, depth) {
-                if (!node || depth > 12 || hit) return;
-                for (const el of node.querySelectorAll("*")) {
-                    if (!hit && el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
-                        hit = el;
-                        return;
+        # Scope chrome to just the click; expect_ai_sidebar_open handles its
+        # own context and should not poll inside a nested chrome block.
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            found = self.driver.execute_script("""
+                const br = document.getElementById("ai-window-browser");
+                const doc = br && br.contentDocument;
+                if (!doc) return false;
+                let hit = null;
+                (function walk(node, depth) {
+                    if (!node || depth > 12) return;
+                    for (const el of node.querySelectorAll("*")) {
+                        if (el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
+                            hit = el;
+                            return;
+                        }
+                        if (el.shadowRoot) {
+                            walk(el.shadowRoot, depth + 1);
+                            if (hit) return;
+                        }
                     }
-                    if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
-                }
-            })(doc, 0);
-            if (!hit) return false;
-            hit.click();
-            return true;
-        """)
+                })(doc, 0);
+                if (!hit) return false;
+                hit.click();
+                return true;
+            """)
         if not found:
             raise AssertionError("sidebar close button not found")
         self.expect_ai_sidebar_open(False)
