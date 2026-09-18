@@ -202,31 +202,47 @@ class SmartWindow(BasePage):
         def _closed(_) -> bool:
             if not self.ai_sidebar_open():
                 return True
-            self._click_sidebar_close_button()
+            if self._click_sidebar_close_button() == "truncated":
+                raise AssertionError(
+                    "shadow walk hit its depth cap before finding the sidebar "
+                    "close button -- aiWindow.html nesting has grown past 12"
+                )
             return False
 
         self.expect(_closed)
         return self
 
     @BasePage.context_chrome
-    def _click_sidebar_close_button(self) -> bool:
+    def _click_sidebar_close_button(self) -> bool | str:
         """
         Click the sidebar's X button if it is present yet.
 
-        Returns whether the click landed. close_ai_sidebar deliberately polls
-        on sidebar state instead of this value -- what matters here is that a
-        miss is a side-effect-free no-op, which is what makes retrying safe.
+        Returns
+        -------
+        bool or str
+            True if the click landed, False if the button is not in the tree
+            yet, or "truncated" if the walk gave up on the depth cap before it
+            could tell those two apart.
+
+        close_ai_sidebar deliberately polls on sidebar state rather than on
+        True/False here -- what matters is that a miss is a side-effect-free
+        no-op, which is what makes retrying safe. "truncated" is the one
+        outcome retrying cannot fix, so the caller raises on it.
         """
         return self.driver.execute_script("""
                 const br = document.getElementById("ai-window-browser");
                 const doc = br && br.contentDocument;
                 if (!doc) return false;
                 let hit = null;
+                let truncated = false;
                 // aiWindow.html nests a few shadow roots deep to reach the
                 // close button; 12 is headroom against further nesting while
                 // still bounding a walk that would otherwise not terminate.
+                // Bailing on depth is reported separately so it cannot be
+                // mistaken for the button simply being absent.
                 (function walk(node, depth) {
-                    if (!node || depth > 12) return;
+                    if (!node) return;
+                    if (depth > 12) { truncated = true; return; }
                     for (const el of node.querySelectorAll("*")) {
                         if (el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
                             hit = el;
@@ -238,7 +254,7 @@ class SmartWindow(BasePage):
                         }
                     }
                 })(doc, 0);
-            if (!hit) return false;
+            if (!hit) return truncated ? "truncated" : false;
             hit.click();
             return true;
         """)
