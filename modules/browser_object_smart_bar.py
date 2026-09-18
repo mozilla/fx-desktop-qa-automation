@@ -58,7 +58,6 @@ function menuItemIds(list) {
 
 # panel-item data-l10n-ids in the CTA's actions menu. Matching on l10n id
 # rather than visible text keeps these locale-independent.
-ACTION_MENU_ASK = "aiwindow-input-cta-menu-label-chat"
 ACTION_MENU_GO_TO_SITE = "aiwindow-input-cta-menu-label-navigate"
 ACTION_MENU_SEARCH_WITH_DEFAULT = "aiwindow-input-cta-menu-label-search"
 ACTION_MENU_SEARCH_WITH = "aiwindow-input-cta-menu-label-search-with"
