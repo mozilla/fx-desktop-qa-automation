@@ -3,6 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 
+EXPECTED_PROVIDERS = ["Cloudflare"]
+
 
 @pytest.fixture()
 def test_case():
@@ -30,4 +32,4 @@ def test_doh_provider_ua_region(driver: Firefox):
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")
     prefs.verify_doh_provider("Cloudflare")
-    prefs.verify_doh_providers_displayed(["Cloudflare"])
+    prefs.verify_doh_providers_displayed(EXPECTED_PROVIDERS)

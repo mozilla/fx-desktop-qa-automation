@@ -3,6 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 
+EXPECTED_PROVIDERS = ["CIRA Canadian Shield", "Cloudflare", "NextDNS"]
+
 
 @pytest.fixture()
 def test_case():
@@ -29,6 +31,4 @@ def test_doh_provider_ca_region(driver: Firefox):
     prefs.open()
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")
-    prefs.verify_doh_providers_displayed(
-        ["CIRA Canadian Shield", "Cloudflare", "NextDNS"]
-    )
+    prefs.verify_doh_providers_displayed(EXPECTED_PROVIDERS)
