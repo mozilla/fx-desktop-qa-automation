@@ -2078,6 +2078,14 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
+  test_c3978359_close_sidebar_from_x_button:
+    result: pass
+    splits:
+    - functional1
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362

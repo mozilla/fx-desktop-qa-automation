@@ -152,3 +152,73 @@ class SmartWindow(BasePage):
         """
         self.expect(lambda _: fragment in self.get_selected_tab_url())
         return self
+
+    # ── AI chat sidebar ──────────────────────────────────────────────────
+
+    @BasePage.context_chrome
+    def ai_sidebar_open(self) -> bool:
+        """
+        Report whether the AI chat sidebar is open.
+
+        Measures the rendered size of #ai-window-box rather than its `hidden`
+        attribute: the container is present but collapsed before the sidebar
+        has ever been opened, and collapses again on close without the
+        attribute changing.
+        """
+        return bool(
+            self.driver.execute_script(
+                """
+                const box = document.getElementById("ai-window-box");
+                if (!box) return false;
+                const r = box.getBoundingClientRect();
+                return r.width > 0 && r.height > 0;
+                """
+            )
+        )
+
+    def expect_ai_sidebar_open(self, is_open: bool = True) -> BasePage:
+        """Wait until the AI chat sidebar is (or is not) open."""
+        self.expect(lambda _: self.ai_sidebar_open() == is_open)
+        return self
+
+    def toggle_ai_sidebar(self) -> BasePage:
+        """
+        Click the Ask button, which opens the sidebar when closed and closes
+        it when open.
+        """
+        self.click_on("smart-window-ask-button")
+        return self
+
+    @BasePage.context_chrome
+    def close_ai_sidebar(self) -> BasePage:
+        """
+        Close the AI chat sidebar with its own X button.
+
+        The button lives inside <browser id="ai-window-browser">, several
+        shadow roots down, so it is reached by walking the shadow tree in
+        privileged JS. Matched on its data-l10n-id so the lookup does not
+        depend on the UI locale.
+        """
+        found = self.driver.execute_script("""
+            const br = document.getElementById("ai-window-browser");
+            const doc = br && br.contentDocument;
+            if (!doc) return false;
+            let hit = null;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || hit) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (!hit && el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
+                        hit = el;
+                        return;
+                    }
+                    if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
+                }
+            })(doc, 0);
+            if (!hit) return false;
+            hit.click();
+            return true;
+        """)
+        if not found:
+            raise AssertionError("sidebar close button not found")
+        self.expect_ai_sidebar_open(False)
+        return self
