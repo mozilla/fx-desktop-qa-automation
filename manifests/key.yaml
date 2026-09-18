@@ -2078,6 +2078,10 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362

@@ -11,6 +11,7 @@ from modules.browser_object_print_preview import *
 from modules.browser_object_reader_view import *
 from modules.browser_object_report_broken_site import *
 from modules.browser_object_sidebar import *
+from modules.browser_object_smart_bar import *
 from modules.browser_object_smart_window import *
 from modules.browser_object_tabbar import *
 from modules.browser_object_translations_panel import *
