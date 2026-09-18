@@ -265,6 +265,11 @@
     "strategy": "id",
     "groups": []
   },
+  "text-font-size": {
+    "selectorData": "editorFreeTextFontSize",
+    "strategy": "id",
+    "groups": []
+  },
   "added-drawing": {
     "selectorData": ".canvasWrapper svg.draw path:not([d=''])",
     "strategy": "css",
@@ -274,6 +279,13 @@
   },
   "added-text": {
     "selectorData": ".freeTextEditor",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "added-text-content": {
+    "selectorData": ".freeTextEditor .internal",
     "strategy": "css",
     "groups": [
       "doNotCache"
