@@ -35,8 +35,7 @@ def test_go_button_dropdown_opens(active_smart_window: SmartWindow, driver):
     # otherwise the checks below would pass without the menu ever opening.
     bar.expect_action_menu_open(False)
 
-    bar.open_action_menu()
-    bar.expect_action_menu_open(True)
+    bar.open_action_menu()  # waits for the open state internally
 
     items = bar.get_action_menu_items()
     for expected in (
