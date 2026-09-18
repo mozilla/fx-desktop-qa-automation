@@ -407,6 +407,20 @@ class AboutPrefs(BasePage):
             if not option.get_attribute("hidden")
         ]
 
+    def set_fallback_language(self, lang_code: str) -> BasePage:
+        """Sets the Fallback language via the moz-select on the Languages pane.
+
+        Args:
+            lang_code: The language code to set (e.g. 'de')
+        """
+        # The fallback options are filled in asynchronously, so wait for ours.
+        self.wait.until(lambda _: lang_code in self.get_fallback_language_options())
+        Select(self.get_element("browser-language-fallback-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("browser-language-fallback", "value", lang_code)
+        return self
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 
