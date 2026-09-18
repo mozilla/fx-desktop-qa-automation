@@ -54,4 +54,8 @@ def test_go_button_dropdown_opens(active_smart_window: SmartWindow, driver):
     # are listed rather than naming one, since both the default engine and the
     # offered list vary by locale and region.
     engines = bar.get_search_with_items()
-    assert len(engines) > 1, f"expected several engines listed, got {engines}"
+    assert len(engines) > 1, (
+        f"expected several engines listed, got {engines}. An empty list here "
+        "means the submenu switched to rendering its items lazily on expand, "
+        "in which case it has to be opened before reading."
+    )

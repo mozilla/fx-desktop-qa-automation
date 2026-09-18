@@ -31,6 +31,8 @@ function cta() {
   const d = aiDoc();
   if (!d) return null;
   let hit = null;
+  // aiWindow.html nests about four shadow roots deep to reach the CTA; 12 is
+  // headroom against further nesting while still bounding a bad walk.
   (function walk(node, depth) {
     if (!node || depth > 12 || hit) return;
     for (const el of node.querySelectorAll("*")) {
