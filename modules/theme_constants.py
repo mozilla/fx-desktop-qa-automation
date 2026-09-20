@@ -24,8 +24,8 @@ ALPENGLOW_TITLE: str = "Alpenglow"
 # Expected background colors per theme (multiple values per theme are allowed)
 THEMES: dict[str, list[str]] = {
     COMPACT_DARK: [
-        "rgb(23, 21, 25)",   # nova dark, the default from Fx157 on
-        "rgb(43, 42, 51)",   # classic darker tone
+        "rgb(23, 21, 25)",  # nova dark, the default from Fx157 on
+        "rgb(43, 42, 51)",  # classic darker tone
         "rgb(143, 143, 148)",  # focused dark
         "rgb(120, 119, 126)",  # dark without focus
     ],
@@ -46,8 +46,8 @@ ALPENGLOW_MAP: dict[str, str] = {
 # match the regular COMPACT_DARK main-window colors above, so it needs its
 # own list. The exact shade varies slightly across platforms/versions.
 PRIVATE_WINDOW_DARK: list[str] = [
-    "rgb(35, 34, 43)",   # observed on Windows 10 with dark-private-windows
-    "rgb(28, 27, 34)",   # common private-window dark variant
-    "rgb(23, 21, 25)",   # nova dark
-    "rgb(43, 42, 51)",   # classic dark
+    "rgb(35, 34, 43)",  # observed on Windows 10 with dark-private-windows
+    "rgb(28, 27, 34)",  # common private-window dark variant
+    "rgb(23, 21, 25)",  # nova dark
+    "rgb(43, 42, 51)",  # classic dark
 ]
