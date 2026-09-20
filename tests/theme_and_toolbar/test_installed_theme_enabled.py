@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.page_object import AboutAddons, AmoThemes
+from modules.theme_constants import AMO_HOST, AMO_THEMES_PATH
 
 
 @pytest.fixture()
@@ -13,11 +14,9 @@ def test_case():
     return "118174"
 
 
-AMO_HOST = "addons.mozilla.org"
-AMO_THEMES_PATH = "/firefox/themes"
 WAIT_TIMEOUT = 30
 
-
+# Test is unstable in MacOS GHA for now
 def test_find_more_themes(driver: Firefox) -> None:
     """
     From about:addons > Themes, 'Find more themes' opens AMO in a new tab.
