@@ -2,15 +2,12 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutAddons, AmoThemes
+from modules.theme_constants import AMO_HOST, AMO_THEMES_PATH
 
 
 @pytest.fixture()
 def test_case():
     return "118174"
-
-
-AMO_HOST: str = "addons.mozilla.org"
-AMO_THEMES_PATH: str = "firefox/themes"
 
 
 # Test is unstable in MacOS GHA for now

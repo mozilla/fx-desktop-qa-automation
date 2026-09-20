@@ -3,33 +3,17 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi
 from modules.page_object import AboutAddons
+from modules.theme_constants import (
+    ALPENGLOW,
+    ALPENGLOW_MAP,
+    THEMES,
+)
 from modules.util import Utilities
 
 
 @pytest.fixture()
 def test_case():
     return "118173"
-
-
-COMPACT_DARK = "firefox-compact-dark_mozilla_org-heading"
-COMPACT_LIGHT = "firefox-compact-light_mozilla_org-heading"
-
-THEMES: dict[str, list[str]] = {
-    COMPACT_DARK: [
-        "rgb(23, 21, 25)",  # nova dark, the default from Fx157 on
-        "rgb(43, 42, 51)",  # classic darker tone
-        "rgb(143, 143, 148)",  # focused dark
-        "rgb(120, 119, 126)",  # dark without focus
-    ],
-    COMPACT_LIGHT: [
-        "rgb(249, 249, 251)",
-    ],
-}
-
-ALPENGLOW_MAP: dict[str, str] = {
-    "light": "rgba(255, 255, 255, 0.76)",
-    "dark": "rgba(40, 29, 78, 0.96)",
-}
 
 
 def test_redirect_to_addons(driver: Firefox) -> None:
@@ -85,7 +69,7 @@ def test_alpenglow_theme(driver: Firefox, util: Utilities) -> None:
     abt_addons.choose_sidebar_option("theme")
 
     current_bg = abt_addons.activate_theme(
-        nav, "firefox-alpenglow_mozilla_org-heading", "", perform_assert=False
+        nav, ALPENGLOW, "", perform_assert=False
     )
 
     # Hi tolerance for Alpenglow in dark mode, it's just like that
