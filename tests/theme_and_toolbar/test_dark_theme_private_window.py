@@ -89,9 +89,7 @@ def _assert_theme_enabled(
     )
 
 
-def _assert_private_window_dark(
-    current_bg: str, util: Utilities, context: str
-) -> None:
+def _assert_private_window_dark(current_bg: str, util: Utilities, context: str) -> None:
     """
     Assert that the given private-window background matches one of the known
     dark colors for private windows. Private windows have a distinctive
