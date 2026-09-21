@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutPrefs
 
 EXPECTED_PROVIDERS = ["Cloudflare", "NextDNS"]
-REGIONS = ["RO", "UK", "SE"]
+REGIONS = ["RO", "GB", "SE"]
 
 
 @pytest.fixture()
