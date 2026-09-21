@@ -140,10 +140,16 @@ class AboutNewtab(BasePage):
 
     @BasePage.context_content
     def get_topsite_url(self, tile_title: str) -> str:
-        """Get the destination URL of the specified TopSite."""
-        link = self.get_element("top-site-link-by-title", labels=[tile_title])
-        url = link.get_attribute("href")
-        assert url, f"TopSite '{tile_title}' has no destination URL"
+        """Wait for and return the destination URL of the specified TopSite."""
+        url = ""
+
+        def _has_destination_url(_):
+            nonlocal url
+            link = self.get_element("top-site-link-by-title", labels=[tile_title])
+            url = link.get_attribute("href") or ""
+            return bool(url)
+
+        self.expect(_has_destination_url)
         return url
 
     @BasePage.context_content
