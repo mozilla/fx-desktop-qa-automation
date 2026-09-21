@@ -1,14 +1,21 @@
 import logging
 
+from selenium.webdriver.common.keys import Keys
+
 from modules.page_base import BasePage
 
-# The Smart Bar renders inside <browser id="ai-window-browser">, whose document
-# is chrome://browser/content/aiwindow/aiWindow.html, and the editor sits two
-# shadow roots down (ai-window -> moz-multiline-editor). Neither a <browser>
-# contentDocument nor that shadow chain is reachable through the components.json
-# selector system, so the accessors below script the traversal instead. Each
-# script is a single traversal or a single property read/write on the product's
-# own MultilineEditor API.
+# The Smart Bar lives in <browser id="ai-window-browser"> with the editor two
+# shadow roots down (ai-window -> moz-multiline-editor), so the accessors below
+# script the traversal. The two supported alternatives were both tried first:
+#
+#   switch_to_iframe_context()  NoSuchFrameException -- it is a XUL <browser>
+#                               ([object XULFrameElement]), not an iframe.
+#   element.shadow_root         "Only supported in content context", and this
+#                               UI exists only in chrome.
+#
+# Note the components.json shadowParent path is not JS-free either: it falls
+# back to execute_script for shadowRoot.children (util.py:834) and, in chrome,
+# matches by string-searching outerHTML (util.py:877).
 _TRAVERSE = """
 function aiDoc() {
   const b = document.getElementById("ai-window-browser");
@@ -70,8 +77,8 @@ class SmartBar(BasePage):
     Browser Object Model for the Smart Window's Smart Bar input.
 
     The Smart Bar is the Smart Window's urlbar, reimplemented as a ProseMirror
-    editor. Open it with open_smart_bar(), then read/write text through the
-    editor's own value API.
+    editor. Open it with open_smart_bar(), then type into it with
+    set_smart_bar_text().
     """
 
     URL_TEMPLATE = "about:blank"
@@ -120,31 +127,36 @@ class SmartBar(BasePage):
 
     def set_smart_bar_text(self, text: str) -> BasePage:
         """
-        Replace the Smart Bar's text.
+        Replace the Smart Bar's text by typing it.
 
-        Assigns MultilineEditor.value, the element's own API, which replaces
-        the full contents and keeps the ProseMirror document valid. Passing ""
-        clears the field.
+        Types with real key events rather than assigning MultilineEditor.value,
+        so the editor's own input handling actually runs -- assigning `value`
+        skips it, which is how the @-mention popup ends up rendering with "No
+        results found" when driven that way.
+
+        Only the focus call is scripted, and that part is not avoidable:
+        elements inside the ai-window-browser contentDocument have no usable
+        Selenium reference from chrome, so send_keys against the editor raises
+        StaleElementReferenceException ("not known in the current browsing
+        context"). There is nothing to click or type into without first
+        focusing it from privileged JS.
         """
         logging.info("Setting Smart Bar text to %r", text)
-        # Guarded like get_smart_bar_text: an unguarded assignment throws an
-        # opaque "Cannot set properties of null" if this is ever called
-        # without open_smart_bar() having run first.
-        assigned = self._script(
-            "const e = editor();"
-            "if (!e) return false;"
-            "e.value = arguments[0];"
-            "return true;",
-            text,
+        focused = self._script(
+            "const p = prosemirror();if (!p) return false;p.focus();return true;"
         )
-        if not assigned:
+        if not focused:
             raise AssertionError("Smart Bar editor is not available to write to")
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # Select-all first so this replaces rather than appends.
+            # perform_key_combo maps CONTROL to COMMAND on macOS, so this stays
+            # correct on the Linux CI workers too.
+            self.perform_key_combo(Keys.CONTROL, "a")
+            self.actions.send_keys(text).perform()
+
         self.expect_smart_bar_text(text)
         return self
-
-    def clear_smart_bar(self) -> BasePage:
-        """Clear the Smart Bar."""
-        return self.set_smart_bar_text("")
 
     def expect_smart_bar_text(self, text: str) -> BasePage:
         """Wait until the Smart Bar's text equals `text`."""
@@ -198,17 +210,4 @@ class SmartBar(BasePage):
             "const l = ctaLists()[1];"
             "return l ? Array.from(l.querySelectorAll('panel-item'))"
             "  .map(i => (i.textContent || '').trim()).filter(t => t) : [];"
-        )
-
-    # ── Placeholder hints ────────────────────────────────────────────────
-
-    def get_placeholder_hints(self) -> list[str]:
-        """
-        Return the rotating placeholder hints shown while the Smart Bar is
-        empty. Empty list once the field has text.
-        """
-        return self._script(
-            "const p = prosemirror();"
-            "return p ? Array.from(p.querySelectorAll('.placeholder-hints li'))"
-            "  .map(li => li.textContent.trim()) : [];"
         )
