@@ -194,10 +194,10 @@ class SmartWindow(BasePage):
         Raises
         ------
         AssertionError
-            On two separate paths, not just the caught timeout: the sidebar
-            stayed open until the wait expired, or the JS walk was cut off by
-            its depth cap. The second propagates out of the predicate without
-            touching the `except` below, since retrying cannot resolve it.
+            If the sidebar is still open when the wait expires. The message
+            names the cause -- button never reachable vs clicked and ignored
+            -- and notes if the JS walk was ever cut off by its depth cap,
+            since that makes "never reachable" less trustworthy.
         """
 
         # NOTE: this expect() predicate has a side effect -- it clicks. That
@@ -210,31 +210,29 @@ class SmartWindow(BasePage):
         # document inside ai-window-browser finishes loading, and a click
         # landing in that window is silently dropped (observed 9/10 without).
         clicked_at_least_once = False
+        walk_was_truncated = False
 
         def _closed(_) -> bool:
-            nonlocal clicked_at_least_once
+            nonlocal clicked_at_least_once, walk_was_truncated
             if not self.ai_sidebar_open():
                 return True
             result = self._click_sidebar_close_button()
             if result == "truncated":
-                # Deliberately does not claim the button is nested too deep:
-                # the flag only says some branch was cut off, which may not be
-                # the branch the button is on. All that is known is that the
-                # walk was incomplete, so "not found" is not trustworthy.
-                raise AssertionError(
-                    "the walk for the sidebar close button stopped at its "
-                    "depth cap of 12 without finding it, so the button is "
-                    "either absent or below the cap -- this cannot be told "
-                    "apart from here. Retrying will not help; raise the cap "
-                    "in _click_sidebar_close_button to distinguish them."
-                )
+                # Treated as "not found yet", not as a hard failure. The cut
+                # branch is not necessarily the button's branch, so truncation
+                # says nothing about whether the button will appear once the
+                # document finishes loading -- and that load race is the whole
+                # reason this retries. Recorded so the timeout can mention it.
+                walk_was_truncated = True
             if not result and not clicked_at_least_once:
                 # Only log before the first successful click. The button goes
                 # away while the sidebar animates shut, so later iterations
                 # legitimately miss it -- logging those would read as if the
                 # click had never landed.
                 logging.debug("sidebar close button not reachable yet, will retry")
-            clicked_at_least_once = clicked_at_least_once or result
+            # `is True`, not truthiness: "truncated" is a non-empty string and
+            # would otherwise count as a landed click and mis-report the cause.
+            clicked_at_least_once = clicked_at_least_once or result is True
             return False
 
         try:
@@ -243,14 +241,17 @@ class SmartWindow(BasePage):
             # A bare TimeoutException here cannot distinguish "the button was
             # never reachable" from "it was clicked and the sidebar ignored
             # it", which are different bugs. Say which one happened.
-            raise AssertionError(
-                "AI chat sidebar did not close: "
-                + (
-                    "the X button was clicked but the sidebar stayed open"
-                    if clicked_at_least_once
-                    else "the X button never appeared inside ai-window-browser"
+            cause = (
+                "the X button was clicked but the sidebar stayed open"
+                if clicked_at_least_once
+                else "the X button never appeared inside ai-window-browser"
+            )
+            if walk_was_truncated and not clicked_at_least_once:
+                cause += (
+                    ", and the shadow walk hit its depth cap of 12 at least "
+                    "once, so the button may be nested below it"
                 )
-            ) from None
+            raise AssertionError(f"AI chat sidebar did not close: {cause}") from None
         return self
 
     @BasePage.context_chrome
@@ -260,7 +261,7 @@ class SmartWindow(BasePage):
 
         Returns
         -------
-        bool or str
+        Literal[True, False, "truncated"]
             True if the click landed, False if the button is not in the tree
             yet, or "truncated" if the walk gave up on the depth cap before it
             could tell those two apart.
