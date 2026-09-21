@@ -58,7 +58,7 @@
     {"id": "3255480", "entry": "urlbar_background_tab", "action": null, "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "mzl", "source": "urlbar", "tagged": "true"}},
     {"id": "3255495", "entry": "urlbar_background_tab", "action": null, "params": {"engine": "Qwant"}, "prefs": [["browser.search.region", "FR"]], "expected": {"provider": "qwant", "partner_code": "brz-moz", "source": "urlbar", "tagged": "true"}},
 
-    {"id": "3255452", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "opened_in_new_tab", "tagged": "true"}, "unstable": {"win": "Windows-only: Bing SERP telemetry does not record on the CI runner"}},
+    {"id": "3255452", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Bing"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "bing", "partner_code": "MOZI", "source": "opened_in_new_tab", "tagged": "true"}},
     {"id": "3255467", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "DuckDuckGo"}, "prefs": [["browser.search.region", "US"]], "expected": {"provider": "duckduckgo", "partner_code": "ffab", "source": "opened_in_new_tab", "tagged": "true"}},
     {"id": "3255482", "entry": "urlbar", "action": "open_in_new_tab", "params": {"engine": "Ecosia"}, "prefs": [["browser.search.region", "DE"]], "expected": {"provider": "ecosia", "partner_code": "", "source": "opened_in_new_tab", "tagged": "false"}},
 

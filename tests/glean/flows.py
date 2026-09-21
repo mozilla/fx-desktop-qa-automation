@@ -16,8 +16,8 @@ RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
 AD_SEARCH_TERM = "car insurance quotes"
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
-# No public signal for SearchSERPTelemetry readiness; buffer before reload.
-RELOAD_TELEMETRY_SETTLE_SECONDS = 1
+# No public signal for SearchSERPTelemetry readiness; buffer before refreshing a SERP.
+SERP_TELEMETRY_SETTLE_SECONDS = 1
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -293,7 +293,7 @@ def _action_reload(driver: Firefox, params: dict = None):
     # telemetry context before we reload; otherwise the reload is attributed as source='unknown'
     page.url_contains(SEARCH_TERM)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
-    sleep(RELOAD_TELEMETRY_SETTLE_SECONDS)
+    sleep(SERP_TELEMETRY_SETTLE_SECONDS)
 
     # Reload the page and wait for it to settle
     nav.refresh_page()
@@ -473,6 +473,7 @@ def _abandonment_refresh_navigation(
     page.url_contains(search_term)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
     _remember_bot_challenge(driver)
+    sleep(SERP_TELEMETRY_SETTLE_SECONDS)
 
     # Refresh the SERP in the same tab -> serp.abandonment reason='navigation'
     nav.refresh_page()
@@ -566,6 +567,20 @@ def block_if_no_ads(driver: Firefox) -> None:
         reason = None
     if reason:
         pytest.skip(f"Blocked by an ad-free SERP: {reason}")
+
+
+def block_if_no_related_search(driver: Firefox, engine: str) -> None:
+    """
+    Skip as Blocked when the engine rendered a SERP without its related-searches component.
+
+    Call from a test's except block, only for the open_in_new_tab action.
+    """
+    try:
+        reason = GenericPage(driver).no_related_search_reason(engine)
+    except Exception:
+        reason = None
+    if reason:
+        pytest.skip(f"Blocked by a missing related-searches component: {reason}")
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):

@@ -56,6 +56,29 @@ class GenericPage(BasePage):
                 return f"{provider} (ad slot present, no ads served)"
         return None
 
+    # Bing sometimes renders a normal, otherwise-complete SERP with no related-searches
+    # component at all; a rendered page missing this container means "not served", not broken.
+    NO_RELATED_SEARCH_MARKERS = {
+        "Bing": "brsv3",
+    }
+
+    @BasePage.context_content
+    def no_related_search_reason(self, engine: str) -> str | None:
+        """
+        Check whether an engine rendered a SERP without its related-searches component.
+
+        Params
+        ------
+        engine: Engine name, matching `params.engine` in cases.json.
+
+        Returns:
+            str: Engine missing the component, or None if present or not tracked.
+        """
+        marker = self.NO_RELATED_SEARCH_MARKERS.get(engine)
+        if marker and marker not in (self.driver.page_source or ""):
+            return f"{engine} (no related-searches component)"
+        return None
+
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
         """
