@@ -10,12 +10,8 @@ from modules.page_object import GenericPage
 
 TEST_URL = "https://joo.uber.space/frame-permissions.html"
 
-# The frame under test is embedded with
-# allow="geolocation https://permission.site; camera https://permission.site;
-#        microphone https://permission.site"
-# but loads joo.uber.space, so its own origin is absent from every allowlist.
-# Those three features are therefore disabled in the frame and none of the
-# requests below may reach the user as a doorhanger.
+# The frame loads joo.uber.space but delegates only to permission.site, so all
+# three features are disabled in it and must never raise a doorhanger.
 IFRAME_HEADING = (
     "This site cross-origin with FP allowed only for https://permission.site"
 )
@@ -24,9 +20,8 @@ FRAME_ALLOW = (
     "microphone https://permission.site"
 )
 
-# Only the features named in the allow attribute are delegated away from the
-# frame. Screen sharing and speaker selection keep their default "self"
-# allowlist and are still expected to prompt, so they are out of scope here.
+# Screen and speaker keep their default "self" allowlist and still prompt, so
+# they are out of scope.
 PERMISSION_BUTTONS = [
     "geolocation-button",
     "camera-button",
@@ -34,8 +29,7 @@ PERMISSION_BUTTONS = [
     "camera-and-microphone-button",
 ]
 
-# Some of the requests are delayed by the page, so give any doorhanger enough
-# time to animate in before declaring that none was raised.
+# Let a delayed doorhanger animate in before declaring that none was raised.
 PROMPT_GRACE_PERIOD = 3
 
 
@@ -83,14 +77,10 @@ def temp_selectors():
 
 def locate_frame_under_test(page: GenericPage) -> WebElement:
     """
-    Return the frame sitting under IFRAME_HEADING, not the first frame on the page.
-
-    The page embeds 15 frames and the unlabelled first one delegates geolocation
-    back to joo.uber.space, so picking it up by accident would invert the test.
-    Pin the match down by count and by the attributes that make this frame the
-    one under test.
+    Return the frame under IFRAME_HEADING, not one of the other 14 on the page.
     """
     page.switch_to_default_frame()
+
     frames = page.get_element("cross-origin-iframe", multiple=True)
     assert len(frames) == 1, (
         f"Expected one frame under {IFRAME_HEADING!r}, got {len(frames)}"
@@ -140,14 +130,12 @@ def test_cross_origin_iframe_permissions_are_not_prompted(
     C602563 - This site cross-origin with FP allowed only for https://permission.site
     """
 
-    # Open the Firefox browser and reach: https://joo.uber.space/frame-permissions.html
+    # Reach https://joo.uber.space/frame-permissions.html
     page = GenericPage(driver, url=TEST_URL).open()
     page.elements |= temp_selectors
 
     for button in PERMISSION_BUTTONS:
-        # Scroll and find the iframe whose permissions policy delegates
-        # geolocation, camera and microphone only to https://permission.site,
-        # then request each of those features from it
+        # Request each delegated feature from the frame under test
         click_in_cross_origin_iframe(page, button)
 
         # No permission prompts are displayed
