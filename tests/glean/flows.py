@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 from selenium.webdriver import Firefox, Keys
 
@@ -14,6 +16,8 @@ RELATED_SEARCH_TERM_IN_URL = RELATED_SEARCH_TERM.split()[0]
 AD_SEARCH_TERM = "car insurance quotes"
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
+# No public signal for SearchSERPTelemetry readiness; buffer before reload.
+RELOAD_TELEMETRY_SETTLE_SECONDS = 1
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
@@ -289,6 +293,7 @@ def _action_reload(driver: Firefox, params: dict = None):
     # telemetry context before we reload; otherwise the reload is attributed as source='unknown'
     page.url_contains(SEARCH_TERM)
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    sleep(RELOAD_TELEMETRY_SETTLE_SECONDS)
 
     # Reload the page and wait for it to settle
     nav.refresh_page()
@@ -547,6 +552,20 @@ def block_if_bot_challenge(driver: Firefox) -> None:
     reason = reason or getattr(driver, "_bot_challenge_reason", None)
     if reason:
         pytest.skip(f"Blocked by an external bot challenge: {reason}")
+
+
+def block_if_no_ads(driver: Firefox) -> None:
+    """
+    Skip as Blocked when the engine served an ad-free SERP for an ads-dependent metric.
+
+    Call from a test's except block, only for cases whose metric requires ads.
+    """
+    try:
+        reason = GenericPage(driver).no_ads_reason()
+    except Exception:
+        reason = None
+    if reason:
+        pytest.skip(f"Blocked by an ad-free SERP: {reason}")
 
 
 def run_entry(driver: Firefox, entry: str, search_term: str, params: dict = None):
