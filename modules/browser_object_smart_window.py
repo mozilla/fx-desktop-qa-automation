@@ -267,9 +267,10 @@ class SmartWindow(BasePage):
             could tell those two apart.
 
         close_ai_sidebar deliberately polls on sidebar state rather than on
-        True/False here -- what matters is that a miss is a side-effect-free
-        no-op, which is what makes retrying safe. "truncated" is the one
-        outcome retrying cannot fix, so the caller raises on it.
+        this value -- what matters is that a miss is a side-effect-free no-op,
+        which is what makes retrying safe. It retries on "truncated" exactly
+        as it does on False, and only mentions the depth cap if the wait then
+        expires.
         """
         return self.driver.execute_script("""
             const br = document.getElementById("ai-window-browser");
