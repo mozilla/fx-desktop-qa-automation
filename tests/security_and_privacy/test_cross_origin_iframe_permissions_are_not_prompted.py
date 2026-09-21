@@ -58,6 +58,15 @@ def add_to_prefs_list():
     return [("media.navigator.streams.fake", True)]
 
 
+@pytest.fixture(autouse=True)
+def script_timeout(driver: Firefox):
+    """Bound the pending-doorhanger case, restoring the default even on failure."""
+    original = driver.timeouts.script
+    driver.set_script_timeout(SCRIPT_TIMEOUT)
+    yield
+    driver.set_script_timeout(original)
+
+
 @pytest.fixture()
 def temp_selectors():
     return {
@@ -158,7 +167,6 @@ def test_cross_origin_iframe_permissions_are_not_prompted(
     # Reach https://joo.uber.space/frame-permissions.html
     page = GenericPage(driver, url=TEST_URL).open()
     page.elements |= temp_selectors
-    driver.set_script_timeout(SCRIPT_TIMEOUT)
 
     for button, request in PERMISSION_REQUESTS:
         # Request each delegated feature from the frame under test
