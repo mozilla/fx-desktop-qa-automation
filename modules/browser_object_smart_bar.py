@@ -3,6 +3,7 @@ import logging
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
+from modules.browser_object_smart_window import SmartWindow
 from modules.page_base import BasePage
 
 # The Smart Bar lives in <browser id="ai-window-browser"> with the editor two
@@ -55,13 +56,10 @@ function cta() {
 // The CTA is a split button: [0] is its actions menu, [1] the Search With
 // submenu. These are positional because the lists carry no id or other stable
 // attribute to select on. To stop a layout change from silently reading the
-// wrong list, callers check ctaListCount() against the expected 2.
+// wrong list, get_search_with_items checks the list count is still 2.
 function ctaLists() {
   const c = cta();
   return c && c.shadowRoot ? Array.from(c.shadowRoot.querySelectorAll("panel-list")) : [];
-}
-function ctaListCount() {
-  return ctaLists().length;
 }
 function menuItemIds(list) {
   return list
@@ -102,8 +100,12 @@ class SmartBar(BasePage):
 
         Requires the window to already be in the Smart Window state; the
         button does not exist in a Classic Window.
+
+        The click is delegated to SmartWindow, which owns the Ask button's
+        selector -- declaring it here too would mean two manifests to update
+        if the id ever changes.
         """
-        self.click_on("smart-window-ask-button")
+        SmartWindow(self.driver).click_on("smart-window-ask-button")
         self.expect_smart_bar_ready()
         return self
 
@@ -231,15 +233,17 @@ class SmartBar(BasePage):
         is reached by position, so a new list inserted ahead of it would
         otherwise return another menu's contents as though they were engines.
         """
-        count = self._script("return ctaListCount();")
-        if count != 2:
+        # Count and read in one script so the shadow tree is only walked once.
+        result = self._script(
+            "const lists = ctaLists();"
+            "if (lists.length !== 2) return {count: lists.length};"
+            "return {items: Array.from(lists[1].querySelectorAll('panel-item'))"
+            "  .map(i => (i.textContent || '').trim()).filter(t => t)};"
+        )
+        if "items" not in result:
             raise AssertionError(
                 f"expected 2 panel-lists in the CTA (actions, Search With), "
-                f"found {count} -- the positional lookup in ctaLists() is no "
-                f"longer safe and needs revisiting"
+                f"found {result['count']} -- the positional lookup in "
+                f"ctaLists() is no longer safe and needs revisiting"
             )
-        return self._script(
-            "const l = ctaLists()[1];"
-            "return l ? Array.from(l.querySelectorAll('panel-item'))"
-            "  .map(i => (i.textContent || '').trim()).filter(t => t) : [];"
-        )
+        return result["items"]
