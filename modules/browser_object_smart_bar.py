@@ -7,17 +7,11 @@ from modules.browser_object_smart_window import SmartWindow
 from modules.page_base import BasePage
 
 # The Smart Bar lives in <browser id="ai-window-browser"> with the editor two
-# shadow roots down (ai-window -> moz-multiline-editor), so the accessors below
-# script the traversal. The two supported alternatives were both tried first:
-#
-#   switch_to_iframe_context()  NoSuchFrameException -- it is a XUL <browser>
-#                               ([object XULFrameElement]), not an iframe.
-#   element.shadow_root         "Only supported in content context", and this
-#                               UI exists only in chrome.
-#
-# Note the components.json shadowParent path is not JS-free either: it falls
-# back to execute_script for shadowRoot.children (util.py:834) and, in chrome,
-# matches by string-searching outerHTML (util.py:877).
+# shadow roots down, so the accessors below script the traversal. Both
+# supported alternatives were tried and do not work here:
+# switch_to_iframe_context() raises NoSuchFrameException (it is a XUL
+# <browser>, not an iframe), and element.shadow_root is content-context only.
+# components.json shadowParent is not JS-free either -- see util.py:834/877.
 _TRAVERSE = """
 function aiDoc() {
   const b = document.getElementById("ai-window-browser");
@@ -99,11 +93,8 @@ class SmartBar(BasePage):
         Click the Ask button and wait for the Smart Bar editor to be ready.
 
         Requires the window to already be in the Smart Window state; the
-        button does not exist in a Classic Window.
-
-        The click is delegated to SmartWindow, which owns the Ask button's
-        selector -- declaring it here too would mean two manifests to update
-        if the id ever changes.
+        button does not exist in a Classic Window. The click goes through
+        SmartWindow, which owns the Ask button's selector.
         """
         SmartWindow(self.driver).click_on("smart-window-ask-button")
         self.expect_smart_bar_ready()
@@ -138,17 +129,14 @@ class SmartBar(BasePage):
         """
         Replace the Smart Bar's text by typing it.
 
-        Types with real key events rather than assigning MultilineEditor.value,
-        so the editor's own input handling actually runs -- assigning `value`
-        skips it, which is how the @-mention popup ends up rendering with "No
-        results found" when driven that way.
+        Real key events, not `MultilineEditor.value`: assigning the property
+        skips the editor's input handling, which is why the @-mention popup
+        shows "No results found" when driven that way.
 
-        Only the focus call is scripted, and that part is not avoidable:
-        elements inside the ai-window-browser contentDocument have no usable
-        Selenium reference from chrome, so send_keys against the editor raises
-        StaleElementReferenceException ("not known in the current browsing
-        context"). There is nothing to click or type into without first
-        focusing it from privileged JS.
+        Focus has to be scripted -- elements inside the ai-window-browser
+        contentDocument have no usable Selenium reference from chrome
+        (send_keys on one raises StaleElementReferenceException), so there is
+        nothing to click first.
         """
         logging.info("Setting Smart Bar text to %r", text)
         focused = self._script(
@@ -158,9 +146,8 @@ class SmartBar(BasePage):
             raise AssertionError("Smart Bar editor is not available to write to")
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
-            # Select-all first so this replaces rather than appends.
-            # perform_key_combo maps CONTROL to COMMAND on macOS, so this stays
-            # correct on the Linux CI workers too.
+            # Select-all so this replaces rather than appends.
+            # perform_key_combo maps CONTROL to COMMAND on macOS.
             self.perform_key_combo(Keys.CONTROL, "a")
             self.actions.send_keys(text).perform()
 
@@ -171,11 +158,9 @@ class SmartBar(BasePage):
         """
         Wait until the Smart Bar's text equals `text`.
 
-        On timeout this reports what the editor actually held. The comparison
-        is exact, so any future serialisation change -- a trailing newline
-        being the obvious candidate -- would otherwise surface as a bare
-        TimeoutException with nothing to point at. (No trailing newline is
-        present today; `value` round-trips exactly.)
+        Reports the actual value on timeout: the comparison is exact, so a
+        future serialisation change (a trailing newline, say) would otherwise
+        give a bare TimeoutException with nothing to point at.
         """
         try:
             self.expect(lambda _: self.get_smart_bar_text() == text)
@@ -201,11 +186,9 @@ class SmartBar(BasePage):
         """
         Open the CTA's Go/Ask action menu, leaving it open if already shown.
 
-        The CTA is a moz-button with type="split"; its menu portion is not a
-        separate element that can be clicked directly, so the panel-list is
-        opened through its own toggle(), which is the same entry point the
-        split button uses. toggle() flips state, so an already-open menu is
-        left alone rather than being closed.
+        The split button's menu portion is not separately clickable, so this
+        goes through the panel-list's own toggle() -- which flips state, hence
+        the open check.
         """
         found = self._script(
             "const l = ctaLists()[0];"
@@ -226,17 +209,12 @@ class SmartBar(BasePage):
         """
         Return the Search With submenu's entries as visible text, in order.
 
-        Engine names are not localised strings with l10n ids, so these are
-        read as text.
+        Read as text because engine names carry no l10n ids, and read without
+        expanding the submenu, which works because its items render eagerly.
+        Returns an empty list if that ever changes.
 
-        Reads the items **without expanding the submenu**, which works because
-        they render eagerly rather than on expand (verified over five
-        consecutive runs). If that ever changes this returns an empty list, and
-        the submenu has to be opened first.
-
-        Raises if the CTA stops holding exactly two panel-lists: the submenu
-        is reached by position, so a new list inserted ahead of it would
-        otherwise return another menu's contents as though they were engines.
+        Raises if the CTA stops holding exactly two panel-lists, since the
+        submenu is reached by position.
         """
         # Count and read in one script so the shadow tree is only walked once.
         result = self._script(
