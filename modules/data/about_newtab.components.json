@@ -157,5 +157,14 @@
       "description": "Topsite tile by title",
       "location": "The about:newtab page (middle section)"
     }
+  },
+  "top-site-link-by-title": {
+    "selectorData": "//li[contains(concat(' ', normalize-space(@class), ' '), ' top-site-outer ')][.//span[contains(concat(' ', normalize-space(@class), ' '), ' title-label ') and normalize-space(.)='{title}']]//a[@href]",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Destination link inside the TopSite tile with the specified title",
+      "location": "The about:newtab page"
+    }
   }
 }
