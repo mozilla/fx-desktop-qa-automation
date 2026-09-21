@@ -234,7 +234,7 @@ class SmartWindow(BasePage):
                 # legitimately miss it -- logging those would read as if the
                 # click had never landed.
                 logging.debug("sidebar close button not reachable yet, will retry")
-            clicked_at_least_once |= bool(result)
+            clicked_at_least_once = clicked_at_least_once or result
             return False
 
         try:
@@ -276,11 +276,12 @@ class SmartWindow(BasePage):
             if (!doc) return false;
             let hit = null;
             let truncated = false;
-            // aiWindow.html nests a few shadow roots deep to reach the close
-            // button; 12 is headroom against further nesting while still
-            // bounding a walk that would otherwise not terminate. Bailing on
-            // depth is reported separately so it cannot be mistaken for the
-            // button simply being absent.
+            // `depth` counts shadow-boundary crossings, not DOM depth -- the
+            // cap bounds runaway nesting, not tree size. aiWindow.html is a
+            // few shadow roots deep to reach the close button, so 12 is ample
+            // headroom while still bounding a walk that would otherwise not
+            // terminate. Bailing on depth is reported separately so it cannot
+            // be mistaken for the button simply being absent.
             (function walk(node, depth) {
                 if (!node) return;
                 if (depth > 12) { truncated = true; return; }
