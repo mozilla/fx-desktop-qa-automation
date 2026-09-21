@@ -1,5 +1,6 @@
 import logging
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -51,10 +52,16 @@ function cta() {
   })(d, 0);
   return hit;
 }
-// The CTA is a split button: [0] is its actions menu, [1] the Search With submenu.
+// The CTA is a split button: [0] is its actions menu, [1] the Search With
+// submenu. These are positional because the lists carry no id or other stable
+// attribute to select on. To stop a layout change from silently reading the
+// wrong list, callers check ctaListCount() against the expected 2.
 function ctaLists() {
   const c = cta();
   return c && c.shadowRoot ? Array.from(c.shadowRoot.querySelectorAll("panel-list")) : [];
+}
+function ctaListCount() {
+  return ctaLists().length;
 }
 function menuItemIds(list) {
   return list
@@ -159,8 +166,22 @@ class SmartBar(BasePage):
         return self
 
     def expect_smart_bar_text(self, text: str) -> BasePage:
-        """Wait until the Smart Bar's text equals `text`."""
-        self.expect(lambda _: self.get_smart_bar_text() == text)
+        """
+        Wait until the Smart Bar's text equals `text`.
+
+        On timeout this reports what the editor actually held. The comparison
+        is exact, so any future serialisation change -- a trailing newline
+        being the obvious candidate -- would otherwise surface as a bare
+        TimeoutException with nothing to point at. (No trailing newline is
+        present today; `value` round-trips exactly.)
+        """
+        try:
+            self.expect(lambda _: self.get_smart_bar_text() == text)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar text never became {text!r}; "
+                f"last read {self.get_smart_bar_text()!r}"
+            ) from None
         return self
 
     # ── Go / Ask action menu ─────────────────────────────────────────────
@@ -205,7 +226,18 @@ class SmartBar(BasePage):
 
         Engine names are not localised strings with l10n ids, so these are
         read as text.
+
+        Raises if the CTA stops holding exactly two panel-lists: the submenu
+        is reached by position, so a new list inserted ahead of it would
+        otherwise return another menu's contents as though they were engines.
         """
+        count = self._script("return ctaListCount();")
+        if count != 2:
+            raise AssertionError(
+                f"expected 2 panel-lists in the CTA (actions, Search With), "
+                f"found {count} -- the positional lookup in ctaLists() is no "
+                f"longer safe and needs revisiting"
+            )
         return self._script(
             "const l = ctaLists()[1];"
             "return l ? Array.from(l.querySelectorAll('panel-item'))"
