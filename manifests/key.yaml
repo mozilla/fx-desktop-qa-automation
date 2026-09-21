@@ -836,6 +836,18 @@ networking:
     result: pass
     splits:
     - functional1
+  test_doh_providers_ca_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ru_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ua_region:
+    result: pass
+    splits:
+    - functional1
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
@@ -1395,6 +1407,14 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_fallback_language_can_be_changed:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
   test_firefox_home_new_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
     result: unstable
@@ -1419,6 +1439,10 @@ preferences:
     splits:
     - smoke
     - exclude_xvfb
+  test_never_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
