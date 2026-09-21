@@ -127,13 +127,12 @@ def request_permission_in_frame(page: GenericPage, button: str, request: str) ->
     page.switch_to_iframe_context(frame)
     page.click_on(button)
 
-    with page.driver.context(page.driver.CONTEXT_CONTENT):
-        try:
-            outcome = page.driver.execute_async_script(REQUEST_SCRIPT, request)
-        except TimeoutException:
-            raise AssertionError(
-                f"{button}: request never settled, so it is waiting on a doorhanger"
-            ) from None
+    try:
+        outcome = page.driver.execute_async_script(REQUEST_SCRIPT, request)
+    except TimeoutException:
+        raise AssertionError(
+            f"{button}: request never settled, so it is waiting on a doorhanger"
+        ) from None
 
     assert outcome == "denied", (
         f"{button}: expected the request to be denied by the permissions policy, got {outcome!r}"
