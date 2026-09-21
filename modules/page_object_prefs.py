@@ -208,11 +208,24 @@ class AboutPrefs(BasePage):
         self.get_element("add-engine-url-input").send_keys(url)
         self.get_element("add-engine-keyword-input").send_keys(keyword)
         self.expect(
-            lambda _: self.get_element("add-engine-accept-button").get_attribute(
-                "disabled"
+            lambda _: (
+                self.get_element("add-engine-accept-button").get_attribute("disabled")
+                is None
             )
-            is None
         )
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
+    def edit_search_engine_keyword(self, engine_id: str, keyword: str) -> BasePage:
+        """Add a keyword to an engine through its Edit Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        keyword, and switch back out.
+        """
+        self.click_on("edit-search-engine-button", labels=[engine_id])
+        self.get_and_switch_iframe()
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
         self.click_on("add-engine-accept-button")
         self.switch_to_default_frame()
         return self
@@ -394,6 +407,20 @@ class AboutPrefs(BasePage):
             if not option.get_attribute("hidden")
         ]
 
+    def set_fallback_language(self, lang_code: str) -> BasePage:
+        """Sets the Fallback language via the moz-select on the Languages pane.
+
+        Args:
+            lang_code: The language code to set (e.g. 'de')
+        """
+        # The fallback options are filled in asynchronously, so wait for ours.
+        self.wait.until(lambda _: lang_code in self.get_fallback_language_options())
+        Select(self.get_element("browser-language-fallback-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("browser-language-fallback", "value", lang_code)
+        return self
+
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
 
@@ -494,6 +521,29 @@ class AboutPrefs(BasePage):
         self.click_on("always-translate-remove-button", labels=[lang_code])
         return self
 
+    def add_never_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Never translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "never-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("never-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("never-translate-picker", "value", lang_code)
+        self.click_on("never-translate-add-button")
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -569,6 +619,23 @@ class AboutPrefs(BasePage):
                 )
             )
         )
+        return self
+
+    def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
+        """Verify the Custom-mode provider menu offers exactly the given providers."""
+
+        def _providers_displayed(_):
+            options = self.get_element("doh-provider-select-inner").find_elements(
+                By.TAG_NAME, "option"
+            )
+            displayed = [
+                opt.text for opt in options if opt.get_attribute("value") != "custom"
+            ]
+            return len(displayed) == len(provider_names) and all(
+                any(name in text for text in displayed) for name in provider_names
+            )
+
+        self.wait.until(_providers_displayed)
         return self
 
     def open_connection_advanced(self) -> BasePage:
@@ -685,6 +752,18 @@ class AboutPrefs(BasePage):
         "strict": "etp-level-strict",
         "custom": "etp-level-custom",
     }
+    # The "Fix ... site issues" checkboxes exist twice, once under the Strict level on
+    # the ETP subpage and once on the Customize subpage, with separate ids.
+    ETP_EXCEPTION_CHECKBOXES = {
+        "etp": {
+            "major": "etp-major-issues-checkbox",
+            "minor": "etp-minor-issues-checkbox",
+        },
+        "etpCustomize": {
+            "major": "etp-customize-major-issues-checkbox",
+            "minor": "etp-customize-minor-issues-checkbox",
+        },
+    }
 
     def open_etp_settings(self) -> BasePage:
         """
@@ -735,6 +814,74 @@ class AboutPrefs(BasePage):
 
         self.expect(_level_is_checked)
         return self
+
+    def verify_etp_exception_checkbox(
+        self, exception: str, checked: bool = True, pane: str = "etp"
+    ) -> BasePage:
+        """
+        Assert the checked state of a "Fix ... site issues" checkbox.
+        exception: one of "major", "minor". pane: one of "etp", "etpCustomize".
+
+        The moz-checkbox holds its state on the host's ``checked`` property, which is
+        not mirrored onto an attribute, so it has to be read over JS.
+        """
+        if pane not in self.ETP_EXCEPTION_CHECKBOXES:
+            raise ValueError(f"Unknown ETP pane: {pane!r}")
+        if exception not in self.ETP_EXCEPTION_CHECKBOXES[pane]:
+            raise ValueError(f"Unknown ETP exception checkbox: {exception!r}")
+        element_name = self.ETP_EXCEPTION_CHECKBOXES[pane][exception]
+
+        def _checkbox_state_matches(_):
+            checkbox = self.get_element(element_name)
+            return (
+                bool(
+                    self.driver.execute_script(
+                        "return !!arguments[0].checked;", checkbox
+                    )
+                )
+                == checked
+            )
+
+        self.expect(_checkbox_state_matches)
+        return self
+
+    def verify_etp_custom_toggle(self, option: str, pressed: bool = True) -> BasePage:
+        """
+        Assert the on/off state of a category moz-toggle on about:preferences#etpCustomize.
+        option: a keyword from ``ETP_TOGGLE_OPTIONS``, e.g. "cookies-checkbox".
+
+        The moz-toggle holds its state on the host's ``pressed`` property, which is
+        not mirrored onto an attribute, so it has to be read over JS.
+        """
+        if option not in self.ETP_TOGGLE_OPTIONS:
+            raise ValueError(f"Unknown ETP toggle option: {option!r}")
+        element_name = self.ETP_TOGGLE_OPTIONS[option]
+
+        def _toggle_state_matches(_):
+            toggle = self.get_element(element_name)
+            return (
+                bool(
+                    self.driver.execute_script("return !!arguments[0].pressed;", toggle)
+                )
+                == pressed
+            )
+
+        self.expect(_toggle_state_matches)
+        return self
+
+    def get_etp_custom_dropdown_options(self, element_name: str) -> List[str]:
+        """
+        Return the labels of the selectable options in one of the ETP Customize
+        dropdowns. Options that Firefox keeps hidden behind a pref are left out.
+
+        element_name: the inner <select>, e.g. "etp-custom-cookie-behavior-select".
+        """
+        select = Select(self.get_element(element_name))
+        return [
+            option.text
+            for option in select.options
+            if not option.get_attribute("hidden")
+        ]
 
     def open_etp_customize(self) -> BasePage:
         """
@@ -1712,13 +1859,6 @@ class AboutPrefs(BasePage):
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
-    def enable_show_sidebar(self):
-        """Enable the Show Sidebar checkbox in Tabs and browsing > Browser layout."""
-        if self.get_element("show-sidebar-checkbox").get_attribute("checked") is None:
-            self.click_on("show-sidebar-shadow-box")
-        self.element_has_attribute("show-sidebar-checkbox", "checked")
-        return self
-
     def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
         """Wait until the UI reflects the selected default search engine."""
         self.wait.until(
@@ -1997,10 +2137,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select wrote through to the backing pref rather than
         # just holding the value we assigned.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 

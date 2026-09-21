@@ -836,6 +836,18 @@ networking:
     result: pass
     splits:
     - functional1
+  test_doh_providers_ca_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ru_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ua_region:
+    result: pass
+    splits:
+    - functional1
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
@@ -1284,6 +1296,16 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_text_area_can_be_deleted_moved_and_resized:
+    result: pass
+    splits:
+    - functional1
+    - nightly
+  test_pdf_text_location:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
@@ -1372,7 +1394,19 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_edit_installed_engines:
+    result: pass
+    splits:
+    - functional1
   test_fallback_language_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_changed:
+    result: pass
+    splits:
+    - functional1
+  test_fallback_language_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1400,12 +1434,24 @@ preferences:
     splits:
     - smoke
     - exclude_xvfb
+  test_never_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
     splits:
     - functional2
+  test_offer_full_page_translation_disabled:
+    result: pass
+    splits:
+    - functional1
   test_offer_full_page_translation_enabled:
+    result: pass
+    splits:
+    - functional1
+  test_pages_can_be_translated_with_offer_disabled:
     result: pass
     splits:
     - functional1
@@ -1516,6 +1562,10 @@ security_and_privacy:
     splits:
     - nightly
     - functional2
+  test_always_denied_permission:
+    result: pass
+    splits:
+    - functional1
   test_blocking_cryptominers:
     result: deprecated
     splits:
@@ -1850,6 +1900,11 @@ security_and_privacy:
     result: pass
     splits:
     - smoke
+  test_verify_etp_section_display:
+    result: pass
+    splits:
+    - functional3
+    - nightly
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
     result: pass

@@ -252,6 +252,7 @@ class GenericPdf(BasePage):
         self.html_body = self.get_element("html-body")
         self.pdf_body = self.get_element("pdf-body")
         self.max_page = int(self.get_element("page-input").get_attribute("max"))
+        self._last_pdf_text_point: dict[str, float] | None = None
 
     def get_green_highlighted_text(self) -> str:
         return self.get_element("highlighted-text").get_attribute("innerText")
@@ -467,13 +468,112 @@ class GenericPdf(BasePage):
         self.element_exists("added-drawing")
         return self
 
-    def add_text_to_pdf_page(self, text: str, page_number: str = "1") -> BasePage:
+    def add_text_to_pdf_page(
+        self,
+        text: str,
+        page_number: str = "1",
+        x_offset: int = 150,
+        y_offset: int = 220,
+    ) -> BasePage:
         """Add text to the selected PDF page."""
         page = self.get_element("pdf-page", labels=[page_number])
-        self.actions.move_to_element_with_offset(page, 150, 220).click().perform()
+        # Match ActionChains offsets to the element's in-view center.
+        self._last_pdf_text_point = self.driver.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            const left = Math.max(0, Math.min(rect.left, rect.right));
+            const right = Math.min(window.innerWidth, Math.max(rect.left, rect.right));
+            const top = Math.max(0, Math.min(rect.top, rect.bottom));
+            const bottom = Math.min(window.innerHeight, Math.max(rect.top, rect.bottom));
+            return {
+                x: Math.floor((left + right) / 2) + arguments[1],
+                y: Math.floor((top + bottom) / 2) + arguments[2],
+            };
+            """,
+            page,
+            x_offset,
+            y_offset,
+        )
+        self.actions.move_to_element_with_offset(
+            page, x_offset, y_offset
+        ).click().perform()
         self.actions.send_keys(text).perform()
         self.element_visible("added-text")
         self.element_has_text("added-text", text)
+        return self
+
+    def expect_text_at_pdf_page_location(
+        self,
+        tolerance: int = 5,
+    ) -> BasePage:
+        """Verify the text editor contains the point selected on the PDF page."""
+        assert self._last_pdf_text_point is not None, (
+            "Expected text to be added before checking its location."
+        )
+        selected_point = self._last_pdf_text_point
+
+        def text_contains_selected_point(_):
+            text_rect = self.get_element_rect(self.get_element("added-text"))
+            return (
+                text_rect["x"] - tolerance
+                <= selected_point["x"]
+                <= text_rect["x"] + text_rect["width"] + tolerance
+                and text_rect["y"] - tolerance
+                <= selected_point["y"]
+                <= text_rect["y"] + text_rect["height"] + tolerance
+            )
+
+        self.expect(text_contains_selected_point)
+        return self
+
+    def select_pdf_text_area(self) -> WebElement:
+        """Finish editing and select the added text area."""
+        self.actions.send_keys(Keys.ESCAPE).perform()
+        text_area = self.get_element("added-text")
+        self.actions.move_to_element(text_area).click().perform()
+        return text_area
+
+    def move_pdf_text_area(self, text_area: WebElement) -> BasePage:
+        """Move a text area and verify its position changed."""
+        initial_rect = self.get_element_rect(text_area)
+        self.actions.drag_and_drop_by_offset(text_area, 80, 50).perform()
+
+        def text_area_moved(_):
+            rect = self.get_element_rect(text_area)
+            return rect["x"] != initial_rect["x"] or rect["y"] != initial_rect["y"]
+
+        self.expect(text_area_moved)
+        return self
+
+    def set_pdf_text_font_size(self, font_size: int) -> BasePage:
+        """Change the selected text area's font size and verify it renders."""
+        text_content = self.get_element("added-text-content")
+        initial_size = text_content.value_of_css_property("font-size")
+        font_size_control = self.get_element("text-font-size")
+
+        # PDF.js applies the size after the control emits an input event.
+        updated_size = self.driver.execute_script(
+            """
+            const control = arguments[0];
+            control.value = arguments[1];
+            control.dispatchEvent(new Event("input", { bubbles: true }));
+            return control.value;
+            """,
+            font_size_control,
+            str(font_size),
+        )
+        assert updated_size == str(font_size), (
+            f"Expected PDF text font size to be {font_size}, got {updated_size}."
+        )
+        self.expect(
+            lambda _: text_content.value_of_css_property("font-size") != initial_size
+        )
+        return self
+
+    def delete_selected_pdf_text_area(self) -> BasePage:
+        """Delete the selected text area."""
+        self.actions.send_keys(Keys.DELETE).perform()
+        self.element_does_not_exist("added-text")
         return self
 
     def get_element_rect(self, element: WebElement) -> dict[str, float]:

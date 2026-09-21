@@ -287,6 +287,17 @@ class BasePage(Page):
         return self
 
     @context_of_model
+    def any_element_visible(self, reference: str | tuple, labels=None) -> Page:
+        """Wait until at least one matching element is visible."""
+
+        def _any_element_visible(_):
+            elements = self.get_elements(reference, labels=labels)
+            return any(el.is_displayed() for el in elements)
+
+        self.expect(_any_element_visible)
+        return self
+
+    @context_of_model
     def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
         """Expect helper: wait until element is visible or timeout"""
 

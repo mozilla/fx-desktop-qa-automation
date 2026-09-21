@@ -162,6 +162,28 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine-row": {
+    "selectorData": "#engineList moz-box-item[label='{name}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
+  "edit-search-engine-button": {
+    "selectorData": "editEngine-{engine}",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Edit button on an engine row in the Search shortcuts list",
+      "location": "about:preferences#search"
+    }
+  },
   "add-search-engine-button": {
     "selectorData": "addEngineButton",
     "strategy": "id",
@@ -576,6 +598,44 @@
       "location": "about:preferences#home"
     }
   },
+  "etp-status-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-status-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Enhanced Tracking Protection card on the privacy pane; \"label\" and \"description\" attributes hold the title and the top-level ETP message",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-shield-icon": {
+    "selectorData": "legend img",
+    "strategy": "css",
+    "shadowParent": "etp-status-card",
+    "groups": [],
+    "comment": {
+      "description": "Shield icon next to the \"Enhanced Tracking Protection\" title (shadowParent: etp-status-card)",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-status-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link under the ETP card message (shadowParent: etp-status-card)",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-item": {
+    "selectorData": "etpStatusItem",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "moz-box-item on the privacy pane showing the ETP level currently in use; \"label\" and \"description\" attributes hold the level name and its summary",
+      "location": "about:preferences#privacy"
+    }
+  },
   "etp-advanced-button": {
     "selectorData": "etpStatusAdvancedButton",
     "strategy": "id",
@@ -583,6 +643,34 @@
     "comment": {
       "description": "ETP \"Advanced\" button on the privacy pane; opens the ETP settings subpage (Settings redesign)",
       "location": "about:preferences#privacy"
+    }
+  },
+  "etp-page-header": {
+    "selectorData": "setting-pane[data-category='paneEtp'] moz-page-header",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Page header of the ETP subpage; \"heading\" attribute holds the \"Enhanced Tracking Protection\" title",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-advanced-settings-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-advanced-settings-group']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Advanced settings\" card holding the ETP level radios; \"label\" and \"description\" attributes hold the title and the ETP message",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-advanced-settings-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-advanced-settings-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link under the \"Advanced settings\" card message (shadowParent: etp-advanced-settings-card)",
+      "location": "about:preferences#etp"
     }
   },
   "etp-level-standard": {
@@ -612,6 +700,34 @@
       "location": "about:preferences#etp"
     }
   },
+  "etp-major-issues-checkbox": {
+    "selectorData": "etpAllowListBaselineEnabled",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix major site issues (recommended)\" moz-checkbox nested under the Strict ETP level (baseline allow list)",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-major-issues-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-major-issues-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link in the \"Fix major site issues\" description (shadowParent: etp-major-issues-checkbox)",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-minor-issues-checkbox": {
+    "selectorData": "etpAllowListConvenienceEnabled",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix minor site issues\" moz-checkbox nested under \"Fix major site issues\" (convenience allow list)",
+      "location": "about:preferences#etp"
+    }
+  },
   "etp-customize-button": {
     "selectorData": "etpCustomizeButton",
     "strategy": "id",
@@ -619,6 +735,97 @@
     "comment": {
       "description": "\"Customize\" button shown under the Custom ETP level; opens the ETP Customize subpage",
       "location": "about:preferences#etp"
+    }
+  },
+  "etp-customize-page-header": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] moz-page-header",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Page header of the ETP Customize subpage; \"heading\" attribute holds the \"Customize tracking protection\" title",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-custom-control-group']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Tracking protection\" card holding the per-category controls; \"label\" and \"description\" attributes hold the title and its message",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-major-issues-checkbox": {
+    "selectorData": "etpAllowListBaselineEnabledCustom",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix major site issues (recommended)\" moz-checkbox on the Customize subpage (baseline allow list)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-major-issues-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-customize-major-issues-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link in the \"Fix major site issues\" description (shadowParent: etp-customize-major-issues-checkbox)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-minor-issues-checkbox": {
+    "selectorData": "etpAllowListConvenienceEnabledCustom",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix minor site issues\" moz-checkbox on the Customize subpage (convenience allow list)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-reset']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Reset customizations\" card; \"label\" and \"description\" attributes hold the title and its message",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-standard-button": {
+    "selectorData": "etpResetStandardButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Reset to standard\" button in the \"Reset customizations\" card",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-strict-button": {
+    "selectorData": "etpResetStrictButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Reset to strict\" button in the \"Reset customizations\" card",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-reload-tabs-hint": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] #reloadTabsHint",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Reload your tabs to apply these changes.\" message bar, shown once a protection is switched. Scoped to the pane because the ETP subpage carries a message bar with the same id.",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-reload-tabs-button": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] #reloadTabsHintButton",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Reload all tabs\" button inside the reload-tabs message bar. Scoped to the pane because the ETP subpage carries a button with the same id.",
+      "location": "about:preferences#etpCustomize"
     }
   },
   "etp-custom-tracking-toggle": {
@@ -1151,6 +1358,18 @@
       "location": "about:preferences#languages - Translations section"
     }
   },
+  "offer-translations-checkbox-input": {
+    "selectorData": "input",
+    "strategy": "tag",
+    "shadowParent": "offer-translations-checkbox",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner <input type=\"checkbox\"> inside the offerTranslations shadow root, used to click the checkbox",
+      "location": "about:preferences#languages (shadow DOM of offerTranslations)"
+    }
+  },
   "translations-more-settings-button": {
     "selectorData": "translationsManageButton",
     "strategy": "id",
@@ -1210,6 +1429,47 @@
     "comment": {
       "description": "Delete button on an always-translate language row, found by language tag",
       "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "never-translate-picker": {
+    "selectorData": "translationsNeverTranslateLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select in the \"Never translate these languages\" list",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "never-translate-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: never-translate-picker)",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-add-button": {
+    "selectorData": "translationsNeverTranslateLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-item": {
+    "selectorData": "moz-box-item.translations-never-translate-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate language, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
     }
   },
   "search-suggestion-in-private-windows": {
@@ -1631,21 +1891,6 @@
       "description": "Saved passwords button in about:preferences#privacy",
       "location": "about:preferences#privacy"
     }
-  },
-  "show-sidebar-checkbox": {
-    "selectorData": "browserLayoutShowSidebar",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "Checkbox to toggle \"Show sidebar\"",
-      "location": "about:preferences (Browser Layout)"
-    }
-  },
-  "show-sidebar-shadow-box": {
-    "selectorData": "input",
-    "strategy": "id",
-    "groups": [],
-    "shadowParent": "show-sidebar-checkbox"
   },
   "change-primary-password": {
     "selectorData": "changePrimaryPassword",
