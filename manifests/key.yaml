@@ -840,6 +840,10 @@ networking:
     result: pass
     splits:
     - functional1
+  test_doh_providers_global_regions:
+    result: pass
+    splits:
+    - functional1
   test_doh_providers_ru_region:
     result: pass
     splits:
