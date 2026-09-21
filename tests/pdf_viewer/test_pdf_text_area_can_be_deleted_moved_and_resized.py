@@ -36,7 +36,8 @@ def test_pdf_text_area_can_be_deleted_moved_and_resized(pdf_viewer: GenericPdf):
     pdf_viewer.select_editor_tool("toolbar-text")
     pdf_viewer.add_text_to_pdf_page(TEXT_TO_ADD)
 
-    text_area = pdf_viewer.select_pdf_text_area()
+    pdf_viewer.select_pdf_text_area()
+    text_area = pdf_viewer.get_element("added-text")
     pdf_viewer.move_pdf_text_area(text_area)
 
     pdf_viewer.set_pdf_text_font_size(INITIAL_FONT_SIZE)
