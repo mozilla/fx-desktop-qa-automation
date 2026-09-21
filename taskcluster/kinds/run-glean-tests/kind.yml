@@ -29,6 +29,9 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
+        git config user.name "dteautomation"
+        git config user.email "dte-automation@mozilla.com"
+        git fetch
         git pull origin main --rebase
         mkdir -p artifacts;
         # Gate first: a PR that doesn't touch glean shouldn't pay for uv and rustup
