@@ -526,12 +526,48 @@ class GenericPdf(BasePage):
         self.expect(text_contains_selected_point)
         return self
 
-    def select_pdf_text_area(self) -> WebElement:
+    def select_pdf_text_area(self) -> BasePage:
         """Finish editing and select the added text area."""
         self.actions.send_keys(Keys.ESCAPE).perform()
         text_area = self.get_element("added-text")
         self.actions.move_to_element(text_area).click().perform()
-        return text_area
+        return self
+
+    def _set_pdf_text_control_value(self, control_name: str, value: str) -> BasePage:
+        """Set a PDF text control and notify PDF.js."""
+        control = self.get_element(control_name)
+        # Native color dialogs and range sliders aren't portable through WebDriver.
+        updated_value = self.driver.execute_script(
+            """
+            const control = arguments[0];
+            control.value = arguments[1];
+            control.dispatchEvent(new Event("input", { bubbles: true }));
+            return control.value;
+            """,
+            control,
+            value,
+        )
+        assert updated_value == value, (
+            f"Expected {control_name} to be {value}, got {updated_value}."
+        )
+        return self
+
+    def set_pdf_text_style(self, color: str, font_size: int) -> BasePage:
+        """Set the Text tool's defaults or update the selected text area."""
+        for control_name, value in [
+            ("text-color", color),
+            ("text-font-size", str(font_size)),
+        ]:
+            self._set_pdf_text_control_value(control_name, value)
+        return self
+
+    def get_pdf_text_style(self) -> dict[str, str]:
+        """Return the text area's rendered color and font size."""
+        text_content = self.get_element("added-text-content")
+        return {
+            "color": text_content.value_of_css_property("color"),
+            "font_size": text_content.value_of_css_property("font-size"),
+        }
 
     def move_pdf_text_area(self, text_area: WebElement) -> BasePage:
         """Move a text area and verify its position changed."""
@@ -549,22 +585,7 @@ class GenericPdf(BasePage):
         """Change the selected text area's font size and verify it renders."""
         text_content = self.get_element("added-text-content")
         initial_size = text_content.value_of_css_property("font-size")
-        font_size_control = self.get_element("text-font-size")
-
-        # PDF.js applies the size after the control emits an input event.
-        updated_size = self.driver.execute_script(
-            """
-            const control = arguments[0];
-            control.value = arguments[1];
-            control.dispatchEvent(new Event("input", { bubbles: true }));
-            return control.value;
-            """,
-            font_size_control,
-            str(font_size),
-        )
-        assert updated_size == str(font_size), (
-            f"Expected PDF text font size to be {font_size}, got {updated_size}."
-        )
+        self._set_pdf_text_control_value("text-font-size", str(font_size))
         self.expect(
             lambda _: text_content.value_of_css_property("font-size") != initial_size
         )
