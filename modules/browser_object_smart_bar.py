@@ -229,6 +229,11 @@ class SmartBar(BasePage):
         Engine names are not localised strings with l10n ids, so these are
         read as text.
 
+        Reads the items **without expanding the submenu**, which works because
+        they render eagerly rather than on expand (verified over five
+        consecutive runs). If that ever changes this returns an empty list, and
+        the submenu has to be opened first.
+
         Raises if the CTA stops holding exactly two panel-lists: the submenu
         is reached by position, so a new list inserted ahead of it would
         otherwise return another menu's contents as though they were engines.
