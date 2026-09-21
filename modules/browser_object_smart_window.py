@@ -228,6 +228,11 @@ class SmartWindow(BasePage):
                     "apart from here. Retrying will not help; raise the cap "
                     "in _click_sidebar_close_button to distinguish them."
                 )
+            if not result:
+                # Without this the retries are silent, so a run that never
+                # reaches the button looks the same in the log as one that
+                # closed on the first try.
+                logging.debug("sidebar close button not reachable yet, will retry")
             clicked_at_least_once |= bool(result)
             return False
 
