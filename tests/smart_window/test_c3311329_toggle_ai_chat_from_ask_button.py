@@ -20,9 +20,10 @@ def test_toggle_ai_chat_from_ask_button(active_smart_window: SmartWindow):
     """
     smart_window = active_smart_window
 
-    # The sidebar starts closed in a freshly activated Smart Window.
-    smart_window.element_visible("smart-window-ask-button")
+    # The sidebar starts closed in a freshly activated Smart Window. Assert
+    # that structural precondition first, then the button that acts on it.
     smart_window.expect_ai_sidebar_open(False)
+    smart_window.element_visible("smart-window-ask-button")
 
     smart_window.toggle_ai_sidebar()
     smart_window.expect_ai_sidebar_open(True)

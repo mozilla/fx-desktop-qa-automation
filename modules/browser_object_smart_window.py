@@ -1,4 +1,5 @@
 import logging
+from typing import Literal
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
@@ -247,7 +248,7 @@ class SmartWindow(BasePage):
         return self
 
     @BasePage.context_chrome
-    def _click_sidebar_close_button(self) -> bool | str:
+    def _click_sidebar_close_button(self) -> Literal[True, False, "truncated"]:
         """
         Click the sidebar's X button if it is present yet.
 
@@ -284,6 +285,9 @@ class SmartWindow(BasePage):
                     }
                     if (el.shadowRoot) {
                         walk(el.shadowRoot, depth + 1);
+                        // Only bail on a hit, never on `truncated`: a sibling
+                        // branch may still hold the button. Returning here
+                        // instead would skip it. Intentional, do not "fix".
                         if (hit) return;
                     }
                 }
