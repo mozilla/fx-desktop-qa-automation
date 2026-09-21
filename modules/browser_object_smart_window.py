@@ -186,29 +186,21 @@ class SmartWindow(BasePage):
         """
         Close the AI chat sidebar with its own X button.
 
-        The button lives inside <browser id="ai-window-browser">, several
-        shadow roots down, which the components.json selector system cannot
-        traverse, so the walk runs in privileged JS. Matched on its
-        data-l10n-id so the lookup does not depend on the UI locale.
+        The button is several shadow roots inside
+        <browser id="ai-window-browser">, which components.json cannot
+        traverse, so the walk runs in privileged JS and matches on
+        data-l10n-id to stay locale-independent.
 
         Raises
         ------
         AssertionError
-            If the sidebar is still open when the wait expires. The message
-            names the cause -- button never reachable vs clicked and ignored
-            -- and notes if the JS walk was ever cut off by its depth cap,
-            since that makes "never reachable" less trustworthy.
+            If the sidebar is still open when the wait expires; the message
+            names the cause.
         """
-
-        # NOTE: this expect() predicate has a side effect -- it clicks. That
-        # is deliberate but unusual; predicates elsewhere in this BOM are pure
-        # observers. Do NOT copy this shape for a toggle control: repeated
-        # clicks would flip it back and forth and never settle. It is only
-        # safe here because the X is close-only, so a repeat click is a no-op.
-        #
-        # The retry is needed because the container becomes visible before the
-        # document inside ai-window-browser finishes loading, and a click
-        # landing in that window is silently dropped (observed 9/10 without).
+        # This predicate clicks, which is unusual and only safe because the X
+        # is close-only -- do not copy it for a toggle. The retry is needed
+        # because the container is visible before the inner document loads,
+        # and clicks landing there are dropped (observed 9/10 without).
         clicked_at_least_once = False
         walk_was_truncated = False
 
@@ -218,29 +210,19 @@ class SmartWindow(BasePage):
                 return True
             result = self._click_sidebar_close_button()
             if result == "truncated":
-                # Treated as "not found yet", not as a hard failure. The cut
-                # branch is not necessarily the button's branch, so truncation
-                # says nothing about whether the button will appear once the
-                # document finishes loading -- and that load race is the whole
-                # reason this retries. Recorded so the timeout can mention it.
+                # Retried, not raised: the cut branch may not be the button's.
                 walk_was_truncated = True
             if not result and not clicked_at_least_once:
-                # Only log before the first successful click. The button goes
-                # away while the sidebar animates shut, so later iterations
-                # legitimately miss it -- logging those would read as if the
-                # click had never landed.
+                # The button vanishes as the sidebar animates shut, so misses
+                # after a landed click are expected.
                 logging.debug("sidebar close button not reachable yet, will retry")
-            # `is True`, not truthiness: "truncated" is a non-empty string and
-            # would otherwise count as a landed click and mis-report the cause.
+            # `is True`: "truncated" is truthy and would fake a landed click.
             clicked_at_least_once = clicked_at_least_once or result is True
             return False
 
         try:
             self.expect(_closed)
         except TimeoutException:
-            # A bare TimeoutException here cannot distinguish "the button was
-            # never reachable" from "it was clicked and the sidebar ignored
-            # it", which are different bugs. Say which one happened.
             cause = (
                 "the X button was clicked but the sidebar stayed open"
                 if clicked_at_least_once
@@ -263,14 +245,10 @@ class SmartWindow(BasePage):
         -------
         Literal[True, False, "truncated"]
             True if the click landed, False if the button is not in the tree
-            yet, or "truncated" if the walk gave up on the depth cap before it
-            could tell those two apart.
+            yet, "truncated" if the walk hit its depth cap first.
 
-        close_ai_sidebar deliberately polls on sidebar state rather than on
-        this value -- what matters is that a miss is a side-effect-free no-op,
-        which is what makes retrying safe. It retries on "truncated" exactly
-        as it does on False, and only mentions the depth cap if the wait then
-        expires.
+        Callers should poll sidebar state rather than this value; a miss is a
+        side-effect-free no-op, which is what makes retrying safe.
         """
         return self.driver.execute_script("""
             const br = document.getElementById("ai-window-browser");
@@ -278,12 +256,8 @@ class SmartWindow(BasePage):
             if (!doc) return false;
             let hit = null;
             let truncated = false;
-            // `depth` counts shadow-boundary crossings, not DOM depth -- the
-            // cap bounds runaway nesting, not tree size. aiWindow.html is a
-            // few shadow roots deep to reach the close button, so 12 is ample
-            // headroom while still bounding a walk that would otherwise not
-            // terminate. Bailing on depth is reported separately so it cannot
-            // be mistaken for the button simply being absent.
+            // `depth` counts shadow-boundary crossings, not DOM depth; 12 is
+            // ample for aiWindow.html while still bounding the walk.
             (function walk(node, depth) {
                 if (!node) return;
                 if (depth > 12) { truncated = true; return; }
@@ -294,9 +268,8 @@ class SmartWindow(BasePage):
                     }
                     if (el.shadowRoot) {
                         walk(el.shadowRoot, depth + 1);
-                        // Only bail on a hit, never on `truncated`: a sibling
-                        // branch may still hold the button. Returning here
-                        // instead would skip it. Intentional, do not "fix".
+                        // Bail on a hit only -- a sibling branch may still
+                        // hold the button. Do not add a `truncated` exit here.
                         if (hit) return;
                     }
                 }
