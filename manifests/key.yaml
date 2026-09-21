@@ -1301,6 +1301,11 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_text_can_be_copied_cut_and_pasted_from_context_menu:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:

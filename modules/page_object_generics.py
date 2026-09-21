@@ -533,6 +533,11 @@ class GenericPdf(BasePage):
         self.actions.move_to_element(text_area).click().perform()
         return text_area
 
+    def wait_for_pdf_text_area_count(self, expected_count: int) -> BasePage:
+        """Wait until the expected number of PDF text areas exists."""
+        self.expect(lambda _: len(self.get_elements("added-text")) == expected_count)
+        return self
+
     def move_pdf_text_area(self, text_area: WebElement) -> BasePage:
         """Move a text area and verify its position changed."""
         initial_rect = self.get_element_rect(text_area)
