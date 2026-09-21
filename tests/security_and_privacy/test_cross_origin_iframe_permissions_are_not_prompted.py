@@ -127,7 +127,7 @@ def test_cross_origin_iframe_permissions_are_not_prompted(
     driver: Firefox, nav: Navigation, temp_selectors: dict
 ):
     """
-    C602563 - This site cross-origin with FP allowed only for https://permission.site
+    C602563 - This sThis site cross-origin with FP allowed only for https://permission.siteite cross-origin with FP allowed only for https://permission.site
     """
 
     # Reach https://joo.uber.space/frame-permissions.html
