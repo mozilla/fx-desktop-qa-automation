@@ -46,13 +46,6 @@ def _assert_text_style(pdf_viewer: GenericPdf, color: str, font_size: int) -> No
         text_style_matches,
         message=f"Expected PDF text color {color} and rendered size {font_size * scale}px.",
     )
-    style = pdf_viewer.get_pdf_text_style()
-    assert Color.from_string(style["color"]).hex == color, (
-        f"Expected PDF text color {color}, got {style['color']}."
-    )
-    assert float(style["font_size"].removesuffix("px")) == expected_size, (
-        f"Expected PDF text size {font_size}, got {style['font_size']}."
-    )
 
 
 def test_pdf_text_uses_selected_font_size_and_color(pdf_viewer: GenericPdf):
