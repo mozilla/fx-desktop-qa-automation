@@ -1558,7 +1558,7 @@
     }
   },
   "download-language-delete-confirm-text": {
-    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}'] div > span",
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}'] span",
     "strategy": "css",
     "groups": [
       "doNotCache"
