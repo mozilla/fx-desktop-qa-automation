@@ -1,5 +1,7 @@
 import logging
+from typing import Literal
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
 from modules.page_base import BasePage
@@ -152,3 +154,127 @@ class SmartWindow(BasePage):
         """
         self.expect(lambda _: fragment in self.get_selected_tab_url())
         return self
+
+    # ── AI chat sidebar ──────────────────────────────────────────────────
+
+    @BasePage.context_of_model
+    def ai_sidebar_open(self) -> bool:
+        """
+        Report whether the AI chat sidebar is open.
+
+        Measures rendered geometry rather than the `hidden` attribute: the
+        container is present but collapsed before the sidebar has ever been
+        opened, and collapses again on close, without `hidden` ever changing.
+        """
+        rect = self.get_element("smart-window-box").rect
+        return rect["width"] > 0 and rect["height"] > 0
+
+    def expect_ai_sidebar_open(self, is_open: bool = True) -> BasePage:
+        """Wait until the AI chat sidebar is (or is not) open."""
+        self.expect(lambda _: self.ai_sidebar_open() == is_open)
+        return self
+
+    def toggle_ai_sidebar(self) -> BasePage:
+        """
+        Click the Ask button, which opens the sidebar when closed and closes
+        it when open.
+        """
+        self.click_on("smart-window-ask-button")
+        return self
+
+    def close_ai_sidebar(self) -> BasePage:
+        """
+        Close the AI chat sidebar with its own X button.
+
+        The button is several shadow roots inside
+        <browser id="ai-window-browser">, which components.json cannot
+        traverse, so the walk runs in privileged JS and matches on
+        data-l10n-id to stay locale-independent.
+
+        Raises
+        ------
+        AssertionError
+            If the sidebar is still open when the wait expires; the message
+            names the cause.
+        """
+        # This predicate clicks, which is unusual and only safe because the X
+        # is close-only -- do not copy it for a toggle. The retry is needed
+        # because the container is visible before the inner document loads,
+        # and clicks landing there are dropped (observed 9/10 without).
+        clicked_at_least_once = False
+        walk_was_truncated = False
+
+        def _closed(_) -> bool:
+            nonlocal clicked_at_least_once, walk_was_truncated
+            if not self.ai_sidebar_open():
+                return True
+            result = self._click_sidebar_close_button()
+            if result == "truncated":
+                # Retried, not raised: the cut branch may not be the button's.
+                walk_was_truncated = True
+            if not result and not clicked_at_least_once:
+                # The button vanishes as the sidebar animates shut, so misses
+                # after a landed click are expected.
+                logging.debug("sidebar close button not reachable yet, will retry")
+            # `is True`: "truncated" is truthy and would fake a landed click.
+            clicked_at_least_once = clicked_at_least_once or result is True
+            return False
+
+        try:
+            self.expect(_closed)
+        except TimeoutException:
+            cause = (
+                "the X button was clicked but the sidebar stayed open"
+                if clicked_at_least_once
+                else "the X button never appeared inside ai-window-browser"
+            )
+            if walk_was_truncated and not clicked_at_least_once:
+                cause += (
+                    ", and the shadow walk hit its depth cap of 12 at least "
+                    "once, so the button may be nested below it"
+                )
+            raise AssertionError(f"AI chat sidebar did not close: {cause}") from None
+        return self
+
+    @BasePage.context_chrome
+    def _click_sidebar_close_button(self) -> Literal[True, False, "truncated"]:
+        """
+        Click the sidebar's X button if it is present yet.
+
+        Returns
+        -------
+        Literal[True, False, "truncated"]
+            True if the click landed, False if the button is not in the tree
+            yet, "truncated" if the walk hit its depth cap first.
+
+        Callers should poll sidebar state rather than this value; a miss is a
+        side-effect-free no-op, which is what makes retrying safe.
+        """
+        return self.driver.execute_script("""
+            const br = document.getElementById("ai-window-browser");
+            const doc = br && br.contentDocument;
+            if (!doc) return false;
+            let hit = null;
+            let truncated = false;
+            // `depth` counts shadow-boundary crossings, not DOM depth; 12 is
+            // ample for aiWindow.html while still bounding the walk.
+            (function walk(node, depth) {
+                if (!node) return;
+                if (depth > 12) { truncated = true; return; }
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.matches('[data-l10n-id="aiwindow-close-sidebar"]')) {
+                        hit = el;
+                        return;
+                    }
+                    if (el.shadowRoot) {
+                        walk(el.shadowRoot, depth + 1);
+                        // Bail on a hit only -- a sibling branch may still
+                        // hold the button. Do not add a `truncated` exit here.
+                        if (hit) return;
+                    }
+                }
+            })(doc, 0);
+            if (!hit) return truncated ? "truncated" : false;
+            hit.click();
+            return true;
+        """)
