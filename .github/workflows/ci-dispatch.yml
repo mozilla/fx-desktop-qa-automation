@@ -165,8 +165,6 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
-      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-L10n-Mac:
     needs: Select-Test-Type
@@ -186,8 +184,6 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
-      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-L10n-Linux:
     needs: Select-Test-Type
@@ -207,5 +203,3 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
-      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
