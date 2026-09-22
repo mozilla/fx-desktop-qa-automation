@@ -1546,6 +1546,50 @@
       "location": "about:preferences#translations - Speed up translation section"
     }
   },
+  "download-language-delete-button": {
+    "selectorData": "moz-button.translations-download-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete icon in a downloaded language row, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-text": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}'] div > span",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Delete <language> (<size>MB)?\" text shown after clicking the delete icon",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-button": {
+    "selectorData": "moz-button.translations-download-delete-confirm-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-cancel-button": {
+    "selectorData": "moz-button.translations-download-delete-cancel-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Cancel button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",

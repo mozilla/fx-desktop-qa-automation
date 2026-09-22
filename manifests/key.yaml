@@ -1383,6 +1383,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_cancel_keeps_downloaded_languages:
+    result: pass
+    splits:
+    - functional1
   test_change_font_family:
     result: pass
     splits:
@@ -1405,6 +1409,10 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
