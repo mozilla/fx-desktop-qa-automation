@@ -1309,6 +1309,11 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_text_can_be_copied_cut_and_pasted_from_context_menu:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:
@@ -1451,6 +1456,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_never_translate_languages_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
@@ -1477,6 +1486,10 @@ preferences:
     splits:
     - functional1
   test_preferred_language_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
+  test_removed_never_translate_sites_can_be_translated:
     result: pass
     splits:
     - functional1

@@ -90,3 +90,22 @@ class TranslationsPanel(BasePage):
             )
         )
         return self
+
+    def check_never_translate_site(self) -> BasePage:
+        """
+        Open the settings wheel gear menu and check "Never translate this site".
+        """
+        self.click_on("settings-gear-button")
+        self.element_visible("never-translate-site-menuitem")
+        self.click_on("never-translate-site-menuitem")
+
+        # autocheck="false", so Firefox adds the attribute once the permission is set.
+        self.expect(
+            lambda _: (
+                self.get_element("never-translate-site-menuitem").get_attribute(
+                    "checked"
+                )
+                is not None
+            )
+        )
+        return self
