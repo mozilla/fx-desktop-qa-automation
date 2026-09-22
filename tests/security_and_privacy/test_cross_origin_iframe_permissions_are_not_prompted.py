@@ -145,12 +145,11 @@ def expect_no_permission_prompt(nav: Navigation, requested: str) -> None:
     try:
         nav.element_not_visible("popup-notification")
     except TimeoutException:
-        with nav.driver.context(nav.driver.CONTEXT_CHROME):
-            raised = [
-                prompt.get_attribute("id")
-                for prompt in nav.get_elements("popup-notification")
-                if prompt.is_displayed()
-            ]
+        raised = [
+            prompt.get_attribute("id")
+            for prompt in nav.get_elements("popup-notification")
+            if prompt.is_displayed()
+        ]
         raise AssertionError(
             f"Clicking {requested} raised the {raised} prompt(s) in the frame"
         ) from None
