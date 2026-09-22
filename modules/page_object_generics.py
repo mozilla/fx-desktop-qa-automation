@@ -378,6 +378,16 @@ class GenericPdf(BasePage):
         self.wait_for_page_to_load()
         return self
 
+    def wait_for_saved_text(self, text: str) -> BasePage:
+        """Wait for a saved free-text annotation to render."""
+        self.expect(
+            lambda _: any(
+                text in (element.get_attribute("textContent") or "")
+                for element in self.get_elements("saved-text-content")
+            )
+        )
+        return self
+
     def select_and_return_checkbox(self, element: str) -> WebElement:
         """select checkbox located at element"""
         checkbox = self.get_element(element)

@@ -1295,6 +1295,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_saved_text_can_be_searched:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:

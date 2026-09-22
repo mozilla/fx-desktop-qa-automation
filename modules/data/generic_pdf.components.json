@@ -300,5 +300,12 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "saved-text-content": {
+    "selectorData": ".freeTextAnnotation .annotationTextContent",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
   }
 }
