@@ -1,8 +1,11 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutConfig, AboutPrefs
+from modules.browser_object import TabBar
+from modules.page_object import AboutConfig, AboutNetworking, AboutPrefs
 
+TEST_URL = "https://www.facebook.com/"
+TEST_HOST = "www.facebook.com"
 TRR_MODE_PREF = "network.trr.mode"
 DEFAULT_TRR_MODE = "0"
 CUSTOM_FALLBACK_TRR_MODE = "2"
@@ -21,22 +24,34 @@ def add_to_prefs_list():
     ]
 
 
-def test_custom_doh_fallback_sets_network_trr_mode_to_2(driver: Firefox):
+def test_doh_custom_fallback_allowed(driver: Firefox):
     """
-    C500827 - Verify that Custom DoH fallback sets network.trr.mode to 2
+    C500827 - Verify that Custom DoH fallback is allowed
     """
     # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
     about_config = AboutConfig(driver)
+    networking = AboutNetworking(driver)
+    tabs = TabBar(driver)
 
     # Verify the network.trr.mode value is 0
     assert about_config.get_pref_value(TRR_MODE_PREF) == DEFAULT_TRR_MODE
 
-    # Select Custom mode and uncheck "Always warn me if secure DNS isn't available" option
+    # Check "Custom" and uncheck "Always warn me if secure DNS isn't available"
     prefs.open()
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")
     prefs.uncheck_doh_fallback_warning()
+
+    # Reach www.facebook.com and verify the lookup is resolved via TRR
+    driver.get(TEST_URL)
+    tabs.open_and_switch_to_new_tab()
+    networking.open()
+    networking.select_network_category("dns")
+    networking.wait_for_dns_entry(TEST_HOST, trr="true")
+
+    # Clear cached elements before reusing about_config in the new tab
+    about_config.clear_cache()
 
     # Verify the network.trr.mode value is set to 2
     assert about_config.get_pref_value(TRR_MODE_PREF) == CUSTOM_FALLBACK_TRR_MODE
