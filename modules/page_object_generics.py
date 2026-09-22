@@ -27,12 +27,57 @@ class GenericPage(BasePage):
     BOT_CHALLENGE_BODY_MARKERS = {
         "Google": "detected unusual traffic",
         "Cloudflare": "__cf_chl_tk",
+        # Turnstile keeps a normal title and URL, so only the body gives it away.
+        "Cloudflare Turnstile": "solve the challenge",
     }
     # Cloudflare appends this token once the challenge clears, leaving a normal-looking SERP
     # that no title marker can catch.
     BOT_CHALLENGE_URL_MARKERS = {
         "Cloudflare": "__cf_chl_tk",
     }
+
+    # Bing renders this container even when it decides not to serve ads to an IP; a
+    # rendered container with no aclick links means "no ads", not a broken page.
+    NO_ADS_MARKERS = {
+        "Bing": ("b_ads_magazine_container", "bing.com/aclick"),
+    }
+
+    @BasePage.context_content
+    def no_ads_reason(self) -> str | None:
+        """
+        Check whether a search engine rendered its ad slot but served no ads.
+
+        Returns:
+            str: Provider that served no ads, or None if ads (or no ad slot) are present.
+        """
+        source = self.driver.page_source or ""
+        for provider, (slot_marker, ad_marker) in self.NO_ADS_MARKERS.items():
+            if slot_marker in source and ad_marker not in source:
+                return f"{provider} (ad slot present, no ads served)"
+        return None
+
+    # Bing sometimes renders a normal, otherwise-complete SERP with no related-searches
+    # component at all; a rendered page missing this container means "not served", not broken.
+    NO_RELATED_SEARCH_MARKERS = {
+        "Bing": "brsv3",
+    }
+
+    @BasePage.context_content
+    def no_related_search_reason(self, engine: str) -> str | None:
+        """
+        Check whether an engine rendered a SERP without its related-searches component.
+
+        Params
+        ------
+        engine: Engine name, matching `params.engine` in cases.json.
+
+        Returns:
+            str: Engine missing the component, or None if present or not tracked.
+        """
+        marker = self.NO_RELATED_SEARCH_MARKERS.get(engine)
+        if marker and marker not in (self.driver.page_source or ""):
+            return f"{engine} (no related-searches component)"
+        return None
 
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
