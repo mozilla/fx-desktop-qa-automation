@@ -72,8 +72,10 @@ def test_fallback_language_can_be_deleted(driver: Firefox, about_prefs: AboutPre
     for language in FALLBACKS:
         about_addons.remove_language_addon(language)
     about_addons.expect(
-        lambda _: len(about_addons.get_language_addon_list())
-        == len(languages) - len(FALLBACKS)
+        lambda _: (
+            len(about_addons.get_language_addon_list())
+            == len(languages) - len(FALLBACKS)
+        )
     )
 
     # The deleted languages are gone from the Fallback language dropdown too.

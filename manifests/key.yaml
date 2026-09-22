@@ -1649,6 +1649,10 @@ security_and_privacy:
       win: unstable
     splits:
     - functional3
+  test_cross_origin_iframe_permissions_are_not_prompted:
+    result: pass
+    splits:
+    - functional1
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
