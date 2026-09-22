@@ -867,6 +867,10 @@ networking:
     splits:
     - functional2
     - nightly
+  test_trr_excluded_domain_uses_os_dns:
+    result: pass
+    splits:
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
