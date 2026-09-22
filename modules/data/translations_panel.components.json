@@ -62,5 +62,14 @@
       "description": "\"Never translate <language>\" checkbox menuitem",
       "location": "Menu opened by the translations panel settings gear"
     }
+  },
+  "never-translate-site-menuitem": {
+    "selectorData": "translations-panel-settings-never-translate-site",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Never translate this site\" checkbox menuitem",
+      "location": "Menu opened by the translations panel settings gear"
+    }
   }
 }

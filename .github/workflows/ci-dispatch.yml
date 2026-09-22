@@ -55,7 +55,7 @@ jobs:
 
       - name: Print planned jobs
         env:
-          SELECT_TEST_TYPES: ${{ needs.Select-Select-Test-Type.outputs.test_types }}
+          SELECT_TEST_TYPES: ${{ needs.Select-Test-Type.outputs.test_types }}
         run: |
           python3 scripts/preview_plan.py
 

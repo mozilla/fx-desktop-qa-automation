@@ -1472,6 +1472,39 @@
       "location": "about:preferences#translations - Never translate these languages section"
     }
   },
+  "never-translate-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate language row, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-site-item": {
+    "selectorData": "moz-box-item.translations-never-translate-site-item[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate site, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "never-translate-site-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-site-remove-button[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate site row, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",

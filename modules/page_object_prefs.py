@@ -544,6 +544,24 @@ class AboutPrefs(BasePage):
         self.click_on("never-translate-add-button")
         return self
 
+    def remove_never_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Never translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("never-translate-remove-button", labels=[lang_code])
+        return self
+
+    def remove_never_translate_site(self, origin: str) -> BasePage:
+        """Deletes a site from the 'Never translate these sites' list.
+
+        Args:
+            origin: The site origin to delete (e.g. 'http://localhost:8000')
+        """
+        self.click_on("never-translate-site-remove-button", labels=[origin])
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 

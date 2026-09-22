@@ -265,6 +265,16 @@
     "strategy": "id",
     "groups": []
   },
+  "text-options": {
+    "selectorData": "editorFreeTextParamsToolbar",
+    "strategy": "id",
+    "groups": []
+  },
+  "text-color": {
+    "selectorData": "editorFreeTextColor",
+    "strategy": "id",
+    "groups": []
+  },
   "text-font-size": {
     "selectorData": "editorFreeTextFontSize",
     "strategy": "id",

@@ -8,6 +8,7 @@ from tests.glean.flows import (
     RELATED_SEARCH_TERM,
     SEARCH_TERM,
     block_if_bot_challenge,
+    block_if_no_related_search,
     run_action,
     run_entry,
 )
@@ -66,4 +67,6 @@ def test_serp_impression(driver: Firefox, case: dict):
         glean.poll_glean_metric(METRIC, case["expected"])
     except Exception:
         block_if_bot_challenge(driver)
+        if case.get("action") == "open_in_new_tab":
+            block_if_no_related_search(driver, params.get("engine"))
         raise
