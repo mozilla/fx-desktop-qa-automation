@@ -1546,17 +1546,6 @@
       "location": "about:preferences#translations - Speed up translation section"
     }
   },
-  "download-language-remove-button": {
-    "selectorData": "moz-button.translations-download-remove-button[data-lang-tag='{code}']",
-    "strategy": "css",
-    "groups": [
-      "doNotCache"
-    ],
-    "comment": {
-      "description": "Button on a downloaded language row; shows a spinner while downloading and a trash can when done",
-      "location": "about:preferences#translations - Speed up translation section"
-    }
-  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",

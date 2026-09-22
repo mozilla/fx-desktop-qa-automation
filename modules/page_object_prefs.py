@@ -23,8 +23,6 @@ from modules.util import Utilities
 
 # Language models are tens of MB each, so the download can be slow.
 DOWNLOAD_LANGUAGE_TIMEOUT = 120
-# The row button swaps this in once the download is finished.
-DOWNLOAD_DONE_ICON = "chrome://global/skin/icons/delete.svg"
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
@@ -593,16 +591,22 @@ class AboutPrefs(BasePage):
     def wait_for_language_download(self, lang_code: str) -> BasePage:
         """Waits until a language finishes downloading.
 
-        The row button shows a spinner while downloading, a trash can when done.
+        The row carries a progress description until the download is done.
+        Use get_dom_attribute, since get_attribute reads the JS property and
+        always returns an empty string here. The row is rebuilt on every
+        progress update, so stale elements are expected while polling.
 
         Args:
             lang_code: The language code being downloaded (e.g. 'es')
         """
-        self.custom_wait(timeout=DOWNLOAD_LANGUAGE_TIMEOUT).until(
+        self.custom_wait(
+            timeout=DOWNLOAD_LANGUAGE_TIMEOUT,
+            ignored_exceptions=(NoSuchElementException, StaleElementReferenceException),
+        ).until(
             lambda _: self.get_element(
-                "download-language-remove-button", labels=[lang_code]
-            ).get_attribute("iconsrc")
-            == DOWNLOAD_DONE_ICON
+                "download-language-item", labels=[lang_code]
+            ).get_dom_attribute("description")
+            is None
         )
         return self
 
