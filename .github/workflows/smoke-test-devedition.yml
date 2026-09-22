@@ -56,6 +56,7 @@ jobs:
       channel: "devedition"
       job_to_run: Test-Windows
       test_set: smoke
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -75,6 +76,7 @@ jobs:
       channel: "devedition"
       job_to_run: Test-MacOS
       test_set: smoke
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
