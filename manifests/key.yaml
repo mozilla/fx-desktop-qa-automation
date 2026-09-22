@@ -836,6 +836,22 @@ networking:
     result: pass
     splits:
     - functional1
+  test_doh_providers_ca_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_global_regions:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ru_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ua_region:
+    result: pass
+    splits:
+    - functional1
   test_heuristics_disabled_when_trr_mode_2:
     result: pass
     splits:
@@ -851,6 +867,10 @@ networking:
     splits:
     - functional2
     - nightly
+  test_trr_excluded_domain_uses_os_dns:
+    result: pass
+    splits:
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
@@ -1289,10 +1309,20 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_text_can_be_copied_cut_and_pasted_from_context_menu:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:
     - functional2
+    - nightly
+  test_pdf_text_uses_selected_font_size_and_color:
+    result: pass
+    splits:
+    - functional1
     - nightly
   test_pdf_zoom_checkboxes:
     result: pass
@@ -1412,6 +1442,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_languages_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_manage_cookie_data:
     result: pass
     splits:
@@ -1423,6 +1457,10 @@ preferences:
     - smoke
     - exclude_xvfb
   test_never_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_never_translate_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1452,6 +1490,10 @@ preferences:
     splits:
     - functional1
   test_preferred_language_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
+  test_removed_never_translate_sites_can_be_translated:
     result: pass
     splits:
     - functional1
@@ -1615,6 +1657,10 @@ security_and_privacy:
       win: unstable
     splits:
     - functional3
+  test_cross_origin_iframe_permissions_are_not_prompted:
+    result: pass
+    splits:
+    - functional1
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
@@ -2078,7 +2124,15 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
   test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
+  test_c3978359_close_sidebar_from_x_button:
     result: pass
     splits:
     - functional1

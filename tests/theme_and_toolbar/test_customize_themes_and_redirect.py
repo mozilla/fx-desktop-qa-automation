@@ -16,12 +16,14 @@ COMPACT_LIGHT = "firefox-compact-light_mozilla_org-heading"
 
 THEMES: dict[str, list[str]] = {
     COMPACT_DARK: [
+        "rgba(0, 0, 0, 0.2)",  # nova dark toolbar, translucent since 157.0b2
         "rgb(23, 21, 25)",  # nova dark, the default from Fx157 on
         "rgb(43, 42, 51)",  # classic darker tone
         "rgb(143, 143, 148)",  # focused dark
         "rgb(120, 119, 126)",  # dark without focus
     ],
     COMPACT_LIGHT: [
+        "rgba(255, 255, 255, 0.4)",  # nova light toolbar, translucent since 157.0b2
         "rgb(249, 249, 251)",
     ],
 }

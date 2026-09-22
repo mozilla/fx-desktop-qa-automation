@@ -8,6 +8,7 @@ from tests.glean.flows import (
     ENTRY_PREFS,
     SEARCH_TERM,
     block_if_bot_challenge,
+    block_if_no_ads,
     run_action,
     run_entry,
 )
@@ -86,6 +87,8 @@ def test_misc_metrics(driver: Firefox, case: dict):
         events = glean.poll_glean_metric(metric, expected)
     except Exception:
         block_if_bot_challenge(driver)
+        if metric in AD_METRICS:
+            block_if_no_ads(driver)
         raise
 
     # Fields whose values are dynamic (ad counts, UUID impression_id) are checked for presence

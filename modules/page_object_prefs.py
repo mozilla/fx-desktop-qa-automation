@@ -21,6 +21,9 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import Utilities
 
+# Language models are tens of MB each, so the download can be slow.
+DOWNLOAD_LANGUAGE_TIMEOUT = 120
+
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
 
@@ -544,6 +547,69 @@ class AboutPrefs(BasePage):
         self.click_on("never-translate-add-button")
         return self
 
+    def remove_never_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Never translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("never-translate-remove-button", labels=[lang_code])
+        return self
+
+    def remove_never_translate_site(self, origin: str) -> BasePage:
+        """Deletes a site from the 'Never translate these sites' list.
+
+        Args:
+            origin: The site origin to delete (e.g. 'http://localhost:8000')
+        """
+        self.click_on("never-translate-site-remove-button", labels=[origin])
+        return self
+
+    def download_translation_language(self, lang_code: str) -> BasePage:
+        """Downloads a language in the 'Speed up translation' section.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to download (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "download-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("download-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("download-language-picker", "value", lang_code)
+        self.click_on("download-language-button")
+        return self
+
+    def wait_for_language_download(self, lang_code: str) -> BasePage:
+        """Waits until a language finishes downloading.
+
+        The row carries a progress description until the download is done.
+        Use get_dom_attribute, since get_attribute reads the JS property and
+        always returns an empty string here. The row is rebuilt on every
+        progress update, so stale elements are expected while polling.
+
+        Args:
+            lang_code: The language code being downloaded (e.g. 'es')
+        """
+        self.custom_wait(
+            timeout=DOWNLOAD_LANGUAGE_TIMEOUT,
+            ignored_exceptions=(NoSuchElementException, StaleElementReferenceException),
+        ).until(
+            lambda _: self.get_element(
+                "download-language-item", labels=[lang_code]
+            ).get_dom_attribute("description")
+            is None
+        )
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -619,6 +685,23 @@ class AboutPrefs(BasePage):
                 )
             )
         )
+        return self
+
+    def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
+        """Verify the Custom-mode provider menu offers exactly the given providers."""
+
+        def _providers_displayed(_):
+            options = self.get_element("doh-provider-select-inner").find_elements(
+                By.TAG_NAME, "option"
+            )
+            displayed = [
+                opt.text for opt in options if opt.get_attribute("value") != "custom"
+            ]
+            return len(displayed) == len(provider_names) and all(
+                any(name in text for text in displayed) for name in provider_names
+            )
+
+        self.wait.until(_providers_displayed)
         return self
 
     def open_connection_advanced(self) -> BasePage:

@@ -27,12 +27,57 @@ class GenericPage(BasePage):
     BOT_CHALLENGE_BODY_MARKERS = {
         "Google": "detected unusual traffic",
         "Cloudflare": "__cf_chl_tk",
+        # Turnstile keeps a normal title and URL, so only the body gives it away.
+        "Cloudflare Turnstile": "solve the challenge",
     }
     # Cloudflare appends this token once the challenge clears, leaving a normal-looking SERP
     # that no title marker can catch.
     BOT_CHALLENGE_URL_MARKERS = {
         "Cloudflare": "__cf_chl_tk",
     }
+
+    # Bing renders this container even when it decides not to serve ads to an IP; a
+    # rendered container with no aclick links means "no ads", not a broken page.
+    NO_ADS_MARKERS = {
+        "Bing": ("b_ads_magazine_container", "bing.com/aclick"),
+    }
+
+    @BasePage.context_content
+    def no_ads_reason(self) -> str | None:
+        """
+        Check whether a search engine rendered its ad slot but served no ads.
+
+        Returns:
+            str: Provider that served no ads, or None if ads (or no ad slot) are present.
+        """
+        source = self.driver.page_source or ""
+        for provider, (slot_marker, ad_marker) in self.NO_ADS_MARKERS.items():
+            if slot_marker in source and ad_marker not in source:
+                return f"{provider} (ad slot present, no ads served)"
+        return None
+
+    # Bing sometimes renders a normal, otherwise-complete SERP with no related-searches
+    # component at all; a rendered page missing this container means "not served", not broken.
+    NO_RELATED_SEARCH_MARKERS = {
+        "Bing": "brsv3",
+    }
+
+    @BasePage.context_content
+    def no_related_search_reason(self, engine: str) -> str | None:
+        """
+        Check whether an engine rendered a SERP without its related-searches component.
+
+        Params
+        ------
+        engine: Engine name, matching `params.engine` in cases.json.
+
+        Returns:
+            str: Engine missing the component, or None if present or not tracked.
+        """
+        marker = self.NO_RELATED_SEARCH_MARKERS.get(engine)
+        if marker and marker not in (self.driver.page_source or ""):
+            return f"{engine} (no related-searches component)"
+        return None
 
     @BasePage.context_content
     def bot_challenge_reason(self) -> str | None:
@@ -526,12 +571,53 @@ class GenericPdf(BasePage):
         self.expect(text_contains_selected_point)
         return self
 
-    def select_pdf_text_area(self) -> WebElement:
+    def select_pdf_text_area(self) -> BasePage:
         """Finish editing and select the added text area."""
         self.actions.send_keys(Keys.ESCAPE).perform()
         text_area = self.get_element("added-text")
         self.actions.move_to_element(text_area).click().perform()
-        return text_area
+        return self
+
+    def _set_pdf_text_control_value(self, control_name: str, value: str) -> BasePage:
+        """Set a PDF text control and notify PDF.js."""
+        control = self.get_element(control_name)
+        # Native color dialogs and range sliders aren't portable through WebDriver.
+        updated_value = self.driver.execute_script(
+            """
+            const control = arguments[0];
+            control.value = arguments[1];
+            control.dispatchEvent(new Event("input", { bubbles: true }));
+            return control.value;
+            """,
+            control,
+            value,
+        )
+        assert updated_value == value, (
+            f"Expected {control_name} to be {value}, got {updated_value}."
+        )
+        return self
+
+    def set_pdf_text_style(self, color: str, font_size: int) -> BasePage:
+        """Set the Text tool's defaults or update the selected text area."""
+        for control_name, value in [
+            ("text-color", color),
+            ("text-font-size", str(font_size)),
+        ]:
+            self._set_pdf_text_control_value(control_name, value)
+        return self
+
+    def get_pdf_text_style(self) -> dict[str, str]:
+        """Return the text area's rendered color and font size."""
+        text_content = self.get_element("added-text-content")
+        return {
+            "color": text_content.value_of_css_property("color"),
+            "font_size": text_content.value_of_css_property("font-size"),
+        }
+
+    def wait_for_pdf_text_area_count(self, expected_count: int) -> BasePage:
+        """Wait until the expected number of PDF text areas exists."""
+        self.expect(lambda _: len(self.get_elements("added-text")) == expected_count)
+        return self
 
     def move_pdf_text_area(self, text_area: WebElement) -> BasePage:
         """Move a text area and verify its position changed."""
@@ -549,22 +635,7 @@ class GenericPdf(BasePage):
         """Change the selected text area's font size and verify it renders."""
         text_content = self.get_element("added-text-content")
         initial_size = text_content.value_of_css_property("font-size")
-        font_size_control = self.get_element("text-font-size")
-
-        # PDF.js applies the size after the control emits an input event.
-        updated_size = self.driver.execute_script(
-            """
-            const control = arguments[0];
-            control.value = arguments[1];
-            control.dispatchEvent(new Event("input", { bubbles: true }));
-            return control.value;
-            """,
-            font_size_control,
-            str(font_size),
-        )
-        assert updated_size == str(font_size), (
-            f"Expected PDF text font size to be {font_size}, got {updated_size}."
-        )
+        self._set_pdf_text_control_value("text-font-size", str(font_size))
         self.expect(
             lambda _: text_content.value_of_css_property("font-size") != initial_size
         )

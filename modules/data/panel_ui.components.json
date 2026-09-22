@@ -381,11 +381,11 @@
     }
   },
   "other-bookmarks-by-title": {
-    "selectorData": "menuitem.menuitem-iconic[label*='{title}']",
+    "selectorData": "#OtherBookmarks menupopup menuitem.menuitem-iconic[label='{title}']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "Bookmark item",
+      "description": "Bookmark with the exact title inside the Other Bookmarks toolbar folder",
       "location": "Toolbar"
     }
   },
