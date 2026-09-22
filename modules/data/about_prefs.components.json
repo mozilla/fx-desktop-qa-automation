@@ -1505,6 +1505,58 @@
       "location": "about:preferences#translations - Never translate these sites section"
     }
   },
+  "download-language-picker": {
+    "selectorData": "translationsDownloadLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Select language moz-select in the \"Speed up translation\" section",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "download-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Select language moz-select shadow DOM (shadowParent: download-language-picker)",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-button": {
+    "selectorData": "translationsDownloadLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Download button that downloads the language picked in the Select language dropdown",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-item": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one downloaded language, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-remove-button": {
+    "selectorData": "moz-button.translations-download-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Button on a downloaded language row; shows a spinner while downloading and a trash can when done",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
   "search-suggestion-in-private-windows": {
     "selectorData": "showSearchSuggestionsPrivateWindowsCheckbox",
     "strategy": "id",

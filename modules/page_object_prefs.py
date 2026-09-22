@@ -21,6 +21,11 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import Utilities
 
+# Language models are tens of MB each, so the download can be slow.
+DOWNLOAD_LANGUAGE_TIMEOUT = 120
+# The row button swaps this in once the download is finished.
+DOWNLOAD_DONE_ICON = "chrome://global/skin/icons/delete.svg"
+
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
 
@@ -560,6 +565,45 @@ class AboutPrefs(BasePage):
             origin: The site origin to delete (e.g. 'http://localhost:8000')
         """
         self.click_on("never-translate-site-remove-button", labels=[origin])
+        return self
+
+    def download_translation_language(self, lang_code: str) -> BasePage:
+        """Downloads a language in the 'Speed up translation' section.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to download (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "download-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("download-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("download-language-picker", "value", lang_code)
+        self.click_on("download-language-button")
+        return self
+
+    def wait_for_language_download(self, lang_code: str) -> BasePage:
+        """Waits until a language finishes downloading.
+
+        The row button shows a spinner while downloading, a trash can when done.
+
+        Args:
+            lang_code: The language code being downloaded (e.g. 'es')
+        """
+        self.custom_wait(timeout=DOWNLOAD_LANGUAGE_TIMEOUT).until(
+            lambda _: self.get_element(
+                "download-language-remove-button", labels=[lang_code]
+            ).get_attribute("iconsrc")
+            == DOWNLOAD_DONE_ICON
+        )
         return self
 
     def open_doh_advanced(self) -> BasePage:

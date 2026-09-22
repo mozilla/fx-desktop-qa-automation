@@ -1438,6 +1438,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_languages_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_manage_cookie_data:
     result: pass
     splits:
