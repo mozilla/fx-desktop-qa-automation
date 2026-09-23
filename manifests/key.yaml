@@ -2108,6 +2108,14 @@ sidebar:
     splits:
     - smoke
 smart_window:
+  test_c3248361_perform_a_classic_search:
+    result: pass
+    splits:
+    - functional1
+  test_c3248362_search_with_different_engines:
+    result: pass
+    splits:
+    - functional1
   test_c3248785_switch_to_smart_window_prompts_signin:
     result: pass
     splits:
@@ -2145,6 +2153,10 @@ smart_window:
     splits:
     - functional1
   test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
+  test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
     - functional1
