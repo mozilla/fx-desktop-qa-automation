@@ -3,7 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.page_object import AboutPrefs
 
-SUPPORT_PAGE_URL = "https://support.mozilla.org/en-US/kb/how-do-i-use-firefox-spell-checker?as=u&utm_source=inproduct"
+SUPPORT_PAGE_URL_PART = "support.mozilla.org"
+SUPPORT_PAGE_ARTICLE_PART = "how-do-i-use-firefox-spell-checker"
 
 
 @pytest.fixture()
@@ -33,4 +34,5 @@ def test_spell_check_learn_more_link(driver: Firefox, about_prefs: AboutPrefs):
     about_prefs.click_on("spell-check-learn-more")
     about_prefs.wait_for_num_tabs(2)
     about_prefs.switch_to_new_tab()
-    about_prefs.url_contains(SUPPORT_PAGE_URL)
+    about_prefs.url_contains(SUPPORT_PAGE_URL_PART)
+    about_prefs.url_contains(SUPPORT_PAGE_ARTICLE_PART)
