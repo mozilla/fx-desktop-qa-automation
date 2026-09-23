@@ -610,35 +610,6 @@ class AboutPrefs(BasePage):
         )
         return self
 
-    def click_delete_downloaded_language(self, lang_code: str) -> BasePage:
-        """Clicks the delete icon on a downloaded language row.
-
-        This only asks for confirmation, it does not delete yet.
-
-        Args:
-            lang_code: The language code to delete (e.g. 'es')
-        """
-        self.click_on("download-language-delete-button", labels=[lang_code])
-        return self
-
-    def confirm_delete_downloaded_language(self, lang_code: str) -> BasePage:
-        """Clicks 'Delete' in the delete confirmation row.
-
-        Args:
-            lang_code: The language code being deleted (e.g. 'es')
-        """
-        self.click_on("download-language-delete-confirm-button", labels=[lang_code])
-        return self
-
-    def cancel_delete_downloaded_language(self, lang_code: str) -> BasePage:
-        """Clicks 'Cancel' in the delete confirmation row.
-
-        Args:
-            lang_code: The language code being kept (e.g. 'es')
-        """
-        self.click_on("download-language-delete-cancel-button", labels=[lang_code])
-        return self
-
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 

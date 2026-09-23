@@ -50,7 +50,7 @@ def test_downloaded_languages_can_be_deleted(driver: Firefox, about_prefs: About
     )
 
     # The delete icon only asks to confirm.
-    about_prefs.click_delete_downloaded_language(DOWNLOAD_LANGUAGE)
+    about_prefs.click_on("download-language-delete-button", labels=[DOWNLOAD_LANGUAGE])
     about_prefs.element_has_text(
         "download-language-delete-confirm-text",
         f"Delete {DOWNLOAD_LANGUAGE_NAME}",
@@ -70,7 +70,9 @@ def test_downloaded_languages_can_be_deleted(driver: Firefox, about_prefs: About
     )
 
     # Confirming deletes the language, so the row goes away.
-    about_prefs.confirm_delete_downloaded_language(DOWNLOAD_LANGUAGE)
+    about_prefs.click_on(
+        "download-language-delete-confirm-button", labels=[DOWNLOAD_LANGUAGE]
+    )
     about_prefs.element_does_not_exist(
         "download-language-item", labels=[DOWNLOAD_LANGUAGE]
     )
