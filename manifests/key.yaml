@@ -1432,6 +1432,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_dictionaries_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
@@ -1530,6 +1534,10 @@ preferences:
     splits:
     - functional1
   test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
+  test_spell_check_recognises_existing_dictionaries:
     result: pass
     splits:
     - functional1

@@ -26,6 +26,15 @@
       "location": "The clickable link within the search result section on the addons.mozilla.org/en-US/firefox/language-tools/ page, which directs users to the addon\u2019s detailed page"
     }
   },
+  "language-addons-dictionary-link": {
+    "selectorData": "td.LanguageTools-lang-{code}-dictionaries a",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The first dictionary link for a language code",
+      "location": "Dictionaries column of the language table on addons.mozilla.org/en-US/firefox/language-tools/"
+    }
+  },
   "language-addons-subpage-add-to-firefox": {
     "selectorData": "div[class='AMInstallButton AMInstallButton--noDownloadLink']",
     "strategy": "css",

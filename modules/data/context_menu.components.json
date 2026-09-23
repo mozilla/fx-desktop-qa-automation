@@ -362,5 +362,25 @@
     "selectorData": "strip-on-share",
     "strategy": "id",
     "groups": []
+  },
+  "context-menu-check-spelling": {
+    "selectorData": "spell-check-enabled",
+    "strategy": "id",
+    "groups": []
+  },
+  "context-menu-spell-languages": {
+    "selectorData": "spell-dictionaries",
+    "strategy": "id",
+    "groups": []
+  },
+  "context-menu-spell-dictionary": {
+    "selectorData": "spell-check-dictionary-{code}",
+    "strategy": "id",
+    "groups": []
+  },
+  "context-menu-spell-suggestion": {
+    "selectorData": "menuitem.spell-suggestion",
+    "strategy": "css",
+    "groups": []
   }
 }

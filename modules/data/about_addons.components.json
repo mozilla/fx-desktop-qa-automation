@@ -88,5 +88,16 @@
       "description": "Remove item in one add-on card's three-dot menu, found by add-on id",
       "location": "about:addons add-on card three-dot menu"
     }
+  },
+  "addon-card": {
+    "selectorData": "addon-card[addon-id='{id}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "One add-on card, found by add-on id",
+      "location": "about:addons add-on list"
+    }
   }
 }
