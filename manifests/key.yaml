@@ -2318,6 +2318,11 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_split_view_context_menu_select_searched_tab:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_tab_hover_different_content_type:
     result: pass
     splits:

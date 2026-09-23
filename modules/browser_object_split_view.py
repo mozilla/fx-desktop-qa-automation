@@ -66,14 +66,22 @@ class SplitView(BasePage):
         """
         Point the content context at the tab shown in the panel in `column`, so
         that page objects act on that side of the Split View.
+
+        The tab is matched by URL, so the panel's URL must be unique across all
+        open tabs.
         """
         url = self.get_panel_url(column)
         with self.driver.context(self.driver.CONTEXT_CONTENT):
+            matches = []
             for handle in self.driver.window_handles:
                 self.driver.switch_to.window(handle)
                 if self.driver.current_url == url:
-                    return self
-        raise AssertionError(f"No tab is loaded with {url}")
+                    matches.append(handle)
+            assert len(matches) == 1, (
+                f"Expected exactly one tab loaded with {url}, found {len(matches)}"
+            )
+            self.driver.switch_to.window(matches[0])
+        return self
 
     def expect_panel_url(self, column: str, url: str) -> BasePage:
         """Wait until the panel in `column` has loaded exactly `url`."""
