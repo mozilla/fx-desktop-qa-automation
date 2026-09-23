@@ -14,6 +14,9 @@ TAB_TO_SEARCH_FOR_URL = "about:license"
 
 @pytest.fixture()
 def test_case():
+    # C3903432 is split across two files: steps 6-7 here, steps 1-5 in
+    # test_split_view_context_menu_search_single_tab.py. Each needs its own
+    # Split View, since the URL bar search replaces about:opentabs.
     return "3903432"
 
 

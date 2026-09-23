@@ -11,6 +11,9 @@ SEARCH_TERM = "mozilla firefox"
 
 @pytest.fixture()
 def test_case():
+    # C3903432 is split across two files: steps 1-5 here, steps 6-7 in
+    # test_split_view_context_menu_select_searched_tab.py. Each needs its own
+    # Split View, since the URL bar search replaces about:opentabs.
     return "3903432"
 
 
