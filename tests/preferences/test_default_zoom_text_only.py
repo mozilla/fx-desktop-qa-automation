@@ -49,24 +49,30 @@ def _page_layout(driver: Firefox, has_image: bool) -> dict:
         ),
     }
     if has_image:
-        layout["image"] = driver.find_element(By.TAG_NAME, "img").size
+        layout["image"] = driver.find_element(By.TAG_NAME, "img").size["width"]
     return layout
 
 
-def _verify_text_zoom(driver: Firefox, handle: str, base: dict, zoom: int):
+def _is_close(actual: float, expected: float) -> bool:
+    """Allow 5% wiggle room for rounding and scrollbars"""
+    return abs(actual - expected) <= expected * 0.05
+
+
+def _verify_text_zoom(
+    driver: Firefox, about_prefs: AboutPrefs, handle: str, base: dict, zoom: int
+):
     """Only the text grows or shrinks, the page and images stay the same"""
     driver.switch_to.window(handle)
-    expected_text = base["text"] * zoom / 100
 
     def _only_text_zoomed(d):
         layout = _page_layout(d, "image" in base)
         return (
-            layout["width"] == base["width"]
-            and layout.get("image") == base.get("image")
-            and abs(layout["text"] - expected_text) <= expected_text * 0.05
+            _is_close(layout["width"], base["width"])
+            and ("image" not in base or _is_close(layout["image"], base["image"]))
+            and _is_close(layout["text"], base["text"] * zoom / 100)
         )
 
-    AboutPrefs(driver).expect_in_content(_only_text_zoomed)
+    about_prefs.expect_in_content(_only_text_zoomed)
 
 
 def test_default_zoom_text_only(
@@ -97,4 +103,4 @@ def test_default_zoom_text_only(
 
         # Every website only zooms its text
         for handle, base in base_layouts.items():
-            _verify_text_zoom(driver, handle, base, zoom)
+            _verify_text_zoom(driver, about_prefs, handle, base, zoom)

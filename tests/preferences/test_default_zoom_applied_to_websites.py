@@ -41,11 +41,13 @@ def _page_width(driver: Firefox) -> int:
     return driver.find_element(By.TAG_NAME, "html").size["width"]
 
 
-def _verify_zoom(driver: Firefox, handle: str, base_width: int, zoom: int):
+def _verify_zoom(
+    driver: Firefox, about_prefs: AboutPrefs, handle: str, base_width: int, zoom: int
+):
     """Check the tab's page width matches the zoom level"""
     driver.switch_to.window(handle)
     expected = base_width * 100 / zoom
-    AboutPrefs(driver).expect_in_content(
+    about_prefs.expect_in_content(
         lambda d: abs(_page_width(d) - expected) <= expected * 0.05
     )
 
@@ -56,22 +58,24 @@ def test_default_zoom_applied_to_websites(
     """
     C3369712 - The Default zoom level is applied to all websites.
     """
-    # Open each website in its own tab
-    driver.get(page_urls[0])
-    for url in page_urls[1:]:
-        about_prefs.open_and_switch_to_new_window("tab")
+    # Open each website in its own tab and save its width at 100%
+    base_widths = {}
+    for index, url in enumerate(page_urls):
+        if index > 0:
+            about_prefs.open_and_switch_to_new_window("tab")
         driver.get(url)
+        base_widths[driver.current_window_handle] = _page_width(driver)
 
     # Settings goes in the last tab
     about_prefs.open_and_switch_to_new_window("tab")
     about_prefs.open()
-    handles = driver.window_handles
-    base_width = _page_width(driver)
+    settings_handle = driver.current_window_handle
+    base_widths[settings_handle] = _page_width(driver)
 
     for zoom in ZOOM_LEVELS:
-        driver.switch_to.window(handles[-1])
+        driver.switch_to.window(settings_handle)
         about_prefs.set_default_zoom_level(zoom)
 
         # Settings and every website use the new zoom
-        for handle in reversed(handles):
-            _verify_zoom(driver, handle, base_width, zoom)
+        for handle, base_width in base_widths.items():
+            _verify_zoom(driver, about_prefs, handle, base_width, zoom)
