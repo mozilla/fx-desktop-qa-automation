@@ -819,10 +819,6 @@ networking:
     splits:
     - functional2
     - nightly
-  test_custom_doh_fallback_sets_trr_mode_to_2:
-    result: pass
-    splits:
-    - functional1
   test_custom_doh_provider:
     result: pass
     splits:
@@ -832,6 +828,14 @@ networking:
     result: pass
     splits:
     - smoke
+  test_doh_custom_fallback_allowed:
+    result: pass
+    splits:
+    - functional1
+  test_doh_custom_no_fallback_allowed:
+    result: pass
+    splits:
+    - functional1
   test_doh_failure_falls_back_to_dns:
     result: pass
     splits:
@@ -1497,6 +1501,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1505,6 +1513,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_translations_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_website_language_can_be_added:
     result: pass
     splits:
@@ -2125,6 +2137,10 @@ smart_window:
     splits:
     - functional1
   test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
+  test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
     - functional1
