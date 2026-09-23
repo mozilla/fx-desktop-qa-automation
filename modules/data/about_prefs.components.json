@@ -2119,6 +2119,15 @@
     "strategy": "id",
     "groups": []
   },
+  "smart-window-activate-link": {
+    "selectorData": "activateSmartWindowLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Activate Smart Window link in the AI settings group",
+      "location": "about:preferences#ai"
+    }
+  },
   "doh-advanced-button": {
     "selectorData": "dohAdvancedButton",
     "strategy": "id",
