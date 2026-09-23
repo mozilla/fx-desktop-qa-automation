@@ -93,7 +93,7 @@ valid_sites = {
     "tchibo",
     "thenorthface",
     "thomann",
-    "tiffany",
+    # "tiffany",
     "toychamp",
     "torfs",
     "urbanoutfitters",
