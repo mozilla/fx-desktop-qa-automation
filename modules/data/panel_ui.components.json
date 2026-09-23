@@ -209,6 +209,15 @@
       "location": "See above"
     }
   },
+  "panel-ui-chats-history": {
+    "selectorData": "appMenu-chats-history-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Chats entry, bound to the Tools:ChatsHistory command. Present in all windows but hidden outside a Smart Window, so check visibility rather than existence.",
+      "location": "On the hamburger menu, beside History"
+    }
+  },
   "panel-ui-history-recently-closed": {
     "selectorData": "appMenuRecentlyClosedTabs",
     "strategy": "id",
