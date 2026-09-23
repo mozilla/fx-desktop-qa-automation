@@ -12,6 +12,7 @@ from modules.browser_object_reader_view import *
 from modules.browser_object_report_broken_site import *
 from modules.browser_object_sidebar import *
 from modules.browser_object_smart_window import *
+from modules.browser_object_split_view import *
 from modules.browser_object_tabbar import *
 from modules.browser_object_translations_panel import *
 from modules.browser_object_trust_panel import *

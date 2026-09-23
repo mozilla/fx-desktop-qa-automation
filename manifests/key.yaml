@@ -2285,6 +2285,11 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_split_view_context_menu_search_single_tab:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_tab_hover_different_content_type:
     result: pass
     splits:

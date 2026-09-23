@@ -1,0 +1,58 @@
+{
+  "context": "chrome",
+  "do-not-cache": true,
+  "split-view-tabpanels": {
+    "selectorData": "#tabbrowser-tabpanels[splitview]",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The tab panels deck. The splitview attribute is only set while the window has a Split View",
+      "location": "Browser window content area"
+    }
+  },
+  "split-view-panel": {
+    "selectorData": ".split-view-panel[column='{column}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "One side of a Split View, by column: 0 is the left side, 1 is the right side",
+      "location": "Browser window content area"
+    }
+  },
+  "split-view-splitter": {
+    "selectorData": ".split-view-splitter",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The draggable divider between the two Split View panels",
+      "location": "Browser window content area"
+    }
+  },
+  "split-view-wrapper": {
+    "selectorData": "tab-split-view-wrapper",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Container holding the tabs that belong to a Split View",
+      "location": "In the tabbed browser"
+    }
+  },
+  "split-view-wrapper-tab": {
+    "selectorData": "tab-split-view-wrapper tab",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "A tab that belongs to a Split View",
+      "location": "In the tabbed browser"
+    }
+  },
+  "tab-by-linked-panel": {
+    "selectorData": "tab[linkedpanel='{panel}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The tab driving a given panel, used to read the title of a Split View panel",
+      "location": "In the tabbed browser"
+    }
+  }
+}
