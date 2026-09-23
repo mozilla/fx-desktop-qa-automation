@@ -626,14 +626,17 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "checked", "")
         return self
 
-    def uncheck_doh_fallback_warning(self) -> BasePage:
-        """Uncheck "Always warn me if secure DNS isn't available".
+    def set_doh_fallback_warning(self, checked: bool) -> BasePage:
+        """Check or uncheck "Always warn me if secure DNS isn't available".
 
         Requires `select_doh_protection_level("custom")` first, which reveals
         this checkbox.
+
+        Arguments:
+            checked: True to check the box, False to uncheck it.
         """
         checkbox = self.get_element("doh-fallback-checkbox-input")
-        if checkbox.is_selected():
+        if checkbox.is_selected() != checked:
             checkbox.click()
         return self
 

@@ -8,12 +8,12 @@ TEST_URL = "https://www.facebook.com/"
 TEST_HOST = "www.facebook.com"
 TRR_MODE_PREF = "network.trr.mode"
 DEFAULT_TRR_MODE = "0"
-CUSTOM_FALLBACK_TRR_MODE = "2"
+CUSTOM_NO_FALLBACK_TRR_MODE = "3"
 
 
 @pytest.fixture()
 def test_case():
-    return "500827"
+    return "2180311"
 
 
 @pytest.fixture()
@@ -24,9 +24,9 @@ def add_to_prefs_list():
     ]
 
 
-def test_doh_custom_fallback_allowed(driver: Firefox):
+def test_doh_custom_no_fallback_allowed(driver: Firefox):
     """
-    C500827 - Verify that Custom DoH fallback is allowed
+    C2180311 - Verify that the user can set DOH to Custom with no fallback
     """
     # Instantiate objects
     prefs = AboutPrefs(driver, category="privacy")
@@ -37,11 +37,11 @@ def test_doh_custom_fallback_allowed(driver: Firefox):
     # Verify the network.trr.mode value is 0
     assert about_config.get_pref_value(TRR_MODE_PREF) == DEFAULT_TRR_MODE
 
-    # Check "Custom" and uncheck "Always warn me if secure DNS isn't available"
+    # Select Custom mode and check "Always warn me if secure DNS isn't available"
     prefs.open()
     prefs.open_doh_advanced()
     prefs.select_doh_protection_level("custom")
-    prefs.set_doh_fallback_warning(False)
+    prefs.set_doh_fallback_warning(True)
 
     # Reach www.facebook.com and verify the lookup is resolved via TRR
     driver.get(TEST_URL)
@@ -53,5 +53,5 @@ def test_doh_custom_fallback_allowed(driver: Firefox):
     # Clear cached elements before reusing about_config in the new tab
     about_config.clear_cache()
 
-    # Verify the network.trr.mode value is set to 2
-    assert about_config.get_pref_value(TRR_MODE_PREF) == CUSTOM_FALLBACK_TRR_MODE
+    # Verify the network.trr.mode value is set to 3
+    assert about_config.get_pref_value(TRR_MODE_PREF) == CUSTOM_NO_FALLBACK_TRR_MODE
