@@ -2140,6 +2140,10 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3313457_history_from_hamburger_menu:
+    result: pass
+    splits:
+    - functional1
   test_c3321887_go_button_dropdown_opens:
     result: pass
     splits:
