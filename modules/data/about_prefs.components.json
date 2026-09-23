@@ -1347,6 +1347,44 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "translations-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='settings-translations-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Translations card on the Languages pane",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "translations-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "translations-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link on the Translations card (shadowParent: translations-card)",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "check-spelling-checkbox": {
+    "selectorData": "checkSpelling",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Check your spelling as you type\" moz-checkbox on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
+  "spell-check-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "check-spelling-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link next to \"Check your spelling as you type\" (shadowParent: check-spelling-checkbox)",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
   "offer-translations-checkbox": {
     "selectorData": "offerTranslations",
     "strategy": "id",
@@ -1503,6 +1541,47 @@
     "comment": {
       "description": "Delete button on a never-translate site row, found by origin",
       "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "download-language-picker": {
+    "selectorData": "translationsDownloadLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Select language moz-select in the \"Speed up translation\" section",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "download-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Select language moz-select shadow DOM (shadowParent: download-language-picker)",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-button": {
+    "selectorData": "translationsDownloadLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Download button that downloads the language picked in the Select language dropdown",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-item": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one downloaded language, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
     }
   },
   "search-suggestion-in-private-windows": {

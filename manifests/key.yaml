@@ -819,10 +819,6 @@ networking:
     splits:
     - functional2
     - nightly
-  test_custom_doh_fallback_sets_trr_mode_to_2:
-    result: pass
-    splits:
-    - functional1
   test_custom_doh_provider:
     result: pass
     splits:
@@ -832,6 +828,10 @@ networking:
     result: pass
     splits:
     - smoke
+  test_doh_custom_fallback_allowed:
+    result: pass
+    splits:
+    - functional1
   test_doh_failure_falls_back_to_dns:
     result: pass
     splits:
@@ -867,6 +867,10 @@ networking:
     splits:
     - functional2
     - nightly
+  test_trr_excluded_domain_uses_os_dns:
+    result: pass
+    splits:
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
@@ -1438,6 +1442,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_languages_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_manage_cookie_data:
     result: pass
     splits:
@@ -1489,6 +1497,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1497,6 +1509,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_translations_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_website_language_can_be_added:
     result: pass
     splits:
@@ -2113,6 +2129,18 @@ smart_window:
     splits:
     - functional1
   test_c3310319_block_smart_window_from_ai_controls:
+    result: pass
+    splits:
+    - functional1
+  test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
+  test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
+  test_c3978359_close_sidebar_from_x_button:
     result: pass
     splits:
     - functional1
