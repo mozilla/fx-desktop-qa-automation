@@ -32,8 +32,9 @@ def test_search_with_different_engines(
     bar.open_smart_bar()
     bar.set_smart_bar_text(QUERY)
 
-    assert ENGINE in bar.get_search_with_items(), (
-        f"{ENGINE} missing from the Search With submenu: {bar.get_search_with_items()}"
+    available = bar.get_search_with_items()
+    assert ENGINE in available, (
+        f"{ENGINE} missing from the Search With submenu: {available}"
     )
 
     # Choosing an engine only sets it; Enter runs the search. The choice is not

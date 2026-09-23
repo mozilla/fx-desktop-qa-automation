@@ -241,8 +241,18 @@ class SmartBar(BasePage):
         """)
 
     def expect_results(self, minimum: int = 1) -> BasePage:
-        """Wait until the Smart Bar shows at least `minimum` autocomplete rows."""
-        self.expect(lambda _: self.get_result_count() >= minimum)
+        """
+        Wait until the Smart Bar shows at least `minimum` autocomplete rows.
+
+        Reports the count actually reached, matching expect_smart_bar_text.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar never reached {minimum} autocomplete row(s); "
+                f"last count {self.get_result_count()}"
+            ) from None
         return self
 
     # ── Go / Ask action menu ─────────────────────────────────────────────
