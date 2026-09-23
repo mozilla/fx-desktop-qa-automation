@@ -1497,6 +1497,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1505,6 +1509,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_translations_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_website_language_can_be_added:
     result: pass
     splits:
