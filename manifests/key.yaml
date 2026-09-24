@@ -546,7 +546,11 @@ downloads:
     splits:
     - functional1
   test_telemetry_pdf_download_open:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2075157
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional1
     - nightly
