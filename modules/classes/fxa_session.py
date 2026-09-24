@@ -8,7 +8,7 @@ class FxaSession:
         self.client = Client(url)
         self.restmail = restmail_session
         self.password = password
-        self.otp_code = None
+        self.session = None
 
         logging.info(self.restmail.email)
         logging.info("[password redacted]")

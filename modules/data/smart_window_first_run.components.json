@@ -61,7 +61,7 @@
       "doNotCache"
     ],
     "comment": {
-      "description": "Clickable model tile, by the model's brandName (e.g. Gemini); names come from the server",
+      "description": "Clickable model tile, by the model's brandName (e.g. Gemini); names come from the server. Matches the compact JSON Firefox writes to data-l10n-args (no space after the colon)",
       "location": "AI_WINDOW_CHOOSE_MODEL screen"
     }
   },
