@@ -7,7 +7,6 @@ the Smart Window first run.
 
 import pytest
 from fxa.tests.utils import TestEmailAccount
-
 from modules.browser_object import SmartWindow
 from modules.page_object import FxaHome
 
@@ -17,11 +16,6 @@ FXA_STAGE_HOST = "accounts.stage.mozaws.net"
 @pytest.fixture()
 def test_case():
     return "3392590"
-
-
-@pytest.fixture()
-def fxa_env():
-    return "stage"
 
 
 @pytest.fixture()

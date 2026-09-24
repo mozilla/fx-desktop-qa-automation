@@ -1,6 +1,8 @@
-import pytest
+from os import environ
 
+import pytest
 from modules.browser_object import SmartWindow
+from modules.taskcluster import get_tc_secret
 
 
 @pytest.fixture()
@@ -43,6 +45,14 @@ def add_to_prefs_list():
 def smart_window(driver):
     """Provide the Smart Window BOM for a window still in the Classic state."""
     return SmartWindow(driver)
+
+
+@pytest.fixture()
+def fxa_env():
+    if environ.get("TASKCLUSTER_ROOT_URL") and environ.get("FX_EXECUTABLE"):
+        fxa_keys = get_tc_secret("ci_waf_token")
+        environ["CI_WAF_TOKEN"] = fxa_keys.get("stage")
+    return "stage"
 
 
 @pytest.fixture()

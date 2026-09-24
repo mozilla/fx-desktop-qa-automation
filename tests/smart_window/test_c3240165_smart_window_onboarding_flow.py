@@ -5,7 +5,6 @@ completed with a chosen model, and its choices take effect.
 """
 
 import pytest
-
 from modules.browser_object import SmartWindow
 from modules.classes.fxa_session import FxaSession
 from modules.page_object import FxaHome, SmartWindowFirstRun
@@ -14,11 +13,6 @@ from modules.page_object import FxaHome, SmartWindowFirstRun
 @pytest.fixture()
 def test_case():
     return "3240165"
-
-
-@pytest.fixture()
-def fxa_env():
-    return "stage"
 
 
 @pytest.fixture()
