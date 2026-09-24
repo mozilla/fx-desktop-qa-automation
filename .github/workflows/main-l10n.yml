@@ -35,10 +35,6 @@ on:
         required: false
       CI_WAF_TOKEN:
         required: false
-      GC_CREDENTIAL_STABILITY:
-        required: false
-      BQ_PROJECT:
-        required: false
 
   workflow_dispatch:
     inputs:
