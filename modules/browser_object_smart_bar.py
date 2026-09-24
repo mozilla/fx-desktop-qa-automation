@@ -214,6 +214,23 @@ class SmartBar(BasePage):
             )
         return self
 
+    def expect_search_engines(self, minimum: int = 2) -> BasePage:
+        """
+        Wait until the Search With submenu has listed the real engines.
+
+        It starts out holding only the generic "Search" entry and fills in once
+        the search service finishes initialising. Reading it immediately is a
+        race that a slow worker loses -- a Windows CI run saw ['Search'] alone.
+        """
+        try:
+            self.expect(lambda _: len(self.get_search_with_items()) >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Search With submenu never listed {minimum} entries; "
+                f"last saw {self.get_search_with_items()}"
+            ) from None
+        return self
+
     @BasePage.context_chrome
     def get_result_count(self) -> int:
         """
