@@ -1,7 +1,6 @@
 from os import environ
 
 import pytest
-
 from modules.browser_object import SmartWindow
 from modules.taskcluster import get_tc_secret
 
@@ -51,7 +50,7 @@ def smart_window(driver):
 @pytest.fixture()
 def fxa_env():
     if environ.get("TASKCLUSTER_ROOT_URL") and environ.get("FX_EXECUTABLE"):
-        fxa_keys = get_tc_secret("ci_waf_token")
+        fxa_keys = get_tc_secret("ci_waf_token", level=1)
         environ["CI_WAF_TOKEN"] = fxa_keys.get("stage")
     return "stage"
 
