@@ -8,6 +8,8 @@ AMO_LANGUAGE_TOOLS_URL = "addons.mozilla.org/en-US/firefox/language-tools"
 PDF_URL = "https://showcase.apryse.com/gallery/form.pdf"
 TEXT_FIELD = "required-field"
 MISSPELLED_WORD = "frumoas"
+# Pixels in from the left edge, where the typed word sits.
+LEFT_EDGE_OFFSET = 10
 
 # Language code on AMO and the dictionary add-on id.
 DICTIONARIES = [
@@ -45,7 +47,7 @@ def hard_quit():
 def right_click_word(pdf_viewer: GenericPdf):
     # Right-click near the left edge so we land on the word.
     field = pdf_viewer.get_element(TEXT_FIELD)
-    x_offset = -field.size["width"] // 2 + 10
+    x_offset = -field.size["width"] // 2 + LEFT_EDGE_OFFSET
     pdf_viewer.actions.move_to_element_with_offset(
         field, x_offset, 0
     ).context_click().perform()
@@ -95,7 +97,7 @@ def test_spell_check_recognises_existing_dictionaries(
     pdf_viewer.context_click(TEXT_FIELD)
     context_menu.click_context_item("context-menu-spell-languages")
     for code, _ in DICTIONARIES:
-        context_menu.element_exists("context-menu-spell-dictionary", labels=[code])
+        context_menu.element_visible("context-menu-spell-dictionary", labels=[code])
 
     # Turn on the Romanian dictionary.
     context_menu.click_context_item("context-menu-spell-dictionary", labels=["ro"])
