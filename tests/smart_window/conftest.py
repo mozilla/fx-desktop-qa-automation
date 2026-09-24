@@ -9,12 +9,34 @@ def suite_id():
 
 
 @pytest.fixture()
-def prefs_list():
+def prefs_list(add_to_prefs_list: dict):
     """
     Smart Window ships disabled by default; every test in this suite needs the
     feature available before the window opens.
+
+    First-run onboarding is marked complete with a model chosen, so a Smart
+    Window opens straight to its normal view. Tests of sign-up or onboarding
+    override add_to_prefs_list to reset these two prefs.
+
+    With first run complete, Firefox opens the AI sidebar whenever a window
+    becomes Smart; openByDefault is turned off so a newly activated Smart
+    Window starts with the sidebar closed.
     """
-    return [("browser.smartwindow.enabled", True)]
+    prefs = [
+        ("browser.smartwindow.enabled", True),
+        ("browser.smartwindow.firstrun.hasCompleted", True),
+        # Choice id "1" (Gemini today). Set before launch, so it can't be
+        # picked by name like SmartWindowFirstRun.select_model does.
+        ("browser.smartwindow.firstrun.modelChoice", "1"),
+        ("browser.smartwindow.sidebar.openByDefault", False),
+    ]
+    prefs.extend(add_to_prefs_list)
+    return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return []
 
 
 @pytest.fixture()

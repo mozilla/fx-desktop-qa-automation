@@ -1285,7 +1285,43 @@ class BasePage(Page):
         return self
 
     def get_localstorage_item(self, key: str):
-        return self.driver.execute_script(f"return window.localStorage.getItem({key});")
+        return self.driver.execute_script(
+            "return window.localStorage.getItem(arguments[0]);", key
+        )
+
+    def set_localstorage_item(self, key: str, value: str) -> Page:
+        """Set a localStorage item for the current page's origin"""
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);", key, value
+        )
+        return self
+
+    @context_chrome
+    def get_pref(self, name: str) -> bool | int | str | None:
+        """
+        Return the current value of a Firefox pref, or None if it is not set.
+
+        Parameters
+        ----------
+        name : str
+            The pref name, e.g. "browser.smartwindow.firstrun.modelChoice".
+        """
+        return self.driver.execute_script(
+            """
+            const name = arguments[0];
+            switch (Services.prefs.getPrefType(name)) {
+              case Services.prefs.PREF_BOOL:
+                return Services.prefs.getBoolPref(name);
+              case Services.prefs.PREF_INT:
+                return Services.prefs.getIntPref(name);
+              case Services.prefs.PREF_STRING:
+                return Services.prefs.getStringPref(name);
+              default:
+                return null;
+            }
+            """,
+            name,
+        )
 
     def _get_alert(self):
         try:

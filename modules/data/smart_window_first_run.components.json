@@ -1,0 +1,128 @@
+{
+  "intro-screen": {
+    "selectorData": "main.screen.AI_WINDOW_INTRO",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Intro screen; moves on by itself after browser.smartwindow.firstrun.autoAdvanceMS (Firefox screen id AI_WINDOW_INTRO)",
+      "location": "Smart Window first run"
+    }
+  },
+  "choose-model-screen": {
+    "selectorData": "main.screen.AI_WINDOW_CHOOSE_MODEL",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Pick a model screen (Firefox screen id AI_WINDOW_CHOOSE_MODEL)",
+      "location": "Smart Window first run"
+    }
+  },
+  "memories-screen": {
+    "selectorData": "main.screen.AI_WINDOW_MEMORIES",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Memories screen (Firefox screen id AI_WINDOW_MEMORIES)",
+      "location": "Smart Window first run"
+    }
+  },
+  "set-default-screen": {
+    "selectorData": "main.screen.AI_WINDOW_SET_DEFAULT",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Make Smart Window the default screen (Firefox screen id AI_WINDOW_SET_DEFAULT)",
+      "location": "Smart Window first run"
+    }
+  },
+  "model-label": {
+    "selectorData": "fieldset.tiles-single-select-section label.select-item .label-text",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Label of each model tile; data-l10n-args holds the model's brandName, shortName and model id",
+      "location": "AI_WINDOW_CHOOSE_MODEL screen"
+    }
+  },
+  "model-tile": {
+    "selectorData": "//label[contains(@class, 'select-item')][.//div[contains(@data-l10n-args, '\"brandName\":\"{name}\"')]]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Clickable model tile, by the model's brandName (e.g. Gemini); names come from the server",
+      "location": "AI_WINDOW_CHOOSE_MODEL screen"
+    }
+  },
+  "model-radio": {
+    "selectorData": "//label[contains(@class, 'select-item')][.//div[contains(@data-l10n-args, '\"brandName\":\"{name}\"')]]//input[@type='radio']",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Visually hidden radio inside a model tile, by brandName; its value is model_<choice id>",
+      "location": "AI_WINDOW_CHOOSE_MODEL screen"
+    }
+  },
+  "next-button": {
+    "selectorData": "button.primary[value='primary_button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Next button, disabled until a model is picked",
+      "location": "AI_WINDOW_CHOOSE_MODEL screen"
+    }
+  },
+  "continue-button": {
+    "selectorData": "additional_button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Next / Let's go button",
+      "location": "AI_WINDOW_MEMORIES and AI_WINDOW_SET_DEFAULT screens"
+    }
+  },
+  "memories-chats-checkbox": {
+    "selectorData": "memories-chats",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Memories from chats, checked by default",
+      "location": "AI_WINDOW_MEMORIES screen"
+    }
+  },
+  "memories-browsing-checkbox": {
+    "selectorData": "memories-browsing",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Memories from browsing, checked by default",
+      "location": "AI_WINDOW_MEMORIES screen"
+    }
+  },
+  "set-default-checkbox": {
+    "selectorData": "set-default-window",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Make Smart Window the default, checked by default",
+      "location": "AI_WINDOW_SET_DEFAULT screen"
+    }
+  }
+}

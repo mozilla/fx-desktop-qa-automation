@@ -64,6 +64,41 @@ class SmartWindow(BasePage):
         self.expect_smart_window_active(True)
         return self
 
+    def expect_first_run_view(self, active: bool = True) -> BasePage:
+        """
+        Wait until the window is (or is not) showing the Smart Window first-run
+        view, which hides the nav-bar while onboarding is on screen.
+        """
+        self.expect(
+            lambda _: (
+                self.get_element("main-window").get_attribute("aiwindow-first-run")
+                is not None
+            )
+            == active
+        )
+        return self
+
+    # ── Account ──────────────────────────────────────────────────────────
+
+    def open_smart_window_sign_in(self) -> BasePage:
+        """
+        Choose Smart in the Switch Windows panel while signed out, then switch
+        the driver to the FxA sign-in tab that Firefox opens for Smart Window.
+        """
+        num_tabs = len(self.driver.window_handles)
+        self.click_switch_to_smart_window()
+        self.wait_for_num_tabs(num_tabs + 1)
+        self.switch_to_new_tab()
+        self.expect_selected_tab_url_contains("service=smartwindow")
+        return self
+
+    def expect_signed_in(self) -> BasePage:
+        """
+        Wait until Firefox reports the FxA account as signed in.
+        """
+        self.element_attribute_is("main-window", "fxastatus", "signedin")
+        return self
+
     # ── Switch Windows button ────────────────────────────────────────────
 
     def open_window_switcher(self) -> BasePage:

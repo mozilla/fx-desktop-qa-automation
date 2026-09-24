@@ -1,6 +1,15 @@
 {
   "context": "chrome",
   "do-not-cache": true,
+  "main-window": {
+    "selectorData": "main-window",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Browser window root. Carries the ai-window, aiwindow-first-run and fxastatus attributes",
+      "location": "Browser window"
+    }
+  },
   "window-switcher-button": {
     "selectorData": "ai-window-toggle",
     "strategy": "id",

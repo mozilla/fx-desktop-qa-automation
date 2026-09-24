@@ -32,9 +32,12 @@ on:
         required: false
       GCP_CREDENTIAL:
         required: false
+      CI_WAF_TOKEN:
+        required: false
 env:
   FX_CHANNEL: ${{ inputs.channel }}
   STARFOX_CATEGORY: ${{ inputs.test_category }}
+  CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
 jobs:
   Test-Windows:
