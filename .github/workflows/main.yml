@@ -303,8 +303,8 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload JSON to GCS Bucket
-        if: ${{ always() && inputs.trigger_event == 'schedule' }}
-        uses: google-github-actions/upload-cloud-storage@6397bd7b0d8792011db84f932fb2ed1f8da2cf62 # v3.0.0
+        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true  }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         with:
           path: artifacts-win
           destination: 'fx-dte/artifacts/'
@@ -495,8 +495,8 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload JSON to GCS Bucket
-        if: ${{ always() && inputs.trigger_event == 'schedule' }}
-        uses: google-github-actions/upload-cloud-storage@6397bd7b0d8792011db84f932fb2ed1f8da2cf62 # v3.0.0
+        if: ${{ always() && inputs.trigger_event == 'schedule'  && inputs.dry_run != true }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         with:
           path: artifacts-mac
           destination: 'fx-dte/artifacts/'
@@ -620,6 +620,13 @@ jobs:
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Upload JSON to GCS Bucket
+        if: ${{ always() && inputs.trigger_event == 'schedule'  && inputs.dry_run != true }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
+        with:
+          path: artifacts
+          destination: 'fx-dte/artifacts/'
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
