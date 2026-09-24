@@ -308,6 +308,7 @@ jobs:
         with:
           path: artifacts-win
           destination: 'fx-dte/artifacts/'
+          glob: '**/*.json'
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
@@ -500,6 +501,7 @@ jobs:
         with:
           path: artifacts-mac
           destination: 'fx-dte/artifacts/'
+          glob: '**/*.json'
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
@@ -627,6 +629,7 @@ jobs:
         with:
           path: artifacts
           destination: 'fx-dte/artifacts/'
+          glob: '**/*.json'
 
       - name: Upload results to BigQuery
         if: ${{ always() && inputs.dry_run != true }}
