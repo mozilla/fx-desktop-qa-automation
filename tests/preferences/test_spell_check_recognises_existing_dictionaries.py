@@ -1,5 +1,3 @@
-from shutil import copyfile
-
 import pytest
 from selenium.webdriver import Firefox
 
@@ -7,8 +5,8 @@ from modules.browser_object import ContextMenu
 from modules.page_object import AboutAddons, AboutPrefs, AmoLanguages, GenericPdf
 
 AMO_LANGUAGE_TOOLS_URL = "addons.mozilla.org/en-US/firefox/language-tools"
-PDF_FILE_NAME = "i-9.pdf"
-TEXT_FIELD = "first-name-field"
+PDF_URL = "https://showcase.apryse.com/gallery/form.pdf"
+TEXT_FIELD = "required-field"
 MISSPELLED_WORD = "frumoas"
 
 # Language code on AMO and the dictionary add-on id.
@@ -32,7 +30,11 @@ def test_case():
 @pytest.fixture()
 def add_to_prefs_list():
     """Add to list of prefs to set"""
-    return [("browser.settings-redesign.enabled", True)]
+    return [
+        ("browser.settings-redesign.enabled", True),
+        # Stops the save prompt for the edited PDF on quit.
+        ("dom.disable_beforeunload", True),
+    ]
 
 
 @pytest.fixture()
@@ -50,7 +52,7 @@ def right_click_word(pdf_viewer: GenericPdf):
 
 
 def test_spell_check_recognises_existing_dictionaries(
-    driver: Firefox, about_prefs: AboutPrefs, tmp_path
+    driver: Firefox, about_prefs: AboutPrefs
 ):
     """
     C3987578 - Spell check recognises existing dictionaries.
@@ -81,10 +83,8 @@ def test_spell_check_recognises_existing_dictionaries(
     for _, addon_id in DICTIONARIES:
         about_addons.element_visible("addon-card", labels=[addon_id])
 
-    # Open a local PDF form instead of the remote one.
-    pdf_path = tmp_path / PDF_FILE_NAME
-    copyfile(f"data/{PDF_FILE_NAME}", pdf_path)
-    pdf_viewer = GenericPdf(driver, pdf_url=f"file://{pdf_path}")
+    # Open the PDF form.
+    pdf_viewer = GenericPdf(driver, pdf_url=PDF_URL)
 
     # Turn on Check Spelling for the text field.
     pdf_viewer.click_on(TEXT_FIELD)

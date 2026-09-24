@@ -300,5 +300,14 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "required-field": {
+    "selectorData": "input[name='required']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The empty \"required\" text input field",
+      "location": "showcase.apryse.com/gallery/form.pdf page content"
+    }
   }
 }
