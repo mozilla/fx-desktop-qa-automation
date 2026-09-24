@@ -7,6 +7,7 @@ onboarding with a chosen model, and its choices take effect.
 
 import pytest
 from fxa.tests.utils import TestEmailAccount
+
 from modules.browser_object import SmartWindow
 from modules.page_object import FxaHome, SmartWindowFirstRun
 

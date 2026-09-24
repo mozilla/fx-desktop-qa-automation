@@ -1,6 +1,7 @@
 from os import environ
 
 import pytest
+
 from modules.browser_object import SmartWindow
 from modules.taskcluster import get_tc_secret
 
