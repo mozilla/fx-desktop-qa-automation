@@ -1420,6 +1420,14 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_default_zoom_applied_to_websites:
+    result: pass
+    splits:
+    - functional1
+  test_default_zoom_text_only:
+    result: pass
+    splits:
+    - functional1
   test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
