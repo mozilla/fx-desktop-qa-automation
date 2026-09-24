@@ -1450,6 +1450,14 @@ preferences:
     splits:
     - functional2
     - nightly
+  test_firefox_mobile_email_link:
+    result: pass
+    splits:
+    - functional1
+  test_firefox_mobile_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_lang_pack_changed_from_about_prefs:
     result: pass
     splits:

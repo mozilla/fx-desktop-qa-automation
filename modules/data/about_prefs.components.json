@@ -2451,5 +2451,23 @@
       "description": "The Fonts dialog OK button",
       "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
     }
+  },
+  "firefox-mobile-learn-more": {
+    "selectorData": "promoGroupLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" link on the Firefox for mobile card",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
+    }
+  },
+  "firefox-mobile-email-link": {
+    "selectorData": "firefoxMobilePromoLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Email the download link to your phone\" link under the QR code",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
+    }
   }
 }
