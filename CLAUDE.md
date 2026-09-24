@@ -28,7 +28,7 @@ pytest --lf                        # Re-run last failed tests
 pdoc --docformat "numpy" modules
 
 # Add a new test to the manifest (also runs on commit via git hook)
-python addtests.py
+python scripts/addtests.py
 
 # Create a new POM or BOM
 python scripts/new_model.py [ModelName|model_name] [pom|bom]
@@ -54,13 +54,13 @@ modules/                   # Page/Browser Object Models and utilities
   page_object_*.py         # Page Object Models (web content context)
   browser_object_*.py      # Browser Object Models (Firefox chrome context)
   data/                    # JSON element manifests (*.components.json)
-  classes/                 # Data classes (AutofillAddressBase, CreditCardBase, etc.)
+  classes/                 # Data classes (AutofillAddressBase, CreditCardBase, FxaSession, etc.)
   util.py                  # BrowserActions, PomUtils, Utilities helper classes
 manifests/
   key.yaml                 # Single source of truth for test skip/pass status
   testkey.py               # Manifest parsing and test balancing logic
 config/                    # pyproject.toml variants for different CI configurations
-conftest.py                # Root fixtures: driver, fx_executable, use_secrets, etc.
+conftest.py                # Root fixtures: driver, fx_executable, FxA fixtures, etc.
 scripts/                   # Utility scripts (new_model.py, addtests.py, etc.)
 profiles/                  # Firefox profile zips for tests requiring pre-existing profiles
 data/                      # Test data files (secrets, autofill forms, etc.)
@@ -106,6 +106,7 @@ The `driver` fixture in `conftest.py` is `autouse=True` and depends on:
 - `suite_id` — `(testrail_id, suite_name)` tuple; required in each suite's `conftest.py`
 - `test_case` — TestRail case ID; defined as a fixture in each test file
 - `use_profile` — return a profile zip name from `./profiles/` to use a pre-built profile
+- `fxa_env` — return `"stage"`/`"prod"` to point Firefox (autoconfig pref) and PyFxA at that FxA environment; default `None`
 
 ### Test Structure
 
@@ -142,7 +143,7 @@ suite_folder_name:
       - ci
 ```
 
-After adding a test, run `python addtests.py` to register it (this also runs on commit via git hook).
+After adding a test, run `python scripts/addtests.py` to register it (this also runs on commit via git hook).
 
 ### Importing POMs/BOMs
 
@@ -159,12 +160,27 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 |---|---|
 | `driver` | Firefox WebDriver (autouse) |
 | `use_profile` | Override to return profile zip name from `./profiles/` |
-| `use_secrets` | Function factory for decrypting test account secrets |
 | `opt_ci` | `--ci` flag (session-scoped) |
 | `opt_headless` | `--run-headless` flag |
 | `sys_platform` | `platform.system()` string (session-scoped) |
 | `delete_files` | Cleanup fixture for downloaded files |
 | `hard_quit` | Return `True` to skip graceful driver.quit() |
+| `fxa_env` | Override to return `"stage"`/`"prod"`; sets the FxA autoconfig pref |
+| `fxa_waf_bypass` | Autouse; adds the `fxa-ci` header to FxA hosts when `fxa_env` and `CI_WAF_TOKEN` are set |
+| `create_fxa` | Verified PyFxA account (`FxaSession`); deleted at teardown |
+| `restmail_session` / `get_otp_code` | Throwaway restmail inbox and emailed-code reader, for UI sign-up |
+
+### FxA and Smart Window
+
+- FxA tests need `CI_WAF_TOKEN` in the environment.
+- Sign in via Smart Window: `SmartWindow.open_smart_window_sign_in()`, then either
+  - existing account: `FxaHome.inject_session(create_fxa)` + `continue_with_cached_account()`, or
+  - new account: `sign_up_sign_in(email)` + `fill_passwordless_code(get_otp_code(restmail_session))`.
+  Firefox switches the window to Smart itself.
+- The Smart Window suite defaults to first run completed. For sign-up/onboarding tests, override `add_to_prefs_list` with `browser.smartwindow.firstrun.hasCompleted=False` and `browser.smartwindow.firstrun.modelChoice=""`.
+- Onboarding: `SmartWindowFirstRun.complete_onboarding()` picks the first offered model; pass a brand name (e.g. `"Mistral"`) only when the test is about that model. The choice id is read from the page, since names and ids come from the server. Check it with `expect_model_choice_saved()`.
+- When sign-in isn't under test, use the `active_smart_window` fixture (bypasses FxA).
+- Read runtime prefs with `BasePage.get_pref(name)`.
 
 ### Firefox Build Setup
 
@@ -183,6 +199,6 @@ Per `.github/pull_request_template.md`:
 - Update Bugzilla bugs or TestRail test cases if needed
 - Delete branch after merging
 - If `BasePage` changes, note it explicitly
-- If new dependencies added, note to rerun `pipenv install`
+- If new dependencies added, note to rerun `uv sync`
 - If hooks changed, note to rerun `./devsetup.sh`
 - Code must be linted and formatted before submitting

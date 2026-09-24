@@ -33,6 +33,12 @@ on:
         required: false
       GCP_CREDENTIAL:
         required: false
+      CI_WAF_TOKEN:
+        required: false
+      GC_CREDENTIAL_STABILITY:
+        required: false
+      BQ_PROJECT:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -53,6 +59,7 @@ env:
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
   FX_L10N: true
 
 jobs:
