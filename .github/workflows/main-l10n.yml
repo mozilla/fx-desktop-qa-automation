@@ -147,24 +147,6 @@ jobs:
           fi
           exit $SCRIPT_EXIT_CODE;
 
-      - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
-        with:
-          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-
-      - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
-        env:
-          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
-          BQ_DATASET: fx_qa_ci
-          BQ_TABLE: test_results
-          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
-          BQ_WORKFLOW_FILE: main-l10n.yml
-          BQ_JOB_NAME: L10N-MacOS
-          BQ_TEST_SET: l10n
-        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -253,14 +235,14 @@ jobs:
         if: ${{ steps.install-fx.conclusion == 'success' && inputs.dry_run != true }}
         env:
           FX_EXECUTABLE: ./firefox/firefox
-          XAUTHORITY: /tmp/xauth/.Xauthority
         run: |
           "$FX_EXECUTABLE" --version;
           echo "0" > TEST_EXIT_CODE;
-          Xvfb :99 -screen 0 '1600x1200x24' -auth "$XAUTHORITY" > artifacts/xvfb.log &
+          XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
+          if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           while IFS= read -r line; do
             echo "Running tests for: $line";
-            DISPLAY=:99 uv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
+            xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run python -m l10n_CM.run_l10n --fx-executable="$FX_EXECUTABLE" $line || SCRIPT_EXIT_CODE=$?;
           done < selected_l10n_mappings;
           mv artifacts artifacts-linux || true;
           EXIT_CODE=$(cat TEST_EXIT_CODE);
@@ -268,25 +250,6 @@ jobs:
             exit $EXIT_CODE;
           fi
           exit $SCRIPT_EXIT_CODE;
-
-      - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
-        with:
-          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-
-      - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
-        env:
-          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
-          BQ_DATASET: fx_qa_ci
-          BQ_TABLE: test_results
-          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
-          BQ_WORKFLOW_FILE: main-l10n.yml
-          BQ_JOB_NAME: L10N-Linux
-          BQ_TEST_SET: l10n
-        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -434,24 +397,6 @@ jobs:
 
           exit $env:SCRIPT_EXIT_CODE
 
-      - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
-        with:
-          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
-
-      - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
-        env:
-          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
-          BQ_DATASET: fx_qa_ci
-          BQ_TABLE: test_results
-          GITHUB_RUN_STARTED_AT: ${{ github.run_started_at }}
-          BQ_WORKFLOW_FILE: main-l10n.yml
-          BQ_JOB_NAME: L10N-Windows
-          BQ_TEST_SET: l10n
-        run: uv run python scripts/upload_results_to_bq.py
 
       - name: Upload artifacts
         if: ${{ always() && inputs.is_pull_request == true && inputs.dry_run != true }}
@@ -527,4 +472,3 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
           uv run python scripts/notifier.py
-          
