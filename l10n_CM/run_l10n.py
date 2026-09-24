@@ -320,7 +320,7 @@ def get_flags_and_sanitize(flags_arguments: list[str]) -> list[str]:
         else:
             logging.warning(f"Invalid Argument: {arg}.")
             # raise ValueError(f"Invalid Argument: {arg}.")
-            exit(0, "Nothing to run.")
+            sys.exit(0)  # Nothing to run
     return flg
 
 
