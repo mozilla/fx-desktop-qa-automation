@@ -24,6 +24,7 @@ class SmartWindowFirstRun(BasePage):
 
     def get_offered_models(self) -> list[str]:
         """Return the brand names of the models offered, in display order"""
+        self.element_visible("model-label")
         return [
             json.loads(label.get_attribute("data-l10n-args"))["brandName"]
             for label in self.get_elements("model-label")
@@ -38,7 +39,6 @@ class SmartWindowFirstRun(BasePage):
         name : str
             The model's brand name as shown on its tile, e.g. "Gemini".
         """
-        self.element_visible("model-label")
         offered = self.get_offered_models()
         assert name in offered, (
             f"Model '{name}' is not offered; available: {', '.join(offered)}"
@@ -51,6 +51,9 @@ class SmartWindowFirstRun(BasePage):
 
     def expect_model_choice_saved(self) -> BasePage:
         """Wait until Firefox has saved the model picked in select_model"""
+        assert self.model_choice_id is not None, (
+            "Call select_model() before expect_model_choice_saved()"
+        )
         self.expect(
             lambda _: self.get_pref("browser.smartwindow.firstrun.modelChoice")
             == self.model_choice_id
@@ -71,7 +74,6 @@ class SmartWindowFirstRun(BasePage):
         """
         self.element_visible("choose-model-screen")
         if model_name is None:
-            self.element_visible("model-label")
             model_name = self.get_offered_models()[0]
             logging.info(f"No model requested; picking the first offered: {model_name}")
         self.select_model(model_name)
