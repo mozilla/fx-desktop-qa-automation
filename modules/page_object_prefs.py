@@ -2026,16 +2026,16 @@ class AboutPrefs(BasePage):
         self.switch_to_iframe_context(self.get_element("browser-popup"))
         return self
 
-    def add_doh_exception(self, url: str) -> BasePage:
+    def add_doh_exception(self, domain: str) -> BasePage:
         """
         From inside the DoH exceptions dialog iframe, add a website as an
         exception and save the changes. Returns to the default frame.
 
         Args:
-            url: website address to add to the exceptions list
+            domain: website domain to add to the exceptions list
         """
         self.element_visible("doh-exceptions-url-input")
-        self.get_element("doh-exceptions-url-input").send_keys(url)
+        self.get_element("doh-exceptions-url-input").send_keys(domain)
         self.click_on("doh-exceptions-add-button")
         self.click_on("doh-exceptions-save-changes-button")
         self.switch_to_default_frame()
