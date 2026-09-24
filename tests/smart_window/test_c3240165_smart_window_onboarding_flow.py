@@ -5,6 +5,7 @@ completed with a chosen model, and its choices are honored.
 """
 
 import pytest
+
 from modules.browser_object import SmartWindow
 from modules.classes.fxa_session import FxaSession
 from modules.page_object import FxaHome, SmartWindowFirstRun
