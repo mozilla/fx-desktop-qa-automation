@@ -574,6 +574,7 @@ class AboutOpentabs(BasePage):
             for row in self.get_elements("opentabs-tab-row")
         ]
 
+    @BasePage.context_content
     def get_listed_tab_titles(self) -> list[str]:
         """Return the title of every tab row currently listed."""
         return [link.text.strip() for link in self.get_listed_tab_links()]
