@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import re
+import time
 from pathlib import Path
 from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
@@ -305,6 +306,30 @@ def use_profile():
     yield False
 
 
+@pytest.fixture()
+def use_persistent_profile():
+    """
+    Override to True in a test whose Firefox state must survive a restart.
+
+    The normal path sets `options.profile`, which makes Selenium copy the
+    profile into a temp directory of its own -- so anything Firefox writes at
+    shutdown (session state, for one) is discarded with that copy. When this
+    is on, the directory is passed as a `-profile` argument instead and
+    Firefox uses it in place.
+    """
+    yield False
+
+
+@pytest.fixture()
+def persistent_profile_dir(tmp_path, use_persistent_profile):
+    """The profile directory shared across restarts, or None when unused."""
+    if not use_persistent_profile:
+        return None
+    path = Path(tmp_path) / "persistent_profile"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -469,6 +494,7 @@ def driver(
     test_case: str,
     tmp_path: str,
     use_profile: str | bool,
+    persistent_profile_dir,
 ):
     """
     Return the webdriver object.
@@ -512,7 +538,11 @@ def driver(
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
-    if use_profile:
+    if persistent_profile_dir:
+        # -profile as an argument, not options.profile: the latter is copied.
+        options.add_argument("-profile")
+        options.add_argument(str(persistent_profile_dir))
+    elif use_profile:
         profile_path = tmp_path / use_profile
         unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
         options.profile = profile_path
@@ -569,6 +599,69 @@ def driver(
     finally:
         if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
+
+
+@pytest.fixture()
+def restart_browser(
+    fx_executable,
+    geckodriver,
+    prefs_list,
+    opt_headless,
+    opt_implicit_timeout,
+    opt_ci,
+    persistent_profile_dir,
+):
+    """
+    Return a function that quits Firefox and relaunches it on the same profile.
+
+    Only usable with `use_persistent_profile` set to True -- without it the
+    profile is a throwaway copy and nothing written at shutdown survives.
+
+    The quit is what makes the restart meaningful: Firefox flushes session
+    state on the way out, so it has to close cleanly rather than be killed.
+    """
+    spawned = []
+
+    def _restart(driver: Firefox) -> Firefox:
+        if not persistent_profile_dir:
+            raise AssertionError(
+                "restart_browser requires a use_persistent_profile fixture "
+                "returning True; otherwise the profile is a discarded copy"
+            )
+        driver.quit()
+
+        options = Options()
+        options.binary_location = fx_executable
+        options.add_argument("-profile")
+        options.add_argument(str(persistent_profile_dir))
+        if opt_headless:
+            options.add_argument("--headless")
+        for opt, value in prefs_list:
+            options.set_preference(opt, value)
+
+        service_args = ["--allow-system-access"]
+        service = (
+            Service(executable_path=geckodriver, service_args=service_args)
+            if geckodriver
+            else Service(service_args=service_args)
+        )
+        restarted = Firefox(service=service, options=options)
+        restarted.implicitly_wait(30 if opt_ci else opt_implicit_timeout)
+        spawned.append(restarted)
+        return restarted
+
+    yield _restart
+
+    for extra in spawned:
+        try:
+            extra.quit()
+        except Exception as exc:  # already gone, or never came up
+            logging.warning(f"restart_browser cleanup: {exc}")
+    if spawned:
+        # Let the relaunched window finish going away before the next test
+        # brings its own up; overlapping windows fight over focus, and the
+        # panel-menu tests are sensitive to losing it.
+        time.sleep(2)
 
 
 @pytest.fixture()

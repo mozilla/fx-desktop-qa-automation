@@ -2156,6 +2156,10 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3309859_smart_window_restored_after_restart:
+    result: pass
+    splits:
+    - functional1
   test_c3310319_block_smart_window_from_ai_controls:
     result: pass
     splits:
