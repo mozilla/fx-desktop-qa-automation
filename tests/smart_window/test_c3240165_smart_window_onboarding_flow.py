@@ -1,11 +1,10 @@
 """
 C3240165 - Verify that the user can go through the entire Onboarding Flow
 Signed in with an existing account, the Smart Window first run can be
-completed with a chosen model, and its choices take effect.
+completed with a chosen model, and its choices are honored.
 """
 
 import pytest
-
 from modules.browser_object import SmartWindow
 from modules.classes.fxa_session import FxaSession
 from modules.page_object import FxaHome, SmartWindowFirstRun
