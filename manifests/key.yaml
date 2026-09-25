@@ -814,6 +814,10 @@ meta:
     result: pass
     splits: []
 networking:
+  test_add_website_to_doh_exceptions:
+    result: pass
+    splits:
+    - functional1
   test_cloudflare_as_default_doh_provider:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064127
     result:
@@ -1399,6 +1403,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_cancel_keeps_downloaded_languages:
+    result: pass
+    splits:
+    - functional1
   test_change_font_family:
     result: pass
     splits:
@@ -1421,6 +1429,18 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_default_zoom_applied_to_websites:
+    result: pass
+    splits:
+    - functional1
+  test_default_zoom_text_only:
+    result: pass
+    splits:
+    - functional1
+  test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1450,6 +1470,14 @@ preferences:
     splits:
     - functional2
     - nightly
+  test_firefox_mobile_email_link:
+    result: pass
+    splits:
+    - functional1
+  test_firefox_mobile_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_lang_pack_changed_from_about_prefs:
     result: pass
     splits:
