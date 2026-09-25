@@ -171,6 +171,107 @@ class SmartBar(BasePage):
             ) from None
         return self
 
+    # ── Searching ────────────────────────────────────────────────────────
+
+    def submit(self) -> BasePage:
+        """
+        Press Enter to run whatever action the Smart Bar is currently set to.
+
+        Sent as a real key event: the CTA acts on keyboard input, and there is
+        no addressable element to click from chrome.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    def choose_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Pick an engine from the Search With submenu by its visible name.
+
+        Only sets the engine -- call submit() to run the search. The choice is
+        not reflected in any CTA attribute, so assert on the resulting URL.
+        """
+        logging.info("Choosing Smart Bar search engine %r", engine_name)
+        result = self._script(
+            "const lists = ctaLists();"
+            "if (lists.length !== 2) return {count: lists.length};"
+            "const items = Array.from(lists[1].querySelectorAll('panel-item'));"
+            "const hit = items.find(i => (i.textContent || '').trim() === arguments[0]);"
+            "if (!hit) return {available: items.map(i => (i.textContent || '').trim())};"
+            "hit.click();"
+            "return {clicked: true};",
+            engine_name,
+        )
+        if "count" in result:
+            raise AssertionError(
+                f"expected 2 panel-lists in the CTA (actions, Search With), "
+                f"found {result['count']}"
+            )
+        if "available" in result:
+            raise AssertionError(
+                f"no Search With entry named {engine_name!r}; "
+                f"available: {result['available']}"
+            )
+        return self
+
+    def expect_search_engines(self, minimum: int = 2) -> BasePage:
+        """
+        Wait until the Search With submenu has listed the real engines.
+
+        It starts out holding only the generic "Search" entry and fills in once
+        the search service finishes initialising. Reading it immediately is a
+        race that a slow worker loses -- a Windows CI run saw ['Search'] alone.
+        """
+        try:
+            self.expect(lambda _: len(self.get_search_with_items()) >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Search With submenu never listed {minimum} entries; "
+                f"last saw {self.get_search_with_items()}"
+            ) from None
+        return self
+
+    @BasePage.context_chrome
+    def get_result_count(self) -> int:
+        """
+        Return how many autocomplete rows the Smart Bar is showing.
+
+        The results live in the Smart Bar's urlbar view rather than the CTA,
+        so this walks to `.urlbarView-results` instead of reusing ctaLists().
+        """
+        return self.driver.execute_script("""
+            const br = document.getElementById("ai-window-browser");
+            const doc = br && br.contentDocument;
+            if (!doc) return 0;
+            let rows = 0;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || rows) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.matches && el.matches(".urlbarView-results")) {
+                        rows = el.querySelectorAll(".urlbarView-row").length;
+                        return;
+                    }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (rows) return; }
+                }
+            })(doc, 0);
+            return rows;
+        """)
+
+    def expect_results(self, minimum: int = 1) -> BasePage:
+        """
+        Wait until the Smart Bar shows at least `minimum` autocomplete rows.
+
+        Reports the count actually reached, matching expect_smart_bar_text.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar never reached {minimum} autocomplete row(s); "
+                f"last count {self.get_result_count()}"
+            ) from None
+        return self
+
     # ── Go / Ask action menu ─────────────────────────────────────────────
 
     def is_action_menu_open(self) -> bool:
