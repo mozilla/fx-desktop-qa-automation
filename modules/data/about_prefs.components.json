@@ -1956,6 +1956,56 @@
       "location": "about:preferences#privacy - DNS over HTTPS advanced section"
     }
   },
+  "doh-exceptions-button": {
+    "selectorData": "dohExceptionsButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Manage exceptions\" button in the DNS over HTTPS (DoH) section; opens the Website Exceptions for DNS over HTTPS dialog",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "doh-exceptions-dialog-shadow-root": {
+    "selectorData": "dialog[buttons='accept,cancel']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Website Exceptions for DNS over HTTPS dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-url-input": {
+    "selectorData": "url",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Website address input field in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-add-button": {
+    "selectorData": "btnAddException",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Add Exception\" button in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-save-changes-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "doh-exceptions-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The DoH Exceptions dialog \"Save Changes\" button",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
   "mlb-allow-audio-video-settings": {
     "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
     "strategy": "css",
