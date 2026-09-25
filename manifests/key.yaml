@@ -1505,6 +1505,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_never_translate_sites_are_not_translated:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
