@@ -11,11 +11,11 @@
     }
   },
   "split-view-panel": {
-    "selectorData": ".split-view-panel[column='{column}']",
+    "selectorData": ".split-view-panel-active[column='{column}']",
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "One side of a Split View, by column: 0 is the left side, 1 is the right side",
+      "description": "One side of the displayed Split View, by column: 0 is the left side, 1 is the right side",
       "location": "Browser window content area"
     }
   },
