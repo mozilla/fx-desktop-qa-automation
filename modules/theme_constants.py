@@ -40,14 +40,11 @@ ALPENGLOW_MAP: dict[str, str] = {
     "dark": "rgba(40, 29, 78, 0.96)",
 }
 
-# Dark background colors observed for the private window when
-# `browser.theme.dark-private-windows = true`. The private window uses its
-# own distinct background (dark with a slight purple tint) that does NOT
-# match the regular COMPACT_DARK main-window colors above, so it needs its
-# own list. The exact shade varies slightly across platforms/versions.
+# Colors observed for the navigation bar in a private window when
+# `browser.theme.dark-private-windows = true`. Read via the same
+# `navigation-background-component` element that activate_theme uses,
+# so navbar colors differ from the old main-window palette.
 PRIVATE_WINDOW_DARK: list[str] = [
-    "rgb(35, 34, 43)",  # observed on Windows 10 with dark-private-windows
-    "rgb(28, 27, 34)",  # common private-window dark variant
-    "rgb(23, 21, 25)",  # nova dark
-    "rgb(43, 42, 51)",  # classic dark
+    "rgb(62, 49, 95)",  # Nightly private-browsing tint
+    "rgba(0, 0, 0, 0.2)",  # Beta 157 private-browsing overlay
 ]
