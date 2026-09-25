@@ -19,6 +19,13 @@
       "location": "any element that supports the attribute (usually text)"
     }
   },
+  "pdf-text-span": {
+    "selectorData": ".textLayer span",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "html-body": {
     "selectorData": "html",
     "strategy": "tag",
@@ -239,6 +246,53 @@
     "selectorData": "editorInkButton",
     "strategy": "id",
     "groups": []
+  },
+  "toolbar-highlight": {
+    "selectorData": "editorHighlightButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "added-highlight": {
+    "selectorData": ".highlightEditor",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "highlight-comment-button": {
+    "selectorData": "button[data-l10n-id='pdfjs-editor-add-comment-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "highlight-comment-indicator": {
+    "selectorData": ".highlightEditor button[data-l10n-id='pdfjs-show-comment-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-dialog": {
+    "selectorData": "commentManagerDialog",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-input": {
+    "selectorData": "commentManagerTextInput",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-save": {
+    "selectorData": "commentManagerSaveButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
   },
   "draw-options": {
     "selectorData": "editorInkParamsToolbar",

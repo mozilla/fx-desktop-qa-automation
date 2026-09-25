@@ -394,8 +394,24 @@ class GenericPdf(BasePage):
         return dropdown_option
 
     def get_first_text_element(self) -> WebElement:
-        """get first text element in pdf"""
-        return self.pdf_body.find_element(By.TAG_NAME, "span")
+        """Return the first rendered text span in the PDF."""
+
+        def first_rendered_text(_):
+            return next(
+                (
+                    element
+                    for element in self.get_elements("pdf-text-span")
+                    if element.text.strip()
+                    and element.size["width"] >= 20
+                    and element.size["height"] > 0
+                ),
+                False,
+            )
+
+        return self.wait.until(
+            first_rendered_text,
+            message="Expected the PDF to contain rendered selectable text.",
+        )
 
     def navigate_page_by_keys(self, key: str):
         self.html_body.send_keys(key)
@@ -429,6 +445,32 @@ class GenericPdf(BasePage):
         """Select a PDF editor toolbar tool."""
         self.get_element(tool).click()
         self.element_attribute_contains(tool, "class", "toggled")
+        return self
+
+    def highlight_pdf_text(self) -> BasePage:
+        """Highlight text in the PDF using the editor tool."""
+        self.select_editor_tool("toolbar-highlight")
+        text = self.get_first_text_element()
+        width = int(text.size["width"])
+        drag_distance = min(width // 3, 40)
+        (
+            self.actions.move_to_element(text)
+            .click_and_hold()
+            .move_by_offset(drag_distance, 0)
+            .release()
+            .perform()
+        )
+        self.element_visible("added-highlight")
+        return self
+
+    def add_comment_to_selected_highlight(self, comment: str) -> BasePage:
+        """Add a comment to the selected PDF highlight."""
+        self.element_visible("highlight-comment-button")
+        self.get_element("highlight-comment-button").click()
+        self.element_visible("comment-dialog")
+        self.get_element("comment-input").send_keys(comment)
+        self.get_element("comment-save").click()
+        self.element_not_visible("comment-dialog")
         return self
 
     def set_draw_style(self, color: str, thickness: int, opacity: float) -> BasePage:
