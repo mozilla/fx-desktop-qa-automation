@@ -23,6 +23,10 @@ ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
         ("browser.startup.page", 1),
+        # MCAB (browser.urlbar.newtab.featureGate) is default-on from Firefox 158 and replaces
+        # this flow's fake handoff input with its own search bar (see "newtab_searchbar" entry).
+        # Pinned off so this flow keeps covering the handoff path regardless of MCAB's rollout.
+        ("browser.urlbar.newtab.featureGate", False),
     ],
     "newtab_searchbar": [
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
