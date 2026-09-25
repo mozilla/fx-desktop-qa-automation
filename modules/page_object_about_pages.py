@@ -14,6 +14,7 @@ from selenium.common.exceptions import (
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -535,6 +536,67 @@ class AboutLogins(BasePage):
         self.add_login(origin, username, password)
         self.assert_username_present(username)
         return self
+
+
+class AboutOpentabs(BasePage):
+    """
+    POM for about:opentabs, the tab picker Firefox loads into the empty side of a
+    new Split View. Lists every open tab that is not pinned and not already in a
+    Split View, and lets one be searched for and picked.
+    """
+
+    URL_TEMPLATE = "about:opentabs"
+
+    @BasePage.context_content
+    def search_tabs(self, query: str) -> BasePage:
+        """
+        Type `query` into the Search tabs box.
+
+        The box debounces before filtering, so wait on the filtered list rather
+        than assuming it has updated by the time this returns.
+        """
+        search_input = self.get_element("opentabs-search-input")
+        search_input.click()
+        search_input.clear()
+        search_input.send_keys(query)
+        return self
+
+    @BasePage.context_content
+    def get_listed_tab_links(self) -> list[WebElement]:
+        """
+        Return the clickable link of every tab row currently listed, honouring any
+        search query in effect.
+        """
+        return [
+            self.utils.find_shadow_element(
+                row, self.get_selector("opentabs-tab-row-link")
+            )
+            for row in self.get_elements("opentabs-tab-row")
+        ]
+
+    @BasePage.context_content
+    def get_listed_tab_titles(self) -> list[str]:
+        """Return the title of every tab row currently listed."""
+        return [link.text.strip() for link in self.get_listed_tab_links()]
+
+    def expect_listed_tab_titles(self, titles: list[str]) -> BasePage:
+        """Wait until exactly `titles` are listed, in any order."""
+        self.expect(lambda _: sorted(self.get_listed_tab_titles()) == sorted(titles))
+        return self
+
+    @BasePage.context_content
+    def select_tab_by_title(self, title: str) -> BasePage:
+        """
+        Click the listed tab whose title is `title`, adding it to the Split View
+        in place of this page.
+        """
+        for link in self.get_listed_tab_links():
+            if link.text.strip() == title:
+                link.click()
+                return self
+        raise AssertionError(
+            f"No tab titled {title!r} is listed, found: {self.get_listed_tab_titles()}"
+        )
 
 
 class AboutPrivatebrowsing(BasePage):
