@@ -5,8 +5,11 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
 from modules.browser_object import ContextMenu
-from modules.page_object import GoogleSearch, LoginAutofill, TextAreaFormAutofill
+from modules.page_object import GenericPage, LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
+
+WIKIPEDIA_URL = "https://www.wikipedia.org/"
+SEARCH_FIELD = "wiki-search-bar"
 
 
 @pytest.fixture()
@@ -100,30 +103,29 @@ def test_text_area_copy_paste(driver: Firefox):
 
 def test_search_field_copy_paste(driver: Firefox):
     context_menu = ContextMenu(driver)
-    google_search = GoogleSearch(driver)
-    google_search.open()
+    search_page = GenericPage(driver, url=WIKIPEDIA_URL)
+    search_page.open()
+    search_page.element_visible(SEARCH_FIELD)
     util = Utilities()
 
     # Send the text
     random_text = util.generate_random_text("sentence")
-    google_search.fill("search-bar-textarea", random_text, press_enter=False)
+    search_page.fill(SEARCH_FIELD, random_text, press_enter=False)
     logging.info(f"Sent the text {random_text} to the search bar.")
 
     # Triple click the text to select all
-    google_search.click_on("search-bar-textarea")
-    google_search.triple_click("search-bar-textarea")
+    search_page.click_on(SEARCH_FIELD)
+    search_page.triple_click(SEARCH_FIELD)
 
     # Context click
-    google_search.context_click("search-bar-textarea")
+    search_page.context_click(SEARCH_FIELD)
     context_menu.click_and_hide_menu("context-menu-copy")
 
     # Delete the current text
-    google_search.get_element("search-bar-textarea").send_keys(Keys.BACK_SPACE)
-    google_search.element_attribute_contains("search-bar-textarea", "value", "")
+    search_page.get_element(SEARCH_FIELD).send_keys(Keys.BACK_SPACE)
+    search_page.element_attribute_contains(SEARCH_FIELD, "value", "")
 
     # Context click and paste the text back
-    google_search.context_click("search-bar-textarea")
+    search_page.context_click(SEARCH_FIELD)
     context_menu.click_and_hide_menu("context-menu-paste")
-    google_search.element_attribute_contains(
-        "search-bar-textarea", "value", random_text
-    )
+    search_page.element_attribute_contains(SEARCH_FIELD, "value", random_text)
