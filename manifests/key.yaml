@@ -810,6 +810,10 @@ meta:
     result: pass
     splits: []
 networking:
+  test_add_website_to_doh_exceptions:
+    result: pass
+    splits:
+    - functional1
   test_cloudflare_as_default_doh_provider:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064127
     result:
@@ -819,10 +823,6 @@ networking:
     splits:
     - functional2
     - nightly
-  test_custom_doh_fallback_sets_trr_mode_to_2:
-    result: pass
-    splits:
-    - functional1
   test_custom_doh_provider:
     result: pass
     splits:
@@ -832,7 +832,31 @@ networking:
     result: pass
     splits:
     - smoke
+  test_doh_custom_fallback_allowed:
+    result: pass
+    splits:
+    - functional1
+  test_doh_custom_no_fallback_allowed:
+    result: pass
+    splits:
+    - functional1
   test_doh_failure_falls_back_to_dns:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ca_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_global_regions:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ru_region:
+    result: pass
+    splits:
+    - functional1
+  test_doh_providers_ua_region:
     result: pass
     splits:
     - functional1
@@ -851,6 +875,10 @@ networking:
     splits:
     - functional2
     - nightly
+  test_trr_excluded_domain_uses_os_dns:
+    result: pass
+    splits:
+    - functional1
 notifications:
   test_audio_video_permissions_notification:
     comment: Issue with Mac GHA? trying pass to see what happens.
@@ -1289,10 +1317,20 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_text_can_be_copied_cut_and_pasted_from_context_menu:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_text_location:
     result: pass
     splits:
     - functional2
+    - nightly
+  test_pdf_text_uses_selected_font_size_and_color:
+    result: pass
+    splits:
+    - functional1
     - nightly
   test_pdf_zoom_checkboxes:
     result: pass
@@ -1357,6 +1395,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_cancel_keeps_downloaded_languages:
+    result: pass
+    splits:
+    - functional1
   test_change_font_family:
     result: pass
     splits:
@@ -1379,6 +1421,18 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
+  test_default_zoom_applied_to_websites:
+    result: pass
+    splits:
+    - functional1
+  test_default_zoom_text_only:
+    result: pass
+    splits:
+    - functional1
+  test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1408,10 +1462,22 @@ preferences:
     splits:
     - functional2
     - nightly
+  test_firefox_mobile_email_link:
+    result: pass
+    splits:
+    - functional1
+  test_firefox_mobile_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_lang_pack_changed_from_about_prefs:
     result: pass
     splits:
     - functional2
+  test_languages_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_manage_cookie_data:
     result: pass
     splits:
@@ -1423,6 +1489,10 @@ preferences:
     - smoke
     - exclude_xvfb
   test_never_translate_languages_can_be_added:
+    result: pass
+    splits:
+    - functional1
+  test_never_translate_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
@@ -1455,6 +1525,14 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_removed_never_translate_sites_can_be_translated:
+    result: pass
+    splits:
+    - functional1
+  test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_support_get_help:
     result: pass
     splits:
@@ -1463,6 +1541,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_translations_learn_more_link:
+    result: pass
+    splits:
+    - functional1
   test_website_language_can_be_added:
     result: pass
     splits:
@@ -1615,6 +1697,10 @@ security_and_privacy:
       win: unstable
     splits:
     - functional3
+  test_cross_origin_iframe_permissions_are_not_prompted:
+    result: pass
+    splits:
+    - functional1
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
@@ -2075,6 +2161,22 @@ smart_window:
     splits:
     - functional1
   test_c3310319_block_smart_window_from_ai_controls:
+    result: pass
+    splits:
+    - functional1
+  test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
+  test_c3313457_history_from_hamburger_menu:
+    result: pass
+    splits:
+    - functional1
+  test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
+  test_c3978359_close_sidebar_from_x_button:
     result: pass
     splits:
     - functional1

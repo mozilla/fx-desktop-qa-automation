@@ -1347,6 +1347,44 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "translations-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='settings-translations-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Translations card on the Languages pane",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "translations-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "translations-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link on the Translations card (shadowParent: translations-card)",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "check-spelling-checkbox": {
+    "selectorData": "checkSpelling",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Check your spelling as you type\" moz-checkbox on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
+  "spell-check-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "check-spelling-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link next to \"Check your spelling as you type\" (shadowParent: check-spelling-checkbox)",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
   "offer-translations-checkbox": {
     "selectorData": "offerTranslations",
     "strategy": "id",
@@ -1470,6 +1508,124 @@
     "comment": {
       "description": "Row for one never-translate language, found by language tag",
       "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate language row, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-site-item": {
+    "selectorData": "moz-box-item.translations-never-translate-site-item[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate site, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "never-translate-site-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-site-remove-button[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate site row, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "download-language-picker": {
+    "selectorData": "translationsDownloadLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Select language moz-select in the \"Speed up translation\" section",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "download-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Select language moz-select shadow DOM (shadowParent: download-language-picker)",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-button": {
+    "selectorData": "translationsDownloadLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Download button that downloads the language picked in the Select language dropdown",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-item": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one downloaded language, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-button": {
+    "selectorData": "moz-button.translations-download-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete icon in a downloaded language row, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-text": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}'] span",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Delete <language> (<size>MB)?\" text shown after clicking the delete icon",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-button": {
+    "selectorData": "moz-button.translations-download-delete-confirm-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-cancel-button": {
+    "selectorData": "moz-button.translations-download-delete-cancel-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Cancel button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
     }
   },
   "search-suggestion-in-private-windows": {
@@ -1798,6 +1954,56 @@
     "comment": {
       "description": "moz-message-bar reporting active DoH provider; data-l10n-args carries the provider name",
       "location": "about:preferences#privacy - DNS over HTTPS advanced section"
+    }
+  },
+  "doh-exceptions-button": {
+    "selectorData": "dohExceptionsButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Manage exceptions\" button in the DNS over HTTPS (DoH) section; opens the Website Exceptions for DNS over HTTPS dialog",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "doh-exceptions-dialog-shadow-root": {
+    "selectorData": "dialog[buttons='accept,cancel']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Website Exceptions for DNS over HTTPS dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-url-input": {
+    "selectorData": "url",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Website address input field in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-add-button": {
+    "selectorData": "btnAddException",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Add Exception\" button in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-save-changes-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "doh-exceptions-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The DoH Exceptions dialog \"Save Changes\" button",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
     }
   },
   "mlb-allow-audio-video-settings": {
@@ -2294,6 +2500,24 @@
     "comment": {
       "description": "The Fonts dialog OK button",
       "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
+    }
+  },
+  "firefox-mobile-learn-more": {
+    "selectorData": "promoGroupLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" link on the Firefox for mobile card",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
+    }
+  },
+  "firefox-mobile-email-link": {
+    "selectorData": "firefoxMobilePromoLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Email the download link to your phone\" link under the QR code",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
     }
   }
 }

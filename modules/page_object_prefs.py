@@ -21,6 +21,9 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import Utilities
 
+# Language models are tens of MB each, so the download can be slow.
+DOWNLOAD_LANGUAGE_TIMEOUT = 120
+
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
 
@@ -544,6 +547,69 @@ class AboutPrefs(BasePage):
         self.click_on("never-translate-add-button")
         return self
 
+    def remove_never_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Never translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("never-translate-remove-button", labels=[lang_code])
+        return self
+
+    def remove_never_translate_site(self, origin: str) -> BasePage:
+        """Deletes a site from the 'Never translate these sites' list.
+
+        Args:
+            origin: The site origin to delete (e.g. 'http://localhost:8000')
+        """
+        self.click_on("never-translate-site-remove-button", labels=[origin])
+        return self
+
+    def download_translation_language(self, lang_code: str) -> BasePage:
+        """Downloads a language in the 'Speed up translation' section.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to download (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "download-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("download-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("download-language-picker", "value", lang_code)
+        self.click_on("download-language-button")
+        return self
+
+    def wait_for_language_download(self, lang_code: str) -> BasePage:
+        """Waits until a language finishes downloading.
+
+        The row carries a progress description until the download is done.
+        Use get_dom_attribute, since get_attribute reads the JS property and
+        always returns an empty string here. The row is rebuilt on every
+        progress update, so stale elements are expected while polling.
+
+        Args:
+            lang_code: The language code being downloaded (e.g. 'es')
+        """
+        self.custom_wait(
+            timeout=DOWNLOAD_LANGUAGE_TIMEOUT,
+            ignored_exceptions=(NoSuchElementException, StaleElementReferenceException),
+        ).until(
+            lambda _: self.get_element(
+                "download-language-item", labels=[lang_code]
+            ).get_dom_attribute("description")
+            is None
+        )
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -560,14 +626,17 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "checked", "")
         return self
 
-    def uncheck_doh_fallback_warning(self) -> BasePage:
-        """Uncheck "Always warn me if secure DNS isn't available".
+    def set_doh_fallback_warning(self, checked: bool) -> BasePage:
+        """Check or uncheck "Always warn me if secure DNS isn't available".
 
         Requires `select_doh_protection_level("custom")` first, which reveals
         this checkbox.
+
+        Arguments:
+            checked: True to check the box, False to uncheck it.
         """
         checkbox = self.get_element("doh-fallback-checkbox-input")
-        if checkbox.is_selected():
+        if checkbox.is_selected() != checked:
             checkbox.click()
         return self
 
@@ -619,6 +688,23 @@ class AboutPrefs(BasePage):
                 )
             )
         )
+        return self
+
+    def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
+        """Verify the Custom-mode provider menu offers exactly the given providers."""
+
+        def _providers_displayed(_):
+            options = self.get_element("doh-provider-select-inner").find_elements(
+                By.TAG_NAME, "option"
+            )
+            displayed = [
+                opt.text for opt in options if opt.get_attribute("value") != "custom"
+            ]
+            return len(displayed) == len(provider_names) and all(
+                any(name in text for text in displayed) for name in provider_names
+            )
+
+        self.wait.until(_providers_displayed)
         return self
 
     def open_connection_advanced(self) -> BasePage:
@@ -1930,6 +2016,31 @@ class AboutPrefs(BasePage):
         """
         self.click_on("remove-all-websites-button")
         self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
+    def open_doh_exceptions_dialog(self) -> BasePage:
+        """
+        Open the "Website Exceptions for DNS over HTTPS" dialog and switch
+        into its popup iframe.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("doh-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def add_doh_exception(self, domain: str) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, add a website as an
+        exception and save the changes. Returns to the default frame.
+
+        Args:
+            domain: website domain to add to the exceptions list
+        """
+        self.element_visible("doh-exceptions-url-input")
+        self.get_element("doh-exceptions-url-input").send_keys(domain)
+        self.click_on("doh-exceptions-add-button")
+        self.click_on("doh-exceptions-save-changes-button")
         self.switch_to_default_frame()
         return self
 
