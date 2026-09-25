@@ -8,3 +8,4 @@ from modules.page_object_generics import *
 from modules.page_object_google import *
 from modules.page_object_newtab import *
 from modules.page_object_prefs import *
+from modules.page_object_smart_window_first_run import *

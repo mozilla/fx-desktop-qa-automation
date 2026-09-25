@@ -76,6 +76,12 @@ Launch the build manually one time to navigate through any system permission dia
   - rerun the test suite as above - run: `pytest`
   - or just the failed test; i.e.: `pytest test_amazon.py`
 
+### Firefox Accounts (FxA) and Smart Window tests
+- Tests in `sync_and_fxa` and the Smart Window sign-up/onboarding tests run against the FxA
+  stage environment and create throwaway restmail.net accounts.
+- They need the `CI_WAF_TOKEN` environment variable.
+- A suite or test chooses the FxA environment by overriding the `fxa_env` fixture.
+
 ### Documentation
 
 We are trying documentation with [pdoc](https://pdoc.dev), run the following in your virtual env:

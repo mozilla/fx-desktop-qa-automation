@@ -97,7 +97,7 @@ dependencies = [
   "pydocstyle==6.3.0 ; python_full_version >= '3.6'",
   "pyemojify==0.2.0",
   "pyflakes==2.5.0 ; python_full_version >= '3.6'",
-  "pyfxa==0.8.1 ; python_full_version >= '3.8'",
+  "pyfxa==0.8.2 ; python_full_version >= '3.8'",
   "pygetwindow==0.0.9",
   "pygments==2.20.0 ; python_full_version >= '3.9'",
   "pyjwt==2.13.0 ; python_full_version >= '3.9'",
@@ -204,6 +204,11 @@ markers = [
   "locale_fr: tests run in FR locale versions",
   "locale_gb: tests run in GB locale versions",
   "noxvfb: tests that should not run in xvfb sessions",
+]
+
+[dependency-groups]
+dev = [
+    "debugpy>=1.8.22",
 ]
 
 [tool.ruff.lint.per-file-ignores]
