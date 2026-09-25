@@ -10,6 +10,7 @@ COMMENT = "Highlight comment"
 def test_case():
     return "3136668"
 
+
 @pytest.fixture()
 def hard_quit():
     return True
@@ -27,7 +28,6 @@ def add_to_prefs_list():
 
 def test_pdf_highlight_comment_can_be_added(pdf_viewer: GenericPdf):
     """C3136668: A comment can be added to highlighted PDF text."""
-    pdf_viewer.element_visible("toolbar-highlight")
     pdf_viewer.highlight_pdf_text()
     pdf_viewer.add_comment_to_selected_highlight(COMMENT)
     assert pdf_viewer.get_element("highlight-comment-indicator").is_displayed(), (

@@ -471,7 +471,6 @@ class GenericPdf(BasePage):
         self.get_element("comment-input").send_keys(comment)
         self.get_element("comment-save").click()
         self.element_not_visible("comment-dialog")
-        self.element_visible("highlight-comment-indicator")
         return self
 
     def set_draw_style(self, color: str, thickness: int, opacity: float) -> BasePage:
