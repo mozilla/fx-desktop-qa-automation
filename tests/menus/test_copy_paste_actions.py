@@ -102,7 +102,7 @@ def test_text_area_copy_paste(driver: Firefox):
 
     # Delete all the text and paste
     text_area_fill.get_element("street-address-textarea").send_keys(Keys.BACK_SPACE)
-    text_area_fill.element_attribute_contains("street-address-textarea", "value", "")
+    text_area_fill.element_attribute_is("street-address-textarea", "value", "")
 
     text_area_fill.context_click("street-address-textarea")
     context_menu.click_and_hide_menu("context-menu-paste")
@@ -140,7 +140,7 @@ def test_search_field_copy_paste(driver: Firefox, search_page_path):
 
     # Delete the current text
     search_page.get_element("search-bar-textarea").send_keys(Keys.BACK_SPACE)
-    search_page.element_attribute_contains("search-bar-textarea", "value", "")
+    search_page.element_attribute_is("search-bar-textarea", "value", "")
 
     # Context click and paste the text back
     search_page.context_click("search-bar-textarea")
