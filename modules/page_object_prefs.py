@@ -2309,6 +2309,17 @@ class AboutAddons(BasePage):
         self.element_does_not_exist("addon-card-more-options-button", labels=[addon_id])
         return self
 
+    def get_theme_background_color(self, nav: Navigation) -> str:
+        """
+        Return the current background color of the main window's theme area.
+
+        Reads the value through the same Navigation BOM element that
+        activate_theme uses, so all theme tests observe the color the same way.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            navigation_component = nav.get_element("navigation-background-component")
+            return navigation_component.value_of_css_property("background-color")
+
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
     ):
@@ -2333,15 +2344,11 @@ class AboutAddons(BasePage):
             )
         )
 
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            navigation_component = nav.get_element("navigation-background-component")
-            background_color = navigation_component.value_of_css_property(
-                "background-color"
-            )
-            if perform_assert:
-                assert background_color == intended_color
-            else:
-                return background_color
+        background_color = self.get_theme_background_color(nav)
+        if perform_assert:
+            assert background_color == intended_color
+        else:
+            return background_color
 
     def click_find_more_themes(self) -> BasePage:
         """Clicks the control that opens the AMO themes page in a new tab.
