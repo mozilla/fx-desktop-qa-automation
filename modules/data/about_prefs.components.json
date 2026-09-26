@@ -1385,6 +1385,15 @@
       "location": "about:preferences#languages - Spell check section"
     }
   },
+  "download-dictionaries-link": {
+    "selectorData": "downloadDictionaries",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Download dictionaries\" moz-box-link on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
   "offer-translations-checkbox": {
     "selectorData": "offerTranslations",
     "strategy": "id",
