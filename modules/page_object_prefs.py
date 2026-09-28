@@ -2044,6 +2044,28 @@ class AboutPrefs(BasePage):
         self.switch_to_default_frame()
         return self
 
+    def remove_one_doh_exception(self) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, remove the first
+        website exception in the list and save the changes. Returns to
+        the default frame.
+        """
+        self.get_elements("children-host-elements")[0].click()
+        self.click_on("doh-exceptions-remove-button")
+        self.click_on("doh-exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
+    def remove_all_doh_exceptions(self) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, remove every website
+        exception and save the changes. Returns to the default frame.
+        """
+        self.click_on("doh-exceptions-remove-all-button")
+        self.click_on("doh-exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
     # ── AI Controls ──────────────────────────────────────────────────────
 
     def toggle_ai_killswitch_click(self) -> BasePage:
