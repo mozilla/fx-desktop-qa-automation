@@ -180,7 +180,7 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 - The Smart Window suite defaults to first run completed. For sign-up/onboarding tests, override `add_to_prefs_list` with `browser.smartwindow.firstrun.hasCompleted=False` and `browser.smartwindow.firstrun.modelChoice=""`.
 - Onboarding: `SmartWindowFirstRun.complete_onboarding()` picks the first offered model; pass a brand name (e.g. `"Mistral"`) only when the test is about that model. The choice id is read from the page, since names and ids come from the server. Check it with `expect_model_choice_saved()`.
 - When sign-in isn't under test, use the `active_smart_window` fixture (bypasses FxA).
-- Read runtime prefs with `BasePage.get_pref(name)`.
+- Read runtime prefs with `SmartWindowFirstRun.get_pref(name)`.
 
 ### Firefox Build Setup
 

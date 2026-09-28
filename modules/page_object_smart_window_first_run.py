@@ -22,6 +22,33 @@ class SmartWindowFirstRun(BasePage):
         super().__init__(driver, **kwargs)
         self.model_choice_id: str | None = None
 
+    @BasePage.context_chrome
+    def get_pref(self, name: str) -> bool | int | str | None:
+        """
+        Return the current value of a Firefox pref, or None if it is not set.
+
+        Parameters
+        ----------
+        name : str
+            The pref name, e.g. "browser.smartwindow.firstrun.modelChoice".
+        """
+        return self.driver.execute_script(
+            """
+            const name = arguments[0];
+            switch (Services.prefs.getPrefType(name)) {
+              case Services.prefs.PREF_BOOL:
+                return Services.prefs.getBoolPref(name);
+              case Services.prefs.PREF_INT:
+                return Services.prefs.getIntPref(name);
+              case Services.prefs.PREF_STRING:
+                return Services.prefs.getStringPref(name);
+              default:
+                return null;
+            }
+            """,
+            name,
+        )
+
     def get_offered_models(self) -> list[str]:
         """Return the brand names of the models offered, in display order"""
         self.element_visible("model-label")

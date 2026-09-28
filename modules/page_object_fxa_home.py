@@ -56,6 +56,13 @@ class FxaHome(BasePage):
         self.element_visible("signed-in-status")
         return self
 
+    def set_localstorage_item(self, key: str, value: str) -> BasePage:
+        """Set a localStorage item for the current page's origin"""
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);", key, value
+        )
+        return self
+
     def inject_session(self, fxa_session: FxaSession) -> BasePage:
         """
         Store a verified account session in the current FxA page and reload it,
@@ -69,6 +76,7 @@ class FxaHome(BasePage):
         fxa_session : FxaSession
             A session from the create_fxa fixture.
         """
+        assert fxa_session.session is not None, "Call create_account() first"
         # Wait for the FxA app itself; localStorage is not available on the
         # about:blank the new tab starts on.
         self.element_visible("login-email-input")
