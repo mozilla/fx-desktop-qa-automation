@@ -30,6 +30,7 @@ ENTRY_PREFS: dict[str, list[tuple]] = {
     ],
     "newtab_searchbar": [
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+        ("browser.urlbar.newtab.featureGate", True),
     ],
     "urlbar_persisted": [
         ("browser.urlbar.showSearchTerms.enabled", True),
@@ -182,9 +183,14 @@ def _entry_newtab_searchbar(driver: Firefox, search_term: str, params: dict = No
     newtab = AboutNewtab(driver)
     tabs = TabBar(driver)
 
-    # Open a new tab and search from its in-page search bar
+    # Open a new tab and search from its in-page search bar. The bar re-renders after the
+    # initial mount, so fetch the element after waiting for it rather than via fill(), which
+    # would otherwise act on a reference grabbed before that re-render.
     tabs.open_and_switch_to_new_tab()
-    newtab.fill("newtab-searchbar-input", search_term)
+    newtab.element_clickable("newtab-searchbar-input")
+    search_input = newtab.get_element("newtab-searchbar-input")
+    search_input.clear()
+    search_input.send_keys(search_term + Keys.ENTER)
 
 
 @_entry("urlbar_background_tab")
