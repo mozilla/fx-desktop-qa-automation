@@ -2062,6 +2062,7 @@ class AboutPrefs(BasePage):
         From inside the DoH exceptions dialog iframe, remove every website
         exception and save the changes. Returns to the default frame.
         """
+        self.element_visible("doh-exceptions-remove-all-button")
         self.click_on("doh-exceptions-remove-all-button")
         self.click_on("doh-exceptions-save-changes-button")
         self.switch_to_default_frame()
