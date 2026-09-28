@@ -1288,6 +1288,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_highlight_comment_can_be_added:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_input_numbers:
     result: pass
     splits:
