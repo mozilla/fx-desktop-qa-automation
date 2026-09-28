@@ -10,6 +10,9 @@ from typing import Callable
 
 # import psutil
 import pytest
+import requests
+from fxa.errors import ClientError
+from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
@@ -20,6 +23,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules import testrail_integration as tri
+from modules.classes.fxa_session import FxaSession
+from modules.page_object import FxaHome
 from modules.taskcluster import get_tc_secret
 from modules.util import env_true
 from scripts import collect_executables
@@ -455,6 +460,7 @@ def driver(
     create_profiles,
     env_prep,
     fx_executable,
+    fxa_url: str | None,
     geckodriver: str,
     hard_quit,
     json_metadata,
@@ -480,6 +486,9 @@ def driver(
 
     fx_executable: str
         Location of the Firefox executable.
+
+    fxa_url: str | None
+        FxA content server for identity.fxaccounts.autoconfig.uri, None to leave Firefox's default.
 
     opt_headless: bool
         Whether pytest was run with --run-headless.
@@ -519,6 +528,8 @@ def driver(
 
     if opt_headless:
         options.add_argument("--headless")
+    if fxa_url:
+        options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
     for opt, value in prefs_list:
         options.set_preference(opt, value)
     try:
@@ -676,3 +687,140 @@ def create_profiles():
 def profile_paths():
     """returns a list of profile zips, eg. ["profiles/theme_change.zip"]"""
     return []
+
+
+@pytest.fixture()
+def fxa_env():
+    """
+    Return "stage" or "prod" in a fixture of this name in a test or suite
+    to point Firefox and PyFxA at that FxA environment
+    """
+    return None
+
+
+@pytest.fixture()
+def fxa_url(fxa_env):
+    if fxa_env == "stage":
+        return "https://accounts.stage.mozaws.net"
+    elif fxa_env == "prod":
+        return "https://accounts.firefox.com"
+
+
+@pytest.fixture()
+def start_time():
+    return datetime.datetime.now(datetime.timezone.utc).strftime(
+        "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
+
+
+@pytest.fixture()
+def acct_password():
+    return "Test123???"
+
+
+@pytest.fixture()
+def fxa_session(
+    fxa_url: str | None,
+    fxa_env: str,
+    acct_password: str,
+    restmail_session,
+):
+    if fxa_env == "stage":
+        fxa_url = "https://api-accounts.stage.mozaws.net"
+    elif fxa_env == "prod":
+        fxa_url = "https://api.accounts.firefox.com"
+    prep = FxaSession(fxa_url, acct_password, restmail_session)
+    prep.restmail.clear()
+    yield prep
+    try:
+        prep.destroy_account()
+    except ClientError as e:
+        # e.g. the test never created the account, or it has no password
+        logging.warning(f"Could not delete FxA account {prep.restmail.email}: {e}")
+
+
+@pytest.fixture()
+def fxa_test_account():
+    return None, None
+
+
+@pytest.fixture()
+def restmail_session(fxa_test_account) -> TestEmailAccount:
+    (username, _) = fxa_test_account
+    return TestEmailAccount(email=username)
+
+
+@pytest.fixture()
+def create_fxa(restmail_session, fxa_session: FxaSession, get_otp_code) -> FxaSession:
+    fxa_session.create_account()
+    code = get_otp_code(restmail_session)
+    fxa_session.session.verify_email_code(code)
+    return fxa_session
+
+
+@pytest.fixture()
+def get_otp_code(start_time: str):
+    """Function factory: wait for the verification email, then return its code"""
+    code_header_names = [
+        "x-verify-short-code",
+        "x-signin-verify-code",
+        "x-verify-code",
+        "x-passwordless-signup-otp",
+    ]
+
+    def _find_code(acct: TestEmailAccount) -> str | None:
+        acct.fetch()
+        for m in acct.messages:
+            if m["receivedAt"] < start_time:
+                continue
+            for header_name in code_header_names:
+                if header_name in m["headers"]:
+                    return m["headers"][header_name]
+        return None
+
+    def _get_otp_code(restmail: TestEmailAccount) -> str:
+        # Poll restmail's API every 0.5s for up to 30s; transient request
+        # errors are retried rather than failing the test.
+        return WebDriverWait(
+            restmail,
+            timeout=30,
+            poll_frequency=0.5,
+            ignored_exceptions=(requests.RequestException,),
+        ).until(_find_code, message=f"No OTP code found in {restmail.email}.")
+
+    return _get_otp_code
+
+
+@pytest.fixture()
+def fxa_hosts(fxa_env):
+    """FxA hosts that should receive the WAF-bypass header in the browser"""
+    if fxa_env == "stage":
+        return [
+            "accounts.stage.mozaws.net",
+            "api-accounts.stage.mozaws.net",
+            "oauth.stage.mozaws.net",
+            "profile.stage.mozaws.net",
+        ]
+    elif fxa_env == "prod":
+        return [
+            "accounts.firefox.com",
+            "api.accounts.firefox.com",
+            "oauth.accounts.firefox.com",
+            "profile.accounts.firefox.com",
+        ]
+
+
+@pytest.fixture(autouse=True)
+def fxa_waf_bypass(driver, fxa_url, fxa_hosts):
+    """
+    When fxa_env is set and CI_WAF_TOKEN is available, add the fxa-ci
+    WAF-bypass header to the browser's requests for the FxA hosts.
+    """
+    waf_token = os.environ.get("CI_WAF_TOKEN")
+    if not (fxa_url and waf_token):
+        yield
+        return
+    fxa = FxaHome(driver)
+    fxa.install_waf_bypass_header(waf_token, fxa_hosts)
+    yield
+    fxa.cleanup_waf_bypass_header()
