@@ -1297,6 +1297,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_highlight_comment_can_be_added:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_input_numbers:
     result: pass
     splits:
@@ -1448,7 +1453,7 @@ preferences:
     splits:
     - functional1
   test_edit_installed_engines:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2052847
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076140
     result: unstable
     splits:
     - functional1
@@ -2357,11 +2362,6 @@ tabs:
     - functional3
     - nightly
   test_save_and_close_a_tab_group:
-    result: pass
-    splits:
-    - functional3
-    - nightly
-  test_split_view_context_menu_search_single_tab:
     result: pass
     splits:
     - functional3
