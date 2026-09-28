@@ -2046,10 +2046,11 @@ class AboutPrefs(BasePage):
 
     def remove_one_doh_exception(self) -> BasePage:
         """
-        From inside the DoH exceptions dialog iframe, remove the first
-        website exception in the list and save the changes. Returns to
-        the default frame.
+        From inside the DoH exceptions dialog iframe, remove one website
+        exception from the list and save the changes. Returns to the
+        default frame.
         """
+        self.any_element_visible("children-host-elements")
         self.get_elements("children-host-elements")[0].click()
         self.click_on("doh-exceptions-remove-button")
         self.click_on("doh-exceptions-save-changes-button")
