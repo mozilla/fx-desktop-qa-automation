@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import pytest
 from selenium.webdriver import Firefox
@@ -75,15 +75,15 @@ def test_language_packs_can_be_downloaded_from_about_addons(
     amo_languages.find_language_row_and_navigate(DOWNLOAD_ROW)
     amo_languages.click_on("language-addons-subpage-version-history")
     # Clicking the link starts an install, so save it with the context menu.
-    saved_xpi = os.path.join(downloads_folder, DOWNLOAD_NAME)
-    amo_languages.install_mock_file_picker(saved_xpi)
+    saved_xpi = Path(downloads_folder) / DOWNLOAD_NAME
+    amo_languages.install_mock_file_picker(str(saved_xpi))
     try:
         amo_languages.context_click("language-addons-subpage-download-file")
         context_menu.click_and_hide_menu("context-menu-save-link")
         amo_languages.wait_for_mock_file_picker()
     finally:
         amo_languages.cleanup_mock_file_picker()
-    amo_languages.custom_wait(timeout=30).until(lambda _: os.path.exists(saved_xpi))
+    amo_languages.custom_wait(timeout=30).until(lambda _: saved_xpi.exists())
 
     # Switch to the installed language from the Preferred language dropdown.
     about_prefs.open()
