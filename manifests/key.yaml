@@ -163,8 +163,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_change_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076136
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -1403,8 +1402,7 @@ pocket:
       splits: []
 preferences:
   test_add_search_engine_option:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076137
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_always_translate_languages_can_be_added:
@@ -1441,8 +1439,7 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076138
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_zoom_applied_to_websites:
@@ -1458,8 +1455,7 @@ preferences:
     splits:
     - functional1
   test_edit_installed_engines:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076140
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_fallback_language_can_be_added:

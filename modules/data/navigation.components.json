@@ -202,6 +202,14 @@
       "location": "Address bar"
     }
   },
+  "searchmode-switcher-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "searchmode-switcher",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "legacy-searchmode-switcher": {
     "selectorData": "#searchbar-new .searchmode-switcher",
     "strategy": "css",
