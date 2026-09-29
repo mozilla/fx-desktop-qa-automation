@@ -36,8 +36,8 @@
     }
   },
   "language-addons-subpage-download-file": {
-    "selectorData": "Download file",
-    "strategy": "link_text",
+    "selectorData": "a.InstallButtonWrapper-download-link",
+    "strategy": "css",
     "groups": [],
     "comment": {
       "description": "\"Download file\" link",
