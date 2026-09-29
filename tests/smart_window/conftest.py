@@ -50,9 +50,12 @@ def smart_window(driver):
 
 @pytest.fixture()
 def fxa_env():
-    if environ.get("TASKCLUSTER_ROOT_URL") and environ.get("FX_EXECUTABLE"):
-        fxa_keys = get_tc_secret("ci_waf_token", level=1)
-        environ["CI_WAF_TOKEN"] = fxa_keys.get("stage")
+    # On Taskcluster, read the secret at the task's own level (PRs: 1, main/cron: 3)
+    level = environ.get("MOZ_SCM_LEVEL")
+    if level:
+        fxa_keys = get_tc_secret("ci_waf_token", level=int(level))
+        if fxa_keys and fxa_keys.get("stage"):
+            environ["CI_WAF_TOKEN"] = fxa_keys["stage"]
     return "stage"
 
 
