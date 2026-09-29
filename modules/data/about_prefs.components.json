@@ -348,11 +348,13 @@
     }
   },
   "remove-search-engine-button": {
-    "selectorData": "removeEngineButton",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-button[data-l10n-id='search-delete-engine']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "The Remove button under Search shortcuts tabel",
+      "description": "Delete button for a custom search engine, matched by its name",
       "location": "about:preferences#search Search Shortcuts subsection"
     }
   },

@@ -168,8 +168,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_cleared_on_engine_removal:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043388
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_exits_correctly:

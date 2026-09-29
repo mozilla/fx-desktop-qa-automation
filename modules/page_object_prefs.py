@@ -301,15 +301,14 @@ class AboutPrefs(BasePage):
             )
         return self
 
-    @BasePage.context_chrome
+    @BasePage.context_content
     def remove_search_engine(self, engine_name: str) -> BasePage:
-        """
-        Remove a search engine from the 'Search Shortcuts' list in about:preferences.
-        Argument:
-            engine_name (str): Name of the search engine to remove (e.g., "DuckDuckGo")
-        """
-        self.element_visible("remove-search-engine-button")
-        self.click_on("remove-search-engine-button")
+        """Delete a custom search engine and wait for its settings row to disappear."""
+        self.scroll_to_element("search-shortcuts-engine-row", labels=[engine_name])
+        self.element_visible("remove-search-engine-button", labels=[engine_name])
+        self.click_on("remove-search-engine-button", labels=[engine_name])
+        self.get_alert().accept()
+        self.element_does_not_exist("search-shortcuts-engine-row", labels=[engine_name])
         return self
 
     @BasePage.context_chrome
