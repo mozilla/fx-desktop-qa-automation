@@ -15,8 +15,8 @@ class ExamplePage(BasePage):
 
     @BasePage.context_content
     def search_selected_header_via_context_menu(self):
-        """Open the page, triple-click the <h1>, right-click it to trigger the context menu."""
+        """Open the page, triple-click the body text, right-click it to trigger the context menu."""
         self.open()
-        header = (By.TAG_NAME, "h1")
-        self.triple_click(header)
-        self.context_click(header)
+        text = (By.TAG_NAME, "p")
+        self.triple_click(text)
+        self.context_click(text)
