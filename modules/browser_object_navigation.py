@@ -575,11 +575,11 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_visible(self, search_mode):
-        """Ensure the search mode is visible in URLbar"""
-        self.element_visible("searchmode-switcher")
+    def verify_search_mode_is_visible(self, search_mode: str) -> BasePage:
+        """Verify the selected or default engine on the URL bar switcher."""
+        self.element_visible("searchmode-switcher-button")
         self.element_attribute_contains(
-            "searchmode-switcher", "data-l10n-args", search_mode
+            "searchmode-switcher-button", "aria-label", search_mode
         )
         return self
 

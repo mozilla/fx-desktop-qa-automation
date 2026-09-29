@@ -29,7 +29,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_addressbar_search_engine_keywords:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
+    result: unstable
     splits:
     - functional1
     - nightly
@@ -92,7 +93,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_insertion_point_no_search_terms_display:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
+    result: unstable
     splits:
     - functional1
     - nightly
@@ -132,11 +134,13 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_code_google_non_us:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076371
+    result: unstable
     splits:
     - smoke
   test_search_code_google_us:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076371
+    result: unstable
     splits:
     - smoke
     - ci-extended
@@ -159,8 +163,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_change_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076136
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -170,7 +173,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_mode_exits_correctly:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
+    result: unstable
     splits:
     - functional1
     - nightly
@@ -180,7 +184,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_update_on_alias_prefix:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
+    result: unstable
     splits:
     - functional1
     - nightly
@@ -238,7 +243,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
+    result: unstable
     splits:
     - functional1
     - nightly
@@ -1308,6 +1314,11 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_paragraph_comment_can_be_edited:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_prefilled_input_data:
     result: pass
     splits:
@@ -1390,8 +1401,7 @@ pocket:
       splits: []
 preferences:
   test_add_search_engine_option:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076137
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_always_translate_languages_can_be_added:
@@ -1428,8 +1438,7 @@ preferences:
     splits:
     - smoke
   test_default_search_engine_dropdown:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076138
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_default_zoom_applied_to_websites:
@@ -1449,8 +1458,7 @@ preferences:
     splits:
     - functional1
   test_edit_installed_engines:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076140
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_fallback_language_can_be_added:
@@ -1484,7 +1492,11 @@ preferences:
     splits:
     - functional1
   test_lang_pack_changed_from_about_prefs:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076368
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
     - functional2
   test_languages_can_be_downloaded:
@@ -1506,6 +1518,10 @@ preferences:
     splits:
     - functional1
   test_never_translate_languages_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
+  test_never_translate_sites_are_not_translated:
     result: pass
     splits:
     - functional1
@@ -1596,7 +1612,11 @@ printing_ui:
     - nightly
 profile:
   test_set_default_profile:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076372
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - smoke
 reader_view:
@@ -1617,24 +1637,27 @@ reader_view:
     - ci-extended
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076369
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
-    comment: Mac cannot be supported
+    comment: Mac cannot be supported. https://bugzilla.mozilla.org/show_bug.cgi?id=2076365
     result:
-      linux: pass
+      linux: unstable
       mac: unsupported
-      win: pass
+      win: unstable
     splits:
     - functional2
   test_zoom_from_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076365
+    result: unstable
     splits:
     - functional2
     - nightly
   test_zoom_menu_correlation:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076365
+    result: unstable
     splits:
     - functional2
     - nightly
