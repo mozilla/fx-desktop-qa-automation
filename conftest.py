@@ -11,7 +11,7 @@ from typing import Callable
 # import psutil
 import pytest
 import requests
-from fxa.errors import ClientError
+from fxa.errors import Error as FxaError
 from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -720,22 +720,27 @@ def acct_password():
 
 @pytest.fixture()
 def fxa_session(
-    fxa_url: str | None,
-    fxa_env: str,
+    fxa_env: str | None,
     acct_password: str,
     restmail_session,
 ):
     if fxa_env == "stage":
-        fxa_url = "https://api-accounts.stage.mozaws.net"
+        fxa_api_url = "https://api-accounts.stage.mozaws.net"
     elif fxa_env == "prod":
-        fxa_url = "https://api.accounts.firefox.com"
-    prep = FxaSession(fxa_url, acct_password, restmail_session)
+        fxa_api_url = "https://api.accounts.firefox.com"
+    else:
+        # Without this, PyFxA would silently default to the production server
+        raise ValueError(
+            f"fxa_session needs fxa_env 'stage' or 'prod', got {fxa_env!r}"
+        )
+    prep = FxaSession(fxa_api_url, acct_password, restmail_session)
     prep.restmail.clear()
     yield prep
     try:
         prep.destroy_account()
-    except ClientError as e:
-        # e.g. the test never created the account, or it has no password
+    except (FxaError, requests.RequestException) as e:
+        # e.g. the test never created the account, it has no password, or
+        # the request was blocked
         logging.warning(f"Could not delete FxA account {prep.restmail.email}: {e}")
 
 
