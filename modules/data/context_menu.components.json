@@ -309,7 +309,7 @@
     "groups": []
   },
   "context-menu-open-link-in-container-work": {
-    "selectorData": "menuitem[data-l10n-id='user-context-work']",
+    "selectorData": "#context-openlinkinusercontext-menu menuitem[data-usercontextid='2']",
     "strategy": "css",
     "groups": []
   },
