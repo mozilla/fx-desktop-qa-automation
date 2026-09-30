@@ -27,6 +27,7 @@ def test_trr_mode_set_to_3(driver: Firefox):
 
     # Set network.trr.mode to 3 in about:config
     about_config.edit_config_value(TRR_MODE_PREF, TRR_MODE_DOH_ONLY)
+    assert about_config.get_pref_value(TRR_MODE_PREF) == str(TRR_MODE_DOH_ONLY)
 
     # Open preferences and search for Secure DNS
     prefs.open()
