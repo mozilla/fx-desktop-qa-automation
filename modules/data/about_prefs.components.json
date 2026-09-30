@@ -329,30 +329,14 @@
     "strategy": "id",
     "groups": []
   },
-  "search-shortcuts-group": {
-    "selectorData": "oneClickSearchProvidersGroup",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts table",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
-  "search-engine-list": {
-    "selectorData": "engineList",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts options list",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
   "remove-search-engine-button": {
-    "selectorData": "removeEngineButton",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-button[data-l10n-id='search-delete-engine']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "The Remove button under Search shortcuts tabel",
+      "description": "Delete button for a custom search engine, matched by its name",
       "location": "about:preferences#search Search Shortcuts subsection"
     }
   },
