@@ -612,6 +612,35 @@ def driver(
             driver.quit()
 
 
+def _driver_process_tree(driver) -> list[int]:
+    """PIDs behind a driver: its geckodriver, plus every Firefox child."""
+    import psutil
+
+    proc = getattr(getattr(driver, "service", None), "process", None)
+    if proc is None:
+        return []
+    try:
+        parent = psutil.Process(proc.pid)
+        return [child.pid for child in parent.children(recursive=True)] + [proc.pid]
+    except psutil.Error:
+        return []
+
+
+def _wait_for_pids_to_exit(pids: list[int], timeout: int = 10) -> bool:
+    """Poll until none of `pids` is alive. Returns False if any outlive timeout."""
+    import psutil
+
+    if not pids:
+        return True
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not any(psutil.pid_exists(pid) for pid in pids):
+            return True
+        time.sleep(0.2)
+    logging.warning(f"restart_browser: {pids} still alive after {timeout}s")
+    return False
+
+
 @pytest.fixture()
 def restart_browser(
     fx_executable,
@@ -664,15 +693,20 @@ def restart_browser(
     yield _restart
 
     for extra in spawned:
+        pids = _driver_process_tree(extra)
         try:
             extra.quit()
         except Exception as exc:  # already gone, or never came up
             logging.warning(f"restart_browser cleanup: {exc}")
+        _wait_for_pids_to_exit(pids)
+
     if spawned:
-        # Let the relaunched window finish going away before the next test
-        # brings its own up; overlapping windows fight over focus, and the
-        # panel-menu tests are sensitive to losing it.
-        time.sleep(2)
+        # Processes exiting is necessary but not sufficient: the relaunched
+        # window is usually already gone by here, yet without a brief settle
+        # the next test's window still loses focus and the panel-menu tests
+        # time out (measured headed: 10/12 without, 12/12 with). Headless is
+        # unaffected, and CI runs headless, so this only costs local runs.
+        time.sleep(1)
 
 
 @pytest.fixture()
