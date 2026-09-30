@@ -10,16 +10,6 @@ run-name: Nightly smoke tests triggered by ${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
-      test_sets:
-        description: "Test set to run, which would be either '[\"smoke\"]' or '[\"smoke\", \"nightly\"]' "
-        default: '["smoke"]'
-        type: string
-
-      target_info:
-        description: 'Build ID information containing date and time of the Firefox build'
-        required: true
-        type: string
-
       win_installer_link:
         description: 'The Windows ZIP URL for the Firefox build under test'
         required: false
@@ -47,13 +37,6 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
-
-env:
-  # Hours 00:00 through 11:59 UTC are considered the morning build.
-  MORNING_CUTOFF_HOUR_UTC: "12"
-
-  # Only used when the release schedule API cannot be read.
-  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
 
 jobs:
   Run:
