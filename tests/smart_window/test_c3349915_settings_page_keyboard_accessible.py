@@ -20,31 +20,6 @@ def test_case():
     return "3349915"
 
 
-def _focused_matches(driver, element) -> bool:
-    """True when `element`, or a host of the focused control, has focus."""
-    active = driver.switch_to.active_element
-    if active == element:
-        return True
-    # moz-select and friends keep the real control in a shadow root, so
-    # activeElement reports the host rather than the control.
-    return bool(
-        driver.execute_script(
-            """
-            const active = arguments[0];
-            let node = arguments[1];
-            while (node) {
-                if (node === active) return true;
-                const root = node.getRootNode && node.getRootNode();
-                node = root && root.host ? root.host : node.parentNode;
-            }
-            return false;
-            """,
-            active,
-            element,
-        )
-    )
-
-
 def test_settings_page_keyboard_accessible(driver: Firefox):
     """
     C3349915 - Settings page keyboard accessible
@@ -60,7 +35,7 @@ def test_settings_page_keyboard_accessible(driver: Firefox):
     }
 
     about_prefs.driver.execute_script("arguments[0].focus();", select)
-    about_prefs.expect(lambda d: _focused_matches(d, select))
+    about_prefs.expect(lambda d: about_prefs.utils.element_has_focus(select))
     logging.info("Smart Window select is keyboard-focusable")
 
     # Only assert that TAB reaches each control, not that they are adjacent:
@@ -73,7 +48,7 @@ def test_settings_page_keyboard_accessible(driver: Firefox):
         reached = [
             name
             for name, element in targets.items()
-            if _focused_matches(about_prefs.driver, element)
+            if about_prefs.utils.element_has_focus(element)
         ]
         for name in reached:
             logging.info("%s is keyboard-focusable", name)

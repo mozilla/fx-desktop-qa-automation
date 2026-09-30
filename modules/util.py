@@ -894,6 +894,35 @@ class PomUtils:
 
         return None
 
+    def element_has_focus(self, element: WebElement) -> bool:
+        """
+        Report whether `element` holds focus, or hosts the control that does.
+
+        Custom elements (moz-toggle, moz-select) keep their focusable control
+        inside a shadow root, so document.activeElement reports the host
+        rather than the control. This walks up from the focused element
+        through shadow hosts to see whether it resolves to `element`.
+        """
+        active = self.driver.switch_to.active_element
+        if active == element:
+            return True
+        return bool(
+            self.driver.execute_script(
+                """
+                const active = arguments[0];
+                let node = arguments[1];
+                while (node) {
+                    if (node === active) return true;
+                    const root = node.getRootNode && node.getRootNode();
+                    node = root && root.host ? root.host : node.parentNode;
+                }
+                return false;
+                """,
+                active,
+                element,
+            )
+        )
+
     def find_shadow_element(
         self,
         shadow_parent: Union[WebElement, ShadowRoot],
