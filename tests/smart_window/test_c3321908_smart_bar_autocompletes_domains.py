@@ -26,10 +26,11 @@ def test_smart_bar_autocompletes_domains(
     bar = SmartBar(driver)
     bar.open_smart_bar()
 
-    # Nothing typed yet, so there is nothing to autocomplete. Asserting this
-    # first is what stops the check below passing on a view that was already
-    # populated.
-    assert bar.get_result_count() == 0, "Smart Bar showed results before any input"
+    # Nothing typed yet, so there is nothing to autocomplete. Checking this
+    # first is what stops the assertion below passing on a view that was
+    # already populated -- and it waits rather than reading once, since a
+    # previous test's results may still be clearing.
+    bar.expect_no_results()
 
     bar.set_smart_bar_text(DOMAIN)
     bar.expect_results(1)
