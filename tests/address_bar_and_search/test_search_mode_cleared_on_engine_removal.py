@@ -5,6 +5,7 @@ from modules.browser_object import Navigation
 from modules.page_object import AboutPrefs
 
 SEARCH_ENGINE = "Starfox Search"
+ENGINE_KEYWORD = "@starfox"
 
 
 @pytest.fixture()
@@ -36,7 +37,7 @@ def test_search_mode_cleared_on_engine_removal(driver, engine_url: str):
 
     # Built-in engines can only be disabled in the redesigned settings.
     prefs.open()
-    prefs.add_search_engine(SEARCH_ENGINE, engine_url, "@starfox")
+    prefs.add_search_engine(SEARCH_ENGINE, engine_url, ENGINE_KEYWORD)
     prefs.scroll_to_element("search-shortcuts-engine-row", labels=[SEARCH_ENGINE])
     prefs.element_visible("search-shortcuts-engine-row", labels=[SEARCH_ENGINE])
 
