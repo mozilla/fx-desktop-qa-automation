@@ -4,7 +4,7 @@ from selenium.webdriver import Firefox
 from modules.page_object import AboutConfig, AboutPrefs
 
 TRR_MODE_PREF = "network.trr.mode"
-TRR_MODE_DOH_ENABLED = 3
+TRR_MODE_DOH_ONLY = 3
 
 
 @pytest.fixture()
@@ -26,7 +26,7 @@ def test_trr_mode_set_to_3(driver: Firefox):
     prefs = AboutPrefs(driver, category="privacy")
 
     # Set network.trr.mode to 3 in about:config
-    about_config.edit_config_value(TRR_MODE_PREF, TRR_MODE_DOH_ENABLED)
+    about_config.edit_config_value(TRR_MODE_PREF, TRR_MODE_DOH_ONLY)
 
     # Open preferences and search for Secure DNS
     prefs.open()
