@@ -285,14 +285,19 @@ class SmartBar(BasePage):
             const doc = aiDoc();
             if (!doc) return 0;
             let rows = 0;
+            // Track "found" separately from the count: an empty results
+            // container is exactly the state this reports, and keying the
+            // early-exit on `rows` would fail to stop the walk there.
+            let found = false;
             (function walk(node, depth) {
-                if (!node || depth > 12 || rows) return;
+                if (!node || depth > 12 || found) return;
                 for (const el of node.querySelectorAll("*")) {
                     if (el.matches && el.matches(".urlbarView-results")) {
                         rows = el.querySelectorAll(".urlbarView-row").length;
+                        found = true;
                         return;
                     }
-                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (rows) return; }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (found) return; }
                 }
             })(doc, 0);
             return rows;
