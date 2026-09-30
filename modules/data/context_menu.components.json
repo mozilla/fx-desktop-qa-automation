@@ -91,6 +91,24 @@
     "strategy": "id",
     "groups": []
   },
+  "context-menu-add-split-view": {
+    "selectorData": "context_moveTabToSplitView",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Creates a Split View from the tab(s) the menu was opened on. Reads 'Add Split View' for one tab and 'Open in Split View' for two",
+      "location": "Tab context menu"
+    }
+  },
+  "context-menu-separate-split-view": {
+    "selectorData": "context_separateSplitView",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Separate Split View, dissolves the Split View the tab belongs to",
+      "location": "Tab context menu, only shown for tabs in a Split View"
+    }
+  },
   "context-menu-pin-tab": {
     "selectorData": "context_pinTab",
     "strategy": "id",
