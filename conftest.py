@@ -562,6 +562,7 @@ def driver(
         options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
     for opt, value in prefs_list:
         options.set_preference(opt, value)
+    driver = None
     try:
         if geckodriver:
             service = Service(executable_path=geckodriver, service_args=service_args)
@@ -574,16 +575,7 @@ def driver(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        separator = "x"
-        if separator not in opt_window_size:
-            if "by" in opt_window_size:
-                separator = "by"
-            elif "," in opt_window_size:
-                separator = ","
-            elif " " in opt_window_size:
-                separator = " "
-        winsize = [int(s) for s in opt_window_size.split(separator)]
-        driver.set_window_size(*winsize)
+        driver.set_window_size(*_parse_window_size(opt_window_size))
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
@@ -608,8 +600,26 @@ def driver(
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
-            driver.quit()
+        # `driver` is None when Firefox() itself threw, and already-quit when
+        # restart_browser replaced it. Neither should turn a real failure into
+        # a confusing teardown error -- an unguarded quit() here raised
+        # UnboundLocalError and hid the actual WebDriverException.
+        if driver:
+            try:
+                driver.quit()
+            except Exception as exc:
+                logging.warning(f"driver teardown: {exc}")
+
+
+def _parse_window_size(opt_window_size: str) -> list[int]:
+    """Parse a window size like "1152x864", also accepting by / , / space."""
+    separator = "x"
+    if separator not in opt_window_size:
+        for alt in ("by", ",", " "):
+            if alt in opt_window_size:
+                separator = alt
+                break
+    return [int(part) for part in opt_window_size.split(separator)]
 
 
 def _driver_process_tree(driver) -> list[int]:
@@ -649,6 +659,8 @@ def restart_browser(
     opt_headless,
     opt_implicit_timeout,
     opt_ci,
+    opt_window_size,
+    fxa_url,
     persistent_profile_dir,
 ):
     """
@@ -675,12 +687,17 @@ def restart_browser(
             )
         driver.quit()
 
+        # Mirror the driver fixture: same prefs, same FxA content server, same
+        # window size, same page-load guard. A relaunch that skips any of them
+        # is a different browser than the test started with.
         options = Options()
         options.binary_location = fx_executable
         options.add_argument("-profile")
         options.add_argument(str(persistent_profile_dir))
         if opt_headless:
             options.add_argument("--headless")
+        if fxa_url:
+            options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
         for opt, value in prefs_list:
             options.set_preference(opt, value)
 
@@ -691,8 +708,14 @@ def restart_browser(
             else Service(service_args=service_args)
         )
         restarted = Firefox(service=service, options=options)
-        restarted.implicitly_wait(30 if opt_ci else opt_implicit_timeout)
         spawned.append(restarted)
+
+        restarted.set_window_size(*_parse_window_size(opt_window_size))
+        timeout = 30 if opt_ci else opt_implicit_timeout
+        restarted.implicitly_wait(timeout)
+        WebDriverWait(restarted, timeout=40).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
         return restarted
 
     yield _restart
