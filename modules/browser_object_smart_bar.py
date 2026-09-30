@@ -179,9 +179,52 @@ class SmartBar(BasePage):
 
         Sent as a real key event: the CTA acts on keyboard input, and there is
         no addressable element to click from chrome.
+
+        Re-focuses the editor first. send_keys goes to whatever holds focus,
+        and choose_search_engine clicks a panel-item, which can move it -- so
+        without this the Enter could land somewhere else entirely.
         """
+        focused = self._script(
+            "const p = prosemirror();if (!p) return false;p.focus();return true;"
+        )
+        if not focused:
+            raise AssertionError("Smart Bar editor is not available to submit from")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    def get_default_search_engine(self) -> str:
+        """
+        Return the engine the CTA names as default, or "" if not shown yet.
+
+        The default is carried on the "Search with X" item's data-l10n-args as
+        {"searchEngineName": "..."}, which is how a test can check a search
+        used the default engine without hardcoding one.
+        """
+        return (
+            self._script(
+                "const l = ctaLists()[0];"
+                "if (!l) return '';"
+                "const hit = Array.from(l.querySelectorAll('panel-item'))"
+                "  .find(i => i.getAttribute('data-l10n-id') === arguments[0]);"
+                "if (!hit) return '';"
+                "try {"
+                "  return JSON.parse(hit.getAttribute('data-l10n-args') || '{}')"
+                "    .searchEngineName || '';"
+                "} catch (e) { return ''; }",
+                ACTION_MENU_SEARCH_WITH_DEFAULT,
+            )
+            or ""
+        )
+
+    def expect_default_search_engine(self) -> BasePage:
+        """Wait until the CTA reports which engine is the default."""
+        try:
+            self.expect(lambda _: self.get_default_search_engine() != "")
+        except TimeoutException:
+            raise AssertionError(
+                "the CTA never named a default search engine"
+            ) from None
         return self
 
     def choose_search_engine(self, engine_name: str) -> BasePage:
