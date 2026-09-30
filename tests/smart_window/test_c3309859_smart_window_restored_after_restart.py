@@ -18,7 +18,7 @@ def test_case():
 @pytest.fixture()
 def use_persistent_profile():
     """Firefox must write session state into a profile that survives the quit."""
-    return True
+    yield True
 
 
 @pytest.fixture()
