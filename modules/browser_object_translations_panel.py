@@ -43,14 +43,17 @@ class TranslationsPanel(BasePage):
         return self
 
     @BasePage.context_chrome
-    def translate_page(self) -> BasePage:
+    def translate_page(self, timeout: int = TRANSLATION_TIMEOUT) -> BasePage:
         """
         Press Translate in the panel and wait until the page is translated.
+
+        Args:
+            timeout: Seconds to wait for the translation
         """
         self.click_on("panel-translate-button")
 
         # The language badge only shows up once the engine is done.
-        self.custom_wait(timeout=TRANSLATION_TIMEOUT).until(
+        self.custom_wait(timeout=timeout).until(
             lambda _: self.get_element(
                 "translations-urlbar-button-locale"
             ).is_displayed()
