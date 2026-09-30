@@ -100,7 +100,7 @@ dependencies = [
   "pyfxa==0.8.2 ; python_full_version >= '3.8'",
   "pygetwindow==0.0.9",
   "pygments==2.20.0 ; python_full_version >= '3.9'",
-  "pyjwt==2.13.0 ; python_full_version >= '3.9'",
+  "pyjwt==2.15.0 ; python_full_version >= '3.9'",
   "pymsgbox==2.0.1 ; python_full_version >= '3.4'",
   "pyobjc-core==12.2 ; sys_platform == 'darwin'",
   "pyobjc-framework-cocoa==12.2 ; python_full_version >= '3.10' and sys_platform == 'darwin'",
