@@ -20,12 +20,12 @@ EXPECTED_ZOOM_OUT_LABEL = "90%"
 TEST_PAGE = "https://www.example.com"
 
 
-def _get_div_x_position(driver: Firefox) -> int:
+def _get_link_x_position(driver: Firefox) -> int:
     """
-    Returns the X location of the first <div> element on the page.
+    Returns the X location of the first <a> element on the page.
     """
-    div = driver.find_element(By.TAG_NAME, "div")
-    return int(div.location["x"])
+    link = driver.find_element(By.TAG_NAME, "a")
+    return int(link.location["x"])
 
 
 def _open_view_zoom_menu_zoom_in(menu_bar: MenuBar) -> None:
@@ -61,26 +61,26 @@ def _zoom_out(menu_bar: MenuBar) -> None:
 
 def test_zoom_from_menu_bar(driver: Firefox):
     """
-    This test verifies that the X-coordinate of a <div> element's position
+    This test verifies that the X-coordinate of an <a> element's position
     changes appropriately when zooming in, resetting zoom, and zooming out
     using the Firefox menu bar controls. Additionally, it checks that the zoom
     level indicator updates correctly.
     """
 
-    # Open the test page and record the initial position of the <div>
+    # Open the test page and record the initial position of the <a>
     page = GenericPage(driver, url=TEST_PAGE)
     page.open()
 
-    initial_position = _get_div_x_position(driver)
-    logging.info(f"Initial X position of div: {initial_position}")
+    initial_position = _get_link_x_position(driver)
+    logging.info(f"Initial X position of link: {initial_position}")
 
     # Access the zoom menu and zoom in
     menu_bar = MenuBar(driver)
     _open_view_zoom_menu_zoom_in(menu_bar)
 
-    # Wait for zoom to apply and get the new position of the <div>
-    zoomed_in_position = _get_div_x_position(driver)
-    logging.info(f"X position of div after zoom-in: {zoomed_in_position}")
+    # Wait for zoom to apply and get the new position of the <a>
+    zoomed_in_position = _get_link_x_position(driver)
+    logging.info(f"X position of link after zoom-in: {zoomed_in_position}")
 
     # Check zoom level in the toolbar
     nav = Navigation(driver)
@@ -100,9 +100,9 @@ def test_zoom_from_menu_bar(driver: Firefox):
     # Reset Zoom to 100%
     _zoom_reset(menu_bar)
 
-    # Wait for zoom reset to apply and get the reset position of the <div>
-    reset_position = _get_div_x_position(driver)
-    logging.info(f"X position of div after zoom-reset: {reset_position}")
+    # Wait for zoom reset to apply and get the reset position of the <a>
+    reset_position = _get_link_x_position(driver)
+    logging.info(f"X position of link after zoom-reset: {reset_position}")
 
     # Check that the zoom button no longer exists
     nav.element_not_visible("toolbar-zoom-level")
@@ -120,9 +120,9 @@ def test_zoom_from_menu_bar(driver: Firefox):
     # Zoom Out
     _zoom_out(menu_bar)
 
-    # Wait for zoom out to apply and get the new position of the <div>
-    zoomed_out_position = _get_div_x_position(driver)
-    logging.info(f"X position of div after zoom-out: {zoomed_out_position}")
+    # Wait for zoom out to apply and get the new position of the <a>
+    zoomed_out_position = _get_link_x_position(driver)
+    logging.info(f"X position of link after zoom-out: {zoomed_out_position}")
 
     # Check zoom level in the toolbar
     nav.element_attribute_contains(
