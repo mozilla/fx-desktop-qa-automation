@@ -303,7 +303,7 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == "success" }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -488,7 +488,7 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == "success" }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -608,7 +608,7 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == "success" }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
