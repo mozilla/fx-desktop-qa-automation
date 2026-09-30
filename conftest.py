@@ -9,7 +9,7 @@ from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-# import psutil
+import psutil
 import pytest
 import requests
 from fxa.errors import Error as FxaError
@@ -410,8 +410,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-        import psutil
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -624,7 +622,6 @@ def _parse_window_size(opt_window_size: str) -> list[int]:
 
 def _driver_process_tree(driver) -> list[int]:
     """PIDs behind a driver: its geckodriver, plus every Firefox child."""
-    import psutil
 
     proc = getattr(getattr(driver, "service", None), "process", None)
     if proc is None:
@@ -638,7 +635,6 @@ def _driver_process_tree(driver) -> list[int]:
 
 def _wait_for_pids_to_exit(pids: list[int], timeout: int = 10) -> bool:
     """Poll until none of `pids` is alive. Returns False if any outlive timeout."""
-    import psutil
 
     if not pids:
         return True
