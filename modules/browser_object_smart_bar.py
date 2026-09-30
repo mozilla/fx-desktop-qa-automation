@@ -231,17 +231,15 @@ class SmartBar(BasePage):
             ) from None
         return self
 
-    @BasePage.context_chrome
     def get_result_count(self) -> int:
         """
         Return how many autocomplete rows the Smart Bar is showing.
 
         The results live in the Smart Bar's urlbar view rather than the CTA,
-        so this walks to `.urlbarView-results` instead of reusing ctaLists().
+        so this walks for `.urlbarView-results` instead of reusing ctaLists().
         """
-        return self.driver.execute_script("""
-            const br = document.getElementById("ai-window-browser");
-            const doc = br && br.contentDocument;
+        return self._script("""
+            const doc = aiDoc();
             if (!doc) return 0;
             let rows = 0;
             (function walk(node, depth) {
@@ -256,6 +254,23 @@ class SmartBar(BasePage):
             })(doc, 0);
             return rows;
         """)
+
+    def expect_no_results(self) -> BasePage:
+        """
+        Wait until the Smart Bar shows no autocomplete rows.
+
+        Separate from expect_results, which waits for *at least* a count and so
+        is trivially satisfied by zero. Used as a precondition, where reading
+        the count once could catch a view a previous test left populated.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() == 0)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar still showed {self.get_result_count()} autocomplete "
+                "row(s) before any input"
+            ) from None
+        return self
 
     def expect_results(self, minimum: int = 1) -> BasePage:
         """
