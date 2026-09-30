@@ -22,13 +22,15 @@ def use_persistent_profile():
 
 
 @pytest.fixture()
-def prefs_list():
-    return [
-        ("browser.smartwindow.enabled", True),
-        # 3 = restore the previous session on start, which is what carries the
-        # Smart Window state across the restart.
-        ("browser.startup.page", 3),
-    ]
+def add_to_prefs_list():
+    """
+    Add to the suite's prefs rather than replacing them: the suite baseline
+    marks first run complete and picks a model, and overriding prefs_list
+    outright would drop both and land this test in onboarding instead.
+    """
+    # 3 = restore the previous session on start, which is what carries the
+    # Smart Window state across the restart.
+    return [("browser.startup.page", 3)]
 
 
 def test_smart_window_restored_after_restart(driver: Firefox, restart_browser):
