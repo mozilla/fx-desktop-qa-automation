@@ -22,6 +22,20 @@ def use_persistent_profile():
 
 
 @pytest.fixture()
+def fxa_env():
+    """
+    Opt out of the FxA WAF bypass: this test never touches FxA.
+
+    The suite sets fxa_env="stage", which makes the autouse fxa_waf_bypass
+    fixture install a header against the *original* driver. restart_browser
+    quits that driver, so the fixture's teardown then talks to a dead
+    geckodriver and raises ConnectionRefused. Returning None makes the bypass
+    a no-op (it early-returns when fxa_url is falsy).
+    """
+    return None
+
+
+@pytest.fixture()
 def add_to_prefs_list():
     """
     Add to the suite's prefs rather than replacing them: the suite baseline
