@@ -109,13 +109,11 @@ address_bar_and_search:
   test_open_link_in_new_container_tab:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_paste_and_go_opens_correct_url:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_refresh_firefox_dialog:
     result: pass
     splits:
@@ -258,12 +256,11 @@ ai_controls:
   test_c3298824_block_all_persists:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_c3308998_unblock_restores_state:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_c3310314_features_remain_after_unblock:
     result: pass
     splits:
@@ -325,8 +322,7 @@ bookmarks_and_history:
   test_add_new_other_bookmark:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_bookmark_via_bookmark_menu:
     result: pass
     splits:
@@ -519,8 +515,7 @@ downloads:
   test_download_telemetry_recorded:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_install_unsigned_addons:
     result: pass
     splits:
@@ -581,8 +576,7 @@ find_toolbar:
   test_find_in_pdf:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_find_in_txt_file:
     result: pass
     splits:
@@ -700,8 +694,7 @@ form_autofill:
   test_private_mode_info_not_saved:
     result: pass
     splits:
-    - nightly
-    - functional1
+    - smoke
   test_telephone_autofill_attribute:
     result: pass
     splits:
@@ -798,8 +791,7 @@ menus:
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
 meta:
   test_selectors:
     comment: Not part of feature functional test suites (no need for http link)
@@ -884,7 +876,6 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
     result: pass
     splits:
     - functional2
@@ -902,8 +893,7 @@ notifications:
   test_deny_geolocation:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_deny_screen_capture:
     result: pass
     splits:
@@ -950,8 +940,7 @@ password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_about_logins_direct_navigation:
     result: pass
     splits:
@@ -1015,8 +1004,7 @@ password_manager:
   test_add_password_non_ascii_chars:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_add_password_save_valid_data:
     result: pass
     splits:
@@ -1399,7 +1387,7 @@ preferences:
   test_add_search_engine_option:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_always_translate_languages_can_be_added:
     result: pass
     splits:
@@ -1545,7 +1533,7 @@ preferences:
   test_preferred_language_can_be_changed:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_preferred_language_can_be_deleted:
     result: pass
     splits:
@@ -2382,8 +2370,7 @@ tabs:
   test_reopen_tabs_through_keys:
     result: pass
     splits:
-    - functional3
-    - nightly
+    - smoke
   test_restore_closed_tabs_previous_groups:
     result: pass
     splits:
