@@ -29,8 +29,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_addressbar_search_engine_keywords:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -93,8 +92,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_insertion_point_no_search_terms_display:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -172,8 +170,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_search_mode_exits_correctly:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -183,8 +180,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_update_on_alias_prefix:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
@@ -242,8 +238,7 @@ address_bar_and_search:
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076361
-    result: unstable
+    result: pass
     splits:
     - functional1
     - nightly
