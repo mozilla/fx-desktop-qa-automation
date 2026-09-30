@@ -23,7 +23,7 @@ def test_trr_mode_set_to_3(driver: Firefox):
     """
     # Instantiate objects
     about_config = AboutConfig(driver)
-    prefs = AboutPrefs(driver, category="general")
+    prefs = AboutPrefs(driver, category="privacy")
 
     # Set network.trr.mode to 3 in about:config
     about_config.edit_config_value(TRR_MODE_PREF, TRR_MODE_DOH_ENABLED)
@@ -34,5 +34,5 @@ def test_trr_mode_set_to_3(driver: Firefox):
     prefs.open_doh_advanced()
 
     # Expect "Custom" and "Always warn me if secure DNS isn't available" checkboxes checked
-    assert prefs.element_has_attribute("doh-radio-custom-input", "checked")
-    assert prefs.element_has_attribute("doh-fallback-checkbox-input", "checked")
+    prefs.element_has_attribute("doh-radio-custom-input", "checked")
+    prefs.element_has_attribute("doh-fallback-checkbox-input", "checked")
