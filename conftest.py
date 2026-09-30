@@ -659,6 +659,11 @@ def restart_browser(
 
     The quit is what makes the restart meaningful: Firefox flushes session
     state on the way out, so it has to close cleanly rather than be killed.
+
+    Note for callers: quitting invalidates the driver that *other* fixtures
+    are holding. An autouse fixture that talks to the driver in teardown will
+    hit a dead geckodriver -- fxa_waf_bypass does, so a restart test should
+    override fxa_env to None unless it actually needs FxA.
     """
     spawned = []
 
