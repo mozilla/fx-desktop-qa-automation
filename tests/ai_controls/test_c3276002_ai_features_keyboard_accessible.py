@@ -18,34 +18,6 @@ def test_case():
     return "3276002"
 
 
-def _focused_matches(driver, element) -> bool:
-    """Return True when `element` (or an element it hosts in its shadow root)
-    is the currently focused element."""
-    active = driver.switch_to.active_element
-    if active == element:
-        return True
-    # Custom elements (moz-toggle, moz-select) put their focusable control
-    # inside a shadow root, so document.activeElement reports the host rather
-    # than the control. Walk up from the element to see if the focused element
-    # hosts it.
-    return bool(
-        driver.execute_script(
-            """
-            const active = arguments[0];
-            let node = arguments[1];
-            while (node) {
-                if (node === active) return true;
-                const root = node.getRootNode && node.getRootNode();
-                node = root && root.host ? root.host : node.parentNode;
-            }
-            return false;
-            """,
-            active,
-            element,
-        )
-    )
-
-
 def test_ai_controls_elements_keyboard_accessible(about_prefs: AboutPrefs):
     """
     C3276002 - Each AI Controls element (killswitch toggle, chatbot select,
@@ -66,7 +38,7 @@ def test_ai_controls_elements_keyboard_accessible(about_prefs: AboutPrefs):
 
     # Seed focus on the toggle, then verify TAB traversal reaches each control.
     about_prefs.driver.execute_script("arguments[0].focus();", toggle)
-    about_prefs.expect(lambda d: _focused_matches(d, toggle))
+    about_prefs.expect(lambda d: about_prefs.utils.element_has_focus(toggle))
     logging.info("AI Controls toggle is keyboard-focusable")
 
     # The rows sitting between the toggle and each select are feature-gated, so
@@ -78,7 +50,7 @@ def test_ai_controls_elements_keyboard_accessible(about_prefs: AboutPrefs):
         reached = [
             name
             for name, element in targets.items()
-            if _focused_matches(about_prefs.driver, element)
+            if about_prefs.utils.element_has_focus(element)
         ]
         for name in reached:
             logging.info("%s is keyboard-focusable", name)
