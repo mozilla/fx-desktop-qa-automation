@@ -31,10 +31,9 @@ def test_trr_mode_set_to_3(driver: Firefox):
 
     # Open preferences and search for Secure DNS
     prefs.open()
-    prefs.find_in_settings("secure DNS")
     prefs.open_doh_advanced()
 
-    # Expect "Custom" and "Always warn me if secure DNS isn't available" checkboxes checked
+    # Expect "Custom" radio button and "Always warn me if secure DNS isn't available" checkbox are checked and enabled
     prefs.element_has_attribute("doh-radio-custom-input", "checked")
     prefs.element_does_not_have_attribute("doh-radio-custom-input", "disabled")
     prefs.element_has_attribute("doh-fallback-checkbox-input", "checked")
