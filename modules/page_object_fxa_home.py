@@ -106,6 +106,9 @@ class FxaHome(BasePage):
         header to requests for the given FxA hosts, so browser navigation (not
         just PyFxA's API calls) can reach WAF-protected FxA hosts.
 
+        The observer sees every request Firefox sends but only changes those to
+        `hosts`, and stays active until cleanup_waf_bypass_header is called.
+
         Mirrors the nsIHttpChannel interceptor in fxa's own
         packages/functional-tests/lib/fixtures/pairing.ts.
 
@@ -118,11 +121,19 @@ class FxaHome(BasePage):
         """
         self.driver.execute_script(
             """
+            // Runs in the browser's privileged (chrome) context, so it sees every
+            // HTTP request Firefox makes, not just those from the current page.
             const [token, hosts] = arguments;
+
+            // Remove an observer left by an earlier call, so only one is ever active.
             if (window.__fxaWafBypassCleanup) {
               window.__fxaWafBypassCleanup();
             }
 
+            // Called for each outgoing HTTP request, just before it is sent. Only
+            // requests to the FxA hosts get the fxa-ci header; all others are left
+            // untouched. The final `false` replaces any existing value rather than
+            // appending to it.
             function wafObserver(subject) {
               const channel = subject.QueryInterface(Ci.nsIHttpChannel);
               if (hosts.includes(channel.URI.host)) {
@@ -130,8 +141,11 @@ class FxaHome(BasePage):
               }
             }
 
+            // "http-on-modify-request" is the notification Firefox sends at that point.
             Services.obs.addObserver(wafObserver, "http-on-modify-request");
 
+            // Store an unregister function on this browser window, so
+            // cleanup_waf_bypass_header (or a repeat call) can remove the observer.
             window.__fxaWafBypassCleanup = () => {
               Services.obs.removeObserver(wafObserver, "http-on-modify-request");
               delete window.__fxaWafBypassCleanup;
