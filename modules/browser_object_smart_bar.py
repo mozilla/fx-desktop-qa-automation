@@ -175,14 +175,10 @@ class SmartBar(BasePage):
 
     def submit(self) -> BasePage:
         """
-        Press Enter to run whatever action the Smart Bar is currently set to.
+        Press Enter to run the Smart Bar's current action.
 
-        Sent as a real key event: the CTA acts on keyboard input, and there is
-        no addressable element to click from chrome.
-
-        Re-focuses the editor first. send_keys goes to whatever holds focus,
-        and choose_search_engine clicks a panel-item, which can move it -- so
-        without this the Enter could land somewhere else entirely.
+        Refocuses first: send_keys goes to whatever holds focus, and
+        choose_search_engine can move it.
         """
         focused = self._script(
             "const p = prosemirror();if (!p) return false;p.focus();return true;"
@@ -197,9 +193,8 @@ class SmartBar(BasePage):
         """
         Return the engine the CTA names as default, or "" if not shown yet.
 
-        The default is carried on the "Search with X" item's data-l10n-args as
-        {"searchEngineName": "..."}, which is how a test can check a search
-        used the default engine without hardcoding one.
+        Read from the "Search with X" item's data-l10n-args, so a test need
+        not hardcode an engine.
         """
         return (
             self._script(
@@ -257,13 +252,28 @@ class SmartBar(BasePage):
             )
         return self
 
+    def expect_search_engine_offered(self, engine_name: str) -> BasePage:
+        """
+        Wait until `engine_name` appears in the Search With submenu.
+
+        Waiting on a count instead would let a two-entry list satisfy the
+        wait before this engine has been added.
+        """
+        try:
+            self.expect(lambda _: engine_name in self.get_search_with_items())
+        except TimeoutException:
+            raise AssertionError(
+                f"{engine_name} never appeared in the Search With submenu; "
+                f"last saw {self.get_search_with_items()}"
+            ) from None
+        return self
+
     def expect_search_engines(self, minimum: int = 2) -> BasePage:
         """
-        Wait until the Search With submenu has listed the real engines.
+        Wait until the Search With submenu lists at least `minimum` entries.
 
-        It starts out holding only the generic "Search" entry and fills in once
-        the search service finishes initialising. Reading it immediately is a
-        race that a slow worker loses -- a Windows CI run saw ['Search'] alone.
+        It holds only a generic "Search" entry until the search service
+        initialises, so reading it immediately is a race.
         """
         try:
             self.expect(lambda _: len(self.get_search_with_items()) >= minimum)
@@ -285,9 +295,8 @@ class SmartBar(BasePage):
             const doc = aiDoc();
             if (!doc) return 0;
             let rows = 0;
-            // Track "found" separately from the count: an empty results
-            // container is exactly the state this reports, and keying the
-            // early-exit on `rows` would fail to stop the walk there.
+            // Separate from the count: an empty container is a valid result,
+            // so the exit cannot key on `rows`.
             let found = false;
             (function walk(node, depth) {
                 if (!node || depth > 12 || found) return;
@@ -307,9 +316,8 @@ class SmartBar(BasePage):
         """
         Wait until the Smart Bar shows no autocomplete rows.
 
-        Separate from expect_results, which waits for *at least* a count and so
-        is trivially satisfied by zero. Used as a precondition, where reading
-        the count once could catch a view a previous test left populated.
+        Separate from expect_results, which waits for *at least* a count and
+        so is trivially true at zero.
         """
         try:
             self.expect(lambda _: self.get_result_count() == 0)
