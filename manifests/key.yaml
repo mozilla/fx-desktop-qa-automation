@@ -1550,6 +1550,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_speed_up_translation_languages_work:
+    result: pass
+    splits:
+    - functional1
   test_spell_check_learn_more_link:
     result: pass
     splits:
