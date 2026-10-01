@@ -1,15 +1,15 @@
 address_bar_and_search:
-  test_adaptive_history_autofill:
-    result: pass
-    splits:
-    - functional1
-    - nightly
   test_adaptive_history_removal:
     result: pass
     splits:
     - functional1
     - nightly
-  test_add_engine_address_bar:
+  test_add_adaptive_history_autofill:
+    result: pass
+    splits:
+    - functional1
+    - nightly
+  test_add_search_engine_from_address_bar:
     result: pass
     splits:
     - smoke
@@ -19,10 +19,15 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_addon_suggestion:
+  test_addon_suggestion_based_on_search_input:
     result: pass
     splits:
     - functional1
+  test_address_bar_and_search_string_displayed_when_address_bar_unfocused:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_addressbar_bookmarks_when_history_disabled:
     result: pass
     splits:
@@ -52,12 +57,12 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_ctrl_enter_completes_link_and_can_refresh:
+  test_ctrl_enter_fixes_url:
     result: pass
     splits:
     - functional1
     - nightly
-  test_ctrl_enter_fixes_url:
+  test_ctrl_enter_refreshes_tab:
     result: pass
     splits:
     - functional1
@@ -77,7 +82,7 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
-  test_delete_history_entry_via_firefox_suggest_completion_list:
+  test_delete_history_from_url_bar_completion_list:
     result: pass
     splits:
     - functional1
@@ -86,21 +91,16 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_dont_show_search_suggestions_in_private_window:
-    result: pass
-    splits:
-    - functional1
-    - nightly
   test_insertion_point_no_search_terms_display:
     result: pass
     splits:
     - functional1
     - nightly
-  test_no_suggestions_for_empty_query:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
-    result: unstable
+  test_no_search_engine_suggestions_in_private_window:
+    result: pass
     splits:
     - functional1
+    - nightly
   test_non_sponsored_topsite_context_menu_option:
     result: pass
     splits:
@@ -147,7 +147,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_search_engine_selector:
+  test_search_engine_selector_and_validator:
     result: pass
     splits:
     - smoke
@@ -185,21 +185,21 @@ address_bar_and_search:
     result: deprecated
     splits:
     - functional1
-  test_search_string_displayed_when_addressbar_unfocused:
+  test_search_suggestion_for_engine_selection:
     result: pass
     splits:
     - functional1
     - nightly
-  test_search_suggestions:
+  test_search_suggestions_pref_affects_urlbar_and_search_bar:
+    result: pass
+    splits:
+    - functional1
+  test_search_suggests_enabled:
     result: hanging
     splits:
     - smoke
     - ci-extended
     - exclude_nightly
-  test_search_suggestions_can_be_disabled:
-    result: pass
-    splits:
-    - functional1
   test_search_term_persists:
     result: pass
     splits:
@@ -214,15 +214,15 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_server_not_found_error_pb:
+  test_server_not_found_error_on_private_window:
     result: pass
     splits:
     - functional1
-  test_suggestion_engine_selection:
-    result: pass
+  test_suggestions_for_empty_query_not_shown_in_search_mode:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
+    result: unstable
     splits:
     - functional1
-    - nightly
   test_switch_to_existing_tab_when_having_the_same_URL:
     result: pass
     splits:
