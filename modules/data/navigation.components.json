@@ -202,6 +202,18 @@
       "location": "Address bar"
     }
   },
+  "searchmode-switcher-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "searchmode-switcher",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner search mode switcher button; its aria-label names the selected or default engine",
+      "location": "Address bar"
+    }
+  },
   "legacy-searchmode-switcher": {
     "selectorData": "#searchbar-new .searchmode-switcher",
     "strategy": "css",
@@ -742,6 +754,17 @@
     "comment": {
       "description": "Browser popup body, e.g. permission to use camera",
       "location": "Appears from \"chrome area\" top of window"
+    }
+  },
+  "screen-sharing-notification": {
+    "selectorData": "webRTC-shareDevices-notification",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Media-sharing permission prompt used for screen capture",
+      "location": "Address bar permission popup"
     }
   },
   "popup-notification-primary-button": {

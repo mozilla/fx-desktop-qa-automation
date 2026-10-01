@@ -575,24 +575,26 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_visible(self, search_mode):
-        """Ensure the search mode is visible in URLbar"""
-        self.element_visible("searchmode-switcher")
+    def verify_search_mode_is_visible(self, search_mode: str) -> BasePage:
+        """Verify the selected or default engine on the URL bar switcher."""
+        self.element_visible("searchmode-switcher-button")
         self.element_attribute_contains(
-            "searchmode-switcher", "data-l10n-args", search_mode
+            "searchmode-switcher-button", "aria-label", search_mode
         )
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_not_visible(self, search_mode):
+    def verify_search_mode_is_not_visible(self, search_mode: str) -> BasePage:
         """Ensure the search mode is cleared from URLbar"""
-        self.element_visible("searchmode-switcher")
-        self.expect(
-            lambda _: (
-                search_mode
-                not in self.fetch("searchmode-switcher").get_attribute("data-l10n-args")
+        self.element_visible("searchmode-switcher-button")
+
+        def engine_changed(_):
+            label = self.get_element("searchmode-switcher-button").get_attribute(
+                "aria-label"
             )
-        )
+            return bool(label) and search_mode not in label
+
+        self.expect(engine_changed)
         return self
 
     @BasePage.context_chrome

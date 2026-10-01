@@ -4,8 +4,7 @@ import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, PanelUi, TabBar
-from modules.browser_object_navigation import Navigation
+from modules.browser_object import ContextMenu, Navigation, PanelUi, TabBar
 from modules.page_object import AboutPrefs, GenericPage
 
 
@@ -96,10 +95,10 @@ def test_lang_pack_changed_from_about_prefs(
     if system() == "Windows":
         nav.click_in_awesome_bar()
 
-    nav.element_visible("popup-notification")
+    nav.element_visible("screen-sharing-notification")
     nav.element_attribute_contains(
-        "popup-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
+        "screen-sharing-notification", "label", SCREEN_CAP_LABEL_FRONT_PT
     )
     nav.element_attribute_contains(
-        "popup-notification", "endlabel", SCREEN_CAP_LABEL_BACK_PT
+        "screen-sharing-notification", "endlabel", SCREEN_CAP_LABEL_BACK_PT
     )

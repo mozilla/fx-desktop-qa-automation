@@ -1,0 +1,64 @@
+{
+  "source-select": {
+    "selectorData": "about-translations-source-select",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"From\" language moz-select",
+      "location": "about:translations - top left"
+    }
+  },
+  "source-select-inner": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "source-select",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the \"From\" moz-select shadow DOM (shadowParent: source-select)",
+      "location": "about:translations - top left"
+    }
+  },
+  "target-select": {
+    "selectorData": "about-translations-target-select",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"To\" language moz-select",
+      "location": "about:translations - top right"
+    }
+  },
+  "target-select-inner": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "target-select",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the \"To\" moz-select shadow DOM (shadowParent: target-select)",
+      "location": "about:translations - top right"
+    }
+  },
+  "source-textarea": {
+    "selectorData": "about-translations-source-textarea",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Text box for the text to translate",
+      "location": "about:translations - left side"
+    }
+  },
+  "target-textarea": {
+    "selectorData": "about-translations-target-textarea",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Read-only text box that shows the translation",
+      "location": "about:translations - right side"
+    }
+  }
+}
