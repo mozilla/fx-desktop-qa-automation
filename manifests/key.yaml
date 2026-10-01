@@ -1739,8 +1739,7 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
