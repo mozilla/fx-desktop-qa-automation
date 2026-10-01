@@ -5,6 +5,21 @@
         "groups": [
             "requiredForPage"
         ]
+    },
+    "search-handoff-ui": {
+        "selectorData": "content-search-handoff-ui",
+        "strategy": "css",
+        "groups": [
+            "doNotCache"
+        ]
+    },
+    "search-handoff-button": {
+        "selectorData": ".search-handoff-button",
+        "strategy": "css",
+        "shadowParent": "search-handoff-ui",
+        "groups": [
+            "doNotCache"
+        ]
     }
 
 }
