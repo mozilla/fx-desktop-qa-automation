@@ -171,6 +171,178 @@ class SmartBar(BasePage):
             ) from None
         return self
 
+    # ── Searching ────────────────────────────────────────────────────────
+
+    def submit(self) -> BasePage:
+        """
+        Press Enter to run the Smart Bar's current action.
+
+        Refocuses first: send_keys goes to whatever holds focus, and
+        choose_search_engine can move it.
+        """
+        focused = self._script(
+            "const p = prosemirror();if (!p) return false;p.focus();return true;"
+        )
+        if not focused:
+            raise AssertionError("Smart Bar editor is not available to submit from")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    def get_default_search_engine(self) -> str:
+        """
+        Return the engine the CTA names as default, or "" if not shown yet.
+
+        Read from the "Search with X" item's data-l10n-args, so a test need
+        not hardcode an engine.
+        """
+        return (
+            self._script(
+                "const l = ctaLists()[0];"
+                "if (!l) return '';"
+                "const hit = Array.from(l.querySelectorAll('panel-item'))"
+                "  .find(i => i.getAttribute('data-l10n-id') === arguments[0]);"
+                "if (!hit) return '';"
+                "try {"
+                "  return JSON.parse(hit.getAttribute('data-l10n-args') || '{}')"
+                "    .searchEngineName || '';"
+                "} catch (e) { return ''; }",
+                ACTION_MENU_SEARCH_WITH_DEFAULT,
+            )
+            or ""
+        )
+
+    def expect_default_search_engine(self) -> BasePage:
+        """Wait until the CTA reports which engine is the default."""
+        try:
+            self.expect(lambda _: self.get_default_search_engine() != "")
+        except TimeoutException:
+            raise AssertionError(
+                "the CTA never named a default search engine"
+            ) from None
+        return self
+
+    def choose_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Pick an engine from the Search With submenu by its visible name.
+
+        Only sets the engine -- call submit() to run the search. The choice is
+        not reflected in any CTA attribute, so assert on the resulting URL.
+        """
+        logging.info("Choosing Smart Bar search engine %r", engine_name)
+        result = self._script(
+            "const lists = ctaLists();"
+            "if (lists.length !== 2) return {count: lists.length};"
+            "const items = Array.from(lists[1].querySelectorAll('panel-item'));"
+            "const hit = items.find(i => (i.textContent || '').trim() === arguments[0]);"
+            "if (!hit) return {available: items.map(i => (i.textContent || '').trim())};"
+            "hit.click();"
+            "return {clicked: true};",
+            engine_name,
+        )
+        if "count" in result:
+            raise AssertionError(
+                f"expected 2 panel-lists in the CTA (actions, Search With), "
+                f"found {result['count']}"
+            )
+        if "available" in result:
+            raise AssertionError(
+                f"no Search With entry named {engine_name!r}; "
+                f"available: {result['available']}"
+            )
+        return self
+
+    def expect_search_engine_offered(self, engine_name: str) -> BasePage:
+        """
+        Wait until `engine_name` appears in the Search With submenu.
+
+        Waiting on a count instead would let a two-entry list satisfy the
+        wait before this engine has been added.
+        """
+        try:
+            self.expect(lambda _: engine_name in self.get_search_with_items())
+        except TimeoutException:
+            raise AssertionError(
+                f"{engine_name} never appeared in the Search With submenu; "
+                f"last saw {self.get_search_with_items()}"
+            ) from None
+        return self
+
+    def expect_search_engines(self, minimum: int = 2) -> BasePage:
+        """
+        Wait until the Search With submenu lists at least `minimum` entries.
+
+        It holds only a generic "Search" entry until the search service
+        initialises, so reading it immediately is a race.
+        """
+        try:
+            self.expect(lambda _: len(self.get_search_with_items()) >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Search With submenu never listed {minimum} entries; "
+                f"last saw {self.get_search_with_items()}"
+            ) from None
+        return self
+
+    def get_result_count(self) -> int:
+        """
+        Return how many autocomplete rows the Smart Bar is showing.
+
+        The results live in the Smart Bar's urlbar view rather than the CTA,
+        so this walks for `.urlbarView-results` instead of reusing ctaLists().
+        """
+        return self._script("""
+            const doc = aiDoc();
+            if (!doc) return 0;
+            let rows = 0;
+            // Separate from the count: an empty container is a valid result,
+            // so the exit cannot key on `rows`.
+            let found = false;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || found) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.matches && el.matches(".urlbarView-results")) {
+                        rows = el.querySelectorAll(".urlbarView-row").length;
+                        found = true;
+                        return;
+                    }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (found) return; }
+                }
+            })(doc, 0);
+            return rows;
+        """)
+
+    def expect_no_results(self) -> BasePage:
+        """
+        Wait until the Smart Bar shows no autocomplete rows.
+
+        Separate from expect_results, which waits for *at least* a count and
+        so is trivially true at zero.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() == 0)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar still showed {self.get_result_count()} autocomplete "
+                "row(s) before any input"
+            ) from None
+        return self
+
+    def expect_results(self, minimum: int = 1) -> BasePage:
+        """
+        Wait until the Smart Bar shows at least `minimum` autocomplete rows.
+
+        Reports the count actually reached, matching expect_smart_bar_text.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar never reached {minimum} autocomplete row(s); "
+                f"last count {self.get_result_count()}"
+            ) from None
+        return self
+
     # ── Go / Ask action menu ─────────────────────────────────────────────
 
     def is_action_menu_open(self) -> bool:
