@@ -562,6 +562,25 @@ class Navigation(BasePage):
         self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
         return self
 
+    @BasePage.context_chrome
+    def wait_for_suggestions_complete(self, search_text: str) -> BasePage:
+        """Wait for the providers to finish the requested URL bar query."""
+        # Visible rows can belong to the previous query; await Firefox's completion signal.
+        self.expect(
+            lambda _: self.driver.execute_async_script(
+                """
+                const expected = arguments[0];
+                const done = arguments[arguments.length - 1];
+                gURLBar.lastQueryContextPromise.then(
+                    context => done(context?.searchString === expected),
+                    () => done(false)
+                );
+                """,
+                search_text,
+            )
+        )
+        return self
+
     def wait_for_suggestions_absent(self):
         """Wait for the suggestions list to disappear (for non-general engines)."""
         self.set_chrome_context()
