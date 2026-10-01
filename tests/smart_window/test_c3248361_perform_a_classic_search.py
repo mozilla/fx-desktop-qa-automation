@@ -25,21 +25,15 @@ def test_perform_a_classic_search(driver: Firefox, active_smart_window: SmartWin
     bar.open_smart_bar()
     bar.set_smart_bar_text(QUERY)
 
-    # Read which engine the build actually defaults to rather than assuming
-    # Google: a different locale, region or enterprise policy ships a
-    # different default, and hardcoding one fails there for no clear reason.
+    # Read the build's default rather than assuming Google: locale, region and
+    # policy all change it.
     bar.expect_default_search_engine()
     engine = bar.get_default_search_engine()
 
     bar.submit()
 
-    # Assert the navigation, not the page. The default engine may serve a bot
-    # interstitial under automation -- Google does -- but that URL still
-    # carries the search target and the query.
-    #
-    # First word of the engine name, lowercased, is the host token: "Google"
-    # -> google.com, "Wikipedia (en)" -> wikipedia.org, "DuckDuckGo" ->
-    # duckduckgo.com. Brand names, so not localised.
-    host_token = engine.split()[0].lower()
-    active_smart_window.expect_selected_tab_url_contains(host_token)
+    # Assert the navigation, not the page: the default engine may serve a bot
+    # interstitial, whose URL still carries the target and the query. First
+    # word of the engine name is the host token.
+    active_smart_window.expect_selected_tab_url_contains(engine.split()[0].lower())
     active_smart_window.expect_selected_tab_url_contains(QUERY)

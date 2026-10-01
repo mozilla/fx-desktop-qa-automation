@@ -1,7 +1,7 @@
 """
 C3321908 - Smart bar autocompletes domains
-Verify typing into the Smart Bar surfaces autocomplete results, and that
-picking the top one navigates to the domain.
+Verify typing into the Smart Bar surfaces autocomplete results, and that the
+domain resolves as a navigation.
 """
 
 import pytest
@@ -26,16 +26,9 @@ def test_smart_bar_autocompletes_domains(
     bar = SmartBar(driver)
     bar.open_smart_bar()
 
-    # Nothing typed yet, so there is nothing to autocomplete. Checking this
-    # first is what stops the assertion below passing on a view that was
-    # already populated -- and it waits rather than reading once, since a
-    # previous test's results may still be clearing.
     bar.expect_no_results()
-
     bar.set_smart_bar_text(DOMAIN)
     bar.expect_results(1)
 
-    # The domain resolves as a navigation rather than a search, which is the
-    # behaviour the case is about.
     bar.submit()
     active_smart_window.expect_selected_tab_url_contains(DOMAIN)
