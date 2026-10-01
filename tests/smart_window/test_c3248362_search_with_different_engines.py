@@ -10,8 +10,6 @@ from selenium.webdriver import Firefox
 from modules.browser_object import SmartBar, SmartWindow
 
 QUERY = "kangaroo"
-# Not the default: Bing is offered in every locale this runs in and, unlike
-# Google, serves the real search URL rather than a bot interstitial.
 ENGINE = "Bing"
 ENGINE_HOST = "bing.com"
 
