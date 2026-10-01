@@ -84,9 +84,7 @@ def test_language_packs_can_be_downloaded_from_about_addons(
     finally:
         amo_languages.cleanup_mock_file_picker()
     # Firefox makes an empty file first, so wait for it to fill up.
-    amo_languages.custom_wait(timeout=30).until(
-        lambda _: saved_xpi.exists() and saved_xpi.stat().st_size > 0
-    )
+    amo_languages.expect(lambda _: saved_xpi.exists() and saved_xpi.stat().st_size > 0)
 
     # Switch to the installed language from the Preferred language dropdown.
     about_prefs.open()
