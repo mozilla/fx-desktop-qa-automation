@@ -1491,6 +1491,10 @@ preferences:
     result: pass
     splits:
     - functional2
+  test_language_packs_can_be_downloaded_from_about_addons:
+    result: pass
+    splits:
+    - functional1
   test_languages_can_be_downloaded:
     result: pass
     splits:

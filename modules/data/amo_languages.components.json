@@ -44,6 +44,24 @@
       "location": "The large blue button on the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/"
     }
   },
+  "language-addons-subpage-download-file": {
+    "selectorData": "a.InstallButtonWrapper-download-link",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Download file\" link",
+      "location": "On each version card of the addon's \"See all versions\" page on addons.mozilla.org"
+    }
+  },
+  "language-addons-subpage-version-history": {
+    "selectorData": "a.AddonMoreInfo-version-history-link",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"See all versions\" link",
+      "location": "Version History section of the detailed addon page after being redirected from the search results on addons.mozilla.org/en-US/firefox/language-tools/"
+    }
+  },
   "language-addons-subpage-header": {
     "selectorData": "AddonTitle",
     "strategy": "class",
