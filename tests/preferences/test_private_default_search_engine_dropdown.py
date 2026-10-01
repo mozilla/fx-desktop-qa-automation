@@ -37,10 +37,9 @@ def check_private_engine(
 ):
     """Check the engine in the address bar, searchbar and page search box."""
     nav.verify_search_mode_is_visible(engine)
-    with nav.driver.context(nav.driver.CONTEXT_CHROME):
-        nav.element_attribute_contains(
-            "legacy-searchmode-switcher-button", "aria-label", engine
-        )
+    nav.element_attribute_contains(
+        "legacy-searchmode-switcher-button", "aria-label", engine
+    )
     private_page.element_attribute_contains(
         "search-handoff-button", "data-l10n-args", engine
     )
