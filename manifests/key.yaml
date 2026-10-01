@@ -866,6 +866,14 @@ networking:
     splits:
     - functional2
     - nightly
+  test_remove_a_website_from_doh_exceptions_list:
+    result: pass
+    splits:
+    - functional1
+  test_remove_all_websites_from_doh_exceptions_list:
+    result: pass
+    splits:
+    - functional1
   test_trr_excluded_domain_uses_os_dns:
     result: pass
     splits:
@@ -1476,11 +1484,7 @@ preferences:
     splits:
     - functional1
   test_lang_pack_changed_from_about_prefs:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076368
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
     - functional2
   test_languages_can_be_downloaded:
@@ -1539,6 +1543,10 @@ preferences:
     splits:
     - functional1
   test_removed_never_translate_sites_can_be_translated:
+    result: pass
+    splits:
+    - functional1
+  test_speed_up_translation_languages_work:
     result: pass
     splits:
     - functional1
@@ -1727,8 +1735,7 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:

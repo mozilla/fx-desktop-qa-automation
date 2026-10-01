@@ -16,6 +16,7 @@ from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
@@ -836,4 +837,44 @@ class AboutGlean(BasePage):
             )
         )
         self.get_element("ping-submit-button").click()
+        return self
+
+
+class AboutTranslations(BasePage):
+    """POM for about:translations"""
+
+    URL_TEMPLATE = "about:translations"
+
+    def select_language(self, picker: str, lang_code: str) -> "AboutTranslations":
+        """Pick a language in the source or target dropdown.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            picker: "source-select" or "target-select"
+            lang_code: The language code to pick (e.g. 'de')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(f"{picker}-inner").find_elements(
+                    By.TAG_NAME, "option"
+                )
+            )
+        )
+        Select(self.get_element(f"{picker}-inner")).select_by_value(lang_code)
+        self.element_attribute_is(picker, "value", lang_code)
+        return self
+
+    def translate_text(self, text: str, timeout: int) -> "AboutTranslations":
+        """Type text and wait until the translation shows up.
+
+        Args:
+            text: The text to translate
+            timeout: Seconds to wait for the translation
+        """
+        self.get_element("source-textarea").send_keys(text)
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_element("target-textarea").get_attribute("value")
+        )
         return self
