@@ -5,11 +5,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_adaptive_history_removal:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2076765
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional1
     - nightly

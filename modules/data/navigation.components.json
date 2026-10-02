@@ -391,6 +391,17 @@
       "location": "URL bar search results"
     }
   },
+  "suggestion-url-by-title": {
+    "selectorData": ".urlbarView-url[title*='{url}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "URL bar suggestion matching a URL in its title",
+      "location": "URL bar search results"
+    }
+  },
   "search-result": {
     "selectorData": "//div[@data-text-ad]//a",
     "strategy": "xpath",
