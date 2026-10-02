@@ -16,20 +16,20 @@ from tests.glean.utils import load_cases, skip_if_unstable
 
 data = load_cases(__file__)
 
-# Metrics read as labeled counters ({label: count}); everything else is an event payload.
+# Metrics read as labeled counters ({label: count}); everything else is an event payload
 LABELED_COUNTER_METRICS = {
     "browserEngagementNavigation.searchbar",
     "browserSearchContent.searchbar",
     "browserSearchWithads.searchbar",
 }
-# Metrics that only record when the SERP serves ads, so they need a commercial query.
+# Metrics that only record when the SERP serves ads, so they need a commercial query
 AD_METRICS = {
     "browserSearchWithads.searchbar",
     "serp.adImpression",
 }
-# Entries that pick their own engine in-flow, so no default-engine change is needed.
+# Entries that pick their own engine in-flow, so no default-engine change is needed
 IN_FLOW_ENGINE_ENTRIES = {"searchbar_search_form"}
-# Already the default engine, so selecting it in prefs is skipped.
+# Already the default engine, so selecting it in prefs is skipped
 DEFAULT_ENGINE = "Google"
 
 
