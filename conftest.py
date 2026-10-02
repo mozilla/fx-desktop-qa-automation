@@ -3,12 +3,13 @@ import logging
 import os
 import platform
 import re
+import time
 from pathlib import Path
 from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-# import psutil
+import psutil
 import pytest
 import requests
 from fxa.errors import Error as FxaError
@@ -310,6 +311,30 @@ def use_profile():
     yield False
 
 
+@pytest.fixture()
+def use_persistent_profile():
+    """
+    Override to True in a test whose Firefox state must survive a restart.
+
+    The normal path sets `options.profile`, which makes Selenium copy the
+    profile into a temp directory of its own -- so anything Firefox writes at
+    shutdown (session state, for one) is discarded with that copy. When this
+    is on, the directory is passed as a `-profile` argument instead and
+    Firefox uses it in place.
+    """
+    yield False
+
+
+@pytest.fixture()
+def persistent_profile_dir(tmp_path, use_persistent_profile):
+    """The profile directory shared across restarts, or None when unused."""
+    if not use_persistent_profile:
+        return None
+    path = Path(tmp_path) / "persistent_profile"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -385,8 +410,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-        import psutil
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -475,6 +498,7 @@ def driver(
     test_case: str,
     tmp_path: str,
     use_profile: str | bool,
+    persistent_profile_dir,
 ):
     """
     Return the webdriver object.
@@ -521,7 +545,11 @@ def driver(
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
-    if use_profile:
+    if persistent_profile_dir:
+        # -profile as an argument, not options.profile: the latter is copied.
+        options.add_argument("-profile")
+        options.add_argument(str(persistent_profile_dir))
+    elif use_profile:
         profile_path = tmp_path / use_profile
         unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
         options.profile = profile_path
@@ -532,6 +560,7 @@ def driver(
         options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
     for opt, value in prefs_list:
         options.set_preference(opt, value)
+    driver = None
     try:
         if geckodriver:
             service = Service(executable_path=geckodriver, service_args=service_args)
@@ -544,16 +573,7 @@ def driver(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        separator = "x"
-        if separator not in opt_window_size:
-            if "by" in opt_window_size:
-                separator = "by"
-            elif "," in opt_window_size:
-                separator = ","
-            elif " " in opt_window_size:
-                separator = " "
-        winsize = [int(s) for s in opt_window_size.split(separator)]
-        driver.set_window_size(*winsize)
+        driver.set_window_size(*_parse_window_size(opt_window_size))
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
@@ -578,8 +598,139 @@ def driver(
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
-            driver.quit()
+        # `driver` is None when Firefox() itself threw, and already-quit when
+        # restart_browser replaced it. Neither should turn a real failure into
+        # a confusing teardown error -- an unguarded quit() here raised
+        # UnboundLocalError and hid the actual WebDriverException.
+        if driver:
+            try:
+                driver.quit()
+            except Exception as exc:
+                logging.warning(f"driver teardown: {exc}")
+
+
+def _parse_window_size(opt_window_size: str) -> list[int]:
+    """Parse a window size like "1152x864", also accepting by / , / space."""
+    separator = "x"
+    if separator not in opt_window_size:
+        for alt in ("by", ",", " "):
+            if alt in opt_window_size:
+                separator = alt
+                break
+    return [int(part) for part in opt_window_size.split(separator)]
+
+
+def _driver_process_tree(driver) -> list[int]:
+    """PIDs behind a driver: its geckodriver, plus every Firefox child."""
+
+    proc = getattr(getattr(driver, "service", None), "process", None)
+    if proc is None:
+        return []
+    try:
+        parent = psutil.Process(proc.pid)
+        return [child.pid for child in parent.children(recursive=True)] + [proc.pid]
+    except psutil.Error:
+        return []
+
+
+def _wait_for_pids_to_exit(pids: list[int], timeout: int = 10) -> bool:
+    """Poll until none of `pids` is alive. Returns False if any outlive timeout."""
+
+    if not pids:
+        return True
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not any(psutil.pid_exists(pid) for pid in pids):
+            return True
+        time.sleep(0.2)
+    logging.warning(f"restart_browser: {pids} still alive after {timeout}s")
+    return False
+
+
+@pytest.fixture()
+def restart_browser(
+    fx_executable,
+    geckodriver,
+    prefs_list,
+    opt_headless,
+    opt_implicit_timeout,
+    opt_ci,
+    opt_window_size,
+    fxa_url,
+    persistent_profile_dir,
+):
+    """
+    Return a function that quits Firefox and relaunches it on the same profile.
+
+    Only usable with `use_persistent_profile` set to True -- without it the
+    profile is a throwaway copy and nothing written at shutdown survives.
+
+    The quit is what makes the restart meaningful: Firefox flushes session
+    state on the way out, so it has to close cleanly rather than be killed.
+
+    Note for callers: quitting invalidates the driver that *other* fixtures
+    are holding. An autouse fixture that talks to the driver in teardown will
+    hit a dead geckodriver -- fxa_waf_bypass does, so a restart test should
+    override fxa_env to None unless it actually needs FxA.
+    """
+    spawned = []
+
+    def _restart(driver: Firefox) -> Firefox:
+        if not persistent_profile_dir:
+            raise AssertionError(
+                "restart_browser requires a use_persistent_profile fixture "
+                "returning True; otherwise the profile is a discarded copy"
+            )
+        driver.quit()
+
+        # Mirror the driver fixture: same prefs, same FxA content server, same
+        # window size, same page-load guard. A relaunch that skips any of them
+        # is a different browser than the test started with.
+        options = Options()
+        options.binary_location = fx_executable
+        options.add_argument("-profile")
+        options.add_argument(str(persistent_profile_dir))
+        if opt_headless:
+            options.add_argument("--headless")
+        if fxa_url:
+            options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
+        for opt, value in prefs_list:
+            options.set_preference(opt, value)
+
+        service_args = ["--allow-system-access"]
+        service = (
+            Service(executable_path=geckodriver, service_args=service_args)
+            if geckodriver
+            else Service(service_args=service_args)
+        )
+        restarted = Firefox(service=service, options=options)
+        spawned.append(restarted)
+
+        restarted.set_window_size(*_parse_window_size(opt_window_size))
+        timeout = 30 if opt_ci else opt_implicit_timeout
+        restarted.implicitly_wait(timeout)
+        WebDriverWait(restarted, timeout=40).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        return restarted
+
+    yield _restart
+
+    for extra in spawned:
+        pids = _driver_process_tree(extra)
+        try:
+            extra.quit()
+        except Exception as exc:  # already gone, or never came up
+            logging.warning(f"restart_browser cleanup: {exc}")
+        _wait_for_pids_to_exit(pids)
+
+    if spawned:
+        # Processes exiting is necessary but not sufficient: the relaunched
+        # window is usually already gone by here, yet without a brief settle
+        # the next test's window still loses focus and the panel-menu tests
+        # time out (measured headed: 10/12 without, 12/12 with). Headless is
+        # unaffected, and CI runs headless, so this only costs local runs.
+        time.sleep(1)
 
 
 @pytest.fixture()
