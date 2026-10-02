@@ -173,6 +173,17 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine-toggle": {
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-toggle",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The on/off toggle on an engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
   "edit-search-engine-button": {
     "selectorData": "editEngine-{engine}",
     "strategy": "id",

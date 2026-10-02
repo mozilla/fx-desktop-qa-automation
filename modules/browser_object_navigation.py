@@ -564,8 +564,10 @@ class Navigation(BasePage):
 
     @BasePage.context_chrome
     def wait_for_suggestions_complete(self, search_text: str) -> BasePage:
-        """Wait for the providers to finish the requested URL bar query."""
-        # Visible rows can belong to the previous query; await Firefox's completion signal.
+        """
+        Wait for the providers to finish the requested URL bar query.
+        Visible rows can belong to the previous query; await Firefox's completion signal.
+        """
         self.expect(
             lambda _: self.driver.execute_async_script(
                 """
