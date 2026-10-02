@@ -13,15 +13,13 @@ tasks:
       using: run-task
       cwd: "{checkout}"
       command: |-
+        set -e
         export PATH=$HOME/.local/bin:$PWD:$PATH
-        git config user.name "dteautomation"
-        git config user.email "dte-automation@mozilla.com"
-        git fetch
-        git pull origin main --rebase
         pip3 install 'ruff==0.9.6' --break-system-packages;
         pip3 install 'uv==0.11.18' --break-system-packages;
         python3 -m ruff version;
         uv sync;
+        set +e
         uv run python -m scripts.manifest_lint;
         export EXIT_CODE=$?;
         python3 -m ruff format --check;
