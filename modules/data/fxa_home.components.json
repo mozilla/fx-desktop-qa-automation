@@ -120,6 +120,33 @@
       "location": "In the FxA signin page flow"
     }
   },
+  "cached-signin-submit": {
+    "selectorData": "[data-testid='cached-signin-submit']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Sign in button on the cached/returning-user sign-in screen",
+      "location": "In the FxA signin page flow"
+    }
+  },
+  "passwordless-code-input": {
+    "selectorData": "[data-testid='signin-passwordless-code-input-field']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "One-time code field for passwordless sign-up / sign-in",
+      "location": "In the FxA passwordless code screen"
+    }
+  },
+  "captcha-container": {
+    "selectorData": "captchaContainer",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Stage WAF 'Client Challenge' captcha, shown instead of FxA without the fxa-ci header",
+      "location": "In place of the FxA page"
+    }
+  },
   "manage-sync-button": {
     "selectorData": "signup_confirmed_sync_manage_sync_button",
     "strategy": "id",

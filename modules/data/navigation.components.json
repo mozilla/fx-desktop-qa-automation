@@ -756,6 +756,17 @@
       "location": "Appears from \"chrome area\" top of window"
     }
   },
+  "screen-sharing-notification": {
+    "selectorData": "webRTC-shareDevices-notification",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Media-sharing permission prompt used for screen capture",
+      "location": "Address bar permission popup"
+    }
+  },
   "popup-notification-primary-button": {
     "selectorData": "popup-notification-primary-button",
     "strategy": "class",
