@@ -5,6 +5,7 @@ from shutil import rmtree
 from zipfile import ZipFile
 
 import pytest
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 
 from modules.page_object import AboutProfiles
@@ -122,26 +123,32 @@ def test_set_default_profile(
         labels=["profiles-set-as-default"],
     ).click()
 
-    # Refetch data to ensure no stale elements
-    profiles = about_profiles.get_all_children("profile-container")
-    test_profile_rows = about_profiles.get_element(
-        "profile-container-item-table-row",
-        multiple=True,
-        parent_element=profiles[test_profile_idx],
-    )
-    default_profile_information = about_profiles.get_element(
-        "profile-container-item-table-row-value", parent_element=test_profile_rows[0]
-    )
+    # The profile list is rebuilt after the click, so refetch on every poll
+    def _test_profile_is_default(_) -> bool:
+        try:
+            profiles = about_profiles.get_all_children("profile-container")
+            test_profile_rows = about_profiles.get_element(
+                "profile-container-item-table-row",
+                multiple=True,
+                parent_element=profiles[test_profile_idx],
+            )
+            default_profile_information = about_profiles.get_element(
+                "profile-container-item-table-row-value",
+                parent_element=test_profile_rows[0],
+            )
+            return default_profile_information.get_attribute("innerHTML") == "yes"
+        except StaleElementReferenceException:
+            return False
 
-    about_profiles.wait.until(
-        lambda _: default_profile_information.get_attribute("innerHTML") == "yes"
-    )
+    about_profiles.wait.until(_test_profile_is_default)
     logging.info("Verified that test profile was set to the default.")
 
     # Set the previous default back to default
     if not opt_ci:
         logging.info(f"Preparing to set profile {cur_default} to the default.")
-        original_default = profiles[cur_default]
+        original_default = about_profiles.get_all_children("profile-container")[
+            cur_default
+        ]
         about_profiles.get_element(
             "profile-container-item-button",
             parent_element=original_default,
