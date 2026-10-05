@@ -43,6 +43,6 @@ def test_default_search_engine_dropdown(
     about_prefs.search_engine_dropdown().select_option(NEW_ENGINE)
     about_prefs.wait_for_default_search_engine(NEW_ENGINE)
 
-    # The unified search button names the new default in its l10n args.
+    # The unified search button names the new default.
     tabs.new_tab_by_button()
-    nav.element_attribute_contains("searchmode-switcher", "data-l10n-args", NEW_ENGINE)
+    nav.verify_search_mode_is_visible(NEW_ENGINE)

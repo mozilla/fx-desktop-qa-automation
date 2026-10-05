@@ -562,6 +562,27 @@ class Navigation(BasePage):
         self.expect(lambda _: len(self.get_elements("suggestion-titles")) >= at_least)
         return self
 
+    @BasePage.context_chrome
+    def wait_for_suggestions_complete(self, search_text: str) -> BasePage:
+        """
+        Wait for the providers to finish the requested URL bar query.
+        Visible rows can belong to the previous query; await Firefox's completion signal.
+        """
+        self.expect(
+            lambda _: self.driver.execute_async_script(
+                """
+                const expected = arguments[0];
+                const done = arguments[arguments.length - 1];
+                gURLBar.lastQueryContextPromise.then(
+                    context => done(context?.searchString === expected),
+                    () => done(false)
+                );
+                """,
+                search_text,
+            )
+        )
+        return self
+
     def wait_for_suggestions_absent(self):
         """Wait for the suggestions list to disappear (for non-general engines)."""
         self.set_chrome_context()
@@ -575,24 +596,26 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_visible(self, search_mode):
-        """Ensure the search mode is visible in URLbar"""
-        self.element_visible("searchmode-switcher")
+    def verify_search_mode_is_visible(self, search_mode: str) -> BasePage:
+        """Verify the selected or default engine on the URL bar switcher."""
+        self.element_visible("searchmode-switcher-button")
         self.element_attribute_contains(
-            "searchmode-switcher", "data-l10n-args", search_mode
+            "searchmode-switcher-button", "aria-label", search_mode
         )
         return self
 
     @BasePage.context_chrome
-    def verify_search_mode_is_not_visible(self, search_mode):
+    def verify_search_mode_is_not_visible(self, search_mode: str) -> BasePage:
         """Ensure the search mode is cleared from URLbar"""
-        self.element_visible("searchmode-switcher")
-        self.expect(
-            lambda _: (
-                search_mode
-                not in self.fetch("searchmode-switcher").get_attribute("data-l10n-args")
+        self.element_visible("searchmode-switcher-button")
+
+        def engine_changed(_):
+            label = self.get_element("searchmode-switcher-button").get_attribute(
+                "aria-label"
             )
-        )
+            return bool(label) and search_mode not in label
+
+        self.expect(engine_changed)
         return self
 
     @BasePage.context_chrome

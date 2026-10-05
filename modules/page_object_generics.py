@@ -447,10 +447,11 @@ class GenericPdf(BasePage):
         self.element_attribute_contains(tool, "class", "toggled")
         return self
 
-    def highlight_pdf_text(self) -> BasePage:
-        """Highlight text in the PDF using the editor tool."""
+    def highlight_pdf_text(self, text: WebElement | None = None) -> BasePage:
+        """Highlight the supplied text or the first rendered PDF text."""
         self.select_editor_tool("toolbar-highlight")
-        text = self.get_first_text_element()
+        if text is None:
+            text = self.get_first_text_element()
         width = int(text.size["width"])
         drag_distance = min(width // 3, 40)
         (

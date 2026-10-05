@@ -42,6 +42,8 @@ on:
         required: false
       BQ_PROJECT:
         required: false
+      CI_WAF_TOKEN:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -77,6 +79,7 @@ env:
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
 jobs:
   Test-Windows:

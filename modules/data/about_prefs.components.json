@@ -173,6 +173,17 @@
       "location": "about:preferences#search"
     }
   },
+  "search-shortcuts-engine-toggle": {
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-toggle",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The on/off toggle on an engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
   "edit-search-engine-button": {
     "selectorData": "editEngine-{engine}",
     "strategy": "id",
@@ -329,30 +340,14 @@
     "strategy": "id",
     "groups": []
   },
-  "search-shortcuts-group": {
-    "selectorData": "oneClickSearchProvidersGroup",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts table",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
-  "search-engine-list": {
-    "selectorData": "engineList",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts options list",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
   "remove-search-engine-button": {
-    "selectorData": "removeEngineButton",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-button[data-l10n-id='search-delete-engine']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "The Remove button under Search shortcuts tabel",
+      "description": "Delete button for a custom search engine, matched by its name",
       "location": "about:preferences#search Search Shortcuts subsection"
     }
   },
@@ -1385,6 +1380,15 @@
       "location": "about:preferences#languages - Spell check section"
     }
   },
+  "download-dictionaries-link": {
+    "selectorData": "downloadDictionaries",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Download dictionaries\" moz-box-link on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
   "offer-translations-checkbox": {
     "selectorData": "offerTranslations",
     "strategy": "id",
@@ -1979,7 +1983,9 @@
   "doh-exceptions-url-input": {
     "selectorData": "url",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Website address input field in the DoH exceptions dialog",
       "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
@@ -1988,9 +1994,33 @@
   "doh-exceptions-add-button": {
     "selectorData": "btnAddException",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "\"Add Exception\" button in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-remove-button": {
+    "selectorData": "removeException",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Remove\" button in the DoH exceptions dialog; removes the currently selected exception entry",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-remove-all-button": {
+    "selectorData": "removeAllExceptions",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Remove All\" button in the DoH exceptions dialog; removes every exception entry",
       "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
     }
   },

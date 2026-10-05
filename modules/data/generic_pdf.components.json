@@ -26,6 +26,13 @@
       "doNotCache"
     ]
   },
+  "pdf-text-containing": {
+    "selectorData": "//div[contains(@class, 'textLayer')]//span[contains(text(), '{text}')]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "html-body": {
     "selectorData": "html",
     "strategy": "tag",
@@ -273,6 +280,27 @@
       "doNotCache"
     ]
   },
+  "comment-indicator": {
+    "selectorData": "button[data-l10n-id='pdfjs-show-comment-button']:not(.hidden)",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-popup-text": {
+    "selectorData": "#commentPopup .commentPopupText",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-popup-edit": {
+    "selectorData": "#commentPopup .commentPopupEdit",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "comment-dialog": {
     "selectorData": "commentManagerDialog",
     "strategy": "id",
@@ -354,5 +382,14 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "required-field": {
+    "selectorData": "input[name='required']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The empty \"required\" text input field",
+      "location": "showcase.apryse.com/gallery/form.pdf page content"
+    }
   }
 }
