@@ -235,5 +235,22 @@
   "tests/security_and_privacy/test_trackers_cryptominers_fingerprinters_blocked.py": "Agree",
   "tests/security_and_privacy/test_tracking_content_custom_mode.py": "Agree",
   "tests/security_and_privacy/test_tracking_content_subpanel_display_when_not_blocked.py": "Agree",
-  "tests/security_and_privacy/test_tracking_elements_not_blocked_with_etp_disabled.py": "Agree"
+  "tests/security_and_privacy/test_tracking_elements_not_blocked_with_etp_disabled.py": "Agree",
+  "tests/session_restore/test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section.py": "Agree",
+  "tests/session_restore/test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar.py": "Agree",
+  "tests/session_restore/test_closed_tabs_from_multiple_windows_shown_in_library_menu.py": "No direct testing of library view for closed tab",
+  "tests/session_restore/test_restore_last_closed_tabs_shortcut.py": "Agree",
+  "tests/session_restore/test_restored_closed_tabs_removed_from_all_history_entries.py": "Agree",
+  "tests/sidebar/test_ai_chatbot_removed_from_sidebar_not_shown_in_tab_context_menu.py": "Unclear that tree test covers chatbot",
+  "tests/sidebar/test_choose_ai_chatbot_via_page_context_menu.py": "Agree",
+  "tests/sidebar/test_hide_sidebar_behaviour.py": "Agree",
+  "tests/sidebar/test_open_ai_chat_via_context_menu.py": "Agree",
+  "tests/sidebar/test_sidebar_enabled_in_private_window.py": "Agree",
+  "tests/sidebar/test_sidebar_expand_collapse_on_hover_unaffected_by_right_side_position.py": "Agree",
+  "tests/sidebar/test_summarize_page_via_ai_chat_panel.py": "Agree",
+  "tests/sidebar/test_summarize_page_via_sidebar_ai_chat_context_menu.py": "Agree",
+  "tests/sidebar/test_summarize_page_via_tab_context_menu.py": "Agree",
+  "tests/sidebar/test_switching_to_horizontal_tabs_disables_expand_on_hover.py": "Agree",
+  "tests/sidebar/test_toggle_sidebar_via_toolbar_button.py": "Agree",
+  "tests/sidebar/test_user_can_manage_pinned_extensions_on_the_sidebar.py": "Agree"
 }
