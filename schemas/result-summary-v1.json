@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mozilla.github.io/fx-desktop-qa-automation/schemas/result-summary-v1.json",
+  "title": "STARfox result summary v1",
+  "description": "Backend-neutral result of one STARfox run on one platform. Produced by scripts/build_result_bundle.py. See TESTING_AS_A_SERVICE.md.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "verdict",
+    "gate",
+    "run",
+    "build",
+    "selection",
+    "totals",
+    "failures",
+    "infra_errors"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Opaque caller-supplied correlation id, echoed back."
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "flaky",
+        "fail",
+        "infra_error"
+      ],
+      "description": "pass = all green. flaky = everything passed, some on retry. fail = at least one test failed outright. infra_error = the run itself broke, so results say nothing about the build."
+    },
+    "gate": {
+      "type": "object",
+      "required": [
+        "fail_on",
+        "failed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "fail_on": {
+          "type": "string",
+          "enum": [
+            "any-failure",
+            "non-flaky-failure",
+            "never"
+          ]
+        },
+        "failed": {
+          "type": "boolean",
+          "description": "Whether the verdict violates fail_on. This is what a caller should gate on."
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "url",
+        "backend"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "backend": {
+          "type": "string",
+          "description": "Execution backend, e.g. github-actions or taskcluster."
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "required": [
+        "channel",
+        "version",
+        "platform",
+        "machine_config",
+        "source_url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "windows",
+            "macos",
+            "linux"
+          ]
+        },
+        "machine_config": {
+          "type": "string",
+          "description": "OS name, major version and arch, e.g. 'MacOS 15 arm64'."
+        },
+        "source_url": {
+          "type": "string"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "required": [
+        "test_set",
+        "test_count",
+        "suites"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "test_set": {
+          "type": "string"
+        },
+        "test_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "suites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "passed",
+        "failed",
+        "error",
+        "skipped",
+        "xfailed",
+        "xpassed",
+        "flaky"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "xfailed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "xpassed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "flaky": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "nodeid",
+          "suite",
+          "outcome",
+          "flaky",
+          "message",
+          "duration_s"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "nodeid": {
+            "type": "string"
+          },
+          "suite": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "failed",
+              "error",
+              "flaky"
+            ]
+          },
+          "flaky": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "duration_s": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "infra_errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Non-empty means the run broke for reasons unrelated to the build under test."
+    }
+  }
+}
