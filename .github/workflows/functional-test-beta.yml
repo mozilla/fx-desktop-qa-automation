@@ -120,6 +120,7 @@ jobs:
     with:
       job_to_run: ${{ matrix.job_to_run }}
       test_set: ${{ matrix.split }}
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
