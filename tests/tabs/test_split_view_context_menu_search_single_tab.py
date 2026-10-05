@@ -26,7 +26,7 @@ def add_to_prefs_list():
 def test_split_view_context_menu_search_single_tab(driver: Firefox):
     """
     C3903432 - Verify that searches from a Split View created from the context
-    menu on a single tab open on the right side.
+    menu on a single tab open on the right side
     """
     tabs = TabBar(driver)
     context_menu = ContextMenu(driver)
