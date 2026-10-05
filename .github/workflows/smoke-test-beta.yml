@@ -81,6 +81,7 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
   Run-Mac-Smoke:
     needs: Check-Beta-Version
@@ -100,3 +101,4 @@ jobs:
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}

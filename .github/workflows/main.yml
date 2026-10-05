@@ -45,6 +45,8 @@ on:
         required: false
       BQ_PROJECT:
         required: false
+      CI_WAF_TOKEN:
+        required: false
 
   workflow_dispatch:
     inputs:
@@ -80,6 +82,7 @@ env:
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
 jobs:
   Test-Windows:
@@ -296,8 +299,8 @@ jobs:
           exit $env:TEST_EXIT_CODE
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
+        id: gcp_auth
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
@@ -311,7 +314,7 @@ jobs:
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -489,8 +492,8 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
+        id: gcp_auth
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
@@ -504,7 +507,7 @@ jobs:
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -621,8 +624,8 @@ jobs:
           exit $TEST_EXIT_CODE
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true }}
-        #continue-on-error: true
+        id: gcp_auth
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
@@ -636,7 +639,7 @@ jobs:
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci

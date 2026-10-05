@@ -1,5 +1,5 @@
 address_bar_and_search:
-  test_adaptive_history_autofill:
+  test_add_adaptive_history_autofill:
     result: pass
     splits:
     - functional1
@@ -9,7 +9,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_add_engine_address_bar:
+  test_add_search_engine_from_address_bar:
     result: pass
     splits:
     - smoke
@@ -19,7 +19,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_addon_suggestion:
+  test_addon_suggestion_based_on_search_input:
     result: pass
     splits:
     - functional1
@@ -52,7 +52,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_ctrl_enter_completes_link_and_can_refresh:
+  test_ctrl_enter_refreshes_tab:
     result: pass
     splits:
     - functional1
@@ -77,7 +77,7 @@ address_bar_and_search:
     result: unstable
     splits:
     - functional1
-  test_delete_history_entry_via_firefox_suggest_completion_list:
+  test_delete_history_from_url_bar_completion_list:
     result: pass
     splits:
     - functional1
@@ -86,7 +86,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_dont_show_search_suggestions_in_private_window:
+  test_no_search_engine_suggestions_in_private_window:
     result: pass
     splits:
     - functional1
@@ -96,7 +96,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_no_suggestions_for_empty_query:
+  test_suggestions_for_empty_query_not_shown_in_search_mode:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2033884
     result: unstable
     splits:
@@ -109,13 +109,11 @@ address_bar_and_search:
   test_open_link_in_new_container_tab:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_paste_and_go_opens_correct_url:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_refresh_firefox_dialog:
     result: pass
     splits:
@@ -149,7 +147,7 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
-  test_search_engine_selector:
+  test_search_engine_selector_and_validator:
     result: pass
     splits:
     - smoke
@@ -164,8 +162,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_mode_cleared_on_engine_removal:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043388
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_search_mode_exits_correctly:
@@ -188,18 +185,18 @@ address_bar_and_search:
     result: deprecated
     splits:
     - functional1
-  test_search_string_displayed_when_addressbar_unfocused:
+  test_address_bar_and_search_string_displayed_when_address_bar_unfocused:
     result: pass
     splits:
     - functional1
     - nightly
-  test_search_suggestions:
+  test_search_suggests_enabled:
     result: hanging
     splits:
     - smoke
     - ci-extended
     - exclude_nightly
-  test_search_suggestions_can_be_disabled:
+  test_search_suggestions_pref_affects_urlbar_and_search_bar:
     result: pass
     splits:
     - functional1
@@ -217,11 +214,11 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_server_not_found_error_pb:
+  test_server_not_found_error_on_private_window:
     result: pass
     splits:
     - functional1
-  test_suggestion_engine_selection:
+  test_search_suggestion_for_engine_selection:
     result: pass
     splits:
     - functional1
@@ -259,12 +256,11 @@ ai_controls:
   test_c3298824_block_all_persists:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_c3308998_unblock_restores_state:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_c3310314_features_remain_after_unblock:
     result: pass
     splits:
@@ -326,8 +322,7 @@ bookmarks_and_history:
   test_add_new_other_bookmark:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_bookmark_via_bookmark_menu:
     result: pass
     splits:
@@ -520,8 +515,7 @@ downloads:
   test_download_telemetry_recorded:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_install_unsigned_addons:
     result: pass
     splits:
@@ -582,8 +576,7 @@ find_toolbar:
   test_find_in_pdf:
     result: pass
     splits:
-    - functional1
-    - nightly
+    - smoke
   test_find_in_txt_file:
     result: pass
     splits:
@@ -701,8 +694,7 @@ form_autofill:
   test_private_mode_info_not_saved:
     result: pass
     splits:
-    - nightly
-    - functional1
+    - smoke
   test_telephone_autofill_attribute:
     result: pass
     splits:
@@ -800,8 +792,7 @@ menus:
   test_tab_context_menu_close:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
 meta:
   test_selectors:
     comment: Not part of feature functional test suites (no need for http link)
@@ -876,13 +867,24 @@ networking:
     splits:
     - functional2
     - nightly
+  test_remove_a_website_from_doh_exceptions_list:
+    result: pass
+    splits:
+    - functional1
+  test_remove_all_websites_from_doh_exceptions_list:
+    result: pass
+    splits:
+    - functional1
   test_trr_excluded_domain_uses_os_dns:
+    result: pass
+    splits:
+    - functional1
+  test_trr_mode_set_to_3:
     result: pass
     splits:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
     result: pass
     splits:
     - functional2
@@ -900,8 +902,7 @@ notifications:
   test_deny_geolocation:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_deny_screen_capture:
     result: pass
     splits:
@@ -948,8 +949,7 @@ password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_about_logins_direct_navigation:
     result: pass
     splits:
@@ -1013,8 +1013,7 @@ password_manager:
   test_add_password_non_ascii_chars:
     result: pass
     splits:
-    - functional2
-    - nightly
+    - smoke
   test_add_password_save_valid_data:
     result: pass
     splits:
@@ -1043,11 +1042,7 @@ password_manager:
     - functional2
     - nightly
   test_changes_made_in_edit_mode_are_saved:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2068682
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
     - functional2
     - nightly
@@ -1289,6 +1284,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_highlight_comment_can_be_added:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_input_numbers:
     result: pass
     splits:
@@ -1303,6 +1303,11 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_paragraph_comment_can_be_edited:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_prefilled_input_data:
     result: pass
     splits:
@@ -1387,7 +1392,7 @@ preferences:
   test_add_search_engine_option:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_always_translate_languages_can_be_added:
     result: pass
     splits:
@@ -1433,11 +1438,19 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_dictionaries_can_be_downloaded:
+    result: pass
+    splits:
+    - functional1
   test_downloaded_languages_can_be_deleted:
     result: pass
     splits:
     - functional1
   test_edit_installed_engines:
+    result: pass
+    splits:
+    - functional1
+  test_engines_toggle_with_keyboard:
     result: pass
     splits:
     - functional1
@@ -1497,6 +1510,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_never_translate_sites_are_not_translated:
+    result: pass
+    splits:
+    - functional1
   test_notifications_change_set:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2047906
     result: unstable
@@ -1521,7 +1538,7 @@ preferences:
   test_preferred_language_can_be_changed:
     result: pass
     splits:
-    - functional1
+    - smoke
   test_preferred_language_can_be_deleted:
     result: pass
     splits:
@@ -1530,7 +1547,15 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_speed_up_translation_languages_work:
+    result: pass
+    splits:
+    - functional1
   test_spell_check_learn_more_link:
+    result: pass
+    splits:
+    - functional1
+  test_spell_check_recognises_existing_dictionaries:
     result: pass
     splits:
     - functional1
@@ -1605,7 +1630,7 @@ scrolling_panning_zooming:
     splits:
     - smoke
   test_mouse_wheel_zoom:
-    comment: Mac cannot be supported
+    comment: Mac cannot be supported.
     result:
       linux: pass
       mac: unsupported
@@ -1707,8 +1732,7 @@ security_and_privacy:
     splits:
     - functional3
   test_cross_site_tracking_cookies_displayed_subpanel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2071786
-    result: unstable
+    result: pass
     splits:
     - functional3
   test_cryptominers_blocked_and_shown_in_info_panel:
@@ -2137,6 +2161,10 @@ sidebar:
     splits:
     - smoke
 smart_window:
+  test_c3240165_smart_window_onboarding_flow:
+    result: pass
+    splits:
+    - functional1
   test_c3248785_switch_to_smart_window_prompts_signin:
     result: pass
     splits:
@@ -2174,6 +2202,14 @@ smart_window:
     splits:
     - functional1
   test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - functional1
+  test_c3371305_smart_window_onboarding_new_account:
+    result: pass
+    splits:
+    - functional1
+  test_c3392590_smart_window_captcha_bypass:
     result: pass
     splits:
     - functional1
@@ -2338,8 +2374,7 @@ tabs:
   test_reopen_tabs_through_keys:
     result: pass
     splits:
-    - functional3
-    - nightly
+    - smoke
   test_restore_closed_tabs_previous_groups:
     result: pass
     splits:
