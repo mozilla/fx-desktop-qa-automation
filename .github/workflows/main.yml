@@ -631,11 +631,11 @@ jobs:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload JSON to GCS Bucket
-        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
+        if: ${{ always() && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
         uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         with:
           path: artifacts-linux
-          destination: 'fx-dte/artifacts/${{ github.run_id }}/'
+          destination: 'fx-dte/artifacts/${{ github.run_id }}/linux/'
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
