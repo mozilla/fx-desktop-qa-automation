@@ -5,6 +5,11 @@
 **Date:** 2026-10-05
 **Branch:** `arash/fx-dte-as-a-service`
 
+> This is the engineering design. For the stakeholder-facing proposal — what we
+> are doing, current status, and the decisions still open — see
+> [STARfox-as-a-service.md](STARfox-as-a-service.md). For consumer instructions,
+> see [SERVICE.md](SERVICE.md).
+
 ---
 
 ## 1. Summary
