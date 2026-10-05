@@ -11,8 +11,12 @@ on:
         type: string
         required: false
       job_to_run:
-        required: true
+        # Optional since the service facade selects platforms purely by which
+        # installer links it passes. Existing internal callers still set it.
+        description: "Test-Windows | Test-MacOS. Leave empty to select by installer link."
+        required: false
         type: string
+        default: ''
       is_pull_request:
         description: "Is this a PR?"
         default: false
@@ -27,6 +31,30 @@ on:
         required: false
         type: boolean
         default: false
+      # --- Bring-your-own-build (see TESTING_AS_A_SERVICE.md) ---
+      # These also exist on workflow_dispatch below. They must be declared here
+      # too, otherwise a workflow_call caller passing them is rejected with
+      # "Invalid input" and the whole BYOB path is unreachable.
+      firefox_version:
+        description: "Firefox version metadata for the supplied build"
+        required: false
+        type: string
+        default: ''
+      win_installer_link:
+        description: "URL of the Windows installer (win64) for the Fx under test"
+        required: false
+        type: string
+        default: ''
+      mac_installer_link:
+        description: "URL of the macOS installer for the Fx under test"
+        required: false
+        type: string
+        default: ''
+      linux_tarball_link:
+        description: "URL of the Linux tarball (linux-x86_64) for the Fx under test"
+        required: false
+        type: string
+        default: ''
       # --- Result contract (see TESTING_AS_A_SERVICE.md) ---
       # Defaults to 'never' so scheduled QA runs keep their current semantics:
       # the pytest exit code decides, and the gate is informational only. The
@@ -56,6 +84,16 @@ on:
         required: false
         type: string
         default: ''
+    outputs:
+      windows_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Test-Windows.outputs.verdict }}
+      macos_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Test-MacOS.outputs.verdict }}
+      linux_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Smoke-Linux.outputs.verdict }}
     secrets:
       TESTRAIL_BASE_URL:
         required: false
@@ -119,6 +157,9 @@ jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
@@ -408,6 +449,9 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-26
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
@@ -624,6 +668,9 @@ jobs:
   Smoke-Linux:
     if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
@@ -787,7 +834,7 @@ jobs:
     # otherwise skip this job too. Missing artifacts are tolerated below.
     # NB: the Slack-credential guard lives on the notify step, not here -- the
     # `env` context is not available in a job-level `if`.
-    if: ${{ !cancelled() && github.event_name != 'workflow_dispatch' }}
+    if: ${{ !cancelled() && github.event_name != 'workflow_dispatch' && inputs.request_id == '' }}
     runs-on: ubuntu-latest
     needs:
       - Test-Windows

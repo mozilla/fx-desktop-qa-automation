@@ -62,7 +62,7 @@ An honest inventory, because the gap is smaller than it looks.
 | Capability | Where | Notes |
 |---|---|---|
 | Reusable workflow with `workflow_call` | `.github/workflows/main.yml:6` | Already the right shape for a service API |
-| Accepts arbitrary build URLs for all 3 platforms | `main.yml:55-66` (`win_installer_link`, `mac_installer_link`, `linux_tarball_link`) | This *is* BYOB — it exists today |
+| Accepts arbitrary build URLs for all 3 platforms | `main.yml` (`win_installer_link`, `mac_installer_link`, `linux_tarball_link`) | The download/install machinery exists. **Correction:** these were originally declared on `workflow_dispatch` *only*, so a `workflow_call` caller passing them was rejected with "Invalid input". Fixed in Phase 2 by declaring them on `workflow_call` too — until then the BYOB path was unreachable from another repo. |
 | Linux job already gated on BYOB input | `main.yml:509-510` (`Smoke-Linux`, `if: inputs.linux_tarball_link`) | Linux coverage comes free with BYOB |
 | Candidate-build resolution from archive.mozilla.org | `.github/workflows/run-firefox-candidate.yml` | A working self-serve façade; validates version, finds latest `buildN`, dispatches |
 | Test selection vocabulary | `manifests/key.yaml` + `scripts/choose_test_split.py` | Splits: `smoke` (72), `functional1/2/3` (183/112/119), `nightly` (263), `ci` (10), `ci-extended` (11), `glean` (5) |
@@ -124,8 +124,10 @@ The consumer adds ~10 lines to their own repo:
 ```yaml
 jobs:
   fx-smoke:
-    uses: mozilla/fx-desktop-qa-automation/.github/workflows/fx-test-request.yml@v1
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main.yml@main
     with:
+      starfox_repository: mozilla/fx-desktop-qa-automation
+      starfox_ref: main
       win_installer_link: ${{ needs.build.outputs.win_url }}
       test_set: smoke
       fail_on: non-flaky-failure
@@ -233,15 +235,17 @@ New script: **`scripts/build_result_bundle.py`** — reads `artifacts/report.jso
 
 ```yaml
   smoke:
-    uses: mozilla/fx-desktop-qa-automation/.github/workflows/fx-test-request.yml@v1
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main.yml@main
     with:
-      firefox_version: ${{ inputs.candidate }}
+      starfox_repository: mozilla/fx-desktop-qa-automation
+      starfox_ref: main
+      win_installer_link: ${{ needs.resolve.outputs.win_url }}
       channel: rc
       fail_on: non-flaky-failure
       request_id: release-${{ inputs.candidate }}
   gate:
     needs: smoke
-    if: needs.smoke.outputs.verdict != 'pass'
+    if: needs.smoke.outputs.windows_verdict != 'pass'
     runs-on: ubuntu-latest
     steps: [{ run: 'echo "Smoke failed — blocking ship"; exit 1' }]
 ```
@@ -300,16 +304,52 @@ Implementation notes worth a reviewer's attention:
 - A merge conflict between the headless and headed reports resolves to the *worse* outcome, so merging can never hide a failure.
 - **A request schema was added beyond the original plan** (`schemas/test-request-v1.json`). The request previously existed only as workflow YAML inputs, which welds the contract to GitHub. Defining it as a backend-neutral document is what lets the execution plane move to Taskcluster later without consumers noticing — see §11.
 
-### Phase 2 — The front door (~1 week). Makes it a service.
+### Phase 2 — The front door. ✅ **Implemented** (except 2.4). Makes it a service.
 
-| # | Change |
-|---|---|
-| 2.1 | `.github/workflows/fx-test-request.yml` with the §6.2 input contract + validation |
-| 2.2 | Fold `run-firefox-candidate.yml`'s resolution logic in behind `firefox_version` |
-| 2.3 | `platforms` input → conditional job selection |
-| 2.4 | Cut a `v1` git tag and a release; document the pinning policy (**F2**) |
-| 2.5 | `SERVICE.md` — consumer-facing docs with copy-paste snippets for both models |
-| 2.6 | `repository_dispatch` support for Model B |
+| # | Change | How |
+|---|---|---|
+| 2.1 | Façade workflow | `.github/workflows/fx-test-request.yml`, with the §6.2 contract on all three triggers. A `Resolve` job validates before any runner minutes are spent. |
+| 2.2 | Candidate resolution | `scripts/resolve_test_request.py` replaces the inline bash in `run-firefox-candidate.yml`, now unit-tested (30 tests). |
+| 2.3 | `platforms` filtering | Implemented **by omission**: `main.yml` starts a platform job only when that platform's link is non-empty, so dropping a URL drops the job. No change to `main.yml`'s job conditions was needed. |
+| 2.4 | `v1` tag + release | ⬜ **Not done.** Policy is written up in `SERVICE.md`; cutting and pushing the tag is deliberately left until after review. |
+| 2.5 | Consumer docs | `SERVICE.md`. |
+| 2.6 | `repository_dispatch` | Supported as event type `fx-test-request`, reading `client_payload`. Not subject to the 10-input limit. |
+
+Supporting changes to `main.yml`:
+
+- **The BYOB inputs were declared on `workflow_dispatch` only.** `win_installer_link`,
+  `mac_installer_link`, `linux_tarball_link` and `firefox_version` are now on
+  `workflow_call` as well. This was a latent blocker: Phase 0's analysis (§4) took
+  their presence as proof that BYOB already worked, but a cross-repo `uses:` caller
+  passing them would have been rejected with "Invalid input". Model A did not
+  actually function until this landed.
+- `windows_verdict` / `macos_verdict` / `linux_verdict` exposed as `workflow_call`
+  outputs — there was previously no way for a caller to read a result at all.
+- `job_to_run` became optional, since the façade selects platforms purely by which
+  installer links it passes.
+
+**The constraint that shaped this phase: expressions are not permitted in `uses:`.**
+A nested reusable workflow therefore cannot forward a dynamic ref, so a cross-repo
+caller pinning `fx-test-request.yml@v1` would still get whatever `main.yml` the
+façade hardcodes — silently breaking the pin. The resolution:
+
+- **Model A (cross-repo) calls `main.yml` directly** with `starfox_repository` /
+  `starfox_ref`. The pin is honest. The cost is skipping the façade's validation,
+  which `SERVICE.md` states plainly.
+- **Model B (dispatch) goes through the façade**, which runs inside this repo where
+  the relative `uses:` resolves correctly.
+
+This is worth knowing before anyone tries to "simplify" by routing Model A through
+the façade.
+
+**Two tenancy decisions made during implementation:**
+
+- The façade does **not** use `secrets: inherit`. That would hand a tenant-triggered
+  run our BigQuery and Slack credentials, making `HAS_BQ_CREDS` true and pushing
+  tenant results into QA's `fx_qa_ci` table. Only `CI_WAF_TOKEN` is passed, which the
+  FxA tests need.
+- `Use-Artifacts` (the Slack notifier) is skipped whenever `request_id` is set, so
+  service requests never notify the QA channel.
 
 ### Phase 3 — Operability (ongoing). Makes it sustainable.
 
