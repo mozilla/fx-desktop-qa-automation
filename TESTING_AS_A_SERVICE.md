@@ -22,7 +22,14 @@ and get an answer without talking to a human, without a TestRail account, and wi
 
 **Scope is deliberately one mode: bring-your-own-build (BYOB).** Consumers run *our existing suites* against *their build*. They do not contribute tests, and they do not vendor the framework. Those are separate conversations (§10).
 
-The headline finding of the investigation behind this RFC: **most of the machinery already exists.** `main.yml` is already a reusable workflow that accepts installer URLs for all three platforms and already produces HTML + JSON reports. What's missing is not capability — it's a **contract**: a stable entrypoint, a stable result format, and a defined failure/triage policy.
+The headline finding of the investigation behind this RFC: **most of the machinery already exists.** `main.yml` already installs an arbitrary Firefox build on all three platforms and produces HTML + JSON reports. What's missing is not capability — it's a **contract**: a stable entrypoint, a stable result format, and a defined failure/triage policy.
+
+**Revision note (§11).** This RFC was first written assuming the service would be
+served from GitHub Actions, because that is where STARfox's own Windows and macOS CI
+runs. That assumption does not hold: our consumers work in the tree on **Taskcluster**,
+and cannot reach a GitHub-Actions-only service. The contract work in Phases 0–2 is
+backend-neutral and carries over, but the intended execution plane is now Taskcluster
+(Phase 4). Read §11 before §6.
 
 ---
 
@@ -122,7 +129,15 @@ GitHub allows a public repo's reusable workflow to be called from another repo (
 
 ### 6.1 Two delivery models — ship both, in order
 
-**Model A — Reusable workflow (`uses:`). Recommended first.**
+> **Superseded in part by §11.** Both models below are GitHub Actions models, and
+> Model A requires the *consumer* to be on GitHub Actions. Our consumers are in the
+> tree, on Taskcluster, so **Model A does not reach the audience this service exists
+> for.** It remains valid for Mozilla consumers that are on GitHub Actions, and Model B
+> remains usable from a Taskcluster task via the REST API. The intended primary path is
+> now the Taskcluster-native service in §11 / Phase 4. This section is kept because it
+> describes what was built and why.
+
+**Model A — Reusable workflow (`uses:`). Recommended for GitHub Actions consumers.**
 
 The consumer adds ~10 lines to their own repo:
 
@@ -145,7 +160,9 @@ jobs:
 | Artifacts land in the caller's run | They already have the retention and access policy they want. |
 | Requires fixing **B1** | ~4 lines of YAML. |
 
-This is the highest-leverage change in the whole RFC: it turns a cost-and-access problem into a non-problem. It requires the repo to be public, which it appears to be (mozilla org, MPL `LICENSE`, unauthenticated clone URL) — *verify before relying on it.*
+It requires the repo to be public, which it appears to be (mozilla org, MPL `LICENSE`, unauthenticated clone URL) — *verify before relying on it.*
+
+*An earlier revision called this "the highest-leverage change in the whole RFC." That judgement assumed consumers could call a GitHub workflow. They cannot — see §11.*
 
 **Model B — Hosted dispatch.** For consumers with no CI of their own (an engineer who just wants an answer) and for the `run-firefox-candidate.yml`-style convenience path. They `workflow_dispatch` (or `repository_dispatch`) into our repo; we run it on our runners; they fetch artifacts via the GitHub API.
 
@@ -356,6 +373,28 @@ the façade.
 - `Use-Artifacts` (the Slack notifier) is skipped whenever `request_id` is set, so
   service requests never notify the QA channel.
 
+### Phase 4 — Taskcluster execution plane. ⬜ **Not started.** Makes it reachable.
+
+Reprioritised above Phase 3 once it became clear that consumers are in the tree, on
+Taskcluster, and therefore cannot reach a GitHub-Actions-only service (§11).
+
+| # | Change | Notes |
+|---|---|---|
+| 4.1 | Windows + macOS worker aliases in `taskcluster/config.yml` | **Blocked** on RelEng/Taskcluster granting capacity and scopes. Longest lead time — start this conversation first |
+| 4.2 | A hook whose `triggerSchema` is the request contract | Returns `taskId` synchronously |
+| 4.3 | Parameterised decision task accepting a build URL | Nothing today does: every `.cron.yml` job uses a fixed `target-tasks-method` |
+| 4.4 | A `byob` kind + transform producing one task per requested platform | Mirrors `kinds/run-smoke-tests/` |
+| 4.5 | `public/results/summary.json` artifact + index routes keyed by request id | Reuses the existing `public/results` artifact path |
+| 4.6 | Taskcluster-side consumer docs in `SERVICE.md` | |
+
+**Linux first.** 4.2–4.6 deliver a complete end-to-end service on the existing
+`t-linux-wayland` pool without waiting on 4.1, so the contract can be piloted while
+the worker-pool conversation proceeds.
+
+Everything built in Phases 0–2 except the GitHub façade itself carries over unchanged:
+`build_result_bundle.py` and `resolve_test_request.py` are pure Python over pytest
+output, and both schemas are backend-neutral.
+
 ### Phase 3 — Operability (ongoing). Makes it sustainable.
 
 | # | Change |
@@ -414,16 +453,26 @@ file is not an API.** Phases 0–2 produce a request contract, a result contract
 neutral artifacts. Those are the durable assets and they survive a backend change.
 The failure mode is mistaking the façade workflow for the service.
 
-### What actually decides this: the macOS fleet
+### Correction: the macOS-fleet argument does not apply here
 
-Firefox desktop tests need real GUI desktop OSes. Apple licensing requires macOS on
-Apple hardware, so a genuine cloud service means owning or renting a Mac fleet
-(MacStadium; EC2 Mac, with its 24-hour minimum dedicated-host allocation). That is
-the entire reason commercial device clouds cost what they do.
+An earlier revision of this section argued that Firefox desktop tests need real GUI
+desktop OSes, that Apple licensing forces macOS onto Apple hardware, and that GitHub
+Actions therefore supplies a fleet we would otherwise have to rent — making a move off
+Actions the expensive decision.
 
-GitHub Actions supplies that fleet for a 10× minutes multiplier and zero ops. **This,
-not the elegance of the control plane, is the expensive decision in the whole design.**
-Stay on Actions until something forces us off.
+**That reasoning was wrong in this context.** `taskcluster/config.yml` sets
+`trust-domain: mozilla`, and the notification blocks point at
+`firefox-ci-tc.services.mozilla.com`: STARfox already runs on the Firefox CI
+Taskcluster deployment, the same one where Firefox's own macOS tests run. Mozilla
+already owns that fleet. Moving execution to Taskcluster costs worker-pool capacity
+and taskgraph work — not hardware.
+
+### What actually decides this: where the consumers are
+
+Our consumers are development teams and RelEng, and **the tree is in Taskcluster**. A
+Taskcluster-based consumer cannot call a GitHub reusable workflow at all, which makes
+Model A (§6.1) unusable for exactly the audience this service exists to serve. That
+is the deciding constraint, and it is not a scale problem — it applies on day one.
 
 ### Where GitHub Actions genuinely breaks as a service backend
 
@@ -462,12 +511,42 @@ Keeping the execution plane swappable is precisely why `summary.json` carries a
 `run.backend` field and why the request contract is published as a schema rather than
 living only in workflow YAML.
 
+### The Taskcluster shape
+
+A **triggerable service in STARfox's own taskgraph** — no mozilla-central changes, and
+a clean ownership boundary:
+
+| Concern | Taskcluster primitive |
+|---|---|
+| Request intake | A **hook**, whose `triggerSchema` is `schemas/test-request-v1.json` more or less verbatim |
+| Correlation | `hooks.triggerHook` returns the `taskId` **synchronously** — this is the single ugliest GitHub limitation, gone |
+| Graph generation | The hook spawns a parameterised **decision task**, the same mechanism `.cron.yml` already uses, producing one test task per requested platform |
+| Authorization | Per-consumer **scopes** on the hook (`hooks:trigger-hook:...`). The repo already relies on scopes for secrets |
+| Quota / priority | Worker pools and `task-priority` |
+| Results | `public/results/summary.json` + `junit.xml` as artifacts, already served from `firefoxci.taskcluster-artifacts.net`, plus **index routes** so a run is findable by request id |
+
+Note what this does *not* require: a new control plane. Taskcluster is the control
+plane. A bespoke HTTP service in front of it would need a specific justification that
+we do not currently have.
+
 ### Decision criteria
 
-Let evidence decide, not architecture taste:
+The question is no longer *whether* to move the execution plane, but how far to take
+the surface around it. Three tiers, framed for stakeholders in
+[STARfox-as-a-service.md](STARfox-as-a-service.md):
 
-- **A few teams, a handful of runs a day** → Model A on Actions is correct permanently; a cloud service would be waste.
-- **Dozens of teams needing quota, chargeback and a synchronous API** → move the execution plane to Taskcluster. Because the contracts are versioned and backend-neutral, consumers should not need to change anything.
+- **Tier 1 — Taskcluster-native service.** Hook, worker pools, artifacts. Nothing new
+  to operate. Delivers everything originally asked for. **Recommended.**
+- **Tier 2 — plus a client.** A CLI that triggers, waits and prints the verdict. Pure
+  UX, no new capability, but probably the difference between adoption and shelfware.
+- **Tier 3 — a managed service with its own control plane.** Months to build, a
+  headcount to operate, and mostly duplicates what Tier 1 already provides.
+
+**Critical-path dependency:** Windows and macOS worker pools. `config.yml` defines only
+`b-linux`, `images` and `t-linux-wayland`. Until capacity and scopes are granted, a
+Taskcluster-native service is Linux-only and the other two platforms must stay on
+GitHub Actions — which is the hybrid the `run.backend` field in the result contract was
+designed to accommodate.
 
 ---
 

@@ -8,6 +8,14 @@ You do **not** need a TestRail account, Mozilla QA credentials, or any knowledge
 how the tests are written. You give us a build; you get back JUnit XML and a
 versioned `summary.json`.
 
+> **Are you working in the tree, on Taskcluster?** This page documents the **GitHub
+> Actions** path, which requires your CI to be GitHub Actions too. A Taskcluster-native
+> entry point — a hook you trigger with a build URL, returning a `taskId` — is proposed
+> but **not yet built**; see
+> [STARfox-as-a-service.md](STARfox-as-a-service.md). Until it lands, in-tree consumers
+> have two options: trigger our GitHub workflow over the REST API from a Taskcluster
+> task (Model B below), or talk to Desktop Test Engineering.
+
 > Designing or changing the service? See [TESTING_AS_A_SERVICE.md](TESTING_AS_A_SERVICE.md).
 
 ---
@@ -19,11 +27,15 @@ versioned `summary.json`.
 | How | `uses:` our workflow from your repo | Actions UI, or a REST API call |
 | Runs on | **your** runners, your minutes | our runners |
 | Results land in | your workflow run | our run; you fetch via API |
-| Needs | a GitHub Actions workflow | nothing, or a token for the API |
+| Needs | a GitHub Actions workflow (**not** available to Taskcluster consumers) | nothing, or a token for the API |
 | Best for | RelEng pipelines, teams with CI | ad-hoc checks, "just tell me if it's broken" |
 
-**Model A is recommended** where you have CI. It costs us nothing, costs you only
-runner minutes you already control, and no secrets cross the boundary.
+**Model A is recommended if your CI is GitHub Actions.** It costs us nothing, costs
+you only runner minutes you already control, and no secrets cross the boundary.
+
+**If your CI is Taskcluster, Model A is not available to you** — a Taskcluster task
+cannot invoke a GitHub reusable workflow. Use Model B's REST call from a task, and
+see the proposal for the Taskcluster-native path.
 
 ---
 
