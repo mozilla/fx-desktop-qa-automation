@@ -32,8 +32,10 @@ def _assert_text_areas(pdf_viewer: GenericPdf, expected_count: int) -> None:
     pdf_viewer.wait_for_pdf_text_area_count(expected_count)
     expected_values = [TEXT_TO_ADD] * expected_count
     pdf_viewer.expect(
-        lambda _: [element.text for element in pdf_viewer.get_elements("added-text")]
-        == expected_values
+        lambda _: (
+            [element.text for element in pdf_viewer.get_elements("added-text")]
+            == expected_values
+        )
     )
     text_values = [element.text for element in pdf_viewer.get_elements("added-text")]
     assert text_values == expected_values, (

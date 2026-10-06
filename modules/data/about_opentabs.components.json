@@ -1,0 +1,73 @@
+{
+  "do-not-cache": true,
+  "opentabs-root": {
+    "selectorData": "splitview-opentabs",
+    "strategy": "css",
+    "groups": [
+      "requiredForPage"
+    ],
+    "comment": {
+      "description": "Root custom element of about:opentabs, the tab picker Firefox loads into a new Split View",
+      "location": "about:opentabs"
+    }
+  },
+  "opentabs-heading": {
+    "selectorData": "h3",
+    "strategy": "css",
+    "shadowParent": "opentabs-root",
+    "groups": [],
+    "comment": {
+      "description": "The 'Choose a tab to add to split view' heading",
+      "location": "Shadow DOM of splitview-opentabs"
+    }
+  },
+  "opentabs-search-box": {
+    "selectorData": "moz-input-search",
+    "strategy": "css",
+    "shadowParent": "opentabs-root",
+    "groups": [],
+    "comment": {
+      "description": "The Search tabs box. Its own shadow root holds the text input",
+      "location": "Shadow DOM of splitview-opentabs"
+    }
+  },
+  "opentabs-search-input": {
+    "selectorData": "input[type='search']",
+    "strategy": "css",
+    "shadowParent": "opentabs-search-box",
+    "groups": [],
+    "comment": {
+      "description": "Text input of the Search tabs box. Debounces before the list is filtered",
+      "location": "Shadow DOM of moz-input-search"
+    }
+  },
+  "opentabs-tab-list": {
+    "selectorData": "sidebar-tab-list",
+    "strategy": "css",
+    "shadowParent": "opentabs-root",
+    "groups": [],
+    "comment": {
+      "description": "List of the open tabs that can be added to the Split View",
+      "location": "Shadow DOM of splitview-opentabs"
+    }
+  },
+  "opentabs-tab-row": {
+    "selectorData": "sidebar-tab-row",
+    "strategy": "css",
+    "shadowParent": "opentabs-tab-list",
+    "groups": [],
+    "comment": {
+      "description": "One tab entry in the list. Only rows matching the search query are rendered",
+      "location": "Shadow DOM of sidebar-tab-list"
+    }
+  },
+  "opentabs-tab-row-link": {
+    "selectorData": "a.fxview-tab-row-main",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Clickable link inside a tab row, holding the tab title and URL. Declared without a shadowParent because it is resolved against the shadow root of one specific row",
+      "location": "Shadow DOM of sidebar-tab-row"
+    }
+  }
+}

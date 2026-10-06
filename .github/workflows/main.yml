@@ -31,6 +31,7 @@ on:
         required: false
         type: boolean
         default: false
+
       # --- Bring-your-own-build (see TESTING_AS_A_SERVICE.md) ---
       # These also exist on workflow_dispatch below. They must be declared here
       # too, otherwise a workflow_call caller passing them is rejected with
@@ -94,6 +95,9 @@ on:
       linux_verdict:
         description: "pass | flaky | fail | infra_error (empty if the job did not run)"
         value: ${{ jobs.Smoke-Linux.outputs.verdict }}
+      trigger_event:
+        required: false
+        type: string
     secrets:
       TESTRAIL_BASE_URL:
         required: false
@@ -372,9 +376,6 @@ jobs:
           }
           exit $env:TEST_EXIT_CODE
 
-
-
-
       # --- Neutral result bundle (TESTING_AS_A_SERVICE.md) --------------------
       # Additive: the existing artifacts-* upload stays as the debug bundle.
       # This is the small, versioned, caller-facing contract.
@@ -412,14 +413,22 @@ jobs:
           exit 1
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
-        #continue-on-error: true
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        id: gcp_auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
+      - name: Upload JSON to GCS Bucket
+        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
+        with:
+          path: artifacts-win
+          destination: 'fx-dte/artifacts/${{ github.run_id }}/win/'
+          glob: '**/*.json'
+
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -639,14 +648,22 @@ jobs:
           exit 1
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
-        #continue-on-error: true
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        id: gcp_auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
+      - name: Upload JSON to GCS Bucket
+        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
+        with:
+          path: artifacts-win
+          destination: 'fx-dte/artifacts/${{ github.run_id }}/mac/'
+          glob: '**/*.json'
+
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -748,6 +765,8 @@ jobs:
           XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
+          mkdir -p artifacts-linux
+          mv -n artifacts/* artifacts-linux/ || true
           exit $TEST_EXIT_CODE
 
       - name: Run Smoke Tests in Ubuntu (Headed)
@@ -762,6 +781,8 @@ jobs:
           XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
+          mkdir -p artifacts-linux
+          mv -n artifacts/* artifacts-linux/ || true
           exit $TEST_EXIT_CODE
 
       # --- Neutral result bundle (TESTING_AS_A_SERVICE.md) --------------------
@@ -801,14 +822,22 @@ jobs:
           exit 1
 
       - name: Auth to Google Cloud
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
-        #continue-on-error: true
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        id: gcp_auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
+      - name: Upload JSON to GCS Bucket
+        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
+        uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
+        with:
+          path: artifacts-win
+          destination: 'fx-dte/artifacts/${{ github.run_id }}/linux/'
+          glob: '**/*.json'
+
       - name: Upload results to BigQuery
-        if: ${{ always() && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -824,9 +853,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
         with:
           name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
-          path: artifacts
-          retention-days: 30
-
+          path: artifacts-linux
 
   Use-Artifacts:
     # !cancelled() rather than success(): a single-platform request (e.g. a BYOB
