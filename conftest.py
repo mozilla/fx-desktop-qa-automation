@@ -316,11 +316,9 @@ def use_persistent_profile():
     """
     Override to True in a test whose Firefox state must survive a restart.
 
-    The normal path sets `options.profile`, which makes Selenium copy the
-    profile into a temp directory of its own -- so anything Firefox writes at
-    shutdown (session state, for one) is discarded with that copy. When this
-    is on, the directory is passed as a `-profile` argument instead and
-    Firefox uses it in place.
+    `options.profile` makes Selenium run from a copy, so anything written at
+    shutdown is discarded. This passes `-profile` instead, which keeps
+    Firefox in the directory we give it.
     """
     yield False
 
@@ -662,16 +660,13 @@ def restart_browser(
     """
     Return a function that quits Firefox and relaunches it on the same profile.
 
-    Only usable with `use_persistent_profile` set to True -- without it the
-    profile is a throwaway copy and nothing written at shutdown survives.
+    Needs `use_persistent_profile` True. The quit matters: Firefox flushes
+    session state on the way out, so it must close cleanly rather than be
+    killed.
 
-    The quit is what makes the restart meaningful: Firefox flushes session
-    state on the way out, so it has to close cleanly rather than be killed.
-
-    Note for callers: quitting invalidates the driver that *other* fixtures
-    are holding. An autouse fixture that talks to the driver in teardown will
-    hit a dead geckodriver -- fxa_waf_bypass does, so a restart test should
-    override fxa_env to None unless it actually needs FxA.
+    Quitting also invalidates the driver other fixtures hold, so a restart
+    test should override fxa_env to None unless it needs FxA -- the autouse
+    fxa_waf_bypass talks to the driver in teardown.
     """
     spawned = []
 
