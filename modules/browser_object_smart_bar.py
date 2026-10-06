@@ -90,11 +90,9 @@ class SmartBar(BasePage):
 
     def open_smart_bar(self) -> BasePage:
         """
-        Click the Ask button and wait for the Smart Bar editor to be ready.
+        Click the Ask button and wait for the editor to be ready.
 
-        Requires the window to already be in the Smart Window state; the
-        button does not exist in a Classic Window. The click goes through
-        SmartWindow, which owns the Ask button's selector.
+        Requires an active Smart Window; the button does not exist otherwise.
         """
         SmartWindow(self.driver).click_on("smart-window-ask-button")
         self.expect_smart_bar_ready()
@@ -114,6 +112,19 @@ class SmartBar(BasePage):
         self.expect(lambda _: self.smart_bar_ready())
         return self
 
+    def _focus_editor(self) -> bool:
+        """
+        Focus the ProseMirror editor; False if it is not available.
+
+        Scripted: elements in the ai-window-browser contentDocument have no
+        usable Selenium reference from chrome, so there is nothing to click.
+        """
+        return bool(
+            self._script(
+                "const p = prosemirror();if (!p) return false;p.focus();return true;"
+            )
+        )
+
     # ── Text ─────────────────────────────────────────────────────────────
 
     def get_smart_bar_text(self) -> str:
@@ -129,20 +140,11 @@ class SmartBar(BasePage):
         """
         Replace the Smart Bar's text by typing it.
 
-        Real key events, not `MultilineEditor.value`: assigning the property
-        skips the editor's input handling, which is why the @-mention popup
-        shows "No results found" when driven that way.
-
-        Focus has to be scripted -- elements inside the ai-window-browser
-        contentDocument have no usable Selenium reference from chrome
-        (send_keys on one raises StaleElementReferenceException), so there is
-        nothing to click first.
+        Real key events, not `MultilineEditor.value`: assigning that property
+        skips the editor's input handling.
         """
         logging.info("Setting Smart Bar text to %r", text)
-        focused = self._script(
-            "const p = prosemirror();if (!p) return false;p.focus();return true;"
-        )
-        if not focused:
+        if not self._focus_editor():
             raise AssertionError("Smart Bar editor is not available to write to")
 
         with self.driver.context(self.driver.CONTEXT_CHROME):
@@ -158,9 +160,7 @@ class SmartBar(BasePage):
         """
         Wait until the Smart Bar's text equals `text`.
 
-        Reports the actual value on timeout: the comparison is exact, so a
-        future serialisation change (a trailing newline, say) would otherwise
-        give a bare TimeoutException with nothing to point at.
+        Reports the value seen on timeout, since the comparison is exact.
         """
         try:
             self.expect(lambda _: self.get_smart_bar_text() == text)
@@ -180,10 +180,7 @@ class SmartBar(BasePage):
         Refocuses first: send_keys goes to whatever holds focus, and
         choose_search_engine can move it.
         """
-        focused = self._script(
-            "const p = prosemirror();if (!p) return false;p.focus();return true;"
-        )
-        if not focused:
+        if not self._focus_editor():
             raise AssertionError("Smart Bar editor is not available to submit from")
         with self.driver.context(self.driver.CONTEXT_CHROME):
             self.actions.send_keys(Keys.ENTER).perform()
@@ -196,20 +193,17 @@ class SmartBar(BasePage):
         Read from the "Search with X" item's data-l10n-args, so a test need
         not hardcode an engine.
         """
-        return (
-            self._script(
-                "const l = ctaLists()[0];"
-                "if (!l) return '';"
-                "const hit = Array.from(l.querySelectorAll('panel-item'))"
-                "  .find(i => i.getAttribute('data-l10n-id') === arguments[0]);"
-                "if (!hit) return '';"
-                "try {"
-                "  return JSON.parse(hit.getAttribute('data-l10n-args') || '{}')"
-                "    .searchEngineName || '';"
-                "} catch (e) { return ''; }",
-                ACTION_MENU_SEARCH_WITH_DEFAULT,
-            )
-            or ""
+        return self._script(
+            "const l = ctaLists()[0];"
+            "if (!l) return '';"
+            "const hit = Array.from(l.querySelectorAll('panel-item'))"
+            "  .find(i => i.getAttribute('data-l10n-id') === arguments[0]);"
+            "if (!hit) return '';"
+            "try {"
+            "  return JSON.parse(hit.getAttribute('data-l10n-args') || '{}')"
+            "    .searchEngineName || '';"
+            "} catch (e) { return ''; }",
+            ACTION_MENU_SEARCH_WITH_DEFAULT,
         )
 
     def expect_default_search_engine(self) -> BasePage:
@@ -256,15 +250,14 @@ class SmartBar(BasePage):
         """
         Wait until `engine_name` appears in the Search With submenu.
 
-        Waiting on a count instead would let a two-entry list satisfy the
-        wait before this engine has been added.
+        A count would be satisfied before this engine is added.
         """
         try:
-            self.expect(lambda _: engine_name in self.get_search_with_items())
+            self.expect(lambda _: engine_name in (self._read_search_with_items() or []))
         except TimeoutException:
             raise AssertionError(
                 f"{engine_name} never appeared in the Search With submenu; "
-                f"last saw {self.get_search_with_items()}"
+                f"last saw {self._read_search_with_items()}"
             ) from None
         return self
 
@@ -276,11 +269,11 @@ class SmartBar(BasePage):
         initialises, so reading it immediately is a race.
         """
         try:
-            self.expect(lambda _: len(self.get_search_with_items()) >= minimum)
+            self.expect(lambda _: len(self._read_search_with_items() or []) >= minimum)
         except TimeoutException:
             raise AssertionError(
                 f"Search With submenu never listed {minimum} entries; "
-                f"last saw {self.get_search_with_items()}"
+                f"last saw {self._read_search_with_items()}"
             ) from None
         return self
 
@@ -359,8 +352,7 @@ class SmartBar(BasePage):
         Open the CTA's Go/Ask action menu, leaving it open if already shown.
 
         The split button's menu portion is not separately clickable, so this
-        goes through the panel-list's own toggle() -- which flips state, hence
-        the open check.
+        uses the panel-list's own toggle() -- which flips, hence the check.
         """
         found = self._script(
             "const l = ctaLists()[0];"
@@ -377,16 +369,11 @@ class SmartBar(BasePage):
         """Return the action menu's panel-item data-l10n-ids, in order."""
         return self._script("return menuItemIds(ctaLists()[0]);")
 
-    def get_search_with_items(self) -> list[str]:
+    def _read_search_with_items(self) -> list[str] | None:
         """
-        Return the Search With submenu's entries as visible text, in order.
+        Search With entries, or None while the CTA has the wrong list count.
 
-        Read as text because engine names carry no l10n ids, and read without
-        expanding the submenu, which works because its items render eagerly.
-        Returns an empty list if that ever changes.
-
-        Raises if the CTA stops holding exactly two panel-lists, since the
-        submenu is reached by position.
+        None rather than raising, so a poll can wait the CTA out.
         """
         # Count and read in one script so the shadow tree is only walked once.
         result = self._script(
@@ -395,10 +382,17 @@ class SmartBar(BasePage):
             "return {items: Array.from(lists[1].querySelectorAll('panel-item'))"
             "  .map(i => (i.textContent || '').trim()).filter(t => t)};"
         )
-        if "items" not in result:
+        return result.get("items")
+
+    def get_search_with_items(self) -> list[str]:
+        """
+        Search With entries as visible text, in order. Raises if the CTA
+        stops holding the two panel-lists the lookup relies on.
+        """
+        items = self._read_search_with_items()
+        if items is None:
             raise AssertionError(
-                f"expected 2 panel-lists in the CTA (actions, Search With), "
-                f"found {result['count']} -- the positional lookup in "
-                f"ctaLists() is no longer safe and needs revisiting"
+                "expected 2 panel-lists in the CTA (actions, Search With) -- "
+                "the positional lookup in ctaLists() is no longer safe"
             )
-        return result["items"]
+        return items

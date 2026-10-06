@@ -4,6 +4,8 @@ Verify a query typed into the Smart Bar and submitted runs a search with the
 default engine.
 """
 
+import re
+
 import pytest
 from selenium.webdriver import Firefox
 
@@ -32,5 +34,6 @@ def test_perform_a_classic_search(driver: Firefox, active_smart_window: SmartWin
     bar.submit()
 
     # Assert that the search engine is in the URL and that the query is in the URL
-    active_smart_window.expect_selected_tab_url_contains(engine.split()[0].lower())
+    host_token = re.sub(r"[^a-z0-9]", "", engine.split()[0].lower())
+    active_smart_window.expect_selected_tab_url_contains(host_token)
     active_smart_window.expect_selected_tab_url_contains(QUERY)
