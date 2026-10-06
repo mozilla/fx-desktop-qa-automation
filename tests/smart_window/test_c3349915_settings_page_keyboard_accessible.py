@@ -1,7 +1,6 @@
 """
 C3349915 - Settings page keyboard accessible
-Verify the Smart Window controls in AI settings can be reached by TAB and
-respond to focus.
+Verify the Smart Window controls in AI settings can be reached by TAB.
 """
 
 import logging
@@ -12,7 +11,7 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import AboutPrefs
 
-MAX_TAB_STOPS = 30
+MAX_TAB_STOPS = 40
 
 
 @pytest.fixture()
@@ -27,30 +26,24 @@ def test_settings_page_keyboard_accessible(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="ai").open()
     about_prefs.navigate_to_ai_controls()
 
-    select = about_prefs.get_element("ai-control-smart-window-select")
     targets = {
+        "Smart Window select": about_prefs.get_element(
+            "ai-control-smart-window-select"
+        ),
         "Activate Smart Window link": about_prefs.get_element(
             "smart-window-activate-link"
         ),
     }
 
-    about_prefs.driver.execute_script("arguments[0].focus();", select)
-    about_prefs.expect(lambda d: about_prefs.utils.element_has_focus(select))
-    logging.info("Smart Window select is keyboard-focusable")
-
-    # Only assert that TAB reaches each control, not that they are adjacent:
-    # the rows between them are feature-gated and some are hidden while
-    # signed out.
+    # TAB from where the page starts, rather than seeding focus, so this
+    # follows the route a keyboard user actually takes.
     for _ in range(MAX_TAB_STOPS):
         if not targets:
             break
         about_prefs.actions.send_keys(Keys.TAB).perform()
-        reached = [
-            name
-            for name, element in targets.items()
-            if about_prefs.utils.element_has_focus(element)
-        ]
-        for name in reached:
+        for name in [
+            n for n, el in targets.items() if about_prefs.utils.element_has_focus(el)
+        ]:
             logging.info("%s is keyboard-focusable", name)
             del targets[name]
 

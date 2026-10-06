@@ -896,13 +896,13 @@ class PomUtils:
 
     def element_has_focus(self, element: WebElement) -> bool:
         """
-        Report whether `element` holds focus, or hosts the control that does.
+        Report whether focus is on `element` or its shadow host/control.
 
-        Custom elements (moz-toggle, moz-select) keep their focusable control
-        inside a shadow root, so document.activeElement reports the host
-        rather than the control. This walks up from `element` through its
-        parents and shadow hosts, checking whether any of them is the focused
-        element -- so a host counts as focused when its inner control is.
+        Hops shadow boundaries only, in both directions: components.json may
+        resolve to a host while focus lands on the inner control, or the
+        reverse. Following parentNode too would match any light-DOM container
+        that happened to hold focus, which made the check pass a tab stop
+        early.
         """
         active = self.driver.switch_to.active_element
         if active == element:
@@ -910,14 +910,18 @@ class PomUtils:
         return bool(
             self.driver.execute_script(
                 """
-                const active = arguments[0];
-                let node = arguments[1];
-                while (node) {
-                    if (node === active) return true;
-                    const root = node.getRootNode && node.getRootNode();
-                    node = root && root.host ? root.host : node.parentNode;
+                function hostChainHits(from, target) {
+                    let node = from;
+                    while (node) {
+                        if (node === target) return true;
+                        const root = node.getRootNode && node.getRootNode();
+                        node = root && root.host ? root.host : null;
+                    }
+                    return false;
                 }
-                return false;
+                const active = arguments[0], element = arguments[1];
+                return hostChainHits(element, active)
+                    || hostChainHits(active, element);
                 """,
                 active,
                 element,
