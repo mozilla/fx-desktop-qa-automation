@@ -896,13 +896,10 @@ class PomUtils:
 
     def element_has_focus(self, element: WebElement) -> bool:
         """
-        Report whether focus is on `element` or its shadow host/control.
-
-        Hops shadow boundaries only, in both directions: components.json may
-        resolve to a host while focus lands on the inner control, or the
-        reverse. Following parentNode too would match any light-DOM container
-        that happened to hold focus, which made the check pass a tab stop
-        early.
+        Report whether focus is on `element`, its shadow host, or its inner
+        control. Both directions are needed -- components.json resolves to
+        either -- and only shadow boundaries are hopped, so a focused
+        light-DOM container does not match.
         """
         active = self.driver.switch_to.active_element
         if active == element:
