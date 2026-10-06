@@ -1943,7 +1943,7 @@ security_and_privacy:
     splits:
     - functional1
   test_report_broken_site:
-    result: pass
+    result: incorrect-case-number
     splits:
     - functional3
     - nightly
@@ -1978,11 +1978,11 @@ security_and_privacy:
     splits:
     - smoke
   test_tp_enabled_after_website_removed_from_exceptions:
-    result: pass
+    result: incorrect-case-number
     splits:
     - functional3
   test_tp_settings_private_browsing:
-    result: pass
+    result: incorrect-case-number
     splits:
     - functional3
   test_trackers_counted_correctly_in_panel:
