@@ -191,6 +191,51 @@ class Navigation(BasePage):
         switch_items[0].click()
 
     @BasePage.context_chrome
+    def get_switch_tab_result(self, url_fragment: str) -> WebElement:
+        """
+        Wait for and return the switch-to-tab result in the URL bar whose URL
+        contains `url_fragment`. Assumes the caller already typed into the
+        awesome bar.
+        """
+
+        def _find_row(_):
+            try:
+                for row in self.get_elements("switch-to-tab"):
+                    url = row.find_element(*self.get_selector("switch-to-tab-url"))
+                    if url_fragment in url.get_attribute("textContent"):
+                        return row
+            except StaleElementReferenceException:
+                pass
+            return False
+
+        return self.wait.until(_find_row)
+
+    @BasePage.context_chrome
+    def get_switch_tab_action_text(self, url_fragment: str) -> str:
+        """Return the action text of the switch-to-tab result for `url_fragment`."""
+        row = self.get_switch_tab_result(url_fragment)
+        action = row.find_element(*self.get_selector("switch-to-tab-action"))
+        return action.get_attribute("textContent").strip()
+
+    def expect_switch_tab_action_text(
+        self, url_fragment: str, expected_text: str
+    ) -> BasePage:
+        """
+        Wait until the switch-to-tab result for `url_fragment` reads
+        `expected_text`, e.g. 'Move Tab to Split View'.
+        """
+        self.expect(
+            lambda _: self.get_switch_tab_action_text(url_fragment) == expected_text
+        )
+        return self
+
+    @BasePage.context_chrome
+    def click_switch_tab_result(self, url_fragment: str) -> BasePage:
+        """Click the switch-to-tab result in the URL bar for `url_fragment`."""
+        self.get_switch_tab_result(url_fragment).click()
+        return self
+
+    @BasePage.context_chrome
     def click_on_clipboard_suggestion(self) -> None:
         """
         Click the 'Visit from clipboard' suggestion in the URL bar.
