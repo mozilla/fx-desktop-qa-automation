@@ -301,6 +301,17 @@
       "doNotCache"
     ]
   },
+  "comment-popup-delete": {
+    "selectorData": "#commentPopup .commentPopupDelete",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Deletes the comment while preserving its annotation",
+      "location": "The PDF viewer comment popup"
+    }
+  },
   "comment-dialog": {
     "selectorData": "commentManagerDialog",
     "strategy": "id",

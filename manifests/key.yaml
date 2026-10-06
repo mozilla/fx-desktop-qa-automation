@@ -1303,6 +1303,11 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_paragraph_comment_can_be_deleted:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_paragraph_comment_can_be_edited:
     result: pass
     splits:
