@@ -274,5 +274,10 @@
   "tests/tabs/test_reload_tab_via_keyboard.py": "Agree",
   "tests/tabs/test_remove_tab_from_a_group.py": "Agree",
   "tests/tabs/test_reopen_tab_through_context_menu.py": "Agree",
-  "tests/tabs/test_reopen_tab_through_history_menu.py": "Agree"
+  "tests/tabs/test_reopen_tab_through_history_menu.py": "Agree",
+  "tests/tabs/test_restore_closed_tabs_previous_groups.py": "Agree",
+  "tests/tabs/test_save_and_close_a_tab_group.py": "Agree",
+  "tests/tabs/test_tab_hover_different_content_type.py": "Content type coverage",
+  "tests/theme_and_toolbar/test_customize_themes_and_redirect.py": "no redirect",
+  "tests/theme_and_toolbar/test_installed_theme_enabled.py": "Agree"
 }
