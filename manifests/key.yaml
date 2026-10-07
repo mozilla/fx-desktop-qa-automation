@@ -1238,6 +1238,11 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_comment_can_be_added_in_content:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_contextual_menu_actions:
     result: pass
     splits:
