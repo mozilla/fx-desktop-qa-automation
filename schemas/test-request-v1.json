@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mozilla.github.io/fx-desktop-qa-automation/schemas/test-request-v1.json",
+  "title": "STARfox test request v1",
+  "description": "A request to run STARfox against a Firefox desktop build. Deliberately independent of any execution backend: the GitHub Actions facade maps its workflow inputs onto this shape, and a future Taskcluster or HTTP front end can accept it directly. See TESTING_AS_A_SERVICE.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "anyOf": [
+    {
+      "required": [
+        "firefox_version"
+      ]
+    },
+    {
+      "required": [
+        "win_installer_link"
+      ]
+    },
+    {
+      "required": [
+        "mac_installer_link"
+      ]
+    },
+    {
+      "required": [
+        "linux_tarball_link"
+      ]
+    }
+  ],
+  "properties": {
+    "firefox_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?(esr|b[0-9]+)?$",
+      "description": "Resolve build URLs from archive.mozilla.org candidates, e.g. 155.0.1, 153.0esr, 156.0b2. Mutually exclusive with the *_link fields."
+    },
+    "win_installer_link": {
+      "type": "string",
+      "format": "uri"
+    },
+    "mac_installer_link": {
+      "type": "string",
+      "format": "uri"
+    },
+    "linux_tarball_link": {
+      "type": "string",
+      "format": "uri"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "beta",
+        "rc",
+        "esr",
+        "nightly",
+        "custom"
+      ],
+      "default": "beta",
+      "description": "Metadata only; affects naming, not test selection."
+    },
+    "test_set": {
+      "type": "string",
+      "default": "smoke",
+      "description": "A split defined in manifests/key.yaml."
+    },
+    "platforms": {
+      "type": "array",
+      "default": [
+        "win",
+        "mac",
+        "linux"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "win",
+          "mac",
+          "linux"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "fail_on": {
+      "type": "string",
+      "enum": [
+        "any-failure",
+        "non-flaky-failure",
+        "never"
+      ],
+      "default": "non-flaky-failure"
+    },
+    "request_id": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Opaque correlation id, echoed into every result summary."
+    }
+  }
+}

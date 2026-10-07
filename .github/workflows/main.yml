@@ -11,8 +11,12 @@ on:
         type: string
         required: false
       job_to_run:
-        required: true
+        # Optional since the service facade selects platforms purely by which
+        # installer links it passes. Existing internal callers still set it.
+        description: "Test-Windows | Test-MacOS. Leave empty to select by installer link."
+        required: false
         type: string
+        default: ''
       is_pull_request:
         description: "Is this a PR?"
         default: false
@@ -27,6 +31,70 @@ on:
         required: false
         type: boolean
         default: false
+
+      # --- Bring-your-own-build (see TESTING_AS_A_SERVICE.md) ---
+      # These also exist on workflow_dispatch below. They must be declared here
+      # too, otherwise a workflow_call caller passing them is rejected with
+      # "Invalid input" and the whole BYOB path is unreachable.
+      firefox_version:
+        description: "Firefox version metadata for the supplied build"
+        required: false
+        type: string
+        default: ''
+      win_installer_link:
+        description: "URL of the Windows installer (win64) for the Fx under test"
+        required: false
+        type: string
+        default: ''
+      mac_installer_link:
+        description: "URL of the macOS installer for the Fx under test"
+        required: false
+        type: string
+        default: ''
+      linux_tarball_link:
+        description: "URL of the Linux tarball (linux-x86_64) for the Fx under test"
+        required: false
+        type: string
+        default: ''
+      # --- Result contract (see TESTING_AS_A_SERVICE.md) ---
+      # Defaults to 'never' so scheduled QA runs keep their current semantics:
+      # the pytest exit code decides, and the gate is informational only. The
+      # service facade passes 'non-flaky-failure' to actually enforce it.
+      fail_on:
+        description: "Gate policy: any-failure | non-flaky-failure | never"
+        required: false
+        type: string
+        default: 'never'
+      request_id:
+        description: "Opaque caller correlation id, echoed into every summary.json"
+        required: false
+        type: string
+        default: ''
+      # --- Cross-repo reuse (see TESTING_AS_A_SERVICE.md) ---
+      # A reusable workflow called from another repository runs with the CALLER's
+      # repo as the default checkout target, so STARfox's own tests/, scripts/ and
+      # manifests/ would be missing. Cross-repo callers must set both of these.
+      # Leaving them empty preserves the exact same-repo behaviour (PR head SHA).
+      starfox_repository:
+        description: "Repo holding the STARfox code. Leave empty for same-repo runs; cross-repo callers set 'mozilla/fx-desktop-qa-automation'."
+        required: false
+        type: string
+        default: ''
+      starfox_ref:
+        description: "Ref/tag/SHA of the STARfox code to check out. Only used with starfox_repository."
+        required: false
+        type: string
+        default: ''
+    outputs:
+      windows_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Test-Windows.outputs.verdict }}
+      macos_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Test-MacOS.outputs.verdict }}
+      linux_verdict:
+        description: "pass | flaky | fail | infra_error (empty if the job did not run)"
+        value: ${{ jobs.Smoke-Linux.outputs.verdict }}
       trigger_event:
         required: false
         type: string
@@ -83,11 +151,19 @@ env:
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
+  # Optional-integration gates. Callers outside Mozilla QA (see
+  # TESTING_AS_A_SERVICE.md) supply no GCP/Slack secrets; without these guards the
+  # BigQuery and notification steps hard-fail *after* the tests already passed.
+  HAS_BQ_CREDS: ${{ secrets.GC_CREDENTIAL_STABILITY != '' && secrets.BQ_PROJECT != '' }}
+  HAS_SLACK_CREDS: ${{ secrets.SLACK_KEY != '' && secrets.GCP_CREDENTIAL != '' }}
 
 jobs:
   Test-Windows:
     if: ${{ inputs.job_to_run == 'Test-Windows' || inputs.win_installer_link }}
     runs-on: windows-latest
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
@@ -95,6 +171,8 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          repository: ${{ inputs.starfox_repository || github.repository }}
+          ref: ${{ inputs.starfox_ref }}
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -298,9 +376,45 @@ jobs:
           }
           exit $env:TEST_EXIT_CODE
 
+      # --- Neutral result bundle (TESTING_AS_A_SERVICE.md) --------------------
+      # Additive: the existing artifacts-* upload stays as the debug bundle.
+      # This is the small, versioned, caller-facing contract.
+      - name: Build result bundle
+        id: bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: bash
+        env:
+          FAIL_ON: ${{ inputs.fail_on }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          TEST_SET: ${{ inputs.test_set }}
+        run: |
+          uv run python -m scripts.build_result_bundle \
+            --artifacts-dir "artifacts-win" \
+            --out results/v1 \
+            --platform windows \
+            --fail-on "${FAIL_ON:-never}" \
+            --request-id "$REQUEST_ID" \
+            --test-set "$TEST_SET" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      - name: Upload result bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: fx-results-windows
+          path: results/v1
+          retention-days: 30
+
+      - name: Enforce result gate
+        if: ${{ always() && inputs.dry_run != true && steps.bundle.outputs.gate_failed == 'true' }}
+        shell: bash
+        run: |
+          echo "::error::Result gate failed (verdict=${{ steps.bundle.outputs.verdict }}, policy=${{ inputs.fail_on }})"
+          exit 1
+
       - name: Auth to Google Cloud
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         id: gcp_auth
-        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
@@ -314,7 +428,7 @@ jobs:
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -331,6 +445,7 @@ jobs:
         with:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
+          retention-days: 30
 
       - name: DLL Interceptor tests
         id: dll
@@ -343,6 +458,9 @@ jobs:
   Test-MacOS:
     if: ${{ inputs.job_to_run == 'Test-MacOS' || inputs.mac_installer_link }}
     runs-on: macos-26
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
@@ -350,6 +468,8 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          repository: ${{ inputs.starfox_repository || github.repository }}
+          ref: ${{ inputs.starfox_ref }}
 
       - name: Dry-run notice
         if: ${{ inputs.dry_run == true }}
@@ -491,9 +611,45 @@ jobs:
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
+      # --- Neutral result bundle (TESTING_AS_A_SERVICE.md) --------------------
+      # Additive: the existing artifacts-* upload stays as the debug bundle.
+      # This is the small, versioned, caller-facing contract.
+      - name: Build result bundle
+        id: bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: bash
+        env:
+          FAIL_ON: ${{ inputs.fail_on }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          TEST_SET: ${{ inputs.test_set }}
+        run: |
+          uv run python -m scripts.build_result_bundle \
+            --artifacts-dir "artifacts-mac" \
+            --out results/v1 \
+            --platform macos \
+            --fail-on "${FAIL_ON:-never}" \
+            --request-id "$REQUEST_ID" \
+            --test-set "$TEST_SET" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      - name: Upload result bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: fx-results-macos
+          path: results/v1
+          retention-days: 30
+
+      - name: Enforce result gate
+        if: ${{ always() && inputs.dry_run != true && steps.bundle.outputs.gate_failed == 'true' }}
+        shell: bash
+        run: |
+          echo "::error::Result gate failed (verdict=${{ steps.bundle.outputs.verdict }}, policy=${{ inputs.fail_on }})"
+          exit 1
+
       - name: Auth to Google Cloud
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         id: gcp_auth
-        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
@@ -502,12 +658,12 @@ jobs:
         if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
         uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         with:
-          path: artifacts-mac
+          path: artifacts-win
           destination: 'fx-dte/artifacts/${{ github.run_id }}/mac/'
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -524,16 +680,22 @@ jobs:
         with:
           name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-mac
+          retention-days: 30
 
   Smoke-Linux:
     if: ${{ inputs.linux_tarball_link }}
     runs-on: ubuntu-latest
+    outputs:
+      verdict: ${{ steps.bundle.outputs.verdict }}
+      gate_failed: ${{ steps.bundle.outputs.gate_failed }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
+          repository: ${{ inputs.starfox_repository || github.repository }}
+          ref: ${{ inputs.starfox_ref }}
 
       - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
@@ -623,23 +785,59 @@ jobs:
           mv -n artifacts/* artifacts-linux/ || true
           exit $TEST_EXIT_CODE
 
+      # --- Neutral result bundle (TESTING_AS_A_SERVICE.md) --------------------
+      # Additive: the existing artifacts-* upload stays as the debug bundle.
+      # This is the small, versioned, caller-facing contract.
+      - name: Build result bundle
+        id: bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        shell: bash
+        env:
+          FAIL_ON: ${{ inputs.fail_on }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          TEST_SET: ${{ inputs.test_set }}
+        run: |
+          uv run python -m scripts.build_result_bundle \
+            --artifacts-dir "artifacts" \
+            --out results/v1 \
+            --platform linux \
+            --fail-on "${FAIL_ON:-never}" \
+            --request-id "$REQUEST_ID" \
+            --test-set "$TEST_SET" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      - name: Upload result bundle
+        if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: fx-results-linux
+          path: results/v1
+          retention-days: 30
+
+      - name: Enforce result gate
+        if: ${{ always() && inputs.dry_run != true && steps.bundle.outputs.gate_failed == 'true' }}
+        shell: bash
+        run: |
+          echo "::error::Result gate failed (verdict=${{ steps.bundle.outputs.verdict }}, policy=${{ inputs.fail_on }})"
+          exit 1
+
       - name: Auth to Google Cloud
+        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         id: gcp_auth
-        if: ${{ always() && !inputs.is_pull_request && inputs.dry_run != true }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
         with:
           credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
 
       - name: Upload JSON to GCS Bucket
-        if: ${{ always() && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
+        if: ${{ always() && inputs.trigger_event == 'schedule' && inputs.dry_run != true && steps.gcp_auth.conclusion == 'success' }}
         uses: google-github-actions/upload-cloud-storage@6397bd7208e18d13ba2619ee21b9873edc94427a # v3.0.0
         with:
-          path: artifacts-linux
+          path: artifacts-win
           destination: 'fx-dte/artifacts/${{ github.run_id }}/linux/'
           glob: '**/*.json'
 
       - name: Upload results to BigQuery
-        if: ${{ always() && steps.gcp_auth.conclusion == 'success' }}
+        if: ${{ always() && steps.gcp_auth.conclusion == 'success' && inputs.dry_run != true && env.HAS_BQ_CREDS == 'true' }}
         env:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
@@ -657,9 +855,13 @@ jobs:
           name: artifacts-linux${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-linux
 
-
   Use-Artifacts:
-    if: ${{ github.event_name != 'workflow_dispatch' }}
+    # !cancelled() rather than success(): a single-platform request (e.g. a BYOB
+    # caller passing only linux_tarball_link) skips one of the needs, which would
+    # otherwise skip this job too. Missing artifacts are tolerated below.
+    # NB: the Slack-credential guard lives on the notify step, not here -- the
+    # `env` context is not available in a job-level `if`.
+    if: ${{ !cancelled() && github.event_name != 'workflow_dispatch' && inputs.request_id == '' }}
     runs-on: ubuntu-latest
     needs:
       - Test-Windows
@@ -669,6 +871,8 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
+          repository: ${{ inputs.starfox_repository || github.repository }}
+          ref: ${{ inputs.starfox_ref }}
 
       - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
@@ -680,25 +884,36 @@ jobs:
           pip3 install 'uv==0.11.18'
           uv sync
 
+      # continue-on-error: a platform job that was skipped (single-platform
+      # request) or that failed before its upload step publishes no artifact.
       - name: Download Windows artifact
+        continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-win${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-win
 
       - name: Download MacOS artifact
+        continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           name: artifacts-mac${{ inputs.test_set == 'glean' && '-glean' || '' }}
           path: artifacts-mac
 
-      - name: List downloaded Windows files
-        run: ls artifacts-win/
-
-      - name: List downloaded MacOS files
-        run: ls artifacts-mac/
+      - name: List downloaded files
+        run: |
+          for d in artifacts-win artifacts-mac; do
+            if [ -d "$d" ]; then
+              echo "== $d =="
+              ls "$d"
+            else
+              echo "== $d == (absent: platform job skipped or produced no artifact)"
+            fi
+          done
 
       - name: Run script with secret
+        # Callers outside Mozilla QA supply no Slack/GCP secrets; skip rather than fail.
+        if: ${{ env.HAS_SLACK_CREDS == 'true' }}
         env:
           SLACK_KEY: ${{ secrets.SLACK_KEY }}
           GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
