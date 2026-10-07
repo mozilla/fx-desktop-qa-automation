@@ -206,22 +206,6 @@ class Navigation(BasePage):
         return None
 
     @BasePage.context_chrome
-    def get_switch_tab_result(self, url_fragment: str) -> WebElement:
-        """
-        Wait for and return the switch-to-tab result in the URL bar whose URL
-        contains `url_fragment`. Assumes the caller already typed into the
-        awesome bar.
-        """
-        return self.wait.until(lambda _: self.find_switch_tab_result(url_fragment))
-
-    @BasePage.context_chrome
-    def get_switch_tab_action_text(self, url_fragment: str) -> str:
-        """Return the action text of the switch-to-tab result for `url_fragment`."""
-        row = self.get_switch_tab_result(url_fragment)
-        action = row.find_element(*self.get_selector("switch-to-tab-action"))
-        return action.get_attribute("textContent").strip()
-
-    @BasePage.context_chrome
     def expect_switch_tab_action_text(
         self, url_fragment: str, expected_text: str
     ) -> BasePage:
