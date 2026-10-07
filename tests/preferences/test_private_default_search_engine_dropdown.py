@@ -27,6 +27,8 @@ def add_to_prefs_list():
         ("browser.settings-redesign.enabled", True),
         (FEATURE_GATE_PREF, True),
         ("browser.aboutConfig.showWarning", False),
+        # Precondition: private engine option already on.
+        ("browser.search.separatePrivateDefault.enabled", True),
         # Lets the private page search box show the engine name.
         ("browser.urlbar.suggest.searches", True),
     ]
@@ -55,11 +57,14 @@ def test_private_default_search_engine_dropdown(
     private_page = AboutPrivatebrowsing(driver)
 
     # Setup: add the searchbar to the toolbar.
-    nav.add_search_bar_to_toolbar()
+    with driver.context(driver.CONTEXT_CHROME):
+        # Faster than going through Customize mode.
+        driver.execute_script(
+            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
+        )
 
-    # Step 1: Open search settings and turn on the private engine option.
+    # Step 1: The private engine option is already on (set by the pref above).
     about_prefs.open()
-    about_prefs.click_on("separate-private-engine-checkbox-input")
     about_prefs.element_attribute_is(
         "separate-private-engine-checkbox", "checked", "true"
     )
@@ -83,9 +88,8 @@ def test_private_default_search_engine_dropdown(
     driver.switch_to.window(private_window)
     check_private_engine(nav, private_page, SECOND_ENGINE)
 
-    # Step 5: Turn the option off in about:config.
+    # Step 5: Turn the feature gate off.
     driver.switch_to.window(prefs_window)
-    driver.switch_to.new_window("tab")
     about_config.toggle_true_false_config(FEATURE_GATE_PREF)
 
     # Step 6: Reload search settings and check the option is gone.

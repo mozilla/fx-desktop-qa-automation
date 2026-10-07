@@ -128,18 +128,6 @@
       "location": "about:preferences#search"
     }
   },
-  "separate-private-engine-checkbox-input": {
-    "selectorData": "input",
-    "strategy": "tag",
-    "shadowParent": "separate-private-engine-checkbox",
-    "groups": [
-      "doNotCache"
-    ],
-    "comment": {
-      "description": "Inner input of the private engine checkbox",
-      "location": "about:preferences#search"
-    }
-  },
   "private-engine-dropdown-root": {
     "selectorData": "defaultPrivateEngine",
     "strategy": "id",
