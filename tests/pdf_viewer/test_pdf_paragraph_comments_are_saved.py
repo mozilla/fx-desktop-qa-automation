@@ -41,6 +41,8 @@ def test_pdf_paragraph_comments_are_saved(
     pdf_viewer: GenericPdf, tmp_path, wait_for_file_download
 ):
     """C3139289: Edited and deleted paragraph comments persist in a saved PDF."""
+    # Step 1: The fixture opens the local PDF.
+    # Steps 2 and 4: Add the first comment, then two more on distinct paragraphs.
     highlights = []
     for paragraph_text, comment in zip(
         PARAGRAPHS, (ORIGINAL_COMMENT, KEPT_COMMENT, DELETED_COMMENT)
@@ -59,6 +61,7 @@ def test_pdf_paragraph_comments_are_saved(
         highlights.extend(new_highlights)
         pdf_viewer.add_comment_to_selected_highlight(comment)
         pdf_viewer.click_on("toolbar-highlight")
+        # Step 3: Edit the first comment before adding the two additional comments.
         if comment == ORIGINAL_COMMENT:
             pdf_viewer.click_on("comment-indicator")
             pdf_viewer.element_visible("comment-popup-text")
@@ -69,6 +72,7 @@ def test_pdf_paragraph_comments_are_saved(
             pdf_viewer.click_on("comment-save")
             pdf_viewer.element_not_visible("comment-dialog")
 
+    # Step 4: Find the comment to remove by text; indicators follow page order.
     for indicator in pdf_viewer.get_elements("comment-indicator"):
         indicator.click()
         pdf_viewer.element_visible("comment-popup-text")
@@ -78,11 +82,13 @@ def test_pdf_paragraph_comments_are_saved(
         pdf_viewer.element_not_visible("comment-popup-text")
     else:
         pytest.fail("The comment to delete was not found.")
+    # Delete only the comment and confirm all three paragraph highlights remain.
     pdf_viewer.click_on("comment-popup-delete")
     pdf_viewer.element_not_visible("comment-popup-text")
     assert len(pdf_viewer.get_elements("comment-indicator")) == 2
     assert set(pdf_viewer.get_elements("added-highlight")) == set(highlights)
 
+    # Record the surviving comments and their positions to check their saved links.
     original_positions = {}
     for indicator in pdf_viewer.get_elements("comment-indicator"):
         indicator.click()
@@ -93,6 +99,7 @@ def test_pdf_paragraph_comments_are_saved(
         pdf_viewer.perform_key_combo(Keys.ESCAPE)
         pdf_viewer.element_not_visible("comment-popup-text")
 
+    # Step 5: Save a separate copy using the mock picker instead of the native dialog.
     saved_pdf = tmp_path / "saved-paragraph-comments.pdf"
     pdf_viewer.install_mock_file_picker(str(saved_pdf))
     try:
@@ -102,6 +109,7 @@ def test_pdf_paragraph_comments_are_saved(
         pdf_viewer.cleanup_mock_file_picker()
     wait_for_file_download(saved_pdf)
 
+    # Step 6: Reopen the saved PDF in Firefox and verify the comments and their links.
     saved_viewer = GenericPdf(pdf_viewer.driver, pdf_url=saved_pdf.as_uri())
     saved_viewer.expect(
         lambda _: len(saved_viewer.get_elements("comment-indicator")) == 2
@@ -119,4 +127,5 @@ def test_pdf_paragraph_comments_are_saved(
         )
         saved_viewer.perform_key_combo(Keys.ESCAPE)
         saved_viewer.element_not_visible("comment-popup-text")
+    # Only the edited and retained comments should survive; the deleted one must not.
     assert sorted(comments) == sorted([EDITED_COMMENT, KEPT_COMMENT])
