@@ -70,6 +70,7 @@ jobs:
     with:
       job_to_run: Test-Windows
       test_set: glean
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -78,6 +79,7 @@ jobs:
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
       BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
   Run-Mac-Glean:
     needs: Check-Beta-Version
@@ -86,6 +88,7 @@ jobs:
     with:
       job_to_run: Test-MacOS
       test_set: glean
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -94,3 +97,4 @@ jobs:
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
       BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}

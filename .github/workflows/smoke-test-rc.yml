@@ -61,12 +61,14 @@ jobs:
       job_to_run: Test-Windows
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: smoke
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
 
   Run-Mac-Smoke:
     needs: Check-RC-Version
@@ -81,9 +83,11 @@ jobs:
       job_to_run: Test-MacOS
       dry_run: ${{ github.event.inputs.dry_run == 'true' }}
       test_set: smoke
+      trigger_event: ${{ github.event_name }}
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
