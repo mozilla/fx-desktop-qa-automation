@@ -15,12 +15,39 @@ class SplitView(BasePage):
     LEFT = "0"
     RIGHT = "1"
 
+    SEPARATE_TABS = "separateTabs"
+    REVERSE_TABS = "reverseTabs"
+    CLOSE_BOTH_TABS = "closeTabs"
+
     def expect_split_view_active(self, active: bool = True) -> BasePage:
         """Wait until the window does (or does not) have a Split View."""
         if active:
             self.element_exists("split-view-tabpanels")
         else:
             self.element_does_not_exist("split-view-tabpanels")
+        return self
+
+    @BasePage.context_chrome
+    def count_split_views(self) -> int:
+        """Return the number of Split Views in the window."""
+        return len(self.get_elements("split-view-wrapper"))
+
+    def expect_split_view_count(self, count: int) -> BasePage:
+        """Wait until the window has exactly `count` Split Views."""
+        self.expect(lambda _: self.count_split_views() == count)
+        return self
+
+    @BasePage.context_chrome
+    def select_urlbar_menu_option(self, action: str) -> BasePage:
+        """
+        Open the Split View menu from the address bar button and pick `action`,
+        one of SEPARATE_TABS, REVERSE_TABS or CLOSE_BOTH_TABS. A Split View tab
+        must be selected for the button to show.
+        """
+        self.element_visible("split-view-urlbar-button")
+        self.click_on("split-view-urlbar-button")
+        self.element_visible("split-view-menu-item", labels=[action])
+        self.click_and_hide_menu("split-view-menu-item", labels=[action])
         return self
 
     @BasePage.context_chrome

@@ -2292,6 +2292,11 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_manage_split_view_address_bar:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_move_multi_selected_tabs:
     result: pass
     splits:

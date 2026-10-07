@@ -46,6 +46,24 @@
       "location": "In the tabbed browser"
     }
   },
+  "split-view-urlbar-button": {
+    "selectorData": "split-view-button",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Split View button, only shown while a Split View tab is selected. Opens the Split View menu",
+      "location": "Address bar, page actions"
+    }
+  },
+  "split-view-menu-item": {
+    "selectorData": "#split-view-menu menuitem[command='splitViewCmd_{action}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Split View menu option by action: separateTabs (Separate Tabs), reverseTabs (Reverse Tabs) or closeTabs (Close Both Tabs)",
+      "location": "Split View menu opened from the address bar button"
+    }
+  },
   "tab-by-linked-panel": {
     "selectorData": "tab[linkedpanel='{panel}']",
     "strategy": "css",
