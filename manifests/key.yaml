@@ -1321,6 +1321,11 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_paragraph_comments_are_saved:
+    result: pass
+    splits:
+    - functional1
+    - nightly
   test_pdf_prefilled_input_data:
     result: pass
     splits:
