@@ -1,0 +1,86 @@
+---
+name: Nightly Tests
+
+run-name: Nightly tests for ${{ inputs.target_info }}
+
+# Dispatch from the build trigger for each Nightly.
+# The script selects the first Nightly, Day 4 AM (Thursday), and last Nightly.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_info:
+        description: 'Firefox build ID: buildID=YYYYMMDDHHMMSS (UTC)'
+        required: true
+        type: string
+      win_installer_link:
+        description: 'The Windows ZIP URL for the Firefox build under test'
+        required: false
+        type: string
+      mac_installer_link:
+        description: 'The macOS installer URL for the Firefox build under test'
+        required: false
+        type: string
+      linux_tarball_link:
+        description: 'The Linux tarball URL for the Firefox build under test'
+        required: false
+        type: string
+      dry_run:
+        description: 'Select nightly tests without downloading or running Firefox'
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Hours 00:00 through 11:59 UTC are considered the morning build.
+  MORNING_CUTOFF_HOUR_UTC: "12"
+
+  # Only used when the release schedule API cannot be read.
+  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
+
+jobs:
+  Plan:
+    name: Determine nightly test plan
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.plan.outputs.should_run }}
+      cycle_day: ${{ steps.plan.outputs.cycle_day }}
+      reason: ${{ steps.plan.outputs.reason }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+      - name: Determine tests from target info
+        id: plan
+        env:
+          TARGET_INFO: ${{ inputs.target_info }}
+        run: |
+          python scripts/determine_nightly_schedule.py \
+            --target-info "$TARGET_INFO" \
+            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC" \
+            --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC"
+
+  Run:
+    name: Run nightly tests
+    needs: Plan
+    if: ${{ needs.Plan.outputs.should_run == 'true' }}
+    uses: ./.github/workflows/core.yml
+    with:
+      test_sets: '["nightly"]'
+      win_installer_link: ${{ inputs.win_installer_link }}
+      mac_installer_link: ${{ inputs.mac_installer_link }}
+      linux_tarball_link: ${{ inputs.linux_tarball_link }}
+      dry_run: ${{ inputs.dry_run }}
+      fx_channel: nightly
