@@ -20,7 +20,11 @@ class SplitView(BasePage):
     CLOSE_BOTH_TABS = "closeTabs"
 
     def expect_split_view_active(self, active: bool = True) -> BasePage:
-        """Wait until the window does (or does not) have a Split View."""
+        """
+        Wait until a Split View is (or is not) displayed, i.e. the selected tab
+        belongs to a Split View. Other Split Views in the window are ignored, use
+        expect_split_view_count for those.
+        """
         if active:
             self.element_exists("split-view-tabpanels")
         else:

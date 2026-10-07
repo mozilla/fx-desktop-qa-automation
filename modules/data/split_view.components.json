@@ -6,7 +6,7 @@
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "The tab panels deck. The splitview attribute is only set while the window has a Split View",
+      "description": "The tab panels deck. The splitview attribute is only set while the selected tab belongs to a Split View",
       "location": "Browser window content area"
     }
   },
