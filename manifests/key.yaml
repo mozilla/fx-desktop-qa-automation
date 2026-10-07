@@ -185,6 +185,11 @@ address_bar_and_search:
     result: deprecated
     splits:
     - functional1
+  test_search_settings_from_new_search_widget:
+    result: pass
+    splits:
+    - functional1
+  test_search_string_displayed_when_addressbar_unfocused:
   test_address_bar_and_search_string_displayed_when_address_bar_unfocused:
     result: pass
     splits:
