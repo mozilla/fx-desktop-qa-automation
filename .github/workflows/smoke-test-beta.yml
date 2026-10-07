@@ -82,6 +82,8 @@ jobs:
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
 
   Run-Mac-Smoke:
     needs: Check-Beta-Version
@@ -102,3 +104,5 @@ jobs:
       SLACK_KEY: ${{ secrets.SLACK_KEY }}
       GCP_CREDENTIAL: ${{ secrets.GCP_CREDENTIAL }}
       CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
+      GC_CREDENTIAL_STABILITY: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+      BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
