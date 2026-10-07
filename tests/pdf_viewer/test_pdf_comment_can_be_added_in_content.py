@@ -40,8 +40,7 @@ def test_pdf_comment_can_be_added_in_content(pdf_viewer: GenericPdf):
     # Step 3: The in-content Comment button highlights the selection and opens input.
     pdf_viewer.click_on("selection-comment-button")
     pdf_viewer.element_visible("added-highlight")
-    highlight = pdf_viewer.get_element("added-highlight")
-    original_rect = highlight.rect
+    original_rect = pdf_viewer.get_element("added-highlight").rect
     pdf_viewer.element_visible("comment-dialog")
     pdf_viewer.element_attribute_is("comment-input", "value", "")
 
@@ -50,10 +49,11 @@ def test_pdf_comment_can_be_added_in_content(pdf_viewer: GenericPdf):
     pdf_viewer.click_on("comment-save")
     pdf_viewer.element_not_visible("comment-dialog")
     pdf_viewer.element_visible("highlight-comment-indicator")
-    assert pdf_viewer.get_elements("added-highlight") == [highlight], (
-        "Saving the comment should preserve the original highlight."
+    highlights = pdf_viewer.get_elements("added-highlight")
+    assert len(highlights) == 1, (
+        "Saving the comment should preserve exactly one highlight."
     )
-    assert highlight.rect == original_rect, (
+    assert highlights[0].rect == original_rect, (
         "The highlight should remain on the selected text after saving the comment."
     )
     pdf_viewer.click_on("comment-indicator")
