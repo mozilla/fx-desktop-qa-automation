@@ -1,5 +1,5 @@
 ---
-name: Nightly Tests
+name: Internal Nightly Tests
 
 run-name: Nightly tests for ${{ inputs.target_info }}
 
