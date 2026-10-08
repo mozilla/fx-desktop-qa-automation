@@ -1,4 +1,5 @@
 import logging
+import os
 
 import pytest
 from selenium.webdriver import Firefox
@@ -7,8 +8,6 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object import ContextMenu
 from modules.page_object import GoogleSearch, LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
-
-import os
 
 os.environ["MOZ_REMOTE_ALLOW_SYSTEM_ACCESS"] = "1"
 
