@@ -402,5 +402,82 @@
       "description": "The empty \"required\" text input field",
       "location": "showcase.apryse.com/gallery/form.pdf page content"
     }
+  },
+  "pages-sidebar-toggle": {
+    "selectorData": "viewsManagerToggleButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Opens the PDF pages sidebar",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnails": {
+    "selectorData": "#thumbnailsView > .thumbnail",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Page thumbnails in document order",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnail-image": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > .thumbnailImageContainer:not(.placeholder)",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Draggable image of the numbered PDF page",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnail-checkbox": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > input[type='checkbox']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Selects the numbered PDF page",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "selected-page-checkboxes": {
+    "selectorData": "#thumbnailsView > .thumbnail > input:checked",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Checked page selection boxes",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-drag-placeholder": {
+    "selectorData": "#thumbnailsView .placeholder",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Placeholder left at the dragged page origin",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-drop-guide": {
+    "selectorData": "#thumbnailsView > .dragMarker",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Guide line indicating the page drop position",
+      "location": "The PDF viewer Pages sidebar"
+    }
   }
 }
