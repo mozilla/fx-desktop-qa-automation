@@ -11,6 +11,8 @@ from selenium.webdriver.common.keys import Keys
 
 from modules.page_object import AboutPrefs
 
+# Measured: the select is stop 16 and the link 17. 40 leaves room for rows
+# that appear when other AI features are enabled.
 MAX_TAB_STOPS = 40
 
 
