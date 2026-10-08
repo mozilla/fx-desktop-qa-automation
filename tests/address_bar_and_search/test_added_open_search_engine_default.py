@@ -57,7 +57,6 @@ def search_site():
     )
     yield server
     server.stop()
-    server.stop()
 
 
 def test_added_open_search_engine_default(driver: Firefox, search_site: HTTPServer):
