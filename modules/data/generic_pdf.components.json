@@ -78,6 +78,15 @@
       "location": "The pdf viewer toolbar"
     }
   },
+  "print-button": {
+    "selectorData": "printButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The print button",
+      "location": "The pdf viewer toolbar"
+    }
+  },
   "zipcode-field": {
     "selectorData": "input[name='ZIP Code']",
     "strategy": "css",
