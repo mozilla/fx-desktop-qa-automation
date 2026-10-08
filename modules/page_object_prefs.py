@@ -549,12 +549,10 @@ class AboutPrefs(BasePage):
             timeout=DOWNLOAD_LANGUAGE_TIMEOUT,
             ignored_exceptions=(NoSuchElementException, StaleElementReferenceException),
         ).until(
-            lambda _: (
-                self.get_element(
-                    "download-language-item", labels=[lang_code]
-                ).get_dom_attribute("description")
-                is None
-            )
+            lambda _: self.get_element(
+                "download-language-item", labels=[lang_code]
+            ).get_dom_attribute("description")
+            is None
         )
         return self
 

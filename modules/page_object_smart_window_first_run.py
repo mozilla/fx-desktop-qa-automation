@@ -82,10 +82,8 @@ class SmartWindowFirstRun(BasePage):
             "Call select_model() before expect_model_choice_saved()"
         )
         self.expect(
-            lambda _: (
-                self.get_pref("browser.smartwindow.firstrun.modelChoice")
-                == self.model_choice_id
-            )
+            lambda _: self.get_pref("browser.smartwindow.firstrun.modelChoice")
+            == self.model_choice_id
         )
         return self
 
