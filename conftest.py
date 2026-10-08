@@ -14,6 +14,7 @@ import requests
 from fxa.errors import Error as FxaError
 from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
+from pytest_httpserver import HTTPServer
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -658,7 +659,18 @@ def faker_seed():
 
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
-    return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+    """
+    URL of a fillable PDF (an I-9 form), served from data/i-9.pdf on a local
+    server. uscis.gov, where it comes from, blocks CI machines.
+    """
+    server = HTTPServer(host="127.0.0.1", port=0)
+    server.expect_request("/i-9.pdf").respond_with_data(
+        Path("data", "i-9.pdf").read_bytes(), content_type="application/pdf"
+    )
+    server.start()
+    yield server.url_for("/i-9.pdf")
+    server.clear()
+    server.stop()
 
 
 @pytest.fixture()
