@@ -2213,7 +2213,7 @@ smart_window:
   test_c3309849_switch_windows_while_visiting_website:
     result: pass
     splits:
-    - smart_windows
+    - smart_window
     - functional1
   test_c3309851_smart_window_missing_in_private_browsing:
     result: pass
