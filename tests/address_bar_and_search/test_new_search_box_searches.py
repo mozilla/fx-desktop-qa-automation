@@ -26,11 +26,7 @@ def test_new_search_box_searches(driver: Firefox):
     tabs = TabBar(driver)
 
     # Setup: add the search bar to the toolbar.
-    with driver.context(driver.CONTEXT_CHROME):
-        # Faster than going through Customize mode.
-        driver.execute_script(
-            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
-        )
+    nav.add_search_bar_via_customizable_ui()
 
     # Step 1: Type a string in the search box in a new tab.
     tabs.open_and_switch_to_new_tab()

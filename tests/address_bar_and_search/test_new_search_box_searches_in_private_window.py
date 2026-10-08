@@ -26,11 +26,7 @@ def test_new_search_box_searches_in_private_window(driver: Firefox):
     nav = Navigation(driver)
 
     # Setup: add the search bar to the toolbar.
-    with driver.context(driver.CONTEXT_CHROME):
-        # Faster than going through Customize mode.
-        driver.execute_script(
-            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
-        )
+    nav.add_search_bar_via_customizable_ui()
 
     # Step 1: Open a private window and focus the search box.
     nav.open_and_switch_to_private_window_via_keyboard()
