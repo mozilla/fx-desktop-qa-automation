@@ -528,6 +528,28 @@ class TabBar(BasePage):
         return self.get_element("tabgroup-label").text
 
     @BasePage.context_chrome
+    def get_tab_groups(self) -> list[dict]:
+        """
+        Return the window's tab groups, in tab strip order.
+
+        Returns
+        -------
+        list[dict]
+            Each with label and urls, the URLs of the group's tabs in order.
+        """
+        return self.driver.execute_script(
+            "return Array.from(gBrowser.tabGroups, group => ({"
+            "  label: group.label,"
+            "  urls: group.tabs.map(tab => tab.linkedBrowser.currentURI.spec),"
+            "}));"
+        )
+
+    def expect_tab_group_exists(self) -> BasePage:
+        """Wait until the window has at least one tab group."""
+        self.expect(lambda _: self.get_tab_groups())
+        return self
+
+    @BasePage.context_chrome
     def edit_tab_group(
         self, new_name: str = None, new_color: str = None, add_new_tab: bool = False
     ) -> "TabBar":

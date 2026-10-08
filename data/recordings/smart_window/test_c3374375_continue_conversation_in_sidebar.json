@@ -1,0 +1,237 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "model": "qwen3-235b-a22b-instruct-2507-maas",
+        "path": "/v1/chat/completions",
+        "purpose": "convo-starters-sidebar",
+        "stream": false
+      },
+      "response": {
+        "body": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "What can you do with this content?  \nExplain key ideas from this page",
+                "provider_specific_fields": {
+                  "refusal": null
+                },
+                "role": "assistant"
+              },
+              "provider_specific_fields": {
+                "matched_stop": 151645
+              }
+            }
+          ],
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "object": "chat.completion"
+        },
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "last_user_message": "In one plain sentence with no formatting, what is a group of otters called?",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 0
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "content": "A group",
+                  "role": "assistant"
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {
+                  "content": " of otters is called a romp, raft, or bevy."
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "stop",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "model": "qwen3-235b-a22b-instruct-2507-maas",
+        "path": "/v1/chat/completions",
+        "purpose": "title-generation",
+        "stream": false
+      },
+      "response": {
+        "body": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Group of otters called",
+                "provider_specific_fields": {
+                  "refusal": null
+                },
+                "role": "assistant"
+              },
+              "provider_specific_fields": {
+                "matched_stop": 151645
+              }
+            }
+          ],
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "object": "chat.completion"
+        },
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "last_user_message": "Without searching the web, in one plain sentence with no formatting, what do they like to eat?",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 0
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "content": "Otters",
+                  "role": "assistant"
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {
+                  "content": " primarily eat fish, crustaceans, mollusks, and other small aquatic animals."
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "stop",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    }
+  ],
+  "meta": {
+    "firefox_version": "Mozilla Firefox 159.0a1",
+    "recorded_at": "2026-10-01",
+    "upstream": "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1"
+  }
+}

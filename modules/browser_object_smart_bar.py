@@ -3,23 +3,21 @@ import logging
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object_smart_window import SmartWindow
+from modules.browser_object_smart_window import CHAT_DOCUMENT_JS, SmartWindow
+from modules.browser_object_tabbar import TabBar
 from modules.page_base import BasePage
 
-# The Smart Bar lives in <browser id="ai-window-browser"> with the editor two
-# shadow roots down, so the accessors below script the traversal. Both
-# supported alternatives were tried and do not work here:
+# The Smart Bar lives in the chat's document (see CHAT_DOCUMENT_JS) with the
+# editor two shadow roots down, so the accessors below script the traversal.
+# Both supported alternatives were tried and do not work here:
 # switch_to_iframe_context() raises NoSuchFrameException (it is a XUL
 # <browser>, not an iframe), and element.shadow_root is content-context only.
 # components.json shadowParent is not JS-free either -- see util.py:834/877.
-_TRAVERSE = """
-function aiDoc() {
-  const b = document.getElementById("ai-window-browser");
-  return b && b.contentDocument;
-}
+_TRAVERSE = (
+    CHAT_DOCUMENT_JS
+    + """
 function editor() {
-  const d = aiDoc();
-  const host = d && d.querySelector("ai-window");
+  const host = aiWindow();
   return host && host.shadowRoot
     ? host.shadowRoot.querySelector("moz-multiline-editor")
     : null;
@@ -63,9 +61,11 @@ function menuItemIds(list) {
     : [];
 }
 """
+)
 
 # panel-item data-l10n-ids in the CTA's actions menu. Matching on l10n id
 # rather than visible text keeps these locale-independent.
+ACTION_MENU_CHAT = "aiwindow-input-cta-menu-label-chat"
 ACTION_MENU_GO_TO_SITE = "aiwindow-input-cta-menu-label-navigate"
 ACTION_MENU_SEARCH_WITH_DEFAULT = "aiwindow-input-cta-menu-label-search"
 ACTION_MENU_SEARCH_WITH = "aiwindow-input-cta-menu-label-search-with"
@@ -97,6 +97,15 @@ class SmartBar(BasePage):
         SmartWindow, which owns the Ask button's selector.
         """
         SmartWindow(self.driver).click_on("smart-window-ask-button")
+        self.expect_smart_bar_ready()
+        return self
+
+    def open_full_page_chat(self) -> BasePage:
+        """
+        Open a new tab, which in a Smart Window is the full-page chat, and
+        wait for its Smart Bar.
+        """
+        TabBar(self.driver).new_tab_by_button()
         self.expect_smart_bar_ready()
         return self
 
@@ -230,3 +239,57 @@ class SmartBar(BasePage):
                 f"ctaLists() is no longer safe and needs revisiting"
             )
         return result["items"]
+
+    # ── Submitting ───────────────────────────────────────────────────────
+
+    def get_action(self) -> str:
+        """Return the CTA's current action: "chat", "search", "navigate" or ""."""
+        return self._script("const c = cta(); return c ? c.action : '';")
+
+    def choose_chat_action(self) -> BasePage:
+        """
+        Pick Ask (chat) from the Go/Ask action menu, leaving the menu closed.
+
+        A scripted click on the item doesn't close the menu the way a real
+        one does, so it is hidden explicitly.
+        """
+        self.open_action_menu()
+        found = self._script(
+            "const l = ctaLists()[0];"
+            "const item = l && l.querySelector(`panel-item[data-l10n-id='${arguments[0]}']`);"
+            "if (!item) return false;"
+            "item.click();"
+            "if (l.open) l.hide();"
+            "return true;",
+            ACTION_MENU_CHAT,
+        )
+        if not found:
+            raise AssertionError("Chat item not found in the CTA action menu")
+        self.expect(lambda _: self.get_action() == "chat")
+        self.expect_action_menu_open(False)
+        return self
+
+    def submit_chat(self, text: str) -> BasePage:
+        """
+        Type `text` and send it to the assistant as a chat message.
+
+        Chat is picked from the menu because Firefox guesses chat or search
+        with a model it downloads from model-hub, which is blocked under
+        automation, so the guess always falls back to search.
+
+        Sent with the CTA button rather than Enter: picking from the menu
+        moves focus, and Enter was dropped in about 1 run in 3.
+        """
+        self.set_smart_bar_text(text)
+        self.choose_chat_action()
+        clicked = self._script(
+            "const b = cta().shadowRoot.querySelector('moz-button');"
+            "if (!b || !b.buttonEl) return false;"
+            "b.buttonEl.click();"
+            "return true;"
+        )
+        if not clicked:
+            raise AssertionError("Smart Bar CTA button not found")
+        # Firefox clears the Smart Bar once the message is sent.
+        self.expect_smart_bar_text("")
+        return self

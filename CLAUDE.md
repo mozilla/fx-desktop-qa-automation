@@ -169,6 +169,7 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 | `fxa_waf_bypass` | Autouse; adds the `fxa-ci` header to FxA hosts when `fxa_env` and `CI_WAF_TOKEN` are set |
 | `create_fxa` | Verified PyFxA account (`FxaSession`); deleted at teardown |
 | `restmail_session` / `get_otp_code` | Throwaway restmail inbox and emailed-code reader, for UI sign-up |
+| `opt_mock_mode` | `--mock-mode` flag: `replay` (default), `record` or `live` (session-scoped) |
 
 ### FxA and Smart Window
 
@@ -181,6 +182,27 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 - Onboarding: `SmartWindowFirstRun.complete_onboarding()` picks the first offered model; pass a brand name (e.g. `"Mistral"`) only when the test is about that model. The choice id is read from the page, since names and ids come from the server. Check it with `expect_model_choice_saved()`.
 - When sign-in isn't under test, use the `active_smart_window` fixture (bypasses FxA).
 - Read runtime prefs with `SmartWindowFirstRun.get_pref(name)`.
+
+### Smart Window mock server
+
+- Full guide for people: `SMART_WINDOW_MOCK_SERVER.md`. Keep it in step with changes to the mock server, fixtures or recording format.
+- The Smart Window suite points Firefox's LLM and web search endpoints at a local `MockServer` (`modules/mock_server.py`), so no test reaches the real service.
+- Chat tests use the `smart_window_chat` fixture, which returns the `SmartWindowChat` BOM with Smart Window active, a stand-in FxA token and `mock_server` loaded. Open the chat, then `chat.send(prompt)` sends and returns once the assistant has answered, tool calls included; read `get_last_reply()` / `get_messages()`. Only a test that acts while the assistant is still answering uses `SmartBar.submit_chat()` and `expect_turn_complete(turn)` directly. Compare with what was served using `mock_server.chat_reply_text(prompt)`.
+- The chat renders in a remote page Selenium can't reach. New chat actions go through `SmartWindowChat._chat_script(body, *args)`, which runs `body` in that page.
+- Each test's responses live in `data/recordings/<suite>/<test file name>.json`, or `<test file name>/<parameter id>.json` per case of a parametrized test (`Recording`, `modules/classes/recording.py`). Replay matches chat messages (streamed, purpose `chat`) by prompt and tool round, and background requests (anything else: title generation, conversation starters) by purpose. A missing chat or search recording fails the test; missing background ones are answered with a 503.
+- Record with `--mock-mode=record` and a prod FxA token in `MOZ_FXA_BEARER_TOKEN` (see `SMART_WINDOW_MOCK_SERVER.md`). Never write the token anywhere else. Replay's failure message gives the exact record command; saved recordings leave out fields that change every call (`VOLATILE_FIELDS` and thought signatures).
+- Where only the reply text matters, build the recording with `chat_reply()`, `tool_call()` or `search_results()` from `modules/classes/recording.py` instead of recording one.
+- Which chat to use: the sidebar (`SmartBar.open_smart_bar()`) when the TestRail case is about the AI Chat Sidebar, otherwise the full-page chat (`SmartBar.open_full_page_chat()`, the Home page). Run both, with a `parametrize`, only where behaviour is known to differ between them; each case then gets its own recording.
+
+### Smart Window tab management tests
+
+- One TestRail case per scenario, so one test file each (see `test_c4438277_group_related_tabs.py`). Describe the scenario with `TabGroupingScenario` (`modules/classes/tab_grouping_scenario.py`): the instruction, the pages opened as tabs, and the pages expected in the group.
+- Pages are files in `data/smart_window_pages/`. The `tab_pages` fixture serves them and turns file names into URLs; open them with `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`.
+- After `chat.send(scenario.instruction)`:
+  - get what the model asked for with `mock_server.tool_calls("manage_tabs")`;
+  - call `SmartWindowChat.confirm_tab_grouping_if_asked()`, since the model chooses whether to ask first;
+  - wait with `TabBar.expect_tab_group_exists()`;
+  - assert with `scenario.check_grouping(TabBar.get_tab_groups(), chat.resolve_url_tokens(...))`. It reports tabs Firefox left out separately from tabs the model chose wrongly.
 
 ### Firefox Build Setup
 

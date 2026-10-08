@@ -1,0 +1,166 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "last_user_message": "Group my recipe tabs",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 0
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "role": "assistant",
+                  "tool_calls": [
+                    {
+                      "function": {
+                        "arguments": "{}",
+                        "name": "get_open_tabs"
+                      },
+                      "id": "call_429790__thought__AY89a1825eX8HzSttPltb1XtOjLRrm/v4iYYU+Io23C/mK8XPjosiJkFSeUv6AQO9tTaTqrPO7VNty/MZLOTSGZsmNre5WyG0WfBJPH1CEC/GjPXhCwtDVn7",
+                      "index": 0,
+                      "type": "function"
+                    }
+                  ]
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "tool_calls",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "last_user_message": "Group my recipe tabs",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 1
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "role": "assistant",
+                  "tool_calls": [
+                    {
+                      "function": {
+                        "arguments": "{\"url_tokens\": [\"\u00a7url_token: LOCALHOST_COOKIE_RECIPE_HTML_1\u00a7\", \"\u00a7url_token: LOCALHOST_LASAGNA_HTML_1\u00a7\"], \"ask_confirmation\": true, \"label\": \"Recipes\", \"action\": \"group_tabs\"}",
+                        "name": "manage_tabs"
+                      },
+                      "id": "call_381356__thought__AY89a19Oezg/g+P9Ojab30jg3wVrDXNN1ltgszhd4UE+Wo9iIdpu81NRq3WJOYlgC05IhISdfc6s64JpcRo9LwF5MPlz2x6CFbU5hB/z70IB/JPFbFCca1Iu",
+                      "index": 0,
+                      "type": "function"
+                    }
+                  ]
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "tool_calls",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "model": "qwen3-235b-a22b-instruct-2507-maas",
+        "path": "/v1/chat/completions",
+        "purpose": "title-generation",
+        "stream": false
+      },
+      "response": {
+        "body": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Organize recipe tabs",
+                "provider_specific_fields": {
+                  "refusal": null
+                },
+                "role": "assistant"
+              },
+              "provider_specific_fields": {
+                "matched_stop": 151645
+              }
+            }
+          ],
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "object": "chat.completion"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "meta": {
+    "firefox_version": "Mozilla Firefox 159.0a1",
+    "recorded_at": "2026-10-01",
+    "upstream": "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1"
+  }
+}
