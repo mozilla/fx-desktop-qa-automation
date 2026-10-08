@@ -1060,6 +1060,17 @@
       "doNotCache"
     ]
   },
+  "searchbar-go-button": {
+    "selectorData": "#searchbar-new .urlbar-go-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Go arrow in the new search bar",
+      "location": "Searchbar"
+    }
+  },
   "searchbar-suggestions": {
     "selectorData": "#searchbar-results div.urlbarView-row",
     "strategy": "css",
