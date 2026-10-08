@@ -96,6 +96,14 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
+  test_new_search_box_searches:
+    result: pass
+    splits:
+    - functional1
+  test_new_search_box_searches_in_private_window:
+    result: pass
+    splits:
+    - functional1
   test_no_search_engine_suggestions_in_private_window:
     result: pass
     splits:

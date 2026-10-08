@@ -1317,6 +1317,17 @@ class Navigation(BasePage):
         self.customize.add_widget_to_toolbar("search-bar")
         return self
 
+    @BasePage.context_chrome
+    def add_search_bar_via_customizable_ui(self) -> BasePage:
+        """
+        Add the search bar to the toolbar without opening customize mode.
+        """
+        # Faster than going through Customize mode.
+        self.driver.execute_script(
+            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
+        )
+        return self
+
     def verify_searchbar_suggestion_is_highlighted(self):
         """Verify that a suggestion item is highlighted in the search bar popup.
 
