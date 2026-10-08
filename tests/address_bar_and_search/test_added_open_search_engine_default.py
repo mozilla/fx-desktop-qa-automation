@@ -56,7 +56,7 @@ def search_site():
         "<html><body>Starfox results</body></html>", content_type="text/html"
     )
     yield server
-    server.clear()
+    server.stop()
     server.stop()
 
 
