@@ -8,6 +8,10 @@ from modules.browser_object import ContextMenu
 from modules.page_object import GoogleSearch, LoginAutofill, TextAreaFormAutofill
 from modules.util import Utilities
 
+import os
+
+os.environ["MOZ_REMOTE_ALLOW_SYSTEM_ACCESS"] = "1"
+
 
 @pytest.fixture()
 def test_case():
@@ -35,12 +39,19 @@ def test_login_form_copy_paste(driver: Firefox):
         login_fill.context_click(element_name, labels=labels)
         context_menu.click_and_hide_menu(f"context-menu-{action}")
 
-    # Paste in the clear
-    login_fill.fill("username-field", random_text, press_enter=False)
-    context_action("username-field")
-    login_fill.fill("username-field", random_other_text, press_enter=False)
-    context_action("username-field", "paste")
-    login_fill.element_attribute_contains("username-field", "value", random_text)
+    # Paste in the clear. The clipboard write is async, so a one-shot paste can
+    # fire before the copy lands; redo the copy/paste cycle until it settles.
+    def _copied_and_pasted(_):
+        login_fill.fill("username-field", random_text, press_enter=False)
+        context_action("username-field")
+        login_fill.fill("username-field", random_other_text, press_enter=False)
+        context_action("username-field", "paste")
+        value = login_fill.get_element("username-field").get_attribute("value")
+        return random_text in (value or "")
+
+    login_fill.custom_wait(timeout=20, poll_frequency=1).until(
+        _copied_and_pasted, message="Pasted text never matched the copied text"
+    )
 
     # Paste to password
     login_fill.context_click("input-field", labels=["current-password"])
@@ -50,6 +61,10 @@ def test_login_form_copy_paste(driver: Firefox):
     login_fill.element_attribute_contains(
         "input-field", "value", random_text, labels=["current-password"]
     )
+
+    # Re-mask the password: a revealed password can be copied, a masked one can't
+    login_fill.context_click("input-field", labels=["current-password"])
+    context_menu.click_and_hide_menu("context-menu-reveal-password")
 
     # Triple click and attempt to copy text from protected input
     login_fill.fill(
