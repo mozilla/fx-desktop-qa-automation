@@ -117,6 +117,28 @@
       "location": "about:preferences#search"
     }
   },
+  "separate-private-engine-checkbox": {
+    "selectorData": "browserSeparateDefaultEngine",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Use a different default search engine in private windows checkbox",
+      "location": "about:preferences#search"
+    }
+  },
+  "private-engine-dropdown-root": {
+    "selectorData": "defaultPrivateEngine",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Default search engine for private windows dropdown",
+      "location": "about:preferences#search"
+    }
+  },
   "select-wrapper-button": {
     "selectorData": ".select-wrapper button",
     "strategy": "css",
