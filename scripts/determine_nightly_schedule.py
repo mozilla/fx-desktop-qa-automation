@@ -108,7 +108,7 @@ def resolve_release_cycle(
     try:
         return fetch_train_info(url)
     except (urllib.error.URLError, ValueError, TimeoutError) as error:
-        print(f"Warning! could not read the release schedule: {error}")
+        print(f"::warning::Could not read the release schedule: {error}")
 
     anchor = parse_anchor_date(anchor_value)
     cycle = calculate_from_anchor(anchor, build_date)
