@@ -1636,6 +1636,11 @@ printing_ui:
     splits:
     - functional2
     - nightly
+  test_print_pdf_via_pdfjs:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_print_preview:
     result: pass
     splits:
