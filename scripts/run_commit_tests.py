@@ -9,7 +9,9 @@ TEST_RE = re.compile(r"tests/.*test\w+\.py")
 if __name__ == "__main__":
     manifest = TestKey("manifests/key.yaml")
     committed_files = (
-        check_output(["git", "--no-pager", "diff", "--name-only", "--cached"])
+        check_output(
+            ["git", "--no-pager", "diff", "--name-only", "--cached", "--diff-filter=d"]
+        )
         .decode()
         .splitlines()
     )
