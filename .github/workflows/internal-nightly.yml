@@ -1,0 +1,85 @@
+---
+name: Internal Nightly Tests
+
+run-name: Nightly tests for ${{ inputs.target_info }}
+
+on:
+  schedule:
+    - cron: "0 12 * * 2,4"
+
+  workflow_dispatch:
+    inputs:
+      target_info:
+        description: 'Firefox build ID: buildID=YYYYMMDDHHMMSS (UTC)'
+        required: true
+        type: string
+      win_installer_link:
+        description: 'The Windows ZIP URL for the Firefox build under test'
+        required: false
+        type: string
+      mac_installer_link:
+        description: 'The macOS installer URL for the Firefox build under test'
+        required: false
+        type: string
+      linux_tarball_link:
+        description: 'The Linux tarball URL for the Firefox build under test'
+        required: false
+        type: string
+      dry_run:
+        description: 'Select nightly tests without downloading or running Firefox'
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Hours 00:00 through 11:59 UTC are considered the morning build.
+  MORNING_CUTOFF_HOUR_UTC: "12"
+
+
+jobs:
+  Resolve-Build:
+    name: Resolve Nightly installer URLs
+    runs-on: ubuntu-latest
+    outputs:
+      win_installer_link: ${{ steps.resolve.outputs.win_installer_link }}
+      mac_installer_link: ${{ steps.resolve.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ steps.resolve.outputs.linux_tarball_link }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Resolve installer URLs
+        id: resolve
+        env:
+          WIN_LINK: ${{ inputs.win_installer_link }}
+          MAC_LINK: ${{ inputs.mac_installer_link }}
+          LINUX_LINK: ${{ inputs.linux_tarball_link }}
+        run: |
+          pipenv run python scripts/resolve_nightly_build.py
+
+  Run:
+    name: Run nightly tests
+    needs: Resolve-Build
+    uses: ./.github/workflows/core.yml
+    with:
+      test_sets: '["nightly"]'
+      win_installer_link: ${{ needs.Resolve-Build.outputs.win_installer_link }}
+      mac_installer_link: ${{ needs.Resolve-Build.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ needs.Resolve-Build.outputs.linux_tarball_link }}
+      dry_run: ${{ inputs.dry_run }}
+      fx_channel: nightly
