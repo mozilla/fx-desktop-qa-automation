@@ -2244,6 +2244,10 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3349915_settings_page_keyboard_accessible:
+    result: pass
+    splits:
+    - functional1
   test_c3371305_smart_window_onboarding_new_account:
     result: pass
     splits:
