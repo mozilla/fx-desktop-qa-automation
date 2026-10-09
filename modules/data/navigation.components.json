@@ -1060,6 +1060,17 @@
       "doNotCache"
     ]
   },
+  "searchbar-go-button": {
+    "selectorData": "#searchbar-new .urlbar-go-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Go arrow in the new search bar",
+      "location": "Searchbar"
+    }
+  },
   "searchbar-suggestions": {
     "selectorData": "#searchbar-results div.urlbarView-row",
     "strategy": "css",
@@ -1147,6 +1158,24 @@
     "comment": {
       "description": "Switch to tab from awesome bar",
       "location": "Address bar"
+    }
+  },
+  "switch-to-tab-url": {
+    "selectorData": ".urlbarView-url",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "URL of a switch-to-tab result. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
+    }
+  },
+  "switch-to-tab-action": {
+    "selectorData": ".urlbarView-action",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Action chiclet of a switch-to-tab result. Reads 'Switch to Tab', or 'Move Tab to Split View' while a Split View tab is selected. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
     }
   },
   "tab-container-label": {

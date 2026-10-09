@@ -191,6 +191,62 @@ class Navigation(BasePage):
         switch_items[0].click()
 
     @BasePage.context_chrome
+    def find_switch_tab_result(self, url_fragment: str) -> WebElement | None:
+        """
+        Return the switch-to-tab result in the URL bar whose URL contains
+        `url_fragment`, or None if it is not listed right now. Does not wait.
+        """
+        try:
+            for row in self.get_elements("switch-to-tab"):
+                url = row.find_element(*self.get_selector("switch-to-tab-url"))
+                if url_fragment in url.get_attribute("textContent"):
+                    return row
+        except StaleElementReferenceException:
+            pass
+        return None
+
+    @BasePage.context_chrome
+    def expect_switch_tab_action_text(
+        self, url_fragment: str, expected_text: str
+    ) -> BasePage:
+        """
+        Wait until the switch-to-tab result for `url_fragment` reads
+        `expected_text`, e.g. 'Move Tab to Split View'.
+        """
+
+        def _action_matches(_):
+            # The results list can refresh between finding the row and reading it
+            try:
+                row = self.find_switch_tab_result(url_fragment)
+                if row is None:
+                    return False
+                action = row.find_element(*self.get_selector("switch-to-tab-action"))
+                return action.get_attribute("textContent").strip() == expected_text
+            except StaleElementReferenceException:
+                return False
+
+        self.expect(_action_matches)
+        return self
+
+    @BasePage.context_chrome
+    def click_switch_tab_result(self, url_fragment: str) -> BasePage:
+        """Click the switch-to-tab result in the URL bar for `url_fragment`."""
+
+        def _click_row(_):
+            # The results list can refresh between finding the row and clicking it
+            try:
+                row = self.find_switch_tab_result(url_fragment)
+                if row is None:
+                    return False
+                row.click()
+                return True
+            except StaleElementReferenceException:
+                return False
+
+        self.expect(_click_row)
+        return self
+
+    @BasePage.context_chrome
     def click_on_clipboard_suggestion(self) -> None:
         """
         Click the 'Visit from clipboard' suggestion in the URL bar.
@@ -1315,6 +1371,17 @@ class Navigation(BasePage):
         self.panel_ui.open_panel_menu()
         self.panel_ui.navigate_to_customize_toolbar()
         self.customize.add_widget_to_toolbar("search-bar")
+        return self
+
+    @BasePage.context_chrome
+    def add_search_bar_via_customizable_ui(self) -> BasePage:
+        """
+        Add the search bar to the toolbar without opening customize mode.
+        """
+        # Faster than going through Customize mode.
+        self.driver.execute_script(
+            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
+        )
         return self
 
     def verify_searchbar_suggestion_is_highlighted(self):
