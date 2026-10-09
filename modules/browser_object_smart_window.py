@@ -71,10 +71,12 @@ class SmartWindow(BasePage):
         """
         self.expect(
             lambda _: (
-                self.get_element("main-window").get_attribute("aiwindow-first-run")
-                is not None
+                (
+                    self.get_element("main-window").get_attribute("aiwindow-first-run")
+                    is not None
+                )
+                == active
             )
-            == active
         )
         return self
 

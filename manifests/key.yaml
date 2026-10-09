@@ -2318,6 +2318,10 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_manage_split_view_address_bar:
+    result: pass
+    splits:
+    - functional3
   test_move_multi_selected_tabs:
     result: pass
     splits:
@@ -2332,7 +2336,6 @@ tabs:
     result: pass
     splits:
     - functional3
-    - nightly
   test_mute_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:
@@ -2437,7 +2440,6 @@ tabs:
     result: pass
     splits:
     - functional3
-    - nightly
   test_tab_hover_different_content_type:
     result: pass
     splits:
