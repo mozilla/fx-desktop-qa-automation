@@ -3,10 +3,10 @@ name: Internal Nightly Tests
 
 run-name: Nightly tests for ${{ inputs.target_info }}
 
-# Dispatch from the build trigger for each Nightly.
-# The script selects Tuesday and Thursday morning builds.
-
 on:
+  schedule:
+    - cron: "0 12 * * 2,4"
+
   workflow_dispatch:
     inputs:
       target_info:
@@ -44,39 +44,42 @@ env:
 
 
 jobs:
-  Plan:
-    name: Determine nightly test plan
+  Resolve-Build:
+    name: Resolve Nightly installer URLs
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.plan.outputs.should_run }}
-      reason: ${{ steps.plan.outputs.reason }}
+      win_installer_link: ${{ steps.resolve.outputs.win_installer_link }}
+      mac_installer_link: ${{ steps.resolve.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ steps.resolve.outputs.linux_tarball_link }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           persist-credentials: false
+
       - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         with:
           python-version: "3.13"
-      - name: Determine tests from target info
-        id: plan
+
+      - name: Resolve installer URLs
+        id: resolve
         env:
-          TARGET_INFO: ${{ inputs.target_info }}
+          WIN_LINK: ${{ inputs.win_installer_link }}
+          MAC_LINK: ${{ inputs.mac_installer_link }}
+          LINUX_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          python scripts/determine_nightly_schedule.py \
-            --target-info "$TARGET_INFO" \
-            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC"
+          pipenv run python scripts/resolve_nightly_build.py
 
   Run:
     name: Run nightly tests
-    needs: Plan
-    if: ${{ needs.Plan.outputs.should_run == 'true' }}
+    needs: Resolve-Build
     uses: ./.github/workflows/core.yml
     with:
       test_sets: '["nightly"]'
-      win_installer_link: ${{ inputs.win_installer_link }}
-      mac_installer_link: ${{ inputs.mac_installer_link }}
-      linux_tarball_link: ${{ inputs.linux_tarball_link }}
+      win_installer_link: ${{ needs.Resolve-Build.outputs.win_installer_link }}
+      mac_installer_link: ${{ needs.Resolve-Build.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ needs.Resolve-Build.outputs.linux_tarball_link }}
       dry_run: ${{ inputs.dry_run }}
       fx_channel: nightly
