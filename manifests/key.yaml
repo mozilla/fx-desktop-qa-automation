@@ -1335,7 +1335,6 @@ pdf_viewer:
     result: pass
     splits:
     - functional1
-    - nightly
   test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:
