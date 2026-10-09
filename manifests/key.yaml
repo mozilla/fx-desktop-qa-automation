@@ -2319,6 +2319,11 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_move_tab_to_split_view:
+    result: pass
+    splits:
+    - functional3
+    - nightly
   test_mute_tabs:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2001204
     result:

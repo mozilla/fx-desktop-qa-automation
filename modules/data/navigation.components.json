@@ -1160,6 +1160,24 @@
       "location": "Address bar"
     }
   },
+  "switch-to-tab-url": {
+    "selectorData": ".urlbarView-url",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "URL of a switch-to-tab result. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
+    }
+  },
+  "switch-to-tab-action": {
+    "selectorData": ".urlbarView-action",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Action chiclet of a switch-to-tab result. Reads 'Switch to Tab', or 'Move Tab to Split View' while a Split View tab is selected. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
+    }
+  },
   "tab-container-label": {
     "selectorData": "userContext-label",
     "strategy": "id",
