@@ -77,8 +77,6 @@ def write_github_outputs(plan: NightlyPlan) -> None:
         github_output,
         [
             f"should_run={str(plan.should_run).lower()}",
-            # Retained as an empty output for compatibility with the existing YAML.
-            "cycle_day=",
             f"reason={plan.reason}",
         ],
     )
@@ -98,12 +96,6 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=12,
         help="Hours before this UTC hour are considered morning.",
-    )
-    # The existing YAML still passes this argument; cycle dates are no longer used.
-    parser.add_argument(
-        "--release-cycle-anchor-utc",
-        default="",
-        help="Unused compatibility argument for the existing workflow.",
     )
     return parser.parse_args()
 

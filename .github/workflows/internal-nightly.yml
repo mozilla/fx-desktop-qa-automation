@@ -4,7 +4,7 @@ name: Internal Nightly Tests
 run-name: Nightly tests for ${{ inputs.target_info }}
 
 # Dispatch from the build trigger for each Nightly.
-# The script selects the first Nightly, Day 4 AM (Thursday), and last Nightly.
+# The script selects Tuesday and Thursday morning builds.
 
 on:
   workflow_dispatch:
@@ -42,8 +42,6 @@ env:
   # Hours 00:00 through 11:59 UTC are considered the morning build.
   MORNING_CUTOFF_HOUR_UTC: "12"
 
-  # Only used when the release schedule API cannot be read.
-  RELEASE_CYCLE_ANCHOR_UTC: ${{ vars.RELEASE_CYCLE_ANCHOR_UTC }}
 
 jobs:
   Plan:
@@ -51,7 +49,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_run: ${{ steps.plan.outputs.should_run }}
-      cycle_day: ${{ steps.plan.outputs.cycle_day }}
       reason: ${{ steps.plan.outputs.reason }}
     steps:
       - name: Checkout repository
@@ -69,8 +66,7 @@ jobs:
         run: |
           python scripts/determine_nightly_schedule.py \
             --target-info "$TARGET_INFO" \
-            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC" \
-            --release-cycle-anchor-utc "$RELEASE_CYCLE_ANCHOR_UTC"
+            --morning-cutoff-hour-utc "$MORNING_CUTOFF_HOUR_UTC"
 
   Run:
     name: Run nightly tests
