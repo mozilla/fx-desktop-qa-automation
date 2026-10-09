@@ -6,7 +6,6 @@ from modules.browser_object import Navigation
 SEARCH_TERM = "soccer"
 SEARCH_ENGINES = [
     "Google",
-    "Amazon.com",
     "Bing",
     "DuckDuckGo",
     "eBay",
