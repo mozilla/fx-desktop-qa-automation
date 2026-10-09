@@ -266,6 +266,17 @@
       "doNotCache"
     ]
   },
+  "selection-comment-button": {
+    "selectorData": "button[data-l10n-id='pdfjs-comment-floating-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Adds a comment and highlight to selected PDF text",
+      "location": "The floating toolbar below a PDF text selection"
+    }
+  },
   "highlight-comment-button": {
     "selectorData": "button[data-l10n-id='pdfjs-editor-add-comment-button']",
     "strategy": "css",
