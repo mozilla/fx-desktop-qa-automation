@@ -1,0 +1,1355 @@
+import json
+import logging
+import os
+import platform
+import re
+import sys
+import time
+from copy import deepcopy
+from functools import wraps
+from importlib.resources import files
+from pathlib import Path
+from typing import List
+
+from pypom import Page
+from selenium.common import NoAlertPresentException
+from selenium.common.exceptions import (NoSuchElementException,
+                                        NoSuchWindowException,
+                                        TimeoutException)
+from selenium.webdriver import ActionChains, Firefox
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from .util import PomUtils
+
+# Convert "strategy" from the components json to Selenium By vals
+STRATEGY_MAP = {
+    "css": By.CSS_SELECTOR,
+    "class": By.CLASS_NAME,
+    "id": By.ID,
+    "link_text": By.LINK_TEXT,
+    "partial_link_text": By.PARTIAL_LINK_TEXT,
+    "xpath": By.XPATH,
+    "tag": By.TAG_NAME,
+    "name": By.NAME,
+}
+
+CV_PATH = Path("data", "cv")
+OS_SHORT_NAMES = {"Windows": "win", "Darwin": "mac", "Linux": "linux"}
+
+_gui_auto = None
+
+
+def _make_gui_auto(sysname):
+    if (
+        sysname == "Linux"
+        and not os.environ.get("MANUAL")
+        and not os.environ.get("DISPLAY")
+        and not os.environ.get("WAYLAND_DISPLAY")
+    ):
+        return None
+    import pyautogui
+
+    return pyautogui
+
+
+def _get_gui_auto(sysname):
+    global _gui_auto
+    if _gui_auto is None:
+        _gui_auto = _make_gui_auto(sysname)
+    return _gui_auto
+
+
+def load_components(manifest_name: str) -> dict:
+    resource = files("auto_fxui").joinpath("data").joinpath(manifest_name)
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+class BasePage(Page):
+    """
+    This class extends pypom.Page with a constructor and methods to support our testing.
+
+    Page objects will now expect a JSON entry in ./modules/data with info about elements'
+    selectors, locations in shadow DOM, and other categorizations. This JSON file should
+    be name filename.components.json, where filename is the snake_case version of the
+    class name. E.g. AboutPrefs has ./modules/data/about_prefs.components.json.
+
+    Elements in the "requiredForPage" group will be checked for presence before self.loaded
+    can return True.
+
+    ...
+
+    Attributes
+    ----------
+    driver: selenium.webdriver.Firefox
+        The browser instance under test
+
+    utils: modules.utils.PomUtils
+        POM utilities for the object
+
+    elements: dict
+        Parse of the elements JSON file
+    """
+
+    def __init__(self, driver: Firefox, **kwargs):
+        super().__init__(driver, **kwargs)
+        self.utils = PomUtils(self.driver)
+
+        # JSON files should be labelled with snake_cased versions of the Class name
+        qualname = self.__class__.__qualname__
+        logging.info("======")
+        logging.info(f"Loading POM for {qualname}...")
+        manifest_name = qualname[0].lower()
+        for char in qualname[1:]:
+            if char == char.lower():
+                manifest_name += char
+            else:
+                manifest_name += f"_{char.lower()}"
+        sys_platform = self.sys_platform()
+        self.load_element_manifest(f"{manifest_name}.components.json")
+        self.actions = ActionChains(self.driver)
+        self.instawait = WebDriverWait(self.driver, 0)
+
+        if not driver.capabilities.get("moz:headless", True):  # headless set to false
+            self.gui = _get_gui_auto(sys_platform)
+
+    _xul_source_snippet = (
+        'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
+    )
+
+    def sys_platform(self):
+        """Return the system platform name"""
+        return platform.system()
+
+    def set_chrome_context(self):
+        """Make sure the Selenium driver is using CONTEXT_CHROME"""
+        if self._xul_source_snippet not in self.driver.page_source:
+            self.driver.set_context(self.driver.CONTEXT_CHROME)
+
+    def set_content_context(self):
+        """Make sure the Selenium driver is using CONTEXT_CONTENT"""
+        if self._xul_source_snippet in self.driver.page_source:
+            self.driver.set_context(self.driver.CONTEXT_CONTENT)
+
+    def custom_wait(self, **kwargs) -> WebDriverWait:
+        """
+        Create a custom WebDriverWait object, refer to Selenium docs
+        for explanations of the arguments.
+        Examples:
+          self.custom_wait(timeout=45).until(<condition>)
+          self.custom_wait(poll_frequency=1).until(<condition>)
+        """
+        return WebDriverWait(self.driver, **kwargs)
+
+    def load_element_manifest(self, manifest_loc):
+        """Populate self.elements with the parse of the elements JSON"""
+        logging.info(f"Loading element manifest: {manifest_loc}")
+        self.elements = load_components(manifest_loc)
+        # We should expect an key-value pair of "context": "chrome" for Browser Objs
+        if "context" in self.elements:
+            self.context = self.elements["context"]
+            self.context_id = (
+                self.driver.CONTEXT_CHROME
+                if self.context == "chrome"
+                else self.driver.CONTEXT_CONTENT
+            )
+            del self.elements["context"]
+        else:
+            self.context = "content"
+            self.context_id = self.driver.CONTEXT_CONTENT
+        # If we find a key-value pair for "do-not-cache", add all elements to that group
+        doNotCache = self.elements.get("do-not-cache")
+        if "do-not-cache" in self.elements:
+            del self.elements["do-not-cache"]
+        if doNotCache:
+            for key in self.elements.keys():
+                logging.info(f"adding do-not-cache to {key}")
+                self.elements[key]["groups"].append("doNotCache")
+
+    def clear_cache(self) -> Page:
+        """
+        Clear cached Selenium objects to avoid stale element references.
+        Useful after switching windows, page reloads, or significant DOM changes.
+        """
+        for name in self.elements:
+            if "seleniumObject" in self.elements[name]:
+                del self.elements[name]["seleniumObject"]
+        return self
+
+    @staticmethod
+    def context_chrome(func):
+        """Decorator to switch to CONTEXT_CHROME"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def context_content(func):
+        """Decorator to switch to CONTEXT_CONTENT"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @staticmethod
+    def context_of_model(func):
+        """Decorator to switch to the context declared in the BOM/POM json file"""
+
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            with self.driver.context(self.context_id):
+                return func(self, *args, **kwargs)
+
+        return wrapper
+
+    @context_content
+    def expect_in_content(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CONTENT"""
+        self.wait.until(condition)
+
+    @context_chrome
+    def expect_in_chrome(self, condition):
+        """Like BasePage.expect, but guarantee we're looking at CONTEXT_CHROME"""
+        self.wait.until(condition)
+
+    def opposite_context(self):
+        """Return the context that is *not* in use"""
+        return (
+            self.driver.CONTEXT_CONTENT
+            if self._xul_source_snippet in self.driver.page_source
+            else self.driver.CONTEXT_CHROME
+        )
+
+    @context_chrome
+    def is_private(self):
+        """Determine if current browsing context is private"""
+        self.expect(lambda _: "Private Browsing" in self.driver.title)
+
+    @context_chrome
+    def is_not_private(self):
+        """Determine if current browsing context is not private"""
+        self.expect(lambda _: "Private Browsing" not in self.driver.title)
+
+    @context_of_model
+    def expect(self, condition) -> Page:
+        """Use the Page's wait object to assert a condition or wait until timeout"""
+        logging.info(f"Expecting in {self.context_id}...")
+        self.wait.until(condition)
+        return self
+
+    @context_of_model
+    def expect_not(self, condition) -> Page:
+        """Use the Page's to wait until assert a condition is not true or wait until timeout"""
+        logging.info(f"Expecting NOT in {self.context_id}...")
+        self.wait.until_not(condition)
+        return self
+
+    @context_of_model
+    def element_exists(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Expect helper: wait until element exists or timeout"""
+        self.expect(lambda _: self.fetch(reference, labels=labels))
+        return self
+
+    @context_of_model
+    def element_does_not_exist(self, reference: str | tuple, labels=None) -> "Page":
+        """Wait until element does not exist (no matches) or timeout."""
+        labels = labels or []
+
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            if isinstance(reference, str):
+                # Use len(...) to avoid any truthiness quirks from wrappers
+                self.instawait.until_not(
+                    lambda _: len(self.get_elements(reference, labels=labels)) > 0
+                )
+            else:
+                self.instawait.until_not(
+                    lambda _: len(self.driver.find_elements(*reference)) > 0
+                )
+        finally:
+            self.driver.implicitly_wait(original)
+
+        return self
+
+    @context_of_model
+    def any_element_visible(self, reference: str | tuple, labels=None) -> Page:
+        """Wait until at least one matching element is visible."""
+
+        def _any_element_visible(_):
+            elements = self.get_elements(reference, labels=labels)
+            return any(el.is_displayed() for el in elements)
+
+        self.expect(_any_element_visible)
+        return self
+
+    @context_of_model
+    def element_visible(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Expect helper: wait until element is visible or timeout"""
+
+        def _element_visible(_):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_displayed()
+
+        self.expect(_element_visible)
+        return self
+
+    @context_of_model
+    def element_not_visible(self, reference: str | tuple, labels=None) -> "Page":
+        labels = labels or []
+
+        def gone_or_hidden(_):
+            els = self.get_elements(reference, labels=labels)
+            if len(els) == 0:
+                return True
+            return not any(el.is_displayed() for el in els)
+
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            self.expect(gone_or_hidden)
+        finally:
+            self.driver.implicitly_wait(original)
+
+        return self
+
+    @context_of_model
+    def element_clickable(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Expect helper: wait until element is clickable or timeout"""
+        self.element_visible(reference, labels=labels)
+        self.expect(lambda _: self.fetch(reference, labels=labels).is_enabled())
+        return self
+
+    @context_of_model
+    def element_selected(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Expect helper: wait until element is selected or timeout"""
+
+        def _element_selected(_):
+            el = self.fetch(reference, labels=labels)
+            return el and el.is_selected()
+
+        self.expect(_element_selected)
+        return self
+
+    @context_of_model
+    def element_has_text(
+        self, reference: str | tuple | WebElement, text: str, labels=None
+    ) -> Page:
+        """Expect helper: wait until element has given text"""
+
+        def _element_has_text(_):
+            el = self.fetch(reference, labels=labels)
+            return el and text in el.text
+
+        self.expect(_element_has_text)
+        return self
+
+    @context_of_model
+    def element_attribute_contains(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ) -> Page:
+        """Expect helper: wait until element attribute contains certain value"""
+
+        def _elem_attr_contains(_):
+            el = self.fetch(reference, labels=labels)
+            return (
+                el
+                and el.get_attribute(attr_name) is not None
+                and str(attr_value) in el.get_attribute(attr_name)
+            )
+
+        self.expect(_elem_attr_contains)
+        return self
+
+    @context_of_model
+    def element_attribute_is(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ):
+        """Expect helper: wait until element attribute is a certain value"""
+
+        def _element_attribute_is(_):
+            el = self.fetch(reference, labels=labels)
+            return el and str(attr_value) == el.get_attribute(attr_name)
+
+        self.expect(_element_attribute_is)
+        return self
+
+    @context_of_model
+    def element_attribute_is_not(
+        self,
+        reference: str | tuple | WebElement,
+        attr_name: str,
+        attr_value: str | float | int,
+        labels=None,
+    ):
+        """Expect helper: wait until element attribute is NOT a certain value"""
+
+        def _element_attribute_is_not(_):
+            el = self.fetch(reference, labels=labels)
+            return el and str(attr_value) != el.get_attribute(attr_name)
+
+        self.expect(_element_attribute_is_not)
+        return self
+
+    @context_of_model
+    def element_has_attribute(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Expect helper: check to see if attribute exists in element."""
+        return self.expect(
+            lambda _: EC.element_attribute_to_include(
+                self.fetch(reference, labels), attr
+            )
+        )
+
+    @context_of_model
+    def element_does_not_have_attribute(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Expect helper: wait until attribute does not exist in element."""
+
+        def _element_does_not_have_attribute(_):
+            el = self.fetch(reference, labels=labels)
+            return el and (el.get_attribute(attr) is None)
+
+        self.expect(_element_does_not_have_attribute)
+        return self
+
+    @context_of_model
+    def get_attribute_value(
+        self, reference: str | tuple | WebElement, attr: str, labels=None
+    ):
+        """Return value of attribute in a context-sensitive way"""
+        return self.fetch(reference, labels).get_attribute(attr)
+
+    @context_content
+    def url_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect_in_content(EC.url_contains(url_part))
+        return self
+
+    def title_contains(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL contains given text or timeout"""
+        self.expect(EC.title_contains(url_part))
+        return self
+
+    def title_is(self, url_part: str) -> Page:
+        """Expect helper: wait until driver URL is given text or timeout"""
+        self.expect(EC.title_is(url_part))
+        return self
+
+    def perform_key_combo(self, *keys) -> Page:
+        """
+        Use ActionChains to perform key combos. Modifier keys should come first in the function call
+        Usage example: perform_key_combo(Keys.CONTROL, Keys.ALT, "c") presses CTRL+ALT+c.
+        """
+        if self.sys_platform() == "Darwin":
+            keys = tuple(Keys.COMMAND if k == Keys.CONTROL else k for k in keys)
+
+        for k in keys[:-1]:
+            self.actions.key_down(k)
+
+        self.actions.send_keys(keys[-1])
+
+        for k in keys[:-1]:
+            self.actions.key_up(k)
+
+        self.actions.perform()
+
+        return self
+
+    @context_chrome
+    def perform_key_combo_chrome(self, *keys) -> Page:
+        """
+        Perform a keyboard shortcut in the browser chrome context (e.g., address bar).
+        This method should be used for actions that target browser UI elements such as the
+        awesome bar or toolbar buttons — not web content.
+        Example:
+            self.perform_key_combo_chrome(Keys.COMMAND, "c")  # Copy from address bar
+        """
+        return self.perform_key_combo(*keys)
+
+    def gui_sequence(self, *keys, interval=0.1) -> Page:
+        """Use a GUI automation to press keys, rather than sending them to an element."""
+        for key in keys:
+            self.gui.press(key)
+            time.sleep(interval)
+        return self
+
+    def get_selector(self, name: str, labels=None) -> list:
+        """
+        Given a key for a self.elements dict entry, return the Selenium selector tuple.
+        If there are items in `labels`, replace instances of {.*} in the "selectorData"
+        with items from `labels`, in the order they are given. (Think Rust format macros.)
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+        list
+            The Selenium selector tuple (as a list)
+        """
+        logging.info(f"Get selector for {name}...")
+        element_data = self.elements[name]
+        selector = [
+            STRATEGY_MAP[element_data["strategy"]],
+            element_data["selectorData"],
+        ]
+        if not labels:
+            logging.info("Returned selector.")
+            return selector
+        braces = re.compile(r"(\{.*?\})")
+        match = braces.findall(selector[1])
+        for i in range(len(labels)):
+            logging.info(f"Replace {match[i]} with {labels[i]}")
+            selector[1] = selector[1].replace(match[i], labels[i], 1)
+        logging.info("Returned selector.")
+        return selector
+
+    def get_element(
+        self, name: str, multiple=False, parent_element=None, labels=None
+    ) -> list[WebElement] | WebElement:
+        """
+        Given a key for a self.elements dict entry, return the Selenium WebElement(s).
+        If multiple is set to True, use find_elements instead of find_element.
+        If there are items in `labels`, replace instances of {.*} in the "selectorData"
+        with items from `labels`, in the order they are given. (Think Rust format macros.)
+
+
+        Note: This method currently does not support finding a child under a parent
+        (given in the JSON) if it has a shadow parent.
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        multiple: bool
+            Do we expect a list of WebElements?
+
+        parent_element: WebElement
+            The parent WebElement to search under to narrow the scope instead of searching the
+            entire page
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+
+        selenium.webdriver.remote.webelement.WebElement
+            The WebElement object referred to by the element dict.
+        """
+        logging.info("====")
+        if not multiple:
+            logging.info(f"Getting element {name}")
+        else:
+            logging.info(f"Getting multiple elements by name {name}")
+        if labels:
+            logging.info(f"Labels: {labels}")
+        logging.info(f"Groups: {self.elements[name]['groups']}")
+        cache_name = name
+        if labels:
+            labelscode = "".join(labels)
+            cache_name = f"{name}{labelscode}"
+            if cache_name not in self.elements:
+                self.elements[cache_name] = deepcopy(self.elements[name])
+        if multiple:
+            logging.info(f"Multiples: Not caching {cache_name}...")
+        if not multiple and "seleniumObject" in self.elements[cache_name]:
+            # no caching for multiples
+            cached_element = self.elements[cache_name]["seleniumObject"]
+            try:
+                self.instawait.until_not(EC.staleness_of(cached_element))
+                logging.info(f"Returned {cache_name} from object cache!")
+                return self.elements[cache_name]["seleniumObject"]
+            except (TimeoutError, TimeoutException):
+                # Because we have a timeout of 0, this should not cause delays
+                pass
+        element_data = self.elements[cache_name]
+        selector = self.get_selector(cache_name, labels)
+        if "shadowParent" in element_data:
+            logging.info(f"Found shadow parent {element_data['shadowParent']}...")
+            shadow_parent = self.get_element(element_data["shadowParent"])
+            if not multiple:
+                shadow_element = self.utils.find_shadow_element(
+                    shadow_parent, selector, context=self.context
+                )
+                # Don't cache a None match, or the next lookup hands None to
+                # the staleness check instead of searching again.
+                if shadow_element is not None and (
+                    "doNotCache" not in element_data["groups"]
+                ):
+                    logging.info(f"Caching {cache_name}...")
+                    self.elements[cache_name]["seleniumObject"] = shadow_element
+                return shadow_element
+            else:
+                # no caching for multiples
+                return self.utils.find_shadow_element(
+                    shadow_parent, selector, multiple=multiple, context=self.context
+                )
+        # if the child has a parent tag
+        if parent_element is not None:
+            logging.info("A WebElement parent was detected.")
+            if not multiple:
+                child_element = parent_element.find_element(*selector)
+                if "doNotCache" not in element_data["groups"]:
+                    self.elements[cache_name]["seleniumObject"] = child_element
+                logging.info(f"Returning element {cache_name}.\n")
+                return child_element
+            else:
+                return parent_element.find_elements(*selector)
+        if not multiple:
+            found_element = self.driver.find_element(*selector)
+            if "doNotCache" not in element_data["groups"]:
+                logging.info(f"Caching {cache_name}...")
+                self.elements[cache_name]["seleniumObject"] = found_element
+            logging.info(f"Returning element {cache_name}.\n")
+            return found_element
+        else:
+            return self.driver.find_elements(*selector)
+
+    def get_elements(self, name: str, labels=None):
+        """
+        Get multiple elements using get_element()
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        Returns
+        -------
+
+        list[selenium.webdriver.remote.webelement.WebElement]
+            The WebElement objects referred to by the element dict.
+        """
+        return self.get_element(name, multiple=True, labels=labels)
+
+    def get_parent_of(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> WebElement:
+        """
+        Given a name + labels, a WebElement, or a tuple, return the direct parent node of
+        the element.
+        """
+
+        child = self.fetch(reference, labels=labels)
+        return child.find_element(By.XPATH, "..")
+
+    def verify_opened_image_url(self, url_substr: str, pattern: str) -> Page:
+        """
+        Given a part of a URL and a regex, wait for that substring to exist in
+        the current URL, then match the regex against the current URL.
+        (This gives us the benefit of fast failure.)
+        """
+        self.url_contains(url_substr)
+        current_url = self.driver.current_url
+
+        assert re.match(pattern, current_url), (
+            f"URL does not match the expected pattern: {current_url}"
+        )
+        return self
+
+    def fill(
+        self, name: str, term: str, clear_first=True, press_enter=True, labels=None
+    ) -> Page:
+        """
+        Get a fillable element and fill it with text. Return self.
+
+        ...
+
+        Arguments
+        ---------
+
+        name: str
+            The key of the entry in self.elements, parsed from the elements JSON
+
+        labels: list[str]
+            Strings that replace instances of {.*} in the "selectorData" subentry of
+            self.elements[name]
+
+        term: str
+            The text to enter into the element
+
+        clear_first: bool
+            Call .clear() on the element first. Default True
+
+        press_enter: bool
+            Press Keys.ENTER after filling the element. Default True
+        """
+        if self.context == "chrome":
+            self.set_chrome_context()
+        el = self.get_element(name, labels=labels)
+        self.element_clickable(name, labels=labels)
+        if clear_first:
+            el.clear()
+        end = Keys.ENTER if press_enter else ""
+        el.send_keys(f"{term}{end}")
+        return self
+
+    def fetch(self, reference: str | tuple | WebElement, labels=None) -> WebElement:
+        """
+        Given an element name, a selector, or a WebElement, return the
+        corresponding WebElement.
+        """
+        if isinstance(reference, str):
+            return self.get_element(reference, labels=labels)
+        elif isinstance(reference, tuple):
+            return self.find_element(*reference)
+        elif isinstance(reference, WebElement):
+            return reference
+        assert False, (
+            "Bad fetch: only selectors, selector names, or WebElements allowed."
+        )
+
+    def click_on(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Click on an element, no matter the context, return the page"""
+        with self.driver.context(self.context_id):
+            self.fetch(reference, labels).click()
+            logging.info(f"{reference} clicked")
+        return self
+
+    @context_of_model
+    def multi_click(
+        self, iters: int, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Perform multiple clicks at once on an element by name, selector, or WebElement"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+
+            def execute_multi_click():
+                if iters == 2:
+                    self.actions.double_click(el).perform()
+                else:
+                    for _ in range(iters):
+                        self.actions.click(el)
+                    self.actions.perform()
+
+            # Little cheat: if element doesn't exist in one context, try the other
+            try:
+                execute_multi_click()
+            except NoSuchElementException:
+                with self.driver.context(self.opposite_context()):
+                    execute_multi_click()
+
+        return self
+
+    def double_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Actions helper: perform double-click on given element"""
+        return self.multi_click(2, reference, labels)
+
+    def triple_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Actions helper: perform triple-click on a given element"""
+        return self.multi_click(3, reference, labels)
+
+    @context_of_model
+    def control_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Actions helper: perform control-click on given element"""
+        element = self.fetch(reference, labels)
+        self.scroll_to_element(element)
+        if self.sys_platform() == "Darwin":
+            mod_key = Keys.COMMAND
+        else:
+            mod_key = Keys.CONTROL
+        self.actions.key_down(mod_key).click(element).key_up(mod_key).perform()
+        return self
+
+    def middle_click(self, reference: str | tuple | WebElement, labels=None):
+        """Actions helper: Perform a middle mouse click on desired element"""
+        with self.driver.context(self.context_id):
+            element = self.fetch(reference, labels)
+
+            element_location = element.location
+            element_size = element.size
+            window_position = self.driver.get_window_position()
+
+            inner_height = self.driver.execute_script("return window.innerHeight;")
+            outer_height = self.driver.execute_script("return window.outerHeight;")
+            chrome_height = outer_height - inner_height
+
+            element_x = (
+                window_position["x"]
+                + element_location["x"]
+                + (element_size["width"] / 2)
+            )
+            element_y = (
+                window_position["y"]
+                + element_location["y"]
+                + (element_size["height"] / 2)
+                + chrome_height
+            )
+            self.gui.moveTo(element_x, element_y)
+
+            # Need a short wait to ensure the mouse move completes, then middle click
+            time.sleep(0.5)
+            self.gui.click(button="middle")
+        return self
+
+    def context_click(self, reference: str | tuple | WebElement, labels=None) -> Page:
+        """Context (right-) click on an element"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.actions.context_click(el).perform()
+        return self
+
+    def copy(self) -> Page:
+        """Copy the selected item"""
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("c")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+
+    def paste(self) -> Page:
+        """Paste the copied item"""
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("v")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+
+    def undo(self) -> Page:
+        """Undo last action"""
+        mod_key = Keys.COMMAND if self.sys_platform() == "Darwin" else Keys.CONTROL
+        self.actions.key_down(mod_key)
+        self.actions.send_keys("z")
+        self.actions.key_up(mod_key).perform()
+        time.sleep(0.5)
+        return self
+
+    def paste_to_element(
+        self, sys_platform, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Paste the copied item into the element"""
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.scroll_to_element(el)
+            mod_key = Keys.COMMAND if sys_platform == "Darwin" else Keys.CONTROL
+            self.actions.key_down(mod_key)
+            self.actions.send_keys_to_element(el, "v")
+            self.actions.key_up(mod_key).perform()
+        return self
+
+    def click_and_hide_menu(
+        self, reference: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """Click an option in a context menu, then hide it"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.fetch(reference, labels=labels).click()
+            self.hide_popup_by_child_node(reference, labels=labels)
+            return self
+
+    def hover(self, reference: str | tuple | WebElement, labels=None):
+        """
+        Hover over the specified element.
+        Parameters: element (str): The element to hover over.
+
+        Default tries to hover something in the chrome context
+        """
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.actions.move_to_element(el).perform()
+        return self
+
+    def scroll_to_element(self, reference: str | tuple | WebElement, labels=None):
+        """
+        Scroll towards the specified element which may be out of frame.
+        Parameters: element (str): The element to hover over.
+        """
+        with self.driver.context(self.context_id):
+            el = self.fetch(reference, labels)
+            self.driver.execute_script("arguments[0].scrollIntoView();", el)
+        return self
+
+    def get_all_children(
+        self,
+        reference: str | tuple | WebElement,
+        locator: str = "./*",
+        labels: list[str] = None,
+    ) -> List[WebElement]:
+        """
+        Gets all the children of a webelement
+        if locator is not specified, defaults to "./*".
+        """
+        children = None
+        with self.driver.context(self.context_id):
+            element = self.fetch(reference, labels)
+            children = element.find_elements(By.XPATH, locator)
+        return children
+
+    def wait_for_no_children(
+        self, parent: str | tuple | WebElement, labels=None
+    ) -> Page:
+        """
+        Waits for 0 children under the given parent, the wait is instant
+        (note, this changes the driver implicit wait and changes it back)
+        """
+        driver_wait = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            assert len(self.get_all_children(self.fetch(parent, labels))) == 0
+        finally:
+            self.driver.implicitly_wait(driver_wait)
+        return self
+
+    def wait_for_num_tabs(self, num_tabs: int) -> Page:
+        """
+        Waits for the driver.window_handles to be updated accordingly
+        with the number of tabs requested
+        """
+        try:
+            self.wait.until(lambda _: len(self.driver.window_handles) == num_tabs)
+        except TimeoutException:
+            logging.warning(
+                f"Timeout waiting for the number of windows to be: {num_tabs}"
+            )
+            raise TimeoutException
+        return self
+
+    def switch_to_default_frame(self) -> Page:
+        """Switch to default content frame"""
+        self.driver.switch_to.default_content()
+        return self
+
+    def switch_to_iframe(self, index: int):
+        """Switch to frame of given index"""
+        self.driver.switch_to.frame(index)
+        return self
+
+    def switch_to_iframe_context(self, iframe: WebElement):
+        """
+        Switches the context to the passed in iframe webelement.
+        """
+        self.driver.switch_to.frame(iframe)
+
+    def switch_to_new_tab(self) -> Page:
+        """Get list of all window handles, switch to the newly opened tab"""
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+        return self
+
+    def switch_to_new_window(self) -> Page:
+        """Switch to the most recently opened window. Can be a standard or private window"""
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            all_window_handles = self.driver.window_handles
+            self.driver.switch_to.window(all_window_handles[-1])
+        return self
+
+    def wait_for_num_windows(self, num: int) -> Page:
+        """Wait for the number of open tabs + windows to equal given int"""
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            return self.wait_for_num_tabs(num)
+
+    def open_and_switch_to_new_window(self, browser_window: str) -> Page:
+        """
+        Opens a new browser window of the given type, then switches to it.
+
+        Parameters:
+            browser_window: Can be a standard 'window', 'tab' or 'private' browser window.
+        """
+        if browser_window == "private":
+            self.open_and_switch_to_private_window_via_keyboard()
+        else:
+            self.driver.switch_to.new_window(browser_window)
+        return self
+
+    def open_and_switch_to_private_window_via_keyboard(self) -> Page:
+        """
+        Opens a new private browsing window via keyboard shortcut and switch to it
+        """
+        # Keep track of window count to ensure we get a new one to switch to
+        window_count = len(self.driver.window_handles)
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            os_name = sys.platform
+            mod_key = Keys.COMMAND if os_name == "darwin" else Keys.CONTROL
+            self.actions.key_down(mod_key)
+            self.actions.key_down(Keys.SHIFT)
+            self.actions.send_keys("p")
+            self.actions.key_up(Keys.SHIFT)
+            self.actions.key_up(mod_key).perform()
+            expected_window_count = window_count + 1
+            self.wait_for_num_windows(expected_window_count)
+            self.switch_to_new_window()
+            self.title_contains("Private")
+        self.driver.get("about:blank")
+        return self
+
+    def switch_to_frame(self, frame: str, labels=None) -> Page:
+        """Switch to inline document frame"""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.expect(
+                EC.frame_to_be_available_and_switch_to_it(
+                    self.get_selector(frame, labels=labels)
+                )
+            )
+        return self
+
+    def hide_popup(self, context_menu: str, chrome=True) -> Page:
+        """
+        Given the ID of the context menu, it will dismiss the menu.
+
+        For example, the tab context menu corresponds to the id of tabContextMenu. Usage would be:
+          tabs.hide_popup("tabContextMenu")
+        """
+        script = f'document.querySelector("#{context_menu}").hidePopup();'
+        if chrome:
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                self.driver.execute_script(script)
+        else:
+            with self.driver.context(self.driver.CONTEXT_CONTENT):
+                self.driver.execute_script(script)
+        return self
+
+    def hide_popup_by_class(self, class_name: str, retry=False) -> None:
+        """
+        Given the class name of the context menu, it will dismiss the menu.
+
+        For example, if the context menu corresponds to the class name of 'context-menu',
+        usage would be: tabs.hide_popup_by_class("context-menu")
+        """
+        try:
+            with self.driver.context(self.context_id):
+                script = f"""var element = document.querySelector(".{class_name}");
+                         if (element && element.hidePopup) {{
+                             element.hidePopup();
+                         }}
+                        """
+                self.driver.execute_script(script)
+        except NoSuchWindowException:
+            if not retry:
+                with self.driver.context(self.opposite_context()):
+                    self.hide_popup_by_class(class_name, True)
+            else:
+                raise NoSuchWindowException
+
+    @context_chrome
+    def install_mock_file_picker(self, target_path: str) -> Page:
+        """
+        Replace Firefox's native file picker with a picker that returns target_path.
+
+        Linux Wayland CI cannot reliably drive GTK file pickers through desktop
+        input, so Linux headed tests can install this before clicking a Firefox
+        control that opens nsIFilePicker.
+        """
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+
+            const target = Cc["@mozilla.org/file/local;1"].createInstance(
+              Ci.nsIFile
+            );
+            target.initWithPath(arguments[0]);
+
+            function installTestingCommonMock() {
+              const { MockFilePicker } = ChromeUtils.importESModule(
+                "resource://testing-common/MockFilePicker.sys.mjs"
+              );
+
+              MockFilePicker.init();
+              MockFilePicker.setFiles([target]);
+              MockFilePicker.returnValue = MockFilePicker.returnOK;
+
+              const state = {
+                get shown() {
+                  return MockFilePicker.shown;
+                },
+                cleanup() {
+                  MockFilePicker.cleanup();
+                },
+              };
+              return state;
+            }
+
+            function installInlineMock() {
+              const contract = "@mozilla.org/filepicker;1";
+              const registrar = Components.manager.QueryInterface(
+                Ci.nsIComponentRegistrar
+              );
+              const state = {
+                shown: false,
+                oldClassID: registrar.contractIDToCID(contract),
+                newClassID: Services.uuid.generateUUID(),
+                factory: null,
+                cleanup() {
+                  registrar.unregisterFactory(this.newClassID, this.factory);
+                  registrar.registerFactory(this.oldClassID, "", contract, null);
+                },
+              };
+
+              function MockFilePicker() {}
+              MockFilePicker.prototype = {
+                QueryInterface: ChromeUtils.generateQI(["nsIFilePicker"]),
+                init(_browsingContext, _title, mode) {
+                  this.mode = mode;
+                },
+                appendFilter() {},
+                appendFilters() {},
+                defaultString: "",
+                defaultExtension: "",
+                displayDirectory: null,
+                displaySpecialDirectory: "",
+                filterIndex: 0,
+                okButtonLabel: "",
+                mode: null,
+                get file() {
+                  return target;
+                },
+                get fileURL() {
+                  return Services.io.newFileURI(target);
+                },
+                get files() {
+                  return [target][Symbol.iterator]();
+                },
+                open(callback) {
+                  state.shown = true;
+                  Services.tm.dispatchToMainThread(() => {
+                    const result = Ci.nsIFilePicker.returnOK;
+                    if (callback?.done) {
+                      callback.done(result);
+                    } else if (typeof callback == "function") {
+                      callback(result);
+                    }
+                  });
+                },
+              };
+
+              state.factory = {
+                createInstance(iid) {
+                  return new MockFilePicker().QueryInterface(iid);
+                },
+                QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
+              };
+
+              registrar.registerFactory(state.newClassID, "", contract, state.factory);
+              return state;
+            }
+
+            const state = (() => {
+              try {
+                return installTestingCommonMock();
+              } catch (error) {
+                return installInlineMock();
+              }
+            })();
+            window.__fxQAMockFilePicker = state;
+            window.__fxQAMockFilePickerCleanup = () => {
+              const currentState = window.__fxQAMockFilePicker;
+              if (!currentState?.cleanup) {
+                return;
+              }
+              currentState.cleanup();
+              delete window.__fxQAMockFilePicker;
+              delete window.__fxQAMockFilePickerCleanup;
+            };
+            """,
+            target_path,
+        )
+        return self
+
+    @context_chrome
+    def mock_file_picker_was_shown(self) -> bool:
+        """Return True when the installed mock file picker has been opened."""
+        return self.driver.execute_script(
+            "return !!window.__fxQAMockFilePicker?.shown;"
+        )
+
+    def wait_for_mock_file_picker(self) -> Page:
+        """Wait for a previously installed mock file picker to be opened."""
+        self.custom_wait(timeout=10).until(lambda _: self.mock_file_picker_was_shown())
+        return self
+
+    @context_chrome
+    def cleanup_mock_file_picker(self) -> Page:
+        """Restore Firefox's native file picker after install_mock_file_picker."""
+        self.driver.execute_script(
+            """
+            if (window.__fxQAMockFilePickerCleanup) {
+              window.__fxQAMockFilePickerCleanup();
+            }
+            """
+        )
+        return self
+
+    def handle_os_download_confirmation(self):
+        """
+        Confirm the native OS download confirmation dialog.
+
+        Uses pyautogui when possible. Tries image-match click first, then falls
+        back to pressing Enter if the image is not found or if it still matches
+        after the click.
+        """
+
+        system = OS_SHORT_NAMES.get(platform.system())
+        if system == "linux":  # pyautogui not working in Wayland
+            self.gui.press("enter")
+            return
+
+        button_img = str(CV_PATH / f"{system}_save_button.png")
+
+        original_failsafe = self.gui.FAILSAFE
+        self.gui.FAILSAFE = False
+
+        try:
+            time.sleep(0.5)
+
+            loc = self.gui.locateCenterOnScreen(button_img, confidence=0.75)
+            logging.info(f"OS dialog button found at {loc}, clicking")
+            self.gui.click(loc)
+            time.sleep(1)
+
+            try:
+                self.gui.locateCenterOnScreen(button_img, confidence=0.75)
+                logging.info(
+                    "Button still visible after click; pressing Enter as fallback"
+                )
+                self.gui.press("enter")
+            except self.gui.ImageNotFoundException:
+                pass  # dialog dismissed successfully
+
+        except self.gui.ImageNotFoundException:
+            logging.info("OS dialog button image not found; pressing Enter as fallback")
+            self.gui.press("enter")
+
+        finally:
+            self.gui.FAILSAFE = original_failsafe
+
+    def hide_popup_by_child_node(
+        self, reference: str | tuple | WebElement, labels=None, retry=False
+    ) -> Page:
+        try:
+            with self.driver.context(self.context_id):
+                logging.info("hide popup child: start")
+                node = self.fetch(reference, labels=labels)
+                logging.info("hide popup child: fetched")
+                script = """var element = arguments[0].parentNode;
+                         if (element && element.hidePopup) {
+                            element.hidePopup();
+                         }"""
+                self.driver.execute_script(script, node)
+        except NoSuchWindowException:
+            if not retry:
+                with self.driver.context(self.opposite_context()):
+                    self.hide_popup_by_child_node(reference, labels, True)
+            else:
+                raise NoSuchWindowException
+        return self
+
+    def get_localstorage_item(self, key: str):
+        return self.driver.execute_script(f"return window.localStorage.getItem({key});")
+
+    def _get_alert(self):
+        try:
+            alert = self.driver.switch_to.alert
+        except NoAlertPresentException:
+            return False
+        return alert
+
+    def get_alert(self):
+        alert = self.wait.until(lambda _: self._get_alert())
+        return alert
+
+    @property
+    def loaded(self):
+        """
+        Here, we're using our own get_elements to ensure that all elements that
+        are requiredForPage are gettable before we return loaded as True
+        """
+        _loaded = False
+        try:
+            if self.context == "chrome":
+                self.set_chrome_context()
+            for name in self.elements:
+                if "requiredForPage" in self.elements[name]["groups"]:
+                    logging.info(f"ensuring {name} in DOM...")
+                    self.get_element(name)
+            _loaded = True
+        except (TimeoutError, TimeoutException):
+            pass
+        self.set_content_context()
+        return _loaded
+
+    def get_css_zoom(self):
+        """
+        Checks the CSS zoom and transform scale to determine the current zoom level.
+        """
+        # Retrieve the CSS zoom property on the body element
+        css_zoom = self.driver.execute_script(
+            "return window.getComputedStyle(document.body).zoom"
+        )
+        if css_zoom:
+            return float(css_zoom)
+
+        # If zoom property is not explicitly set, check the transform scale
+        css_transform_scale = self.driver.execute_script("""
+            const transform = window.getComputedStyle(document.body).transform;
+            if (transform && transform !== 'none') {
+                return transform;
+            } else {
+                return null;
+        """)
+
+        # Parse the transform matrix to extract the scale factor (e.g., matrix(a, b, c, d, e, f))
+        if css_transform_scale:
+            scale_factor = float(css_transform_scale.split("(")[1].split(",")[0])
+            return scale_factor
+
+        # Default return if neither zoom nor transform is set
+        return 1.0
+
+    @context_of_model
+    def js_click_on(self, reference, labels=None):
+        """
+        Perform a 'hard click' using a JS command. Use this when regular click_on()
+        doesn't work well. Runs in the model's declared context, so it works for both
+        chrome BOMs and content POMs.
+        """
+        self.driver.execute_script(
+            "arguments[0].click();", self.fetch(reference, labels=labels)
+        )
+        return self

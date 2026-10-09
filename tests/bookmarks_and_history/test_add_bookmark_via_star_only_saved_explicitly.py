@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import ActionChains, Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()

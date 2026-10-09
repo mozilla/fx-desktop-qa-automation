@@ -11,6 +11,9 @@ from typing import Callable
 # import psutil
 import pytest
 import requests
+from auto_fxui.classes.fxa_session import FxaSession
+from auto_fxui.page_object import FxaHome
+from auto_fxui.util import env_true
 from fxa.errors import Error as FxaError
 from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
@@ -23,10 +26,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules import testrail_integration as tri
-from modules.classes.fxa_session import FxaSession
-from modules.page_object import FxaHome
 from modules.taskcluster import get_tc_secret
-from modules.util import env_true
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"

@@ -206,6 +206,13 @@ markers = [
   "noxvfb: tests that should not run in xvfb sessions",
 ]
 
+[tool.uv.workspace]
+members = [
+    "packages/fx-ui",
+    "packages/auto-fxui",
+    "packages/auto_fxui",
+]
+
 [dependency-groups]
 dev = [
     "debugpy>=1.8.22",
