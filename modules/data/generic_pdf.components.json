@@ -447,6 +447,17 @@
       "location": "The PDF viewer Pages sidebar"
     }
   },
+  "page-thumbnail-checkbox": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > input[type='checkbox']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Selects the numbered PDF page",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
   "selected-page-checkboxes": {
     "selectorData": "#thumbnailsView > .thumbnail > input:checked",
     "strategy": "css",
