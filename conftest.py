@@ -8,7 +8,7 @@ from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-# import psutil
+import psutil
 import pytest
 import requests
 from fxa.errors import Error as FxaError
@@ -310,6 +310,22 @@ def use_profile():
     yield False
 
 
+@pytest.fixture()
+def use_persistent_profile():
+    """True when state must survive a restart; options.profile runs from a copy."""
+    yield False
+
+
+@pytest.fixture()
+def persistent_profile_dir(tmp_path, use_persistent_profile):
+    """The profile directory shared across restarts, or None when unused."""
+    if not use_persistent_profile:
+        return None
+    path = Path(tmp_path) / "persistent_profile"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -385,8 +401,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-        import psutil
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -475,6 +489,7 @@ def driver(
     test_case: str,
     tmp_path: str,
     use_profile: str | bool,
+    persistent_profile_dir,
 ):
     """
     Return the webdriver object.
@@ -521,7 +536,11 @@ def driver(
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
-    if use_profile:
+    if persistent_profile_dir:
+        # -profile as an argument, not options.profile: the latter is copied.
+        options.add_argument("-profile")
+        options.add_argument(str(persistent_profile_dir))
+    elif use_profile:
         profile_path = tmp_path / use_profile
         unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
         options.profile = profile_path
@@ -532,6 +551,7 @@ def driver(
         options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
     for opt, value in prefs_list:
         options.set_preference(opt, value)
+    driver = None
     try:
         if geckodriver:
             service = Service(executable_path=geckodriver, service_args=service_args)
@@ -544,16 +564,7 @@ def driver(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        separator = "x"
-        if separator not in opt_window_size:
-            if "by" in opt_window_size:
-                separator = "by"
-            elif "," in opt_window_size:
-                separator = ","
-            elif " " in opt_window_size:
-                separator = " "
-        winsize = [int(s) for s in opt_window_size.split(separator)]
-        driver.set_window_size(*winsize)
+        driver.set_window_size(*_parse_window_size(opt_window_size))
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
@@ -578,8 +589,20 @@ def driver(
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        # None if Firefox() threw; flagged if restart_browser already closed it.
+        if driver and not getattr(driver, "closed_by_restart", False):
             driver.quit()
+
+
+def _parse_window_size(opt_window_size: str) -> list[int]:
+    """Parse a window size like "1152x864", also accepting by / , / space."""
+    separator = "x"
+    if separator not in opt_window_size:
+        for alt in ("by", ",", " "):
+            if alt in opt_window_size:
+                separator = alt
+                break
+    return [int(part) for part in opt_window_size.split(separator)]
 
 
 @pytest.fixture()
