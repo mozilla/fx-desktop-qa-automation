@@ -221,6 +221,17 @@
       "doNotCache"
     ]
   },
+  "legacy-searchmode-switcher-title": {
+    "selectorData": "#searchbar-new .searchmode-switcher-title",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Name of the engine selected in the search bar switcher",
+      "location": "Search bar"
+    }
+  },
   "legacy-searchbar-switcher-popup": {
     "selectorData": "searchmode-switcher-panel-list",
     "strategy": "class",
