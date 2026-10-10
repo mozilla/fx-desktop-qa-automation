@@ -13,7 +13,6 @@ SEARCH_ENGINES = {
     "Bing": "bing.com",
     "DuckDuckGo": "duckduckgo.com",
     "eBay": "ebay.com",
-    "MDN": "developer.mozilla.org",
     "Perplexity": "perplexity.ai",
     "Wikipedia (en)": "wikipedia.org",
 }
