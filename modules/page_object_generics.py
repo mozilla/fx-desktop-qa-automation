@@ -831,3 +831,81 @@ class GenericPdf(BasePage):
 
         self.expect(drawing_resized)
         return self
+
+    def press_until_focused(
+        self,
+        name: str,
+        *keys,
+        labels: list[str] | None = None,
+        max_presses: int = 20,
+    ) -> BasePage:
+        """
+        Press the given keys (Tab by default) until the named element has
+        keyboard focus. Usage example: press_until_focused("x", Keys.SHIFT, Keys.TAB)
+        """
+        keys = keys or (Keys.TAB,)
+        element = self.get_element(name, labels=labels)
+        for _ in range(max_presses):
+            if self.utils.element_has_focus(element):
+                return self
+            self.perform_key_combo(*keys)
+        assert self.utils.element_has_focus(element), (
+            f"Could not reach {name} with the keyboard in {max_presses} presses."
+        )
+        return self
+
+    def expect_text_on_page(self, page_number: int, text: str) -> BasePage:
+        """Scroll to a page and wait until it contains the given text."""
+        self.jump_to_page(page_number)
+        self.element_has_text("pdf-page", text, labels=[str(page_number)])
+        return self
+
+    def open_manage_pages_sidebar_with_keyboard(self) -> BasePage:
+        """Tab to the Manage pages button and press Enter to open the Pages sidebar."""
+        self.press_until_focused("pages-sidebar-toggle")
+        self.perform_key_combo(Keys.ENTER)
+        self.element_visible("page-thumbnail-checkbox", labels=["1"])
+        return self
+
+    def focus_page_checkbox_with_keyboard(self, page_number: int) -> BasePage:
+        """
+        Tab to a page's checkbox in the Pages sidebar. Only the current page's
+        checkbox is in the tab order, so this only reaches the page in view.
+        """
+        self.press_until_focused("page-thumbnail-checkbox", labels=[str(page_number)])
+        return self
+
+    def select_adjacent_page_with_keyboard(
+        self, key: str, page_number: int
+    ) -> BasePage:
+        """
+        From a focused page checkbox, press an arrow key to move to the adjacent
+        page's checkbox and Space to tick it.
+        """
+        self.perform_key_combo(key)
+        self.perform_key_combo(Keys.SPACE)
+        self.element_selected("page-thumbnail-checkbox", labels=[str(page_number)])
+        return self
+
+    def cut_selected_pages_via_manage_menu_with_keyboard(self) -> BasePage:
+        """
+        Shift+Tab back to the Manage dropdown, open it with Enter,
+        move to Cut with the Down arrow, and press Enter.
+        """
+        self.press_until_focused("manage-dropdown-button", Keys.SHIFT, Keys.TAB)
+        self.perform_key_combo(Keys.ENTER)
+        self.element_attribute_contains(
+            "manage-dropdown-button", "aria-expanded", "true"
+        )
+        self.press_until_focused("manage-cut-option", Keys.DOWN, max_presses=5)
+        self.perform_key_combo(Keys.ENTER)
+        return self
+
+    def paste_pages_after_page_with_keyboard(self, page_number: int) -> BasePage:
+        """
+        Tab to the Paste button after the given page, numbered as the sidebar
+        shows it after the cut, and press Enter.
+        """
+        self.press_until_focused("paste-after-page-button", labels=[str(page_number)])
+        self.perform_key_combo(Keys.ENTER)
+        return self
