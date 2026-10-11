@@ -1324,6 +1324,10 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_pages_can_be_cut_from_manage_menu_with_keyboard:
+    result: pass
+    splits:
+    - functional2
   test_pdf_paragraph_comment_can_be_deleted:
     result: pass
     splits:
@@ -2272,11 +2276,11 @@ smart_window:
     splits:
     - smart_window
     - functional1
-  test_c3349915_settings_page_keyboard_accessible:
+  test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
     - functional1
-  test_c3321908_smart_bar_autocompletes_domains:
+  test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
     - functional1

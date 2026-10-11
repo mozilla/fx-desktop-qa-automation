@@ -499,5 +499,38 @@
       "description": "Guide line indicating the page drop position",
       "location": "The PDF viewer Pages sidebar"
     }
+  },
+  "manage-dropdown-button": {
+    "selectorData": "viewsManagerStatusActionButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Opens the Manage menu (Copy, Cut, Delete, Export) for the selected pages",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "manage-cut-option": {
+    "selectorData": "viewsManagerStatusActionCut",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Cuts the selected pages",
+      "location": "The Manage menu in the PDF viewer Pages sidebar"
+    }
+  },
+  "paste-after-page-button": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > .thumbnailPasteButton[data-l10n-id='pdfjs-views-manager-paste-button-after']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Pastes the cut or copied pages after the numbered page, as numbered after the cut",
+      "location": "The PDF viewer Pages sidebar"
+    }
   }
 }
