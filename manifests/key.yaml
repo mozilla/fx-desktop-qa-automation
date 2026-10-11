@@ -1453,6 +1453,14 @@ preferences:
     splits:
     - functional2
     - nightly
+  test_check_for_updates_button_works:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2079218
+    result:
+      mac: pass
+      win: unstable
+      linux: pass
+    splits:
+    - functional2
   test_clear_cookie_data:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064065
     result:

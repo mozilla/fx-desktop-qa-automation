@@ -1176,6 +1176,42 @@
       "location": "about:preferences#general"
     }
   },
+  "update-checking-message": {
+    "selectorData": "moz-box-item.checkingForUpdates",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Checking for updates…\" message",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-checking-button": {
+    "selectorData": "moz-box-item.checkingForUpdates moz-button",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > grayed out Check for updates button while checking",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-up-to-date-message": {
+    "selectorData": "moz-box-item.noUpdatesFound",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Nightly is up to date\" message",
+      "location": "about:preferences#about"
+    }
+  },
   "cookies-privacy-label": {
     "selectorData": "deleteOnCloseInfo",
     "strategy": "id",
