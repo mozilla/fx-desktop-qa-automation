@@ -1,9 +1,20 @@
+import re
+
 from modules.browser_object_smart_bar import SmartBar
 from modules.browser_object_smart_window import CHAT_DOCUMENT_JS
 from modules.page_base import BasePage
 
 # MESSAGE_ROLE.USER in the conversation model.
 USER_ROLE = 0
+
+# uiTypes of the card the assistant shows when it asks before grouping tabs,
+# and of the card that shows an action's result (it replaces the first once
+# the user confirms).
+TAB_GROUP_CONFIRMATION = "tab-group-confirmation"
+ACTION_RESULT = "ai-action-result"
+
+# How the model names a tab in tool calls: §url_token: LOCALHOST_LASAGNA_HTML_1§
+URL_TOKEN_RE = re.compile(r"§url_token:\s*([A-Z0-9_]+_\d+)§")
 
 # Tool calls make a turn several LLM round trips; record and live modes wait
 # on the real service for each.
@@ -160,3 +171,95 @@ class SmartWindowChat(BasePage):
         """Return the newest assistant message's text, or None if there is none."""
         replies = [m["text"] for m in self.get_messages() if m["role"] == "assistant"]
         return replies[-1] if replies else None
+
+    # ── Tool actions ─────────────────────────────────────────────────────
+
+    def get_tool_ui_types(self) -> list[str]:
+        """
+        Return the uiType of each tool result shown in the chat, oldest first,
+        e.g. "tab-group-confirmation" for a card waiting on the user.
+        """
+        return self._ai_window_script(
+            "const aw = aiWindow();"
+            "const c = aw && aw.conversation;"
+            "return c ? c.messages.filter(m => m.toolUIData)"
+            "  .map(m => m.toolUIData.uiType) : [];"
+        )
+
+    def get_last_tool_ui_type(self) -> str | None:
+        """Return the newest tool result's uiType, or None if there is none."""
+        ui_types = self.get_tool_ui_types()
+        return ui_types[-1] if ui_types else None
+
+    def confirm_action(self) -> BasePage:
+        """
+        Click Confirm on the card the assistant is waiting on, and wait until
+        Firefox has acted on it, which replaces the card with its result.
+        """
+        waiting = self.get_last_tool_ui_type()
+
+        def _confirmed(_) -> bool:
+            # Checked before each click, so a click that landed isn't repeated.
+            if self.get_last_tool_ui_type() != waiting:
+                return True
+            # Retried, because a click that lands before the card is ready is
+            # dropped.
+            self._click_confirm()
+            return False
+
+        self.wait.until(
+            _confirmed, message=f"Confirm on the {waiting} card never took effect"
+        )
+        return self
+
+    def _click_confirm(self) -> bool:
+        """Click the waiting card's Confirm button, if it's there yet."""
+        return self._chat_script("""
+            const chat = content.document.querySelector("ai-chat-content");
+            const card = chat && chat.shadowRoot &&
+              chat.shadowRoot.querySelector("ai-website-confirmation");
+            const button = card && card.shadowRoot && card.shadowRoot
+              .querySelector("moz-button[type='primary']:not([disabled])");
+            if (!button) return false;
+            button.click();
+            return true;
+        """)
+
+    def confirm_tab_grouping_if_asked(self) -> BasePage:
+        """
+        Confirm the tab grouping if the assistant asked first. Asking is the
+        model's choice (manage_tabs' ask_confirmation), so a recording can
+        take either path.
+        """
+        # The card can arrive just after the turn ends, so wait for it first.
+        self.expect(
+            lambda _: (
+                self.get_last_tool_ui_type() in (TAB_GROUP_CONFIRMATION, ACTION_RESULT)
+            )
+        )
+        if self.get_last_tool_ui_type() == TAB_GROUP_CONFIRMATION:
+            self.confirm_action()
+        return self
+
+    # ── URL tokens ───────────────────────────────────────────────────────
+
+    def get_url_tokens(self) -> dict[str, str]:
+        """Return the conversation's URL tokens, each mapped to its URL."""
+        return dict(
+            self._ai_window_script(
+                "const aw = aiWindow();"
+                "return aw && aw.conversation ? [...aw.conversation.tokenToUrl] : [];"
+            )
+        )
+
+    def resolve_url_tokens(self, items: list[str]) -> list[str]:
+        """
+        Turn the URL tokens a tool call names tabs by into their URLs. Items
+        that aren't known tokens are returned as they are.
+        """
+        urls = self.get_url_tokens()
+        resolved = []
+        for item in items:
+            match = URL_TOKEN_RE.search(item)
+            resolved.append(urls.get(match.group(1), item) if match else item)
+        return resolved
