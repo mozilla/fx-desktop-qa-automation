@@ -97,6 +97,11 @@ like to have documentation on.
 The Glean telemetry suite follows its own dataset-driven pattern, documented in
 [GLEAN.md](GLEAN.md).
 
+**Running STARfox against your own Firefox build?** Development and RelEng teams can
+request a run without QA involvement — see [SERVICE.md](SERVICE.md). The proposal
+behind that work is [STARfox-as-a-service.md](STARfox-as-a-service.md), and its
+engineering design is [TESTING_AS_A_SERVICE.md](TESTING_AS_A_SERVICE.md).
+
 ### IDE Pycharm Configuration
 Note: you may need to install Rust for PyCharm to work properly.
 

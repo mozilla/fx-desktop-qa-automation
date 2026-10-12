@@ -1,0 +1,298 @@
+---
+# The public front door for STARfox as a service. See SERVICE.md (consumers)
+# and TESTING_AS_A_SERVICE.md (design).
+#
+# This file is the only thing we promise not to break. main.yml is QA-internal
+# and gets refactored freely; this facade keeps a versioned contract on top of
+# it (schemas/test-request-v1.json -> schemas/result-summary-v1.json).
+#
+# Three ways in:
+#   workflow_dispatch   a human picks options in the Actions UI
+#   repository_dispatch another system POSTs a request (no 10-input limit)
+#   workflow_call       same-repo callers; see the cross-repo note in SERVICE.md
+#
+# TestRail is never written to on this path: main.yml sets TESTRAIL_REPORT=false
+# for non-scheduled runs and conftest.py short-circuits before any network call.
+name: Fx Test Request
+
+# Embeds the caller's request_id in the run name. Dispatching a workflow via the
+# REST API returns 204 with no body, so there is no run id to correlate on; the
+# documented workaround is to search runs by name. Hence this.
+run-name: >-
+  Fx test request
+  ${{ inputs.request_id || github.event.client_payload.request_id || github.run_id }}
+  (${{ inputs.test_set || github.event.client_payload.test_set || 'smoke' }})
+
+on:
+  workflow_call:
+    inputs:
+      firefox_version:
+        description: "Resolve build URLs from archive.mozilla.org, e.g. 155.0.1, 153.0esr, 156.0b2"
+        required: false
+        type: string
+        default: ''
+      win_installer_link:
+        description: "Direct Windows installer URL (.exe or .zip)"
+        required: false
+        type: string
+        default: ''
+      mac_installer_link:
+        description: "Direct macOS installer URL (.dmg)"
+        required: false
+        type: string
+        default: ''
+      linux_tarball_link:
+        description: "Direct Linux tarball URL (.tar.xz)"
+        required: false
+        type: string
+        default: ''
+      channel:
+        description: "beta | rc | esr | nightly | custom (metadata only)"
+        required: false
+        type: string
+        default: 'beta'
+      test_set:
+        description: "A split from manifests/key.yaml: smoke | functional1..3 | nightly"
+        required: false
+        type: string
+        default: 'smoke'
+      platforms:
+        description: "Comma-separated subset of win,mac,linux"
+        required: false
+        type: string
+        default: 'win,mac,linux'
+      fail_on:
+        description: "any-failure | non-flaky-failure | never"
+        required: false
+        type: string
+        default: 'non-flaky-failure'
+      request_id:
+        description: "Opaque correlation id, echoed into every summary.json"
+        required: false
+        type: string
+        default: ''
+    outputs:
+      verdict:
+        description: "Worst verdict across platforms: pass | flaky | fail | infra_error"
+        value: ${{ jobs.Summarize.outputs.verdict }}
+      gate_failed:
+        description: "true when the verdict violates fail_on. Gate on this."
+        value: ${{ jobs.Summarize.outputs.gate_failed }}
+
+  workflow_dispatch:
+    # NOTE: workflow_dispatch allows a maximum of 10 inputs. This uses 9.
+    # Anything further must go through repository_dispatch's client_payload.
+    inputs:
+      firefox_version:
+        description: "Firefox version to resolve (e.g. 155.0.1). Leave blank if giving URLs."
+        required: false
+        type: string
+      win_installer_link:
+        description: "Direct Windows installer URL"
+        required: false
+        type: string
+      mac_installer_link:
+        description: "Direct macOS installer URL"
+        required: false
+        type: string
+      linux_tarball_link:
+        description: "Direct Linux tarball URL"
+        required: false
+        type: string
+      channel:
+        description: "Channel (metadata only)"
+        required: false
+        default: 'beta'
+        type: choice
+        options: [beta, rc, esr, nightly, custom]
+      test_set:
+        description: "Test set"
+        required: false
+        default: 'smoke'
+        type: choice
+        options: [smoke, functional1, functional2, functional3, nightly]
+      platforms:
+        description: "Comma-separated subset of win,mac,linux"
+        required: false
+        default: 'win,mac,linux'
+        type: string
+      fail_on:
+        description: "Gate policy"
+        required: false
+        default: 'non-flaky-failure'
+        type: choice
+        options: [non-flaky-failure, any-failure, never]
+      request_id:
+        description: "Your correlation id (shown in the run name)"
+        required: false
+        type: string
+
+  repository_dispatch:
+    types: [fx-test-request]
+
+permissions: {}
+
+jobs:
+  # ------------------------------------------------------------------
+  # Validate and resolve before spending any runner minutes. A typo'd
+  # test_set fails here in seconds rather than after a 40-minute run that
+  # selected nothing.
+  # ------------------------------------------------------------------
+  Resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      win_installer_link: ${{ steps.r.outputs.win_installer_link }}
+      mac_installer_link: ${{ steps.r.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ steps.r.outputs.linux_tarball_link }}
+      channel: ${{ steps.r.outputs.channel }}
+      firefox_version: ${{ steps.r.outputs.firefox_version }}
+      test_set: ${{ steps.r.outputs.test_set }}
+      fail_on: ${{ steps.r.outputs.fail_on }}
+      platforms: ${{ steps.r.outputs.platforms }}
+      request_id: ${{ steps.id.outputs.request_id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      # Only PyYAML is needed; a full `uv sync` would pull selenium et al for
+      # a job that never launches a browser.
+      - name: Install resolver dependencies
+        run: pip install 'pyyaml==6.0.2'
+
+      - name: Normalise request id
+        id: id
+        env:
+          REQUEST_ID: ${{ inputs.request_id || github.event.client_payload.request_id || '' }}
+        run: echo "request_id=${REQUEST_ID:-run-$GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate and resolve request
+        id: r
+        env:
+          FIREFOX_VERSION: ${{ inputs.firefox_version || github.event.client_payload.firefox_version || '' }}
+          WIN_LINK: ${{ inputs.win_installer_link || github.event.client_payload.win_installer_link || '' }}
+          MAC_LINK: ${{ inputs.mac_installer_link || github.event.client_payload.mac_installer_link || '' }}
+          LINUX_LINK: ${{ inputs.linux_tarball_link || github.event.client_payload.linux_tarball_link || '' }}
+          CHANNEL: ${{ inputs.channel || github.event.client_payload.channel || 'beta' }}
+          TEST_SET: ${{ inputs.test_set || github.event.client_payload.test_set || 'smoke' }}
+          PLATFORMS: ${{ inputs.platforms || github.event.client_payload.platforms || 'win,mac,linux' }}
+          FAIL_ON: ${{ inputs.fail_on || github.event.client_payload.fail_on || 'non-flaky-failure' }}
+        run: |
+          python -m scripts.resolve_test_request \
+            --firefox-version "$FIREFOX_VERSION" \
+            --win-installer-link "$WIN_LINK" \
+            --mac-installer-link "$MAC_LINK" \
+            --linux-tarball-link "$LINUX_LINK" \
+            --channel "$CHANNEL" \
+            --test-set "$TEST_SET" \
+            --platforms "$PLATFORMS" \
+            --fail-on "$FAIL_ON"
+
+      - name: Echo resolved request
+        run: |
+          {
+            echo "### Fx test request \`${{ steps.id.outputs.request_id }}\`"
+            echo
+            echo "| field | value |"
+            echo "|---|---|"
+            echo "| build | \`${{ steps.r.outputs.firefox_version }}\` |"
+            echo "| channel | ${{ steps.r.outputs.channel }} |"
+            echo "| test set | \`${{ steps.r.outputs.test_set }}\` |"
+            echo "| platforms | ${{ steps.r.outputs.platforms }} |"
+            echo "| gate policy | ${{ steps.r.outputs.fail_on }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ------------------------------------------------------------------
+  # A platform job in main.yml starts only when its link is non-empty, so
+  # omitting a URL is how `platforms` filtering takes effect.
+  #
+  # The relative `uses:` resolves within this repository. Expressions are
+  # not permitted in `uses:`, so the ref cannot be made dynamic -- which is
+  # why cross-repo consumers call main.yml directly instead of nesting
+  # through this facade. See SERVICE.md.
+  # ------------------------------------------------------------------
+  Test:
+    needs: Resolve
+    uses: ./.github/workflows/main.yml
+    with:
+      job_to_run: ''
+      channel: ${{ needs.Resolve.outputs.channel }}
+      test_set: ${{ needs.Resolve.outputs.test_set }}
+      fail_on: ${{ needs.Resolve.outputs.fail_on }}
+      request_id: ${{ needs.Resolve.outputs.request_id }}
+      win_installer_link: ${{ needs.Resolve.outputs.win_installer_link }}
+      mac_installer_link: ${{ needs.Resolve.outputs.mac_installer_link }}
+      linux_tarball_link: ${{ needs.Resolve.outputs.linux_tarball_link }}
+    # Deliberately NOT `secrets: inherit`. Handing a tenant run our BigQuery and
+    # Slack credentials would make HAS_BQ_CREDS true and push tenant results into
+    # QA's fx_qa_ci table. Only the WAF token is needed, for the FxA tests.
+    secrets:
+      CI_WAF_TOKEN: ${{ secrets.CI_WAF_TOKEN }}
+
+  Summarize:
+    needs: [Resolve, Test]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    outputs:
+      verdict: ${{ steps.v.outputs.verdict }}
+      gate_failed: ${{ steps.v.outputs.gate_failed }}
+    steps:
+      - name: Combine platform verdicts
+        id: v
+        env:
+          WIN: ${{ needs.Test.outputs.windows_verdict }}
+          MAC: ${{ needs.Test.outputs.macos_verdict }}
+          LINUX: ${{ needs.Test.outputs.linux_verdict }}
+          FAIL_ON: ${{ needs.Resolve.outputs.fail_on }}
+          REQUEST_ID: ${{ needs.Resolve.outputs.request_id }}
+        shell: python
+        run: |
+          import os
+
+          # worst verdict wins; an empty string means that platform did not run
+          RANK = {"pass": 0, "flaky": 1, "fail": 2, "infra_error": 3}
+          got = {p: os.environ.get(p.upper(), "") for p in ("win", "mac", "linux")}
+          ran = {p: v for p, v in got.items() if v}
+
+          if not ran:
+              # Test was skipped entirely, or every job died before producing a bundle
+              verdict = "infra_error"
+          else:
+              verdict = max(ran.values(), key=lambda v: RANK.get(v, 3))
+
+          fail_on = os.environ.get("FAIL_ON", "non-flaky-failure")
+          if fail_on == "never":
+              failed = False
+          elif fail_on == "any-failure":
+              failed = verdict != "pass"
+          else:
+              failed = verdict in ("fail", "infra_error")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"verdict={verdict}\n")
+              fh.write(f"gate_failed={str(failed).lower()}\n")
+
+          rows = "\n".join(
+              f"| {p} | {v or '_not run_'} |" for p, v in got.items()
+          )
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
+              fh.write(
+                  f"### Verdict: `{verdict}`\n\n"
+                  f"Request `{os.environ.get('REQUEST_ID', '')}` "
+                  f"- gate policy `{fail_on}` - "
+                  f"{'**FAILED**' if failed else 'passed'}\n\n"
+                  f"| platform | verdict |\n|---|---|\n{rows}\n\n"
+                  f"Per-platform detail is in the `fx-results-*` artifacts.\n"
+              )
+
+      - name: Fail the request if the gate was violated
+        if: ${{ steps.v.outputs.gate_failed == 'true' }}
+        run: |
+          echo "::error::Request gate failed (verdict=${{ steps.v.outputs.verdict }})"
+          exit 1
