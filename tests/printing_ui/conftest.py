@@ -9,6 +9,25 @@ DOWNLOAD_TIMEOUT_SEC = 10.0
 POLL_INTERVAL_SEC = 0.5
 
 
+def _pdf_complete(file_path):
+    """
+    Save-to-PDF streams to the target path, so existence isn't completion.
+    HTTP downloads land in a .part file and are renamed once complete, but a
+    Save-to-PDF job writes directly to the chosen file. The %%EOF trailer is
+    written last, so its presence marks a finished PDF (mirrors the intent of
+    the pdf_viewer stable-size check, which is only valid for atomic renames).
+    """
+    try:
+        size = os.path.getsize(file_path)
+        if size <= 0:
+            return False
+        with open(file_path, "rb") as f:
+            f.seek(max(0, size - 1024))
+            return b"%%EOF" in f.read()
+    except OSError:
+        return False
+
+
 @pytest.fixture()
 def wait_for_file_download():
     """Return a helper that blocks until a file finishes downloading."""
@@ -18,7 +37,7 @@ def wait_for_file_download():
     ) -> bool:
         start = time.time()
         while time.time() - start < timeout:
-            if os.path.exists(file_path):
+            if os.path.exists(file_path) and _pdf_complete(file_path):
                 return True
             time.sleep(interval)
         return False

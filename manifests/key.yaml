@@ -1646,6 +1646,11 @@ printing_ui:
     splits:
     - smoke
     - ci
+  test_print_text_file:
+    result: pass
+    splits:
+    - functional2
+    - nightly
   test_print_to_pdf:
     result: pass
     splits:
@@ -2272,11 +2277,11 @@ smart_window:
     splits:
     - smart_window
     - functional1
-  test_c3349915_settings_page_keyboard_accessible:
+  test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
     - functional1
-  test_c3321908_smart_bar_autocompletes_domains:
+  test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
     - functional1

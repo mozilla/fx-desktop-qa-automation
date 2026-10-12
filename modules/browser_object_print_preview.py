@@ -62,6 +62,69 @@ class PrintPreview(BasePage):
         return self
 
     @BasePage.context_chrome
+    def _set_settings_control(self, element_id: str, value: str) -> None:
+        """Set a print-settings control and fire the input event it listens for."""
+        settings_browser = self.get_element("print-settings-browser")
+        self.driver.execute_script(
+            """
+            const el = arguments[0].contentDocument.getElementById(arguments[1]);
+            if (!el) throw new Error("Element not found: " + arguments[1]);
+            el.value = arguments[2];
+            el.dispatchEvent(new Event("input", { bubbles: true }));
+            """,
+            settings_browser,
+            element_id,
+            value,
+        )
+
+    @BasePage.context_chrome
+    def set_custom_page_range(self, page_range: str) -> BasePage:
+        """
+        Choose Pages > Custom and enter page_range (e.g. "1-3")
+
+        page-range-input listens for bubbling "input", not "change". Setting
+        .value alone does not update pageRanges. The custom field starts hidden
+        and disabled; the picker handler unhides it, and the page-count handler
+        enables it only after totalPages is known. Typing before that is ignored
+        or rejected as out of range. print.js then applies pageRanges after a
+        short delay, so the caller must wait on sheet-count separately.
+        """
+        self.wait_for_preview_ready()
+        settings_browser = self.get_element("print-settings-browser")
+        self.custom_wait(timeout=20).until(
+            lambda _: self.driver.execute_script(
+                """
+                const input = arguments[0].contentDocument
+                    .getElementById("custom-range");
+                return !!input && !input.disabled;
+                """,
+                settings_browser,
+            )
+        )
+        self._set_settings_control("range-picker", "custom")
+        self.custom_wait(timeout=10).until(
+            lambda _: self.driver.execute_script(
+                """
+                const input = arguments[0].contentDocument
+                    .getElementById("custom-range");
+                return !!input && !input.hidden;
+                """,
+                settings_browser,
+            )
+        )
+        self._set_settings_control("custom-range", page_range)
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_sheet_count(self, expected: int, timeout: int = 20) -> BasePage:
+        """Wait until the preview sheet-count equals expected"""
+        self.wait_for_preview_ready(timeout=timeout)
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_sheet_indicator_values()[1] == expected
+        )
+        return self
+
+    @BasePage.context_chrome
     def hover_preview(self) -> BasePage:
         """Hover over the print preview to reveal the page indicator toolbar."""
         preview_browser = self.get_element("print-preview-browser")
