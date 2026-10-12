@@ -378,6 +378,11 @@ class GenericPdf(BasePage):
         self.wait_for_page_to_load()
         return self
 
+    def click_print_button(self) -> BasePage:
+        """click on print button for the pdf"""
+        self.get_element("print-button").click()
+        return self
+
     def select_and_return_checkbox(self, element: str) -> WebElement:
         """select checkbox located at element"""
         checkbox = self.get_element(element)

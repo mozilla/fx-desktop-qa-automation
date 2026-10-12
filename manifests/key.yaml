@@ -1344,6 +1344,10 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_single_page_drag:
+    result: pass
+    splits:
+    - functional1
   test_pdf_text_and_draw_toolbar_buttons:
     result: pass
     splits:
@@ -1369,6 +1373,10 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_unchecked_page_drag:
+    result: pass
+    splits:
+    - functional1
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
@@ -1582,6 +1590,10 @@ preferences:
     result: pass
     splits:
     - functional1
+  test_private_default_search_engine_dropdown:
+    result: pass
+    splits:
+    - functional1
   test_removed_never_translate_sites_can_be_translated:
     result: pass
     splits:
@@ -1628,6 +1640,11 @@ preferences:
     - functional2
 printing_ui:
   test_page_number_indicator_print_preview:
+    result: pass
+    splits:
+    - functional2
+    - nightly
+  test_print_pdf_via_pdfjs:
     result: pass
     splits:
     - functional2
@@ -2203,58 +2220,88 @@ smart_window:
   test_c3240165_smart_window_onboarding_flow:
     result: pass
     splits:
+    - smart_window
+    - functional1
+  test_c3248361_perform_a_classic_search:
+    result: pass
+    splits:
+    - functional1
+  test_c3248362_search_with_different_engines:
+    result: pass
+    splits:
     - functional1
   test_c3248785_switch_to_smart_window_prompts_signin:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3248786_switch_to_classic_window:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3309849_switch_windows_while_visiting_website:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3309851_smart_window_missing_in_private_browsing:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3309853_open_private_window_from_smart_window:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3309854_open_classic_window_from_smart_window:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3310319_block_smart_window_from_ai_controls:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3311329_toggle_ai_chat_from_ask_button:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3321887_go_button_dropdown_opens:
+    result: pass
+    splits:
+    - smart_window
+    - functional1
+  test_c3349915_settings_page_keyboard_accessible:
+    result: pass
+    splits:
+    - functional1
+  test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
     - functional1
   test_c3371305_smart_window_onboarding_new_account:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3392590_smart_window_captcha_bypass:
     result: pass
     splits:
+    - smart_window
     - functional1
   test_c3978359_close_sidebar_from_x_button:
     result: pass
     splits:
+    - smart_window
     - functional1
 sync_and_fxa:
   test_existing_fxa:
