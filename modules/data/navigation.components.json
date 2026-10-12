@@ -221,6 +221,18 @@
       "doNotCache"
     ]
   },
+  "legacy-searchmode-switcher-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "legacy-searchmode-switcher",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine button in the searchbar",
+      "location": "Searchbar"
+    }
+  },
   "legacy-searchbar-switcher-popup": {
     "selectorData": "searchmode-switcher-panel-list",
     "strategy": "class",
