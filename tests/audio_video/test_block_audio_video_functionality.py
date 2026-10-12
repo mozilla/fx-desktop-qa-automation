@@ -20,8 +20,6 @@ BLOCK_AUDIO_VIDEO_VALUE = "5"
 @pytest.fixture()
 def add_to_prefs_list():
     return [
-        (AUTOPLAY_PREF, 1),
-        ("media.autoplay.enabled.user-gestures-needed", True),
         ("browser.aboutConfig.showWarning", False),
     ]
 
