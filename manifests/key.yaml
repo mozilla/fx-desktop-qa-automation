@@ -2152,6 +2152,11 @@ smart_window:
     splits:
     - smart_window
     - functional3
+  test_c3374375_continue_conversation_in_sidebar:
+    result: pass
+    splits:
+    - smart_window
+    - functional3
   test_c3392590_smart_window_captcha_bypass:
     result: pass
     splits:

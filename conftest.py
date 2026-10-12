@@ -178,6 +178,15 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--mock-mode",
+        action="store",
+        default="replay",
+        choices=["replay", "record", "live"],
+        help="How the mock server answers Smart Window requests: replay "
+        "recordings (default), record new ones, or pass through live",
+    )
+
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
@@ -234,6 +243,11 @@ def opt_ci(request):
 @pytest.fixture()
 def opt_window_size(request):
     return request.config.getoption("--window-size")
+
+
+@pytest.fixture(scope="session")
+def opt_mock_mode(request):
+    return request.config.getoption("--mock-mode")
 
 
 @pytest.fixture(scope="session")
