@@ -1373,6 +1373,10 @@ pdf_viewer:
     splits:
     - functional1
     - nightly
+  test_pdf_unchecked_page_drag:
+    result: pass
+    splits:
+    - functional1
   test_pdf_zoom_checkboxes:
     result: pass
     splits:
