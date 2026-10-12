@@ -223,7 +223,8 @@ address_bar_and_search:
     splits:
     - functional1
   test_server_not_found_error_on_private_window:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080911
+    result: unstable
     splits:
     - functional1
   test_suggestions_for_empty_query_not_shown_in_search_mode:
@@ -1591,7 +1592,8 @@ preferences:
     splits:
     - functional1
   test_preferred_language_localisation_works:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080912
+    result: unstable
     splits:
     - functional1
   test_private_default_search_engine_dropdown:
@@ -2062,17 +2064,20 @@ security_and_privacy:
     - nightly
 session_restore:
   test_closed_tabs_from_multiple_windows_shown_in_fx_view_corresponding_section:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080911
+    result: unstable
     splits:
     - functional3
     - nightly
   test_closed_tabs_from_multiple_windows_shown_in_history_menu_bar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080911
+    result: unstable
     splits:
     - functional3
     - nightly
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080911
+    result: unstable
     splits:
     - functional3
     - nightly
@@ -2086,7 +2091,8 @@ session_restore:
     - functional3
     - nightly
   test_restored_closed_tabs_removed_from_all_history_entries:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2080911
+    result: unstable
     splits:
     - functional3
     - nightly
