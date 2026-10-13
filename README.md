@@ -219,8 +219,8 @@ If you are outside of Mozilla and would like to contribute to this project:
   - Ask to be allowed to take the bug to work on it.
   - A Mozilla DTE will either assign you the bug or suggest another test case bug for you to work on.
   - They will give you, as a comment in the bug, the test steps, from our test case repository, TestRail.
-- Fork the repo and create your test case based on the test steps given.
-- Submit your PR to this repo.
+- Clone the repo, create branch in the form <yourfirstname>/<branch name> and create your test case based on the test steps given in the bug you selected.
+- Submit your PR (commit and push) to this repo.
 - A Mozilla DTE will review your PR
   - Address any review comments
 - Once approved your test code will be landed in this repo.
