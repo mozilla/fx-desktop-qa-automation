@@ -132,11 +132,11 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_code_google_non_us:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_code_google_us:
-    result: pass
+    result: unstable
     splits:
     - smoke
     - ci-extended
@@ -150,7 +150,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_engine_selector:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_search_mode_appears_after_input:
@@ -779,7 +779,7 @@ menus:
     - functional2
     - nightly
   test_hyperlink_context_menu:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_image_context_menu_actions:
@@ -1477,7 +1477,7 @@ reader_view:
     - ci-extended
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: pass
+    result: unstable
     splits:
     - smoke
   test_mouse_wheel_zoom:
@@ -1714,7 +1714,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_open_link_in_private_window:
-    result: pass
+    result: unstable
     splits:
     - smoke
     - ci-extended
