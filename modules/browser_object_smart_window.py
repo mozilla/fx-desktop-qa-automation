@@ -7,6 +7,27 @@ from selenium.webdriver.common.keys import Keys
 from modules.page_base import BasePage
 
 AI_WINDOW_MODULE = "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs"
+OPENAI_ENGINE_MODULE = (
+    "moz-src:///browser/components/aiwindow/models/openAIEngine.sys.mjs"
+)
+
+# Chrome JS locating the chat the user is in, for the Smart Bar and chat BOMs.
+# In full page the chat is the selected tab's own document (aiWindow.html,
+# loaded in the parent process); in the sidebar it is the document of
+# <browser id="ai-window-browser">. Web page tabs are remote, so their
+# contentDocument is null here.
+CHAT_DOCUMENT_JS = """
+function aiDoc() {
+  const tabDoc = gBrowser.selectedBrowser.contentDocument;
+  if (tabDoc && tabDoc.querySelector("ai-window")) return tabDoc;
+  const b = document.getElementById("ai-window-browser");
+  return b && b.contentDocument;
+}
+function aiWindow() {
+  const d = aiDoc();
+  return d && d.querySelector("ai-window");
+}
+"""
 
 
 class SmartWindow(BasePage):
@@ -62,6 +83,24 @@ class SmartWindow(BasePage):
                 """
             )
         self.expect_smart_window_active(True)
+        return self
+
+    @BasePage.context_chrome
+    def stub_fxa_token(self) -> BasePage:
+        """
+        Make Firefox send Smart Window requests with a stand-in FxA token, so
+        chat works without signing in. Only for use with the mock server,
+        which ignores the token (or swaps in a real one when recording).
+
+        This is the stub Firefox's own tests use: MockEngineManager in
+        browser/components/aiwindow/ui/test/AIWindowTestUtils.sys.mjs.
+        """
+        self.driver.execute_script(
+            f"""
+            const {{ openAIEngine }} = ChromeUtils.importESModule("{OPENAI_ENGINE_MODULE}");
+            openAIEngine.getFxAccountToken = async () => "mock-fxa-token";
+            """
+        )
         return self
 
     def expect_first_run_view(self, active: bool = True) -> BasePage:
