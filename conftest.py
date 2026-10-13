@@ -504,7 +504,7 @@ def driver(
     test_case: str,
     tmp_path: str,
     use_profile: str | bool,
-    persistent_profile_dir,
+    persistent_profile_dir: Path | None,
 ):
     """
     Return the webdriver object.
