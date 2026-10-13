@@ -1,0 +1,20 @@
+[project]
+name = "auto-fxui"
+version = "0.1.0"
+description = "Reusable Firefox UI page / browser component objects"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MPL-2.0"
+license-files = ["LICENSE"]
+dependencies = [
+    "selenium==4.23.1",
+    "pypom==2.2.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["auto_fxui*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+fx_ui = ["data/*.components.json"]
