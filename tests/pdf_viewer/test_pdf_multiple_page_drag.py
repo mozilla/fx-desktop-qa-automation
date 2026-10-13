@@ -124,11 +124,9 @@ def test_pdf_multiple_page_drag(
     insertion = order.index(target_number) + (not before)
     order[insertion:insertion] = selected_numbers
     expected_pages = [original_pages[number - 1] for number in order]
-    pdf_viewer.expect(
-        lambda _: pdf_viewer.get_elements("page-thumbnails") == expected_pages
-    )
-    assert pdf_viewer.get_elements("page-thumbnails") == expected_pages, (
-        "Selected pages should move together in their original relative order."
+    pdf_viewer.wait.until(
+        lambda _: pdf_viewer.get_elements("page-thumbnails") == expected_pages,
+        message="Selected pages should move together in their original relative order.",
     )
     assert [page.get_attribute("page-number") for page in expected_pages] == [
         str(number) for number in range(1, len(expected_pages) + 1)
@@ -140,9 +138,14 @@ def test_pdf_multiple_page_drag(
     pdf_viewer.element_not_visible("page-drop-guide")
 
     # Step 5: Reselect the moved pages, copy through Manage, and paste after the last page.
-    for checkbox in selected_checkboxes:
+    selected_checkboxes = []
+    for original_number in selected_numbers:
+        checkbox = pdf_viewer.get_element(
+            "page-thumbnail-checkbox", labels=[str(order.index(original_number) + 1)]
+        )
         if not checkbox.is_selected():
             pdf_viewer.click_on(checkbox)
+        selected_checkboxes.append(checkbox)
     assert pdf_viewer.get_elements("selected-page-checkboxes") == selected_checkboxes, (
         "Manage should act on exactly the pages that were dragged."
     )
