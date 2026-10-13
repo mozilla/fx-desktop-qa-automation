@@ -7,8 +7,15 @@
 #
 # To enable this hook, move to ".git/hooks/pre-commit".
 
-pytest tests/meta/test_version.py
-if [[ $? -ne 0 ]]; then
+if ! command -v uv >/dev/null 2>&1; then
+  echo "uv not found on PATH. Run ./devsetup.sh to set up the environment."
+  exit 1
+fi
+
+# An activated non-project virtualenv only makes uv warn; .venv is pinned.
+unset VIRTUAL_ENV
+
+if ! uv run pytest tests/meta/test_version.py; then
   echo "Please update your firefox/geckodriver, see test results for details!"
   exit 1
 fi
@@ -52,28 +59,28 @@ EOF
 fi
 
 # Check new tests in pytest
-if ! python -m scripts.run_commit_tests; then
+if ! uv run python -m scripts.run_commit_tests; then
     echo "New test failed to pass!"
     exit 1
 fi
 
 # Lint and format with ruff
-ruff check --select I --fix
-ruff format .
+uv run ruff check --select I --fix
+uv run ruff format .
 git add -u
 
 # if ruff check  doesn't work, we need to fail
-if ! ruff check -q --select I; then
+if ! uv run ruff check -q --select I; then
     echo "Linting failed!"
     exit 1
 fi
 
-if ! ruff format -q; then
+if ! uv run ruff format -q; then
     echo "Formatting failed!"
     exit 1
 fi
 
-if ! python scripts/addtests.py -q; then
+if ! uv run python scripts/addtests.py -q; then
     echo "Manifest missing tests!"
     exit 1
 fi
