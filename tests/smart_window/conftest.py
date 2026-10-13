@@ -6,6 +6,7 @@ from pathlib import Path
 
 import psutil
 import pytest
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
@@ -13,11 +14,11 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from conftest import _parse_window_size
 from modules.browser_object import SmartWindow, SmartWindowChat
 from modules.classes.recording import Recording
 from modules.mock_server import MLPA_STAGE_URL, MockServer
 from modules.taskcluster import get_tc_secret
+from modules.util import parse_window_size
 
 
 @pytest.fixture()
@@ -256,6 +257,8 @@ def restart_browser(
         driver.closed_by_restart = True
 
         # Mirror the driver fixture, so the relaunch is the same browser.
+        # use_profile is deliberately not mirrored: a restart needs the
+        # persistent profile, not a zip unpacked into a fresh directory.
         options = Options()
         options.binary_location = fx_executable
         options.add_argument("-profile")
@@ -276,7 +279,7 @@ def restart_browser(
         restarted = Firefox(service=service, options=options)
         spawned.append(restarted)
 
-        restarted.set_window_size(*_parse_window_size(opt_window_size))
+        restarted.set_window_size(*parse_window_size(opt_window_size))
         restarted.implicitly_wait(30 if opt_ci else opt_implicit_timeout)
         WebDriverWait(restarted, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
@@ -289,7 +292,7 @@ def restart_browser(
         pids = _driver_process_tree(extra)
         try:
             extra.quit()
-        except Exception as exc:  # already gone, or never came up
+        except WebDriverException as exc:  # already gone, or never came up
             logging.info(f"restart_browser cleanup: {exc}")
         _reap(pids)
 

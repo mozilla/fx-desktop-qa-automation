@@ -27,7 +27,7 @@ from modules import testrail_integration as tri
 from modules.classes.fxa_session import FxaSession
 from modules.page_object import FxaHome
 from modules.taskcluster import get_tc_secret
-from modules.util import env_true
+from modules.util import env_true, parse_window_size
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -579,7 +579,7 @@ def driver(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        driver.set_window_size(*_parse_window_size(opt_window_size))
+        driver.set_window_size(*parse_window_size(opt_window_size))
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
@@ -607,17 +607,6 @@ def driver(
         # None if Firefox() threw; flagged if restart_browser already closed it.
         if driver and not getattr(driver, "closed_by_restart", False):
             driver.quit()
-
-
-def _parse_window_size(opt_window_size: str) -> list[int]:
-    """Parse a window size like "1152x864", also accepting by / , / space."""
-    separator = "x"
-    if separator not in opt_window_size:
-        for alt in ("by", ",", " "):
-            if alt in opt_window_size:
-                separator = alt
-                break
-    return [int(part) for part in opt_window_size.split(separator)]
 
 
 @pytest.fixture()
