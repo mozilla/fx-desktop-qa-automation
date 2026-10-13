@@ -128,10 +128,7 @@ def write_github_outputs(links: dict[str, str]) -> None:
                 file.write(f"{name}={url}\n")
 
     if summary := os.environ.get("GITHUB_STEP_SUMMARY"):
-        summary_links = {
-            name: url.replace("|", r"\|")
-            for name, url in links.items()
-        }
+        summary_links = {name: url.replace("|", r"\|") for name, url in links.items()}
 
         with Path(summary).open("a", encoding="utf-8") as file:
             file.write(
