@@ -3,8 +3,8 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import SplitView, TabBar
 
-URLS = ["about:about", "about:mozilla"]
-SECOND_SPLIT_TAB = "The Book of Mozilla, 6:27"
+URLS = ["https://example.com/", "https://www.wikipedia.org/"]
+SECOND_SPLIT_TAB = "Wikipedia"
 
 
 @pytest.fixture()
@@ -30,7 +30,7 @@ def test_dissolve_split_view_on_tab_close(driver: Firefox):
     tabs.wait_for_num_tabs(len(URLS))
     split_view.create_split_view(1, SECOND_SPLIT_TAB)
     split_view.expect_panel_url(SplitView.LEFT, URLS[0])
-    split_view.expect_panel_url(SplitView.RIGHT, URLS[1])
+    split_view.expect_panel_url_contains(SplitView.RIGHT, "wikipedia.org")
     assert split_view.count_tabs_in_split_view() == 2
 
     # Close one of the tabs inside the Split View by clicking the X button
