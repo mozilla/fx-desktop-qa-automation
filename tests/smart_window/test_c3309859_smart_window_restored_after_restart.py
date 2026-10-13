@@ -7,7 +7,9 @@ restored after a restart.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import SmartWindow
+from modules.browser_object import SmartWindow, TabBar
+
+URL = "about:robots"
 
 
 @pytest.fixture()
@@ -39,6 +41,7 @@ def test_smart_window_restored_after_restart(driver: Firefox, restart_browser):
     C3309859 - Smart Window restored after restart
     """
     smart_window = SmartWindow(driver)
+    driver.get(URL)
     smart_window.activate_smart_window()
     smart_window.expect_smart_window_active(True)
 
@@ -47,3 +50,7 @@ def test_smart_window_restored_after_restart(driver: Firefox, restart_browser):
     restarted = restart_browser(driver)
 
     SmartWindow(restarted).expect_smart_window_active(True)
+    # The page comes back too, so this is the restored window rather than a
+    # fresh one that happens to be Smart.
+    TabBar(restarted).expect_title_contains("Gort")
+    assert len(restarted.window_handles) == 1, "session restore duplicated the tab"

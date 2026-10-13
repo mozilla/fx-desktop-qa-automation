@@ -252,9 +252,10 @@ def restart_browser(
                 "restart_browser requires a use_persistent_profile fixture "
                 "returning True; otherwise the profile is a discarded copy"
             )
-        driver.quit()
-        # Tell the driver fixture not to quit this one again in teardown.
+        # Set before quitting: if quit() raises, the driver fixture must
+        # still know not to quit this one again in teardown.
         driver.closed_by_restart = True
+        driver.quit()
 
         # Mirror the driver fixture, so the relaunch is the same browser.
         # use_profile is deliberately not mirrored: a restart needs the

@@ -551,6 +551,10 @@ def driver(
     options.binary_location = fx_executable
     # options.set_preference("app.update.disabledForTesting", False)
 
+    if persistent_profile_dir and use_profile:
+        raise AssertionError(
+            "use_persistent_profile and use_profile are mutually exclusive"
+        )
     if persistent_profile_dir:
         # -profile as an argument, not options.profile: the latter is copied.
         options.add_argument("-profile")
