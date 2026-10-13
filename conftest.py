@@ -336,7 +336,7 @@ def persistent_profile_dir(tmp_path, use_persistent_profile):
     """The profile directory shared across restarts, or None when unused."""
     if not use_persistent_profile:
         return None
-    path = Path(tmp_path) / "persistent_profile"
+    path = tmp_path / "persistent_profile"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -538,6 +538,10 @@ def driver(
 
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
+
+    persistent_profile_dir: Path | None
+        Profile directory to run from in place, so state survives a restart.
+        None unless use_persistent_profile is True; not usable with use_profile.
 
     build_version: str
         The result of calling collect_executables with "-n".
