@@ -252,10 +252,17 @@ def restart_browser(
                 "restart_browser requires a use_persistent_profile fixture "
                 "returning True; otherwise the profile is a discarded copy"
             )
+        # Collected before the quit, while the tree is still there to read.
+        old_pids = _driver_process_tree(driver)
         # Set before quitting: if quit() raises, the driver fixture must
         # still know not to quit this one again in teardown.
         driver.closed_by_restart = True
         driver.quit()
+        # quit() returns once geckodriver acks, which is before Firefox has
+        # finished flushing session state and released the profile lock.
+        # Reopening the directory while it is still held prompts for a new
+        # profile, so wait the old tree out before relaunching on it.
+        _reap(old_pids)
 
         # Mirror the driver fixture, so the relaunch is the same browser.
         # use_profile is deliberately not mirrored: a restart needs the
