@@ -128,14 +128,19 @@ def write_github_outputs(links: dict[str, str]) -> None:
                 file.write(f"{name}={url}\n")
 
     if summary := os.environ.get("GITHUB_STEP_SUMMARY"):
+        summary_links = {
+            name: url.replace("|", r"\|")
+            for name, url in links.items()
+        }
+
         with Path(summary).open("a", encoding="utf-8") as file:
             file.write(
                 "### Resolved Nightly installers\n\n"
                 "| Platform | URL |\n"
                 "| --- | --- |\n"
-                f"| Windows | {links['win_installer_link']} |\n"
-                f"| macOS | {links['mac_installer_link']} |\n"
-                f"| Linux | {links['linux_tarball_link']} |\n"
+                f"| Windows | {summary_links['win_installer_link']} |\n"
+                f"| macOS | {summary_links['mac_installer_link']} |\n"
+                f"| Linux | {summary_links['linux_tarball_link']} |\n"
             )
 
 

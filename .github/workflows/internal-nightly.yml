@@ -11,7 +11,7 @@ on:
     inputs:
       target_info:
         description: 'Firefox build ID: buildID=YYYYMMDDHHMMSS (UTC)'
-        required: true
+        required: false
         type: string
       win_installer_link:
         description: 'The Windows ZIP URL for the Firefox build under test'
