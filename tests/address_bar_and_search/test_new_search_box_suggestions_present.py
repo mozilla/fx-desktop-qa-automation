@@ -39,7 +39,7 @@ def test_new_search_box_suggestions_present(driver: Firefox):
     nav.search_bar_has_suggestions()
 
     # Step 3: Pick a suggestion and submit it.
-    nav.type_in_search_bar(Keys.DOWN)
+    nav.perform_key_combo_chrome(Keys.DOWN)
     nav.verify_searchbar_suggestion_is_highlighted()
     suggestion = nav.get_search_bar_text()
     assert suggestion != SEARCH_TERM, "No suggestion was picked."
