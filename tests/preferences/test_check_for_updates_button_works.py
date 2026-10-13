@@ -31,7 +31,13 @@ def test_check_for_updates_button_works(driver: Firefox, about_prefs: AboutPrefs
     about_prefs.open()
 
     # The page checks once on open, so wait for it to finish.
-    about_prefs.element_visible("update-up-to-date-message")
+    about_prefs.element_visible("update-check-finished")
+
+    # If an update is waiting, there's no button to click.
+    if not about_prefs.get_element("update-up-to-date-message"):
+        pytest.skip(
+            "An update is available, so the build under test is not the latest."
+        )
 
     about_prefs.click_on("up_to_date_button")
 

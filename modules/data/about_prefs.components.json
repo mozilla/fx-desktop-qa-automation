@@ -1212,6 +1212,18 @@
       "location": "about:preferences#about"
     }
   },
+  "update-check-finished": {
+    "selectorData": "moz-box-item.noUpdatesFound, moz-box-item.downloading, moz-box-item.applying, moz-box-button:not([data-l10n-id='update-checkForUpdatesButton'])",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > any state after a check: up to date, or an update found",
+      "location": "about:preferences#about"
+    }
+  },
   "cookies-privacy-label": {
     "selectorData": "deleteOnCloseInfo",
     "strategy": "id",
