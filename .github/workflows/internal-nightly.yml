@@ -1,7 +1,7 @@
 ---
 name: Internal Nightly Tests
 
-run-name: Nightly tests for ${{ inputs.target_info }}
+run-name: Nightly tests for ${{ inputs.target_info || 'scheduled run' }}
 
 on:
   schedule:
@@ -70,7 +70,7 @@ jobs:
           MAC_LINK: ${{ inputs.mac_installer_link }}
           LINUX_LINK: ${{ inputs.linux_tarball_link }}
         run: |
-          pipenv run python scripts/resolve_nightly_build.py
+          python scripts/resolve_nightly_build.py
 
   Run:
     name: Run nightly tests

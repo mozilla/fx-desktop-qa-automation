@@ -46,8 +46,6 @@ def fetch_links(url: str) -> set[str]:
                 raise
             time.sleep(2**attempt)
 
-    raise RuntimeError("Unable to read archive listing.")
-
 
 def discover_build(build_date: date, cutoff: int) -> dict[str, str]:
     """Find the newest complete morning build for the supplied UTC date."""
