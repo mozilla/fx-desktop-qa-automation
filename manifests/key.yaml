@@ -142,6 +142,10 @@ address_bar_and_search:
       win: pass
     splits:
     - functional1
+  test_search_engine_selection_work:
+    result: pass
+    splits:
+    - functional1
   test_search_engine_selector_and_validator:
     result: pass
     splits:
