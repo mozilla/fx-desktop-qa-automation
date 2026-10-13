@@ -1,8 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, SplitView, TabBar
-from modules.page_object import AboutOpentabs
+from modules.browser_object import Navigation, SplitView, TabBar
 
 URLS = ["https://www.youtube.com", "https://www.wikipedia.org"]
 SECOND_SPLIT_TAB = "Wikipedia"
@@ -29,23 +28,15 @@ def test_move_tab_to_split_view(driver: Firefox):
     """
 
     tabs = TabBar(driver)
-    context_menu = ContextMenu(driver)
     nav = Navigation(driver)
     split_view = SplitView(driver)
-    open_tabs = AboutOpentabs(driver)
 
-    # Open Youtube and Wikipedia and use the Add Split View context menu option
-    # on the Youtube tab
+    # Open Youtube and Wikipedia and create a Split View from the Youtube tab,
+    # then click the Wikipedia tab, it is moved into Split View
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
     tabs.wait_for_num_tabs(len(URLS))
-    tabs.create_split_view_from_tab(1, context_menu)
-    split_view.expect_split_view_active()
+    split_view.create_split_view(1, SECOND_SPLIT_TAB)
     split_view.expect_panel_url_contains(SplitView.LEFT, "youtube.com")
-
-    # Click the Wikipedia tab, it is moved into Split View
-    split_view.expect_panel_url(SplitView.RIGHT, "about:opentabs")
-    split_view.switch_to_panel(SplitView.RIGHT)
-    open_tabs.select_tab_by_title(SECOND_SPLIT_TAB)
     split_view.expect_panel_url_contains(SplitView.RIGHT, "wikipedia.org")
 
     # Open a new tab and focus one of the views from the Split View
