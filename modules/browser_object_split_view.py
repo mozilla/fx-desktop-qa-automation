@@ -20,6 +20,11 @@ class SplitView(BasePage):
     LEFT = "0"
     RIGHT = "1"
 
+    # Footer menu options, by the command they run
+    SEPARATE_TABS = "separateTabs"
+    REVERSE_TABS = "reverseTabs"
+    CLOSE_BOTH_TABS = "closeTabs"
+
     def create_split_view(
         self, left_tab: Union[str, int], right_tab_title: str
     ) -> BasePage:
@@ -37,6 +42,32 @@ class SplitView(BasePage):
         self.switch_to_panel(self.RIGHT)
         AboutOpentabs(self.driver).select_tab_by_title(right_tab_title)
         self.expect(lambda _: self.get_panel_title(self.RIGHT) == right_tab_title)
+        return self
+
+    @BasePage.context_chrome
+    def open_footer_menu(self) -> BasePage:
+        """
+        Open the three-dot menu in the Split View footer. The footer, with the
+        button at its right corner, is only shown on the side that is not
+        selected.
+        """
+        column = self.RIGHT if self.get_selected_column() == self.LEFT else self.LEFT
+        self.element_visible("split-view-footer-menu-button", labels=[column])
+        self.click_on("split-view-footer-menu-button", labels=[column])
+        self.expect(
+            lambda _: (
+                self.get_element("split-view-menu").get_attribute("open") == "true"
+            )
+        )
+        return self
+
+    def select_footer_menu_option(self, command: str) -> BasePage:
+        """
+        Pick an option from the Split View footer menu, by command:
+        SEPARATE_TABS, REVERSE_TABS or CLOSE_BOTH_TABS.
+        """
+        self.open_footer_menu()
+        self.click_and_hide_menu("split-view-menuitem", labels=[command])
         return self
 
     def expect_split_view_active(self, active: bool = True) -> BasePage:
