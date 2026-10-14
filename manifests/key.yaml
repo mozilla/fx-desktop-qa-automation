@@ -2204,6 +2204,10 @@ tabs:
     result: pass
     splits:
     - functional3
+  test_dissolve_split_view_on_tab_close:
+    result: pass
+    splits:
+    - functional3
   test_edit_tab_groups:
     result: pass
     splits:
