@@ -122,6 +122,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_bar_display_alpenglow_theme:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2019943
     result: unstable
     splits:
     - functional1
@@ -136,6 +137,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_code_google_us:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081889
     result: unstable
     splits:
     - smoke
@@ -150,7 +152,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_engine_selector:
-    result: unstable
+    result: flaky
     splits:
     - smoke
   test_search_mode_appears_after_input:
@@ -779,6 +781,7 @@ menus:
     - functional2
     - nightly
   test_hyperlink_context_menu:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081899
     result: unstable
     splits:
     - smoke
@@ -911,6 +914,7 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1974013
     result: unstable
     splits:
     - functional2
@@ -1057,6 +1061,7 @@ password_manager:
     - functional2
     - nightly
   test_insecure_password:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043392
     result: unstable
     splits:
     - functional2
@@ -1476,7 +1481,7 @@ reader_view:
     - ci-extended
 scrolling_panning_zooming:
   test_default_zoom_persists:
-    result: unstable
+    result: flaky
     splits:
     - smoke
   test_mouse_wheel_zoom:
@@ -1713,7 +1718,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_open_link_in_private_window:
-    result: unstable
+    result: flaky
     splits:
     - smoke
     - ci-extended
@@ -1779,6 +1784,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_see_all_link_redirects_to_blocked_trackers:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081822
     result: unstable
     splits:
     - functional3
@@ -1985,6 +1991,7 @@ sidebar:
     - functional3
     - nightly
   test_user_can_manage_pinned_extensions_on_the_sidebar:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081837
     result: unstable
     splits:
     - functional3
@@ -2208,12 +2215,14 @@ tabs:
     - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081912
     result: unstable
     splits:
     - smoke
     - exclude_xvfb
     - exclude_nightly
   test_installed_theme_enabled:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081914
     result: unstable
     splits:
     - functional3
