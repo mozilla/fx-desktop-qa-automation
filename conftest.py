@@ -14,6 +14,7 @@ import requests
 from fxa.errors import Error as FxaError
 from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
+from pytest_httpserver import HTTPServer
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -177,6 +178,15 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--mock-mode",
+        action="store",
+        default="replay",
+        choices=["replay", "record", "live"],
+        help="How the mock server answers Smart Window requests: replay "
+        "recordings (default), record new ones, or pass through live",
+    )
+
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
@@ -233,6 +243,11 @@ def opt_ci(request):
 @pytest.fixture()
 def opt_window_size(request):
     return request.config.getoption("--window-size")
+
+
+@pytest.fixture(scope="session")
+def opt_mock_mode(request):
+    return request.config.getoption("--mock-mode")
 
 
 @pytest.fixture(scope="session")
@@ -658,7 +673,18 @@ def faker_seed():
 
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
-    return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+    """
+    URL of a fillable PDF (an I-9 form), served from data/i-9.pdf on a local
+    server. uscis.gov, where it comes from, blocks CI machines.
+    """
+    server = HTTPServer(host="127.0.0.1", port=0)
+    server.expect_request("/i-9.pdf").respond_with_data(
+        Path("data", "i-9.pdf").read_bytes(), content_type="application/pdf"
+    )
+    server.start()
+    yield server.url_for("/i-9.pdf")
+    server.clear()
+    server.stop()
 
 
 @pytest.fixture()

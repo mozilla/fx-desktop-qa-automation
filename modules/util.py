@@ -894,6 +894,37 @@ class PomUtils:
 
         return None
 
+    def element_has_focus(self, element: WebElement) -> bool:
+        """
+        Report whether focus is on `element`, its shadow host, or its inner
+        control. Both directions are needed -- components.json resolves to
+        either -- and only shadow boundaries are hopped, so a focused
+        light-DOM container does not match.
+        """
+        active = self.driver.switch_to.active_element
+        if active == element:
+            return True
+        return bool(
+            self.driver.execute_script(
+                """
+                function hostChainHits(from, target) {
+                    let node = from;
+                    while (node) {
+                        if (node === target) return true;
+                        const root = node.getRootNode && node.getRootNode();
+                        node = root && root.host ? root.host : null;
+                    }
+                    return false;
+                }
+                const active = arguments[0], element = arguments[1];
+                return hostChainHits(element, active)
+                    || hostChainHits(active, element);
+                """,
+                active,
+                element,
+            )
+        )
+
     def find_shadow_element(
         self,
         shadow_parent: Union[WebElement, ShadowRoot],

@@ -56,7 +56,7 @@ def test_serp_impression(driver: Firefox, case: dict):
         prefs.search_engine_dropdown().select_option(engine)
 
     # open_in_new_tab clicks an on-page related-search link, which only renders for a
-    # commercial query; every other flow uses the default term.
+    # commercial query; every other flow uses the default term
     search_term = (
         RELATED_SEARCH_TERM if case.get("action") == "open_in_new_tab" else SEARCH_TERM
     )
