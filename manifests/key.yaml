@@ -19,8 +19,8 @@ address_bar_and_search:
     splits:
     - smoke
     - ci-extended
-  test_add_search_engine_from_address_bar:
-    result: pass
+  test_added_open_search_engine_default:
+    result: flaky
     splits:
     - smoke
     - ci-extended
@@ -181,6 +181,7 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_bar_display_alpenglow_theme:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2019943
     result: unstable
     splits:
     - functional1
@@ -195,6 +196,7 @@ address_bar_and_search:
     splits:
     - smoke
   test_search_code_google_us:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081889
     result: unstable
     splits:
     - smoke
@@ -204,7 +206,7 @@ address_bar_and_search:
     result:
       linux: unstable
       mac: pass
-      win: pass
+      win: unstable
     splits:
     - functional1
     - nightly
@@ -214,10 +216,6 @@ address_bar_and_search:
     - functional1
   test_search_engine_selector:
     result: flaky
-    splits:
-    - smoke
-  test_search_engine_selector_and_validator:
-    result: pass
     splits:
     - smoke
   test_search_mode_appears_after_input:
@@ -656,7 +654,6 @@ downloads:
     splits:
     - functional1
   test_telemetry_pdf_download_open:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2075157
     result: flaky
     splits:
     - functional1
@@ -1010,7 +1007,6 @@ networking:
     - functional1
 notifications:
   test_audio_video_permissions_notification:
-    comment: Issue with Mac GHA? trying pass to see what happens.
     result: covered-in-tree
     splits:
     - functional2
@@ -1216,6 +1212,7 @@ password_manager:
     - functional2
     - nightly
   test_insecure_password:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2043392
     result: unstable
     splits:
     - functional2
@@ -1569,8 +1566,8 @@ preferences:
     result: pass
     splits:
     - functional1
-  test_cancel_keeps_downloaded_languages:
-    result: pass
+  test_change_font_family:
+    result: flaky
     splits:
     - functional1
   test_change_font_family:
@@ -1655,6 +1652,10 @@ preferences:
     - functional2
   test_language_packs_can_be_downloaded_from_about_addons:
     result: pass
+    splits:
+    - functional1
+  test_manage_cookie_data:
+    result: flaky
     splits:
     - functional1
   test_languages_can_be_downloaded:
@@ -2125,6 +2126,7 @@ security_and_privacy:
     - functional3
     - nightly
   test_see_all_link_redirects_to_blocked_trackers:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081822
     result: unstable
     splits:
     - functional3
@@ -2619,6 +2621,7 @@ tabs:
     - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081912
     result: unstable
     splits:
     - smoke
