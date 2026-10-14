@@ -310,6 +310,11 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def get_search_bar_text(self) -> str:
+        """Get the text in the search bar."""
+        return self.get_element("searchbar-input").get_attribute("value")
+
+    @BasePage.context_chrome
     def search_bar_search(self, term: str) -> BasePage:
         """
         Search using the *Old* Search Bar. Returns self.

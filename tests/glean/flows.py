@@ -17,7 +17,7 @@ AD_SEARCH_TERM = "car insurance quotes"
 PERSISTED_REFINEMENT = " browser"
 IMAGE_PAGE_URL = "https://www.python.org/"
 # No public signal for SearchSERPTelemetry readiness; buffer before refreshing a SERP
-SERP_TELEMETRY_SETTLE_SECONDS = 1
+SERP_TELEMETRY_SETTLE_SECONDS = 3
 
 ENTRY_PREFS: dict[str, list[tuple]] = {
     "urlbar_handoff": [
