@@ -1403,14 +1403,17 @@ class Navigation(BasePage):
         self, name: str, labels: list[str] | None = None, max_presses: int = 20
     ) -> BasePage:
         """Press Down until the named element has focus."""
-        # Check instantly instead of waiting on each miss.
+        # Short wait per press so slow machines don't skip past the item.
+        short_wait = self.custom_wait(timeout=1)
         original = self.driver.timeouts.implicit_wait
         self.driver.implicitly_wait(0)
         try:
             for _ in range(max_presses):
-                if self.get_elements(name, labels=labels):
+                try:
+                    short_wait.until(lambda _: self.get_elements(name, labels=labels))
                     break
-                self.perform_key_combo(Keys.DOWN)
+                except TimeoutException:
+                    self.perform_key_combo(Keys.DOWN)
         finally:
             self.driver.implicitly_wait(original)
         self.element_visible(name, labels=labels)
