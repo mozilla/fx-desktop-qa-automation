@@ -133,7 +133,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_search_bar_display_alpenglow_theme:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081812
+    result: unstable
     splits:
     - functional1
   test_search_bar_results_shown_in_a_new_tab:
@@ -878,7 +879,8 @@ notifications:
     - functional2
     - nightly
   test_cancel_webextension:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081813
+    result: unstable
     splits:
     - functional2
   test_deny_geolocation:
@@ -919,7 +921,8 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081813
+    result: unstable
     splits:
     - functional2
     - nightly
@@ -1619,15 +1622,15 @@ security_and_privacy:
     result: pass
     splits:
     - nightly
-    - functional2
+    - functional3
   test_always_denied_permission:
     result: pass
     splits:
-    - functional1
+    - functional3
   test_blocking_cryptominers:
     result: deprecated
     splits:
-    - functional2
+    - functional3
   test_blocking_fingerprinters:
     result: pass
     splits:
@@ -1682,7 +1685,7 @@ security_and_privacy:
   test_cross_origin_iframe_permissions_are_not_prompted:
     result: pass
     splits:
-    - functional1
+    - functional3
   test_cross_site_tracking_cookies_blocked:
     result: deprecated
     splits:
@@ -1868,7 +1871,7 @@ security_and_privacy:
   test_remember_decision_permissions_prompt:
     result: pass
     splits:
-    - functional1
+    - functional3
   test_report_broken_site:
     result: pass
     splits:
@@ -1880,7 +1883,11 @@ security_and_privacy:
     - functional3
     - nightly
   test_see_all_link_redirects_to_blocked_trackers:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081822
+    result:
+      linux: pass
+      mac: unstable
+      win: unstable
     splits:
     - functional3
   test_sidebar_removed_on_end_private_session:
@@ -2076,7 +2083,11 @@ sidebar:
     - functional3
     - nightly
   test_user_can_manage_pinned_extensions_on_the_sidebar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081837
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
     - functional3
   test_vertical_tab_pinned_unpinned_with_expand_on_hover_enabled:
@@ -2269,7 +2280,11 @@ tabs:
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081816
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
     splits:
     - functional3
   test_open_new_tab:
@@ -2355,12 +2370,14 @@ tabs:
     - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081812
+    result: unstable
     splits:
     - smoke
     - exclude_xvfb
     - exclude_nightly
   test_installed_theme_enabled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081812
+    result: unstable
     splits:
     - functional3
