@@ -1399,6 +1399,27 @@ class Navigation(BasePage):
         self.element_visible("searchbar-highlighted-suggestion")
 
     @BasePage.context_chrome
+    def press_down_until_focused(
+        self, name: str, labels: list[str] | None = None, max_presses: int = 20
+    ) -> BasePage:
+        """Press Down until the named element has focus."""
+        # Short wait per press so slow machines don't skip past the item.
+        short_wait = self.custom_wait(timeout=1)
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            for _ in range(max_presses):
+                try:
+                    short_wait.until(lambda _: self.get_elements(name, labels=labels))
+                    break
+                except TimeoutException:
+                    self.perform_key_combo(Keys.DOWN)
+        finally:
+            self.driver.implicitly_wait(original)
+        self.element_visible(name, labels=labels)
+        return self
+
+    @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:
         """
         Click the 'Exit' button in the search mode.
