@@ -8,6 +8,7 @@ from tests.glean.flows import (
     ENTRY_PREFS,
     SEARCH_TERM,
     block_if_bot_challenge,
+    block_if_no_ads,
     run_action,
     run_entry,
 )
@@ -15,20 +16,20 @@ from tests.glean.utils import load_cases, skip_if_unstable
 
 data = load_cases(__file__)
 
-# Metrics read as labeled counters ({label: count}); everything else is an event payload.
+# Metrics read as labeled counters ({label: count}); everything else is an event payload
 LABELED_COUNTER_METRICS = {
     "browserEngagementNavigation.searchbar",
     "browserSearchContent.searchbar",
     "browserSearchWithads.searchbar",
 }
-# Metrics that only record when the SERP serves ads, so they need a commercial query.
+# Metrics that only record when the SERP serves ads, so they need a commercial query
 AD_METRICS = {
     "browserSearchWithads.searchbar",
     "serp.adImpression",
 }
-# Entries that pick their own engine in-flow, so no default-engine change is needed.
+# Entries that pick their own engine in-flow, so no default-engine change is needed
 IN_FLOW_ENGINE_ENTRIES = {"searchbar_search_form"}
-# Already the default engine, so selecting it in prefs is skipped.
+# Already the default engine, so selecting it in prefs is skipped
 DEFAULT_ENGINE = "Google"
 
 
@@ -86,6 +87,8 @@ def test_misc_metrics(driver: Firefox, case: dict):
         events = glean.poll_glean_metric(metric, expected)
     except Exception:
         block_if_bot_challenge(driver)
+        if metric in AD_METRICS:
+            block_if_no_ads(driver)
         raise
 
     # Fields whose values are dynamic (ad counts, UUID impression_id) are checked for presence

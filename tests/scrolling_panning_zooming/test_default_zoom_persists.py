@@ -18,12 +18,12 @@ def test_case():
     return "545730"
 
 
-def _get_div_x_position(driver: Firefox) -> int:
+def _get_link_x_position(driver: Firefox) -> int:
     """
-    Returns the X location of the first <div> element on the page.
+    Returns the X location of the first <a> element on the page.
     """
-    div = driver.find_element(By.TAG_NAME, "div")
-    return int(div.location["x"])
+    link = driver.find_element(By.TAG_NAME, "a")
+    return int(link.location["x"])
 
 
 def _set_default_zoom(driver: Firefox, zoom_percent: int) -> None:
@@ -44,17 +44,17 @@ def test_default_zoom_across_tabs(driver: Firefox):
     to 150% and that the X-coordinate changes and is consistent across tabs.
     """
 
-    # Step 1: Open the test page and record the initial position of the <div>
+    # Step 1: Open the test page and record the initial position of the <a>
     page = GenericPage(driver, url=TEST_URL)
     page.open()
 
-    initial_position = _get_div_x_position(driver)
-    logging.info(f"Initial X position of div before setting zoom: {initial_position}")
+    initial_position = _get_link_x_position(driver)
+    logging.info(f"Initial X position of link before setting zoom: {initial_position}")
 
     # Step 2: Open the browser preferences and set the default zoom level to 150%
     _set_default_zoom(driver, DEFAULT_ZOOM_PERCENT)
 
-    # Step 3: Open three tabs, load the test URL, and verify the <div>'s position
+    # Step 3: Open three tabs, load the test URL, and verify the <a>'s position
     tabs = TabBar(driver)
 
     # Store the first tab's position after zoom change for consistency checks
@@ -72,8 +72,8 @@ def test_default_zoom_across_tabs(driver: Firefox):
         page = GenericPage(driver, url=TEST_URL)
         page.open()
 
-        current_position = _get_div_x_position(driver)
-        logging.info(f"X position of div in tab {index + 1}: {current_position}")
+        current_position = _get_link_x_position(driver)
+        logging.info(f"X position of link in tab {index + 1}: {current_position}")
 
         # Assert that the current position is different from the initial position
         assert current_position != initial_position, (

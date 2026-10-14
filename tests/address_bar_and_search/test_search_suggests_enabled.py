@@ -1,0 +1,89 @@
+import pytest
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import Firefox
+
+from modules.browser_object_navigation import Navigation
+from modules.page_object_prefs import AboutPrefs
+from modules.util import BrowserActions
+
+# Constants
+SEARCH_TERM_SPONSORED = "amazon"
+SEARCH_TERM_NON_SPONSORED = "california"
+RETRY_LIMIT = 5
+
+
+@pytest.fixture()
+def test_case():
+    return "3029158"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return [
+        ("browser.urlbar.quicksuggest.enabled", True),
+        ("browser.urlbar.suggest.quicksuggest.sponsored", True),
+        ("browser.urlbar.suggest.quicksuggest.nonsponsored", True),
+    ]
+
+
+def test_search_suggests_enabled(driver: Firefox):
+    """
+    C1618400: Firefox Suggest displays sponsored and non-sponsored
+    suggestions when enabled in Preferences
+    """
+    nav = Navigation(driver)
+    prefs = AboutPrefs(driver, category="search")
+    actions = BrowserActions(driver)
+
+    prefs.open()
+
+    # Enable "Show search suggestions" if disabled
+    suggestions_checkbox = prefs.get_element("show-suggestions")
+    if not suggestions_checkbox.is_selected():
+        suggestions_checkbox.click()
+
+    nonsponsored_checkbox = prefs.get_element("show-suggestions-first")
+    assert nonsponsored_checkbox.is_selected(), (
+        "'show-suggestions-first' checkbox not checked"
+    )
+
+    sponsored_checkbox = prefs.get_element("show-trending")
+    assert sponsored_checkbox.is_selected(), "'show-trending' checkbox not checked"
+
+    # Check for sponsored suggestion
+    found_sponsored = False
+    retries = 0
+
+    while not found_sponsored and retries < RETRY_LIMIT:
+        nav.clear_awesome_bar()
+        actions.search(SEARCH_TERM_SPONSORED, with_enter=False)
+        try:
+            nav.wait_for_suggestions_present()
+            found_sponsored = len(nav.get_elements("sponsored-suggestion")) > 0
+        except TimeoutException:
+            pass
+
+        retries += 1
+
+    assert found_sponsored, (
+        f"No sponsored suggestion found after {RETRY_LIMIT} retries."
+    )
+
+    # Check for non-sponsored suggestion
+    found_non_sponsored = False
+    retries = 0
+    while not found_non_sponsored and retries < RETRY_LIMIT:
+        nav.clear_awesome_bar()
+        actions.search(SEARCH_TERM_NON_SPONSORED, with_enter=False)
+        try:
+            nav.wait_for_suggestions_present()
+            entries = nav.get_elements("firefox-suggest")
+            found_non_sponsored = any("Wikipedia" in entry.text for entry in entries)
+        except (NoSuchElementException, TimeoutException):
+            pass
+
+        retries += 1
+
+    assert found_non_sponsored, (
+        f"Non-sponsored suggestion not found after {RETRY_LIMIT} retries."
+    )

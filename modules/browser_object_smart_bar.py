@@ -1,0 +1,454 @@
+import logging
+
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+
+from modules.browser_object_smart_window import CHAT_DOCUMENT_JS, SmartWindow
+from modules.browser_object_tabbar import TabBar
+from modules.page_base import BasePage
+
+# The Smart Bar lives in the chat's document (see CHAT_DOCUMENT_JS) with the
+# editor two shadow roots down, so the accessors below script the traversal.
+# Both supported alternatives were tried and do not work here:
+# switch_to_iframe_context() raises NoSuchFrameException (it is a XUL
+# <browser>, not an iframe), and element.shadow_root is content-context only.
+# components.json shadowParent is not JS-free either -- see util.py:834/877.
+_TRAVERSE = (
+    CHAT_DOCUMENT_JS
+    + """
+function editor() {
+  const host = aiWindow();
+  return host && host.shadowRoot
+    ? host.shadowRoot.querySelector("moz-multiline-editor")
+    : null;
+}
+function prosemirror() {
+  const e = editor();
+  return e && e.shadowRoot ? e.shadowRoot.querySelector("div.ProseMirror") : null;
+}
+// Walk from the document: input-cta is not inside ai-window's own shadow
+// root, so starting the search there misses it entirely.
+function cta() {
+  const d = aiDoc();
+  if (!d) return null;
+  let hit = null;
+  // aiWindow.html nests about four shadow roots deep to reach the CTA; 12 is
+  // headroom against further nesting while still bounding a bad walk.
+  (function walk(node, depth) {
+    if (!node || depth > 12 || hit) return;
+    for (const el of node.querySelectorAll("*")) {
+      // Match with CSS, not tagName: these are HTML-namespaced elements in a
+      // XUL document, so tagName reads back as "html:input-cta".
+      if (el.matches && el.matches("input-cta")) { hit = el; return; }
+      if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+    }
+  })(d, 0);
+  return hit;
+}
+// The CTA is a split button: [0] is its actions menu, [1] the Search With
+// submenu. These are positional because the lists carry no id or other stable
+// attribute to select on. To stop a layout change from silently reading the
+// wrong list, get_search_with_items checks the list count is still 2.
+function ctaLists() {
+  const c = cta();
+  return c && c.shadowRoot ? Array.from(c.shadowRoot.querySelectorAll("panel-list")) : [];
+}
+function menuItemIds(list) {
+  return list
+    ? Array.from(list.querySelectorAll("panel-item"))
+        .map(i => i.getAttribute("data-l10n-id"))
+        .filter(Boolean)
+    : [];
+}
+"""
+)
+
+# panel-item data-l10n-ids in the CTA's actions menu. Matching on l10n id
+# rather than visible text keeps these locale-independent.
+ACTION_MENU_CHAT = "aiwindow-input-cta-menu-label-chat"
+ACTION_MENU_GO_TO_SITE = "aiwindow-input-cta-menu-label-navigate"
+ACTION_MENU_SEARCH_WITH_DEFAULT = "aiwindow-input-cta-menu-label-search"
+ACTION_MENU_SEARCH_WITH = "aiwindow-input-cta-menu-label-search-with"
+
+
+class SmartBar(BasePage):
+    """
+    Browser Object Model for the Smart Window's Smart Bar input.
+
+    The Smart Bar is the Smart Window's urlbar, reimplemented as a ProseMirror
+    editor. Open it with open_smart_bar(), then type into it with
+    set_smart_bar_text().
+    """
+
+    URL_TEMPLATE = "about:blank"
+
+    @BasePage.context_chrome
+    def _script(self, body: str, *args):
+        return self.driver.execute_script(_TRAVERSE + body, *args)
+
+    # ── Opening ──────────────────────────────────────────────────────────
+
+    def open_smart_bar(self) -> BasePage:
+        """
+        Click the Ask button and wait for the editor to be ready.
+
+        Requires an active Smart Window; the button does not exist otherwise.
+        """
+        SmartWindow(self.driver).click_on("smart-window-ask-button")
+        self.expect_smart_bar_ready()
+        return self
+
+    def open_full_page_chat(self) -> BasePage:
+        """
+        Open a new tab, which in a Smart Window is the full-page chat, and
+        wait for its Smart Bar.
+        """
+        TabBar(self.driver).new_tab_by_button()
+        self.expect_smart_bar_ready()
+        return self
+
+    def smart_bar_ready(self) -> bool:
+        """Report whether the Smart Bar editor exists and has finished loading."""
+        return bool(
+            self._script(
+                "const d = aiDoc();"
+                "return !!(d && d.readyState === 'complete' && editor());"
+            )
+        )
+
+    def expect_smart_bar_ready(self) -> BasePage:
+        """Wait until the Smart Bar editor is available."""
+        self.expect(lambda _: self.smart_bar_ready())
+        return self
+
+    def _focus_editor(self) -> bool:
+        """
+        Focus the ProseMirror editor; False if it is not available.
+
+        Scripted: elements in the ai-window-browser contentDocument have no
+        usable Selenium reference from chrome, so there is nothing to click.
+        """
+        return bool(
+            self._script(
+                "const p = prosemirror();if (!p) return false;p.focus();return true;"
+            )
+        )
+
+    # ── Text ─────────────────────────────────────────────────────────────
+
+    def get_smart_bar_text(self) -> str:
+        """
+        Return the Smart Bar's current text, or "" before it is available.
+
+        Returning a value rather than throwing lets expect() poll this during
+        the window where the editor has not finished loading.
+        """
+        return self._script("const e = editor(); return e ? e.value : '';")
+
+    def set_smart_bar_text(self, text: str) -> BasePage:
+        """
+        Replace the Smart Bar's text by typing it.
+
+        Real key events, not `MultilineEditor.value`: assigning that property
+        skips the editor's input handling.
+        """
+        logging.info("Setting Smart Bar text to %r", text)
+        if not self._focus_editor():
+            raise AssertionError("Smart Bar editor is not available to write to")
+
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # Select-all so this replaces rather than appends.
+            # perform_key_combo maps CONTROL to COMMAND on macOS.
+            self.perform_key_combo(Keys.CONTROL, "a")
+            self.actions.send_keys(text).perform()
+
+        self.expect_smart_bar_text(text)
+        return self
+
+    def expect_smart_bar_text(self, text: str) -> BasePage:
+        """
+        Wait until the Smart Bar's text equals `text`.
+
+        Reports the value seen on timeout, since the comparison is exact.
+        """
+        try:
+            self.expect(lambda _: self.get_smart_bar_text() == text)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar text never became {text!r}; "
+                f"last read {self.get_smart_bar_text()!r}"
+            ) from None
+        return self
+
+    # ── Searching ────────────────────────────────────────────────────────
+
+    def submit(self) -> BasePage:
+        """
+        Press Enter to run the Smart Bar's current action.
+
+        Refocuses first: send_keys goes to whatever holds focus, and
+        choose_search_engine can move it.
+        """
+        if not self._focus_editor():
+            raise AssertionError("Smart Bar editor is not available to submit from")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys(Keys.ENTER).perform()
+        return self
+
+    def get_default_search_engine(self) -> str:
+        """
+        Return the engine the CTA names as default, or "" if not shown yet.
+
+        Read from the "Search with X" item's data-l10n-args, so a test need
+        not hardcode an engine.
+        """
+        return self._script(
+            "const l = ctaLists()[0];"
+            "if (!l) return '';"
+            "const hit = Array.from(l.querySelectorAll('panel-item'))"
+            "  .find(i => i.getAttribute('data-l10n-id') === arguments[0]);"
+            "if (!hit) return '';"
+            "try {"
+            "  return JSON.parse(hit.getAttribute('data-l10n-args') || '{}')"
+            "    .searchEngineName || '';"
+            "} catch (e) { return ''; }",
+            ACTION_MENU_SEARCH_WITH_DEFAULT,
+        )
+
+    def expect_default_search_engine(self) -> BasePage:
+        """Wait until the CTA reports which engine is the default."""
+        try:
+            self.expect(lambda _: self.get_default_search_engine() != "")
+        except TimeoutException:
+            raise AssertionError(
+                "the CTA never named a default search engine"
+            ) from None
+        return self
+
+    def choose_search_engine(self, engine_name: str) -> BasePage:
+        """
+        Pick an engine from the Search With submenu by its visible name.
+
+        Only sets the engine -- call submit() to run the search. The choice is
+        not reflected in any CTA attribute, so assert on the resulting URL.
+        """
+        logging.info("Choosing Smart Bar search engine %r", engine_name)
+        result = self._script(
+            "const lists = ctaLists();"
+            "if (lists.length !== 2) return {count: lists.length};"
+            "const items = Array.from(lists[1].querySelectorAll('panel-item'));"
+            "const hit = items.find(i => (i.textContent || '').trim() === arguments[0]);"
+            "if (!hit) return {available: items.map(i => (i.textContent || '').trim())};"
+            "hit.click();"
+            "return {clicked: true};",
+            engine_name,
+        )
+        if "count" in result:
+            raise AssertionError(
+                f"expected 2 panel-lists in the CTA (actions, Search With), "
+                f"found {result['count']}"
+            )
+        if "available" in result:
+            raise AssertionError(
+                f"no Search With entry named {engine_name!r}; "
+                f"available: {result['available']}"
+            )
+        return self
+
+    def expect_search_engine_offered(self, engine_name: str) -> BasePage:
+        """
+        Wait until `engine_name` appears in the Search With submenu.
+
+        A count would be satisfied before this engine is added.
+        """
+        try:
+            self.expect(lambda _: engine_name in (self._read_search_with_items() or []))
+        except TimeoutException:
+            raise AssertionError(
+                f"{engine_name} never appeared in the Search With submenu; "
+                f"last saw {self._read_search_with_items()}"
+            ) from None
+        return self
+
+    def expect_search_engines(self, minimum: int = 2) -> BasePage:
+        """
+        Wait until the Search With submenu lists at least `minimum` entries.
+
+        It holds only a generic "Search" entry until the search service
+        initialises, so reading it immediately is a race.
+        """
+        try:
+            self.expect(lambda _: len(self._read_search_with_items() or []) >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Search With submenu never listed {minimum} entries; "
+                f"last saw {self._read_search_with_items()}"
+            ) from None
+        return self
+
+    def get_result_count(self) -> int:
+        """
+        Return how many autocomplete rows the Smart Bar is showing.
+
+        The results live in the Smart Bar's urlbar view rather than the CTA,
+        so this walks for `.urlbarView-results` instead of reusing ctaLists().
+        """
+        return self._script("""
+            const doc = aiDoc();
+            if (!doc) return 0;
+            let rows = 0;
+            // Separate from the count: an empty container is a valid result,
+            // so the exit cannot key on `rows`.
+            let found = false;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || found) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.matches && el.matches(".urlbarView-results")) {
+                        rows = el.querySelectorAll(".urlbarView-row").length;
+                        found = true;
+                        return;
+                    }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (found) return; }
+                }
+            })(doc, 0);
+            return rows;
+        """)
+
+    def expect_no_results(self) -> BasePage:
+        """
+        Wait until the Smart Bar shows no autocomplete rows.
+
+        Separate from expect_results, which waits for *at least* a count and
+        so is trivially true at zero.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() == 0)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar still showed {self.get_result_count()} autocomplete "
+                "row(s) before any input"
+            ) from None
+        return self
+
+    def expect_results(self, minimum: int = 1) -> BasePage:
+        """
+        Wait until the Smart Bar shows at least `minimum` autocomplete rows.
+
+        Reports the count actually reached, matching expect_smart_bar_text.
+        """
+        try:
+            self.expect(lambda _: self.get_result_count() >= minimum)
+        except TimeoutException:
+            raise AssertionError(
+                f"Smart Bar never reached {minimum} autocomplete row(s); "
+                f"last count {self.get_result_count()}"
+            ) from None
+        return self
+
+    # ── Go / Ask action menu ─────────────────────────────────────────────
+
+    def is_action_menu_open(self) -> bool:
+        """Report whether the CTA's Go/Ask action menu is open."""
+        return bool(self._script("const l = ctaLists()[0]; return !!(l && l.open);"))
+
+    def expect_action_menu_open(self, is_open: bool = True) -> BasePage:
+        """Wait until the Go/Ask action menu is (or is not) open."""
+        self.expect(lambda _: self.is_action_menu_open() == is_open)
+        return self
+
+    def open_action_menu(self) -> BasePage:
+        """
+        Open the CTA's Go/Ask action menu, leaving it open if already shown.
+
+        The split button's menu portion is not separately clickable, so this
+        uses the panel-list's own toggle() -- which flips, hence the check.
+        """
+        found = self._script(
+            "const l = ctaLists()[0];"
+            "if (!l) return false;"
+            "if (!l.open) l.toggle(new MouseEvent('click'));"
+            "return true;"
+        )
+        if not found:
+            raise AssertionError("CTA action menu not found")
+        self.expect_action_menu_open(True)
+        return self
+
+    def get_action_menu_items(self) -> list[str]:
+        """Return the action menu's panel-item data-l10n-ids, in order."""
+        return self._script("return menuItemIds(ctaLists()[0]);")
+
+    def _read_search_with_items(self) -> list[str] | None:
+        """
+        Search With entries, or None while the CTA has the wrong list count.
+
+        None rather than raising, so a poll can wait the CTA out.
+        """
+        # Count and read in one script so the shadow tree is only walked once.
+        result = self._script(
+            "const lists = ctaLists();"
+            "if (lists.length !== 2) return {count: lists.length};"
+            "return {items: Array.from(lists[1].querySelectorAll('panel-item'))"
+            "  .map(i => (i.textContent || '').trim()).filter(t => t)};"
+        )
+        return result.get("items")
+
+    def get_search_with_items(self) -> list[str]:
+        """
+        Search With entries as visible text, in order. Raises if the CTA
+        stops holding the two panel-lists the lookup relies on.
+        """
+        items = self._read_search_with_items()
+        if items is None:
+            raise AssertionError(
+                "expected 2 panel-lists in the CTA (actions, Search With) -- "
+                "the positional lookup in ctaLists() is no longer safe"
+            )
+        return items
+
+    # ── Submitting ───────────────────────────────────────────────────────
+
+    def get_action(self) -> str:
+        """Return the CTA's current action: "chat", "search", "navigate" or ""."""
+        return self._script("const c = cta(); return c ? c.action : '';")
+
+    def choose_chat_action(self) -> BasePage:
+        """
+        Pick Ask (chat) from the Go/Ask action menu, leaving the menu closed.
+
+        A scripted click on the item doesn't close the menu the way a real
+        one does, so it is hidden explicitly.
+        """
+        self.open_action_menu()
+        found = self._script(
+            "const l = ctaLists()[0];"
+            "const item = l && l.querySelector(`panel-item[data-l10n-id='${arguments[0]}']`);"
+            "if (!item) return false;"
+            "item.click();"
+            "if (l.open) l.hide();"
+            "return true;",
+            ACTION_MENU_CHAT,
+        )
+        if not found:
+            raise AssertionError("Chat item not found in the CTA action menu")
+        self.expect(lambda _: self.get_action() == "chat")
+        self.expect_action_menu_open(False)
+        return self
+
+    def submit_chat(self, text: str) -> BasePage:
+        """
+        Type `text` and send it to the assistant as a chat message.
+        """
+        self.set_smart_bar_text(text)
+        self.choose_chat_action()
+        clicked = self._script(
+            "const b = cta().shadowRoot.querySelector('moz-button');"
+            "if (!b || !b.buttonEl) return false;"
+            "b.buttonEl.click();"
+            "return true;"
+        )
+        if not clicked:
+            raise AssertionError("Smart Bar CTA button not found")
+        # Firefox clears the Smart Bar once the message is sent.
+        self.expect_smart_bar_text("")
+        return self

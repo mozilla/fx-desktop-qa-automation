@@ -21,6 +21,9 @@ from modules.components.dropdown import Dropdown
 from modules.page_base import BasePage
 from modules.util import Utilities
 
+# Language models are tens of MB each, so the download can be slow.
+DOWNLOAD_LANGUAGE_TIMEOUT = 120
+
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
 
@@ -195,6 +198,41 @@ class AboutPrefs(BasePage):
             for engine in self.get_elements("search-shortcuts-enabled-engine")
         ]
 
+    def add_search_engine(self, name: str, url: str, keyword: str) -> BasePage:
+        """Add an engine through the Add Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        form, and switch back out. The Add Engine button stays disabled until
+        the URL passes validation, so wait for it.
+        """
+        self.click_on("add-search-engine-button")
+        self.get_and_switch_iframe()
+        self.get_element("add-engine-name-input").send_keys(name)
+        self.get_element("add-engine-url-input").send_keys(url)
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
+        self.expect(
+            lambda _: (
+                self.get_element("add-engine-accept-button").get_attribute("disabled")
+                is None
+            )
+        )
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
+    def edit_search_engine_keyword(self, engine_id: str, keyword: str) -> BasePage:
+        """Add a keyword to an engine through its Edit Search Engine dialog.
+
+        The dialog opens in a subdialog iframe, so switch into it, fill the
+        keyword, and switch back out.
+        """
+        self.click_on("edit-search-engine-button", labels=[engine_id])
+        self.get_and_switch_iframe()
+        self.get_element("add-engine-keyword-input").send_keys(keyword)
+        self.click_on("add-engine-accept-button")
+        self.switch_to_default_frame()
+        return self
+
     def find_in_settings(self, term: str) -> BasePage:
         """Search via the Find in Settings bar, return self."""
         search_input = self.get_element("find-in-settings-input")
@@ -210,68 +248,14 @@ class AboutPrefs(BasePage):
             checkbox.click()
         return self
 
-    def select_search_engine_from_tree(self, engine_name: str) -> BasePage:
-        """
-        Select a search engine from the 'Search Shortcuts' list in about:preferences.
-        Note:
-            This method handles browser UI built with Firefox’s internal XUL TreeView API,
-            where items are generated virtually rather than as standard DOM nodes. Since
-            Selenium cannot interact with these virtual rows directly, this method scrolls
-            to the table and delegates selection to a JavaScript-based helper.
-        Argument:
-            engine_name (str): Name of the search engine to select (e.g., "DuckDuckGo")
-        """
-        search_shortcuts_group = self.get_element("search-shortcuts-group")
-        engine_list = self.get_element(
-            "search-engine-list", parent_element=search_shortcuts_group
-        )
-        return self._select_engine_with_javascript(engine_list, engine_name)
-
-    def _select_engine_with_javascript(self, engine_list, engine_name: str) -> BasePage:
-        """
-        Select a search engine from a XUL TreeView-backed list via JavaScript.
-        Note:
-            The 'Search Shortcuts' table is rendered using Firefox’s internal TreeView API,
-            not the standard DOM. Therefore, Selenium cannot access or click individual rows.
-            This method executes JavaScript to loop through the TreeView rows and programmatically
-            select the row that matches the given engine name.
-        Arguments:
-            engine_list: WebElement representing the XUL tree container.
-            engine_name (str): Search engine name to select (case-insensitive match).
-        Raises:
-            Exception: If no matching search engine is found in the TreeView.
-        """
-        js = """
-        let tree = arguments[0];
-        let name = arguments[1].toLowerCase();
-        let view = tree.view;
-        for (let i = 0; i < view.rowCount; i++) {
-            let text = view.getCellText(i, tree.columns.getNamedColumn("engineName"));
-            if (text && text.toLowerCase().includes(name)) {
-                view.selection.select(i);
-                tree.ensureRowIsVisible(i);
-                return true;
-            }
-        }
-        return false;
-        """
-
-        found = self.driver.execute_script(js, engine_list, engine_name)
-        if not found:
-            raise Exception(
-                f"Search engine '{engine_name}' not found in Search Shortcuts table."
-            )
-        return self
-
-    @BasePage.context_chrome
+    @BasePage.context_content
     def remove_search_engine(self, engine_name: str) -> BasePage:
-        """
-        Remove a search engine from the 'Search Shortcuts' list in about:preferences.
-        Argument:
-            engine_name (str): Name of the search engine to remove (e.g., "DuckDuckGo")
-        """
-        self.element_visible("remove-search-engine-button")
-        self.click_on("remove-search-engine-button")
+        """Delete a custom search engine and wait for its settings row to disappear."""
+        self.scroll_to_element("search-shortcuts-engine-row", labels=[engine_name])
+        self.element_visible("remove-search-engine-button", labels=[engine_name])
+        self.click_on("remove-search-engine-button", labels=[engine_name])
+        self.get_alert().accept()
+        self.element_does_not_exist("search-shortcuts-engine-row", labels=[engine_name])
         return self
 
     @BasePage.context_chrome
@@ -371,6 +355,20 @@ class AboutPrefs(BasePage):
             ).find_elements(By.TAG_NAME, "option")
             if not option.get_attribute("hidden")
         ]
+
+    def set_fallback_language(self, lang_code: str) -> BasePage:
+        """Sets the Fallback language via the moz-select on the Languages pane.
+
+        Args:
+            lang_code: The language code to set (e.g. 'de')
+        """
+        # The fallback options are filled in asynchronously, so wait for ours.
+        self.wait.until(lambda _: lang_code in self.get_fallback_language_options())
+        Select(self.get_element("browser-language-fallback-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("browser-language-fallback", "value", lang_code)
+        return self
 
     def add_website_language(self, lang_code: str) -> BasePage:
         """Adds a language to the Website language card on the Languages pane.
@@ -472,6 +470,92 @@ class AboutPrefs(BasePage):
         self.click_on("always-translate-remove-button", labels=[lang_code])
         return self
 
+    def add_never_translate_language(self, lang_code: str) -> BasePage:
+        """Adds a language to the 'Never translate these languages' list.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to add (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "never-translate-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("never-translate-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("never-translate-picker", "value", lang_code)
+        self.click_on("never-translate-add-button")
+        return self
+
+    def remove_never_translate_language(self, lang_code: str) -> BasePage:
+        """Deletes a language from the 'Never translate these languages' list.
+
+        Args:
+            lang_code: The language code to delete (e.g. 'es')
+        """
+        self.click_on("never-translate-remove-button", labels=[lang_code])
+        return self
+
+    def remove_never_translate_site(self, origin: str) -> BasePage:
+        """Deletes a site from the 'Never translate these sites' list.
+
+        Args:
+            origin: The site origin to delete (e.g. 'http://localhost:8000')
+        """
+        self.click_on("never-translate-site-remove-button", labels=[origin])
+        return self
+
+    def download_translation_language(self, lang_code: str) -> BasePage:
+        """Downloads a language in the 'Speed up translation' section.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            lang_code: The language code to download (e.g. 'es')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(
+                    "download-language-picker-select"
+                ).find_elements(By.TAG_NAME, "option")
+            )
+        )
+        Select(self.get_element("download-language-picker-select")).select_by_value(
+            lang_code
+        )
+        self.element_attribute_is("download-language-picker", "value", lang_code)
+        self.click_on("download-language-button")
+        return self
+
+    def wait_for_language_download(self, lang_code: str) -> BasePage:
+        """Waits until a language finishes downloading.
+
+        The row carries a progress description until the download is done.
+        Use get_dom_attribute, since get_attribute reads the JS property and
+        always returns an empty string here. The row is rebuilt on every
+        progress update, so stale elements are expected while polling.
+
+        Args:
+            lang_code: The language code being downloaded (e.g. 'es')
+        """
+        self.custom_wait(
+            timeout=DOWNLOAD_LANGUAGE_TIMEOUT,
+            ignored_exceptions=(NoSuchElementException, StaleElementReferenceException),
+        ).until(
+            lambda _: self.get_element(
+                "download-language-item", labels=[lang_code]
+            ).get_dom_attribute("description")
+            is None
+        )
+        return self
+
     def open_doh_advanced(self) -> BasePage:
         """Open the DoH Advanced settings sub-pane.
 
@@ -488,14 +572,17 @@ class AboutPrefs(BasePage):
         self.element_attribute_contains(option_id, "checked", "")
         return self
 
-    def uncheck_doh_fallback_warning(self) -> BasePage:
-        """Uncheck "Always warn me if secure DNS isn't available".
+    def set_doh_fallback_warning(self, checked: bool) -> BasePage:
+        """Check or uncheck "Always warn me if secure DNS isn't available".
 
         Requires `select_doh_protection_level("custom")` first, which reveals
         this checkbox.
+
+        Arguments:
+            checked: True to check the box, False to uncheck it.
         """
         checkbox = self.get_element("doh-fallback-checkbox-input")
-        if checkbox.is_selected():
+        if checkbox.is_selected() != checked:
             checkbox.click()
         return self
 
@@ -547,6 +634,23 @@ class AboutPrefs(BasePage):
                 )
             )
         )
+        return self
+
+    def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
+        """Verify the Custom-mode provider menu offers exactly the given providers."""
+
+        def _providers_displayed(_):
+            options = self.get_element("doh-provider-select-inner").find_elements(
+                By.TAG_NAME, "option"
+            )
+            displayed = [
+                opt.text for opt in options if opt.get_attribute("value") != "custom"
+            ]
+            return len(displayed) == len(provider_names) and all(
+                any(name in text for text in displayed) for name in provider_names
+            )
+
+        self.wait.until(_providers_displayed)
         return self
 
     def open_connection_advanced(self) -> BasePage:
@@ -663,6 +767,18 @@ class AboutPrefs(BasePage):
         "strict": "etp-level-strict",
         "custom": "etp-level-custom",
     }
+    # The "Fix ... site issues" checkboxes exist twice, once under the Strict level on
+    # the ETP subpage and once on the Customize subpage, with separate ids.
+    ETP_EXCEPTION_CHECKBOXES = {
+        "etp": {
+            "major": "etp-major-issues-checkbox",
+            "minor": "etp-minor-issues-checkbox",
+        },
+        "etpCustomize": {
+            "major": "etp-customize-major-issues-checkbox",
+            "minor": "etp-customize-minor-issues-checkbox",
+        },
+    }
 
     def open_etp_settings(self) -> BasePage:
         """
@@ -713,6 +829,74 @@ class AboutPrefs(BasePage):
 
         self.expect(_level_is_checked)
         return self
+
+    def verify_etp_exception_checkbox(
+        self, exception: str, checked: bool = True, pane: str = "etp"
+    ) -> BasePage:
+        """
+        Assert the checked state of a "Fix ... site issues" checkbox.
+        exception: one of "major", "minor". pane: one of "etp", "etpCustomize".
+
+        The moz-checkbox holds its state on the host's ``checked`` property, which is
+        not mirrored onto an attribute, so it has to be read over JS.
+        """
+        if pane not in self.ETP_EXCEPTION_CHECKBOXES:
+            raise ValueError(f"Unknown ETP pane: {pane!r}")
+        if exception not in self.ETP_EXCEPTION_CHECKBOXES[pane]:
+            raise ValueError(f"Unknown ETP exception checkbox: {exception!r}")
+        element_name = self.ETP_EXCEPTION_CHECKBOXES[pane][exception]
+
+        def _checkbox_state_matches(_):
+            checkbox = self.get_element(element_name)
+            return (
+                bool(
+                    self.driver.execute_script(
+                        "return !!arguments[0].checked;", checkbox
+                    )
+                )
+                == checked
+            )
+
+        self.expect(_checkbox_state_matches)
+        return self
+
+    def verify_etp_custom_toggle(self, option: str, pressed: bool = True) -> BasePage:
+        """
+        Assert the on/off state of a category moz-toggle on about:preferences#etpCustomize.
+        option: a keyword from ``ETP_TOGGLE_OPTIONS``, e.g. "cookies-checkbox".
+
+        The moz-toggle holds its state on the host's ``pressed`` property, which is
+        not mirrored onto an attribute, so it has to be read over JS.
+        """
+        if option not in self.ETP_TOGGLE_OPTIONS:
+            raise ValueError(f"Unknown ETP toggle option: {option!r}")
+        element_name = self.ETP_TOGGLE_OPTIONS[option]
+
+        def _toggle_state_matches(_):
+            toggle = self.get_element(element_name)
+            return (
+                bool(
+                    self.driver.execute_script("return !!arguments[0].pressed;", toggle)
+                )
+                == pressed
+            )
+
+        self.expect(_toggle_state_matches)
+        return self
+
+    def get_etp_custom_dropdown_options(self, element_name: str) -> List[str]:
+        """
+        Return the labels of the selectable options in one of the ETP Customize
+        dropdowns. Options that Firefox keeps hidden behind a pref are left out.
+
+        element_name: the inner <select>, e.g. "etp-custom-cookie-behavior-select".
+        """
+        select = Select(self.get_element(element_name))
+        return [
+            option.text
+            for option in select.options
+            if not option.get_attribute("hidden")
+        ]
 
     def open_etp_customize(self) -> BasePage:
         """
@@ -1690,13 +1874,6 @@ class AboutPrefs(BasePage):
         self.click_on("clear-data-accept-button")
         self.switch_to_default_frame()
 
-    def enable_show_sidebar(self):
-        """Enable the Show Sidebar checkbox in Tabs and browsing > Browser layout."""
-        if self.get_element("show-sidebar-checkbox").get_attribute("checked") is None:
-            self.click_on("show-sidebar-shadow-box")
-        self.element_has_attribute("show-sidebar-checkbox", "checked")
-        return self
-
     def wait_for_default_search_engine(self, engine_name: str) -> BasePage:
         """Wait until the UI reflects the selected default search engine."""
         self.wait.until(
@@ -1785,6 +1962,55 @@ class AboutPrefs(BasePage):
         """
         self.click_on("remove-all-websites-button")
         self.click_on("exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
+    def open_doh_exceptions_dialog(self) -> BasePage:
+        """
+        Open the "Website Exceptions for DNS over HTTPS" dialog and switch
+        into its popup iframe.
+        """
+        self._dismiss_open_prefs_dialog()
+        self.js_click_on("doh-exceptions-button")
+        self.switch_to_iframe_context(self.get_element("browser-popup"))
+        return self
+
+    def add_doh_exception(self, domain: str) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, add a website as an
+        exception and save the changes. Returns to the default frame.
+
+        Args:
+            domain: website domain to add to the exceptions list
+        """
+        self.element_visible("doh-exceptions-url-input")
+        self.get_element("doh-exceptions-url-input").send_keys(domain)
+        self.click_on("doh-exceptions-add-button")
+        self.click_on("doh-exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
+    def remove_one_doh_exception(self) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, remove one website
+        exception from the list and save the changes. Returns to the
+        default frame.
+        """
+        self.any_element_visible("children-host-elements")
+        self.get_elements("children-host-elements")[0].click()
+        self.click_on("doh-exceptions-remove-button")
+        self.click_on("doh-exceptions-save-changes-button")
+        self.switch_to_default_frame()
+        return self
+
+    def remove_all_doh_exceptions(self) -> BasePage:
+        """
+        From inside the DoH exceptions dialog iframe, remove every website
+        exception and save the changes. Returns to the default frame.
+        """
+        self.element_visible("doh-exceptions-remove-all-button")
+        self.click_on("doh-exceptions-remove-all-button")
+        self.click_on("doh-exceptions-save-changes-button")
         self.switch_to_default_frame()
         return self
 
@@ -1975,10 +2201,12 @@ class AboutPrefs(BasePage):
         # Confirm the moz-select wrote through to the backing pref rather than
         # just holding the value we assigned.
         self.expect(
-            lambda _: self.driver.execute_script(
-                "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+            lambda _: (
+                self.driver.execute_script(
+                    "return Services.prefs.getStringPref('browser.ai.control.smartWindow', '');"
+                )
+                == state
             )
-            == state
         )
         return self
 

@@ -44,8 +44,10 @@ def test_cross_site_tracking_cookies_displayed_subpanel(
     # Click on cross-site tracking cookies
     trust_panel.open_detected_category("tracking cookies")
 
-    # "Third-Party Cookies Blocked" title is displayed in the subpanel
-    trust_panel.blocked_trackers_title_displayed_in_subpanel("third-party cookies")
+    # "Cross-Site Tracking Cookies Blocked" title is displayed in the subpanel
+    trust_panel.blocked_trackers_title_displayed_in_subpanel(
+        "cross-site tracking cookies"
+    )
 
     # The blocked cross-site tracking cookies are displayed inside the subpanel
     assert trust_panel.has_detected_tracking_sites(*DETECTED_COOKIES)

@@ -117,6 +117,28 @@
       "location": "about:preferences#search"
     }
   },
+  "separate-private-engine-checkbox": {
+    "selectorData": "browserSeparateDefaultEngine",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Use a different default search engine in private windows checkbox",
+      "location": "about:preferences#search"
+    }
+  },
+  "private-engine-dropdown-root": {
+    "selectorData": "defaultPrivateEngine",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Default search engine for private windows dropdown",
+      "location": "about:preferences#search"
+    }
+  },
   "select-wrapper-button": {
     "selectorData": ".select-wrapper button",
     "strategy": "css",
@@ -149,6 +171,115 @@
     "comment": {
       "description": "An enabled engine row in the Search shortcuts list (Settings redesign)",
       "location": "about:preferences#search"
+    }
+  },
+  "search-shortcuts-added-engine": {
+    "selectorData": "#engineList moz-box-item[label='{name}'][description='{keyword}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A user-added engine row in the Search shortcuts list, matched by its name and keyword",
+      "location": "about:preferences#search"
+    }
+  },
+  "search-shortcuts-engine-row": {
+    "selectorData": "#engineList moz-box-item[label='{name}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
+  "search-shortcuts-engine-toggle": {
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-toggle",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The on/off toggle on an engine row in the Search shortcuts list, matched by its name",
+      "location": "about:preferences#search"
+    }
+  },
+  "edit-search-engine-button": {
+    "selectorData": "editEngine-{engine}",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Edit button on an engine row in the Search shortcuts list",
+      "location": "about:preferences#search"
+    }
+  },
+  "add-search-engine-button": {
+    "selectorData": "addEngineButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The \"Add search engine\" button under Additional search engines",
+      "location": "about:preferences#search"
+    }
+  },
+  "add-engine-name-input": {
+    "selectorData": "engineName",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The \"Search engine name\" field",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-url-input": {
+    "selectorData": "engineUrl",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The URL field, takes %s in place of the search term",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-keyword-input": {
+    "selectorData": "engineAlias",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The optional Keyword field",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-dialog-shadow-root": {
+    "selectorData": "add-engine-dialog",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Add Search Engine dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
+    }
+  },
+  "add-engine-accept-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "add-engine-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Add Search Engine dialog \"Add Engine\" button",
+      "location": "about:preferences#search (Add Search Engine dialog, inside browser-popup iframe)"
     }
   },
   "find-in-settings": {
@@ -231,30 +362,14 @@
     "strategy": "id",
     "groups": []
   },
-  "search-shortcuts-group": {
-    "selectorData": "oneClickSearchProvidersGroup",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts table",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
-  "search-engine-list": {
-    "selectorData": "engineList",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "The Search shortcuts options list",
-      "location": "about:preferences#search Search Shortcuts subsection"
-    }
-  },
   "remove-search-engine-button": {
-    "selectorData": "removeEngineButton",
-    "strategy": "id",
-    "groups": [],
+    "selectorData": "#engineList moz-box-item[label='{name}'] moz-button[data-l10n-id='search-delete-engine']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "The Remove button under Search shortcuts tabel",
+      "description": "Delete button for a custom search engine, matched by its name",
       "location": "about:preferences#search Search Shortcuts subsection"
     }
   },
@@ -500,6 +615,44 @@
       "location": "about:preferences#home"
     }
   },
+  "etp-status-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-status-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Enhanced Tracking Protection card on the privacy pane; \"label\" and \"description\" attributes hold the title and the top-level ETP message",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-shield-icon": {
+    "selectorData": "legend img",
+    "strategy": "css",
+    "shadowParent": "etp-status-card",
+    "groups": [],
+    "comment": {
+      "description": "Shield icon next to the \"Enhanced Tracking Protection\" title (shadowParent: etp-status-card)",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-status-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link under the ETP card message (shadowParent: etp-status-card)",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "etp-status-item": {
+    "selectorData": "etpStatusItem",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "moz-box-item on the privacy pane showing the ETP level currently in use; \"label\" and \"description\" attributes hold the level name and its summary",
+      "location": "about:preferences#privacy"
+    }
+  },
   "etp-advanced-button": {
     "selectorData": "etpStatusAdvancedButton",
     "strategy": "id",
@@ -507,6 +660,34 @@
     "comment": {
       "description": "ETP \"Advanced\" button on the privacy pane; opens the ETP settings subpage (Settings redesign)",
       "location": "about:preferences#privacy"
+    }
+  },
+  "etp-page-header": {
+    "selectorData": "setting-pane[data-category='paneEtp'] moz-page-header",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Page header of the ETP subpage; \"heading\" attribute holds the \"Enhanced Tracking Protection\" title",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-advanced-settings-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-advanced-settings-group']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Advanced settings\" card holding the ETP level radios; \"label\" and \"description\" attributes hold the title and the ETP message",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-advanced-settings-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-advanced-settings-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link under the \"Advanced settings\" card message (shadowParent: etp-advanced-settings-card)",
+      "location": "about:preferences#etp"
     }
   },
   "etp-level-standard": {
@@ -536,6 +717,34 @@
       "location": "about:preferences#etp"
     }
   },
+  "etp-major-issues-checkbox": {
+    "selectorData": "etpAllowListBaselineEnabled",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix major site issues (recommended)\" moz-checkbox nested under the Strict ETP level (baseline allow list)",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-major-issues-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-major-issues-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link in the \"Fix major site issues\" description (shadowParent: etp-major-issues-checkbox)",
+      "location": "about:preferences#etp"
+    }
+  },
+  "etp-minor-issues-checkbox": {
+    "selectorData": "etpAllowListConvenienceEnabled",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix minor site issues\" moz-checkbox nested under \"Fix major site issues\" (convenience allow list)",
+      "location": "about:preferences#etp"
+    }
+  },
   "etp-customize-button": {
     "selectorData": "etpCustomizeButton",
     "strategy": "id",
@@ -543,6 +752,97 @@
     "comment": {
       "description": "\"Customize\" button shown under the Custom ETP level; opens the ETP Customize subpage",
       "location": "about:preferences#etp"
+    }
+  },
+  "etp-customize-page-header": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] moz-page-header",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Page header of the ETP Customize subpage; \"heading\" attribute holds the \"Customize tracking protection\" title",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-custom-control-group']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Tracking protection\" card holding the per-category controls; \"label\" and \"description\" attributes hold the title and its message",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-major-issues-checkbox": {
+    "selectorData": "etpAllowListBaselineEnabledCustom",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix major site issues (recommended)\" moz-checkbox on the Customize subpage (baseline allow list)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-major-issues-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "etp-customize-major-issues-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link in the \"Fix major site issues\" description (shadowParent: etp-customize-major-issues-checkbox)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-minor-issues-checkbox": {
+    "selectorData": "etpAllowListConvenienceEnabledCustom",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Fix minor site issues\" moz-checkbox on the Customize subpage (convenience allow list)",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='preferences-etp-reset']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The \"Reset customizations\" card; \"label\" and \"description\" attributes hold the title and its message",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-standard-button": {
+    "selectorData": "etpResetStandardButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Reset to standard\" button in the \"Reset customizations\" card",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-reset-strict-button": {
+    "selectorData": "etpResetStrictButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Reset to strict\" button in the \"Reset customizations\" card",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-reload-tabs-hint": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] #reloadTabsHint",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Reload your tabs to apply these changes.\" message bar, shown once a protection is switched. Scoped to the pane because the ETP subpage carries a message bar with the same id.",
+      "location": "about:preferences#etpCustomize"
+    }
+  },
+  "etp-customize-reload-tabs-button": {
+    "selectorData": "setting-pane[data-category='paneEtpCustomize'] #reloadTabsHintButton",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "\"Reload all tabs\" button inside the reload-tabs message bar. Scoped to the pane because the ETP subpage carries a button with the same id.",
+      "location": "about:preferences#etpCustomize"
     }
   },
   "etp-custom-tracking-toggle": {
@@ -1064,6 +1364,76 @@
       "location": "about:preferences#languages Website language section"
     }
   },
+  "translations-card": {
+    "selectorData": "moz-fieldset[data-l10n-id='settings-translations-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The Translations card on the Languages pane",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "translations-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "translations-card",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link on the Translations card (shadowParent: translations-card)",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "check-spelling-checkbox": {
+    "selectorData": "checkSpelling",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Check your spelling as you type\" moz-checkbox on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
+  "spell-check-learn-more": {
+    "selectorData": "a[is='moz-support-link']",
+    "strategy": "css",
+    "shadowParent": "check-spelling-checkbox",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" support link next to \"Check your spelling as you type\" (shadowParent: check-spelling-checkbox)",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
+  "download-dictionaries-link": {
+    "selectorData": "downloadDictionaries",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Download dictionaries\" moz-box-link on the Spell check card",
+      "location": "about:preferences#languages - Spell check section"
+    }
+  },
+  "offer-translations-checkbox": {
+    "selectorData": "offerTranslations",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Offer full page translation\" moz-checkbox; the checked attribute tracks browser.translations.automaticallyPopup",
+      "location": "about:preferences#languages - Translations section"
+    }
+  },
+  "offer-translations-checkbox-input": {
+    "selectorData": "input",
+    "strategy": "tag",
+    "shadowParent": "offer-translations-checkbox",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner <input type=\"checkbox\"> inside the offerTranslations shadow root, used to click the checkbox",
+      "location": "about:preferences#languages (shadow DOM of offerTranslations)"
+    }
+  },
   "translations-more-settings-button": {
     "selectorData": "translationsManageButton",
     "strategy": "id",
@@ -1123,6 +1493,165 @@
     "comment": {
       "description": "Delete button on an always-translate language row, found by language tag",
       "location": "about:preferences#translations - Automatic translation section"
+    }
+  },
+  "never-translate-picker": {
+    "selectorData": "translationsNeverTranslateLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Add language moz-select in the \"Never translate these languages\" list",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "never-translate-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Add language moz-select shadow DOM (shadowParent: never-translate-picker)",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-add-button": {
+    "selectorData": "translationsNeverTranslateLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Plus button that adds the language picked in the Add language dropdown",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-item": {
+    "selectorData": "moz-box-item.translations-never-translate-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate language, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate language row, found by language tag",
+      "location": "about:preferences#translations - Never translate these languages section"
+    }
+  },
+  "never-translate-site-item": {
+    "selectorData": "moz-box-item.translations-never-translate-site-item[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one never-translate site, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "never-translate-site-remove-button": {
+    "selectorData": "moz-button.translations-never-translate-site-remove-button[data-origin='{origin}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button on a never-translate site row, found by origin",
+      "location": "about:preferences#translations - Never translate these sites section"
+    }
+  },
+  "download-language-picker": {
+    "selectorData": "translationsDownloadLanguagesSelect",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Select language moz-select in the \"Speed up translation\" section",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-picker-select": {
+    "selectorData": "select",
+    "strategy": "css",
+    "shadowParent": "download-language-picker",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner native <select> inside the Select language moz-select shadow DOM (shadowParent: download-language-picker)",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-button": {
+    "selectorData": "translationsDownloadLanguagesButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Download button that downloads the language picked in the Select language dropdown",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-item": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Row for one downloaded language, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-button": {
+    "selectorData": "moz-button.translations-download-remove-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete icon in a downloaded language row, found by language tag",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-text": {
+    "selectorData": "moz-box-item.translations-download-language-item[data-lang-tag='{code}'] span",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Delete <language> (<size>MB)?\" text shown after clicking the delete icon",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-confirm-button": {
+    "selectorData": "moz-button.translations-download-delete-confirm-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Delete button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
+    }
+  },
+  "download-language-delete-cancel-button": {
+    "selectorData": "moz-button.translations-download-delete-cancel-button[data-lang-tag='{code}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Cancel button in the delete confirmation row",
+      "location": "about:preferences#translations - Speed up translation section"
     }
   },
   "search-suggestion-in-private-windows": {
@@ -1453,6 +1982,82 @@
       "location": "about:preferences#privacy - DNS over HTTPS advanced section"
     }
   },
+  "doh-exceptions-button": {
+    "selectorData": "dohExceptionsButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Manage exceptions\" button in the DNS over HTTPS (DoH) section; opens the Website Exceptions for DNS over HTTPS dialog",
+      "location": "about:preferences#privacy"
+    }
+  },
+  "doh-exceptions-dialog-shadow-root": {
+    "selectorData": "dialog[buttons='accept,cancel']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The Website Exceptions for DNS over HTTPS dialog root (is a shadow root); hosts the accept/cancel buttons",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-url-input": {
+    "selectorData": "url",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Website address input field in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-add-button": {
+    "selectorData": "btnAddException",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Add Exception\" button in the DoH exceptions dialog",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-remove-button": {
+    "selectorData": "removeException",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Remove\" button in the DoH exceptions dialog; removes the currently selected exception entry",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-remove-all-button": {
+    "selectorData": "removeAllExceptions",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "\"Remove All\" button in the DoH exceptions dialog; removes every exception entry",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
+  "doh-exceptions-save-changes-button": {
+    "selectorData": "[dlgtype='accept']",
+    "strategy": "css",
+    "shadowParent": "doh-exceptions-dialog-shadow-root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The DoH Exceptions dialog \"Save Changes\" button",
+      "location": "about:preferences#privacy (DoH exceptions dialog, inside browser-popup iframe)"
+    }
+  },
   "mlb-allow-audio-video-settings": {
     "selectorData": "richlistitem[origin='https://www.mlb.com'] menulist[label='Allow Audio and Video']",
     "strategy": "css",
@@ -1544,21 +2149,6 @@
       "description": "Saved passwords button in about:preferences#privacy",
       "location": "about:preferences#privacy"
     }
-  },
-  "show-sidebar-checkbox": {
-    "selectorData": "browserLayoutShowSidebar",
-    "strategy": "id",
-    "groups": [],
-    "comment": {
-      "description": "Checkbox to toggle \"Show sidebar\"",
-      "location": "about:preferences (Browser Layout)"
-    }
-  },
-  "show-sidebar-shadow-box": {
-    "selectorData": "input",
-    "strategy": "id",
-    "groups": [],
-    "shadowParent": "show-sidebar-checkbox"
   },
   "change-primary-password": {
     "selectorData": "changePrimaryPassword",
@@ -1674,6 +2264,15 @@
     "selectorData": "aiControlSmartWindowSelect",
     "strategy": "id",
     "groups": []
+  },
+  "smart-window-activate-link": {
+    "selectorData": "activateSmartWindowLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Activate Smart Window link in the AI settings group",
+      "location": "about:preferences#ai"
+    }
   },
   "doh-advanced-button": {
     "selectorData": "dohAdvancedButton",
@@ -1962,6 +2561,24 @@
     "comment": {
       "description": "The Fonts dialog OK button",
       "location": "about:preferences#accessibility (Fonts dialog, inside browser-popup iframe)"
+    }
+  },
+  "firefox-mobile-learn-more": {
+    "selectorData": "promoGroupLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Learn more\" link on the Firefox for mobile card",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
+    }
+  },
+  "firefox-mobile-email-link": {
+    "selectorData": "firefoxMobilePromoLink",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "\"Email the download link to your phone\" link under the QR code",
+      "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
     }
   }
 }

@@ -25,6 +25,15 @@
       "location": "The about:newtab page"
     }
   },
+  "newtab-searchbar-input": {
+    "selectorData": ".urlbar-input-container input.urlbar-input",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The MCAB search input; searching from it tags the SERP as source='newtab_searchbar'",
+      "location": "The about:newtab page"
+    }
+  },
   "card-by-index": {
     "selectorData": "article-ds-card",
     "strategy": "css",
@@ -156,6 +165,15 @@
     "comment": {
       "description": "Topsite tile by title",
       "location": "The about:newtab page (middle section)"
+    }
+  },
+  "top-site-link-by-title": {
+    "selectorData": "//li[contains(concat(' ', normalize-space(@class), ' '), ' top-site-outer ')][.//span[contains(concat(' ', normalize-space(@class), ' '), ' title-label ') and normalize-space(.)='{title}']]//a[@href]",
+    "strategy": "xpath",
+    "groups": [],
+    "comment": {
+      "description": "Destination link inside the TopSite tile with the specified title",
+      "location": "The about:newtab page"
     }
   }
 }
