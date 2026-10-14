@@ -5,7 +5,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_adaptive_history_removal:
-    result: covered-in-tree
+    result:
+    - covered-in-tree
     splits:
     - functional1
     - nightly
@@ -522,6 +523,14 @@ bookmarks_and_history:
     splits:
     - functional1
     - nightly
+desktop_integration:
+  test_in_scope_navigation_stays_in_taskbar_tab:
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
+    splits:
+    - functional1
 downloads:
   test_add_mime_type_doc:
     comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
