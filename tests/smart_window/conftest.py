@@ -8,17 +8,11 @@ import psutil
 import pytest
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import Firefox
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.browser_object import SmartWindow, SmartWindowChat
 from modules.classes.recording import Recording
 from modules.mock_server import MLPA_STAGE_URL, MockServer
 from modules.taskcluster import get_tc_secret
-from modules.util import parse_window_size
 
 
 @pytest.fixture()
@@ -222,17 +216,7 @@ def _reap(pids: list[int], timeout: int = 10) -> None:
 
 
 @pytest.fixture()
-def restart_browser(
-    fx_executable,
-    geckodriver,
-    prefs_list,
-    opt_headless,
-    opt_implicit_timeout,
-    opt_ci,
-    opt_window_size,
-    fxa_url,
-    persistent_profile_dir,
-):
+def restart_browser(launch_firefox, opt_headless, persistent_profile_dir):
     """
     Return a function that quits Firefox and relaunches it on the same profile.
 
@@ -264,34 +248,8 @@ def restart_browser(
         # profile, so wait the old tree out before relaunching on it.
         _reap(old_pids)
 
-        # Mirror the driver fixture, so the relaunch is the same browser.
-        # use_profile is deliberately not mirrored: a restart needs the
-        # persistent profile, not a zip unpacked into a fresh directory.
-        options = Options()
-        options.binary_location = fx_executable
-        options.add_argument("-profile")
-        options.add_argument(str(persistent_profile_dir))
-        if opt_headless:
-            options.add_argument("--headless")
-        if fxa_url:
-            options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
-        for opt, value in prefs_list:
-            options.set_preference(opt, value)
-
-        service_args = ["--allow-system-access"]
-        service = (
-            Service(executable_path=geckodriver, service_args=service_args)
-            if geckodriver
-            else Service(service_args=service_args)
-        )
-        restarted = Firefox(service=service, options=options)
+        restarted = launch_firefox()
         spawned.append(restarted)
-
-        restarted.set_window_size(*parse_window_size(opt_window_size))
-        restarted.implicitly_wait(30 if opt_ci else opt_implicit_timeout)
-        WebDriverWait(restarted, timeout=40).until(
-            EC.presence_of_element_located((By.TAG_NAME, "body"))
-        )
         return restarted
 
     yield _restart
