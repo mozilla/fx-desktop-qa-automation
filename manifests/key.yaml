@@ -447,6 +447,14 @@ bookmarks_and_history:
     result: pass
     splits:
     - functional1
+desktop_integration:
+  test_in_scope_navigation_stays_in_taskbar_tab:
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
+    splits:
+    - functional1
 downloads:
   test_add_mime_type_doc:
     result: pass
