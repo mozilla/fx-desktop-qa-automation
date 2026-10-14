@@ -19,11 +19,10 @@ address_bar_and_search:
     splits:
     - smoke
     - ci-extended
-  test_added_open_search_engine_default:
-    result: flaky
+  test_add_search_engine_from_address_bar:
+    result: pass
     splits:
-    - smoke
-    - ci-extended
+    - functional1
   test_added_open_search_engine_default:
     result: flaky
     splits:
@@ -218,6 +217,10 @@ address_bar_and_search:
     result: flaky
     splits:
     - smoke
+  test_search_engine_selector_and_validator:
+    result: pass
+    splits:
+    - functional1
   test_search_mode_appears_after_input:
     result: covered-in-tree
     splits:
@@ -1066,10 +1069,10 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2082171
     result: unstable
     splits:
     - functional2
-    - nightly
 password_manager:
   test_about_logins_copy_prompts_primary_password:
     result: pass
@@ -1566,8 +1569,8 @@ preferences:
     result: pass
     splits:
     - functional1
-  test_change_font_family:
-    result: flaky
+  test_cancel_keeps_downloaded_languages:
+    result: pass
     splits:
     - functional1
   test_change_font_family:
@@ -1652,10 +1655,6 @@ preferences:
     - functional2
   test_language_packs_can_be_downloaded_from_about_addons:
     result: pass
-    splits:
-    - functional1
-  test_manage_cookie_data:
-    result: flaky
     splits:
     - functional1
   test_languages_can_be_downloaded:
