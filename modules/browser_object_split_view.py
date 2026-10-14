@@ -1,4 +1,9 @@
+from typing import Union
+
+from modules.browser_object_context_menu import ContextMenu
+from modules.browser_object_tabbar import TabBar
 from modules.page_base import BasePage
+from modules.page_object_about_pages import AboutOpentabs
 
 
 class SplitView(BasePage):
@@ -7,13 +12,32 @@ class SplitView(BasePage):
     the divider between them, and the tab strip wrapper grouping their tabs.
 
     Panels are addressed by column, where 0 is the left side and 1 is the right
-    side. Use TabBar.create_split_view_from_tab to create one.
+    side. Use create_split_view to create one.
     """
 
     URL_TEMPLATE = "about:blank"
 
     LEFT = "0"
     RIGHT = "1"
+
+    def create_split_view(
+        self, left_tab: Union[str, int], right_tab_title: str
+    ) -> BasePage:
+        """
+        Create a Split View holding two open tabs: `left_tab` (a title or an
+        index) on the left side and the tab titled `right_tab_title` on the right.
+        """
+        TabBar(self.driver).create_split_view_from_tab(
+            left_tab, ContextMenu(self.driver)
+        )
+        self.expect_split_view_active()
+
+        # The right side opens on about:opentabs, pick the second tab from there
+        self.expect_panel_url(self.RIGHT, "about:opentabs")
+        self.switch_to_panel(self.RIGHT)
+        AboutOpentabs(self.driver).select_tab_by_title(right_tab_title)
+        self.expect(lambda _: self.get_panel_title(self.RIGHT) == right_tab_title)
+        return self
 
     def expect_split_view_active(self, active: bool = True) -> BasePage:
         """Wait until the window does (or does not) have a Split View."""

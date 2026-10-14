@@ -191,6 +191,62 @@ class Navigation(BasePage):
         switch_items[0].click()
 
     @BasePage.context_chrome
+    def find_switch_tab_result(self, url_fragment: str) -> WebElement | None:
+        """
+        Return the switch-to-tab result in the URL bar whose URL contains
+        `url_fragment`, or None if it is not listed right now. Does not wait.
+        """
+        try:
+            for row in self.get_elements("switch-to-tab"):
+                url = row.find_element(*self.get_selector("switch-to-tab-url"))
+                if url_fragment in url.get_attribute("textContent"):
+                    return row
+        except StaleElementReferenceException:
+            pass
+        return None
+
+    @BasePage.context_chrome
+    def expect_switch_tab_action_text(
+        self, url_fragment: str, expected_text: str
+    ) -> BasePage:
+        """
+        Wait until the switch-to-tab result for `url_fragment` reads
+        `expected_text`, e.g. 'Move Tab to Split View'.
+        """
+
+        def _action_matches(_):
+            # The results list can refresh between finding the row and reading it
+            try:
+                row = self.find_switch_tab_result(url_fragment)
+                if row is None:
+                    return False
+                action = row.find_element(*self.get_selector("switch-to-tab-action"))
+                return action.get_attribute("textContent").strip() == expected_text
+            except StaleElementReferenceException:
+                return False
+
+        self.expect(_action_matches)
+        return self
+
+    @BasePage.context_chrome
+    def click_switch_tab_result(self, url_fragment: str) -> BasePage:
+        """Click the switch-to-tab result in the URL bar for `url_fragment`."""
+
+        def _click_row(_):
+            # The results list can refresh between finding the row and clicking it
+            try:
+                row = self.find_switch_tab_result(url_fragment)
+                if row is None:
+                    return False
+                row.click()
+                return True
+            except StaleElementReferenceException:
+                return False
+
+        self.expect(_click_row)
+        return self
+
+    @BasePage.context_chrome
     def click_on_clipboard_suggestion(self) -> None:
         """
         Click the 'Visit from clipboard' suggestion in the URL bar.
@@ -252,6 +308,11 @@ class Navigation(BasePage):
         self.set_search_bar()
         self.search_bar.clear()
         return self
+
+    @BasePage.context_chrome
+    def get_search_bar_text(self) -> str:
+        """Get the text in the search bar."""
+        return self.get_element("searchbar-input").get_attribute("value")
 
     @BasePage.context_chrome
     def search_bar_search(self, term: str) -> BasePage:
@@ -1317,6 +1378,17 @@ class Navigation(BasePage):
         self.customize.add_widget_to_toolbar("search-bar")
         return self
 
+    @BasePage.context_chrome
+    def add_search_bar_via_customizable_ui(self) -> BasePage:
+        """
+        Add the search bar to the toolbar without opening customize mode.
+        """
+        # Faster than going through Customize mode.
+        self.driver.execute_script(
+            "CustomizableUI.addWidgetToArea('search-container', CustomizableUI.AREA_NAVBAR);"
+        )
+        return self
+
     def verify_searchbar_suggestion_is_highlighted(self):
         """Verify that a suggestion item is highlighted in the search bar popup.
 
@@ -1325,6 +1397,27 @@ class Navigation(BasePage):
         the first matching element — which may not be the highlighted one.
         """
         self.element_visible("searchbar-highlighted-suggestion")
+
+    @BasePage.context_chrome
+    def press_down_until_focused(
+        self, name: str, labels: list[str] | None = None, max_presses: int = 20
+    ) -> BasePage:
+        """Press Down until the named element has focus."""
+        # Short wait per press so slow machines don't skip past the item.
+        short_wait = self.custom_wait(timeout=1)
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            for _ in range(max_presses):
+                try:
+                    short_wait.until(lambda _: self.get_elements(name, labels=labels))
+                    break
+                except TimeoutException:
+                    self.perform_key_combo(Keys.DOWN)
+        finally:
+            self.driver.implicitly_wait(original)
+        self.element_visible(name, labels=labels)
+        return self
 
     @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:
