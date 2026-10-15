@@ -1004,7 +1004,7 @@ notifications:
     splits:
     - smoke
   test_webextension_completed_installation_successfully_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2082171
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081813
     result: unstable
     splits:
     - functional2
