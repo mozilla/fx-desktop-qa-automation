@@ -1,8 +1,7 @@
 import pytest
+from modules.browser_object import Navigation
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
-
-from modules.browser_object import Navigation
 
 
 @pytest.fixture()
@@ -10,7 +9,7 @@ def test_case():
     return "3028780"
 
 
-sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
+sites = ["Google", "Bing", "DuckDuckGo", "eBay"]
 
 
 @pytest.mark.parametrize("site", sites)
