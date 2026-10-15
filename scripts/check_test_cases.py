@@ -1,7 +1,7 @@
 import logging
 import os
 
-d = {}
+matches = {}
 count = 0
 # List all test suites
 test_suites = [d for d in os.listdir("./tests/") if os.path.isdir(f"tests/{d}")]
@@ -20,17 +20,19 @@ for test_suite in test_suites:
             test_case = line[ind:-1]
             if not test_case.isnumeric():
                 continue
-        if d.get(test_case):
-            count += 1
-            if count == 2:
-                logging.warning(test_case)
+        if matches.get(test_case):
+            matches[test_case].append(file_name)
+            logging.warning(f"Potential collision on {test_case}")
         else:
-            d[test_case] = file_name
+            matches[test_case] = [file_name]
 
-if count > 2:
-    logging.warning("""|\---/|""")
+dupes = [file_list for file_list in matches.values() if len(file_list) > 1]
+if dupes:
+    logging.warning("""|\\---/|""")
     logging.warning(
         """| o_o | Someone copied and pasted a test without changing test_case()!!!!"""
     )
-    logging.warning(""" \_^_/""")
+    logging.warning(""" \\_^_/""")
+    for dupe in dupes:
+        logging.warning("=".join(dupe))
     exit(1)
