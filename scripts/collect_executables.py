@@ -144,6 +144,24 @@ def main(args):
         if not language:
             language = "en-US"
 
+        if channel == "-nightly":
+            train_resp = requests.get(
+                "https://whattrainisitnow.com/api/release/schedule/?version=nightly"
+            )
+            train_resp.raise_for_status()
+            train_json = train_resp.json()
+            current_nightly = train_json.get("version")
+            alpha = f"{current_nightly}a1"
+            if number_only:
+                return alpha
+            pfm = get_fx_platform()
+            ext = get_fx_executable_extension()
+            if "linux" in pfm:
+                ext = "tar.xz"
+            elif "win" in pfm:
+                ext = "installer.exe"
+            return f"https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-{alpha}.en-US.{pfm}.{ext}"
+
         if channel == "-devedition":
             # Devedition has special requirements as it's testing a release
 
@@ -173,7 +191,7 @@ def main(args):
             )
 
         else:
-            # Anything but devedition
+            # Anything but devedition / nightly
 
             candidate_exists = True
             this_beta = BACKSTOP

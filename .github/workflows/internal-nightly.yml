@@ -38,11 +38,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-env:
-  # Hours 00:00 through 11:59 UTC are considered the morning build.
-  MORNING_CUTOFF_HOUR_UTC: "12"
-
-
 jobs:
   Resolve-Build:
     name: Resolve Nightly installer URLs
@@ -63,14 +58,30 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install dependencies
+        run: |
+          python -m pip install "uv==0.11.18"
+          uv sync
+
       - name: Resolve installer URLs
         id: resolve
         env:
           WIN_LINK: ${{ inputs.win_installer_link }}
           MAC_LINK: ${{ inputs.mac_installer_link }}
           LINUX_LINK: ${{ inputs.linux_tarball_link }}
+          FX_CHANNEL: nightly
         run: |
-          python scripts/resolve_nightly_build.py
+          # Collect the latest Nightly per platform.
+          if [[ -z "$WIN_LINK$MAC_LINK$LINUX_LINK" ]]; then
+            WIN_LINK=$(FX_PLATFORM=Windows uv run python -m scripts.collect_executables)
+            MAC_LINK=$(FX_PLATFORM=Darwin uv run python -m scripts.collect_executables)
+            LINUX_LINK=$(FX_PLATFORM=Linux uv run python -m scripts.collect_executables)
+          fi
+          {
+            echo "win_installer_link=$WIN_LINK"
+            echo "mac_installer_link=$MAC_LINK"
+            echo "linux_tarball_link=$LINUX_LINK"
+          } | tee -a "$GITHUB_OUTPUT"
 
   Run:
     name: Run nightly tests
