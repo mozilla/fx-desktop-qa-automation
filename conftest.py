@@ -8,9 +8,13 @@ from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-# import psutil
+import psutil
 import pytest
+import requests
+from fxa.errors import Error as FxaError
+from fxa.tests.utils import TestEmailAccount
 from PIL import Image, ImageGrab
+from pytest_httpserver import HTTPServer
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -20,8 +24,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from modules import testrail_integration as tri
+from modules.classes.fxa_session import FxaSession
+from modules.page_object import FxaHome
 from modules.taskcluster import get_tc_secret
-from modules.util import env_true
+from modules.util import env_true, parse_window_size
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -173,6 +179,15 @@ def pytest_addoption(parser):
         help="Size for Fx window, default is '1152x864'",
     )
 
+    parser.addoption(
+        "--mock-mode",
+        action="store",
+        default="replay",
+        choices=["replay", "record", "live"],
+        help="How the mock server answers Smart Window requests: replay "
+        "recordings (default), record new ones, or pass through live",
+    )
+
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
     if not filename.endswith(".png"):
@@ -229,6 +244,11 @@ def opt_ci(request):
 @pytest.fixture()
 def opt_window_size(request):
     return request.config.getoption("--window-size")
+
+
+@pytest.fixture(scope="session")
+def opt_mock_mode(request):
+    return request.config.getoption("--mock-mode")
 
 
 @pytest.fixture(scope="session")
@@ -312,6 +332,22 @@ def use_profile():
     yield False
 
 
+@pytest.fixture()
+def use_persistent_profile():
+    """True when state must survive a restart; options.profile runs from a copy."""
+    yield False
+
+
+@pytest.fixture()
+def persistent_profile_dir(tmp_path, use_persistent_profile):
+    """The profile directory shared across restarts, or None when unused."""
+    if not use_persistent_profile:
+        return None
+    path = tmp_path / "persistent_profile"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -387,8 +423,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-        import psutil
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -456,37 +490,35 @@ def hard_quit():
     return False
 
 
-@pytest.fixture(autouse=True)
-def driver(
-    build_version,
-    create_profiles,
-    env_prep,
-    fx_executable,
+@pytest.fixture()
+def launch_firefox(
+    fx_executable: str,
+    fxa_url: str | None,
     geckodriver: str,
-    hard_quit,
-    json_metadata,
-    machine_config: str,
     opt_ci: bool,
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
+    persistent_profile_dir: Path | None,
     prefs_list: dict,
-    request,
-    suite_id: str,
-    test_case: str,
     tmp_path: str,
     use_profile: str | bool,
-):
+) -> Callable[[], Firefox]:
     """
-    Return the webdriver object.
+    Return a function that launches Firefox configured for this test.
 
-    All arguments are fixtures being requested, rather than parameters.
+    The driver fixture calls it once. A fixture that restarts Firefox mid-test
+    calls it again, so the relaunch is the same browser rather than a second
+    copy of the same settings that has to be kept in step by hand.
 
     Fixtures
     --------
 
     fx_executable: str
         Location of the Firefox executable.
+
+    fxa_url: str | None
+        FxA content server for identity.fxaccounts.autoconfig.uri, None to leave Firefox's default.
 
     opt_headless: bool
         Whether pytest was run with --run-headless.
@@ -507,28 +539,39 @@ def driver(
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
 
-    build_version: str
-        The result of calling collect_executables with "-n".
+    persistent_profile_dir: Path | None
+        Profile directory to run from in place, so state survives a restart.
+        None unless use_persistent_profile is True; not usable with use_profile.
 
-    env_prep: None
-        Fixture that does other environment work, like set logging levels.
     """
-    options = Options()
-    service_args = ["--allow-system-access"]
-    # options.log.level = "trace"
-    options.binary_location = fx_executable
-    # options.set_preference("app.update.disabledForTesting", False)
+    if persistent_profile_dir and use_profile:
+        raise AssertionError(
+            "use_persistent_profile and use_profile are mutually exclusive"
+        )
 
-    if use_profile:
-        profile_path = tmp_path / use_profile
-        unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
-        options.profile = profile_path
+    def _launch() -> Firefox:
+        options = Options()
+        service_args = ["--allow-system-access"]
+        # options.log.level = "trace"
+        options.binary_location = fx_executable
+        # options.set_preference("app.update.disabledForTesting", False)
 
-    if opt_headless:
-        options.add_argument("--headless")
-    for opt, value in prefs_list:
-        options.set_preference(opt, value)
-    try:
+        if persistent_profile_dir:
+            # -profile as an argument, not options.profile: the latter is copied.
+            options.add_argument("-profile")
+            options.add_argument(str(persistent_profile_dir))
+        elif use_profile:
+            profile_path = tmp_path / use_profile
+            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+            options.profile = profile_path
+
+        if opt_headless:
+            options.add_argument("--headless")
+        if fxa_url:
+            options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
+        for opt, value in prefs_list:
+            options.set_preference(opt, value)
+
         if geckodriver:
             service = Service(executable_path=geckodriver, service_args=service_args)
         else:
@@ -540,22 +583,52 @@ def driver(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        separator = "x"
-        if separator not in opt_window_size:
-            if "by" in opt_window_size:
-                separator = "by"
-            elif "," in opt_window_size:
-                separator = ","
-            elif " " in opt_window_size:
-                separator = " "
-        winsize = [int(s) for s in opt_window_size.split(separator)]
-        driver.set_window_size(*winsize)
+        driver.set_window_size(*parse_window_size(opt_window_size))
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
+        return driver
+
+    return _launch
+
+
+@pytest.fixture(autouse=True)
+def driver(
+    build_version,
+    create_profiles,
+    env_prep,
+    hard_quit,
+    json_metadata,
+    launch_firefox,
+    machine_config: str,
+    request,
+    suite_id: str,
+    test_case: str,
+):
+    """
+    Return the webdriver object.
+
+    All arguments are fixtures being requested, rather than parameters.
+
+    Fixtures
+    --------
+
+    launch_firefox: Callable[[], Firefox]
+        Launches Firefox configured for this test; see that fixture for the
+        configuration it reads.
+
+    build_version: str
+        The result of calling collect_executables with "-n".
+
+    env_prep: None
+        Fixture that does other environment work, like set logging levels.
+    """
+    driver = None
+    try:
+        driver = launch_firefox()
 
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
@@ -574,7 +647,8 @@ def driver(
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        # None if Firefox() threw; flagged if restart_browser already closed it.
+        if driver and not getattr(driver, "closed_by_restart", False):
             driver.quit()
 
 
@@ -654,7 +728,18 @@ def faker_seed():
 
 @pytest.fixture(scope="session")
 def fillable_pdf_url():
-    return "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf"
+    """
+    URL of a fillable PDF (an I-9 form), served from data/i-9.pdf on a local
+    server. uscis.gov, where it comes from, blocks CI machines.
+    """
+    server = HTTPServer(host="127.0.0.1", port=0)
+    server.expect_request("/i-9.pdf").respond_with_data(
+        Path("data", "i-9.pdf").read_bytes(), content_type="application/pdf"
+    )
+    server.start()
+    yield server.url_for("/i-9.pdf")
+    server.clear()
+    server.stop()
 
 
 @pytest.fixture()
@@ -683,3 +768,145 @@ def create_profiles():
 def profile_paths():
     """returns a list of profile zips, eg. ["profiles/theme_change.zip"]"""
     return []
+
+
+@pytest.fixture()
+def fxa_env():
+    """
+    Return "stage" or "prod" in a fixture of this name in a test or suite
+    to point Firefox and PyFxA at that FxA environment
+    """
+    return None
+
+
+@pytest.fixture()
+def fxa_url(fxa_env):
+    if fxa_env == "stage":
+        return "https://accounts.stage.mozaws.net"
+    elif fxa_env == "prod":
+        return "https://accounts.firefox.com"
+
+
+@pytest.fixture()
+def start_time():
+    return datetime.datetime.now(datetime.timezone.utc).strftime(
+        "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
+
+
+@pytest.fixture()
+def acct_password():
+    return "Test123???"
+
+
+@pytest.fixture()
+def fxa_session(
+    fxa_env: str | None,
+    acct_password: str,
+    restmail_session,
+):
+    if fxa_env == "stage":
+        fxa_api_url = "https://api-accounts.stage.mozaws.net"
+    elif fxa_env == "prod":
+        fxa_api_url = "https://api.accounts.firefox.com"
+    else:
+        # Without this, PyFxA would silently default to the production server
+        raise ValueError(
+            f"fxa_session needs fxa_env 'stage' or 'prod', got {fxa_env!r}"
+        )
+    prep = FxaSession(fxa_api_url, acct_password, restmail_session)
+    prep.restmail.clear()
+    yield prep
+    try:
+        prep.destroy_account()
+    except (FxaError, requests.RequestException) as e:
+        # e.g. the test never created the account, it has no password, or
+        # the request was blocked
+        logging.warning(f"Could not delete FxA account {prep.restmail.email}: {e}")
+
+
+@pytest.fixture()
+def fxa_test_account():
+    return None, None
+
+
+@pytest.fixture()
+def restmail_session(fxa_test_account) -> TestEmailAccount:
+    (username, _) = fxa_test_account
+    return TestEmailAccount(email=username)
+
+
+@pytest.fixture()
+def create_fxa(restmail_session, fxa_session: FxaSession, get_otp_code) -> FxaSession:
+    fxa_session.create_account()
+    code = get_otp_code(restmail_session)
+    fxa_session.session.verify_email_code(code)
+    return fxa_session
+
+
+@pytest.fixture()
+def get_otp_code(start_time: str):
+    """Function factory: wait for the verification email, then return its code"""
+    code_header_names = [
+        "x-verify-short-code",
+        "x-signin-verify-code",
+        "x-verify-code",
+        "x-passwordless-signup-otp",
+    ]
+
+    def _find_code(acct: TestEmailAccount) -> str | None:
+        acct.fetch()
+        for m in acct.messages:
+            if m["receivedAt"] < start_time:
+                continue
+            for header_name in code_header_names:
+                if header_name in m["headers"]:
+                    return m["headers"][header_name]
+        return None
+
+    def _get_otp_code(restmail: TestEmailAccount) -> str:
+        # Poll restmail's API every 0.5s for up to 30s; transient request
+        # errors are retried rather than failing the test.
+        return WebDriverWait(
+            restmail,
+            timeout=30,
+            poll_frequency=0.5,
+            ignored_exceptions=(requests.RequestException,),
+        ).until(_find_code, message=f"No OTP code found in {restmail.email}.")
+
+    return _get_otp_code
+
+
+@pytest.fixture()
+def fxa_hosts(fxa_env):
+    """FxA hosts that should receive the WAF-bypass header in the browser"""
+    if fxa_env == "stage":
+        return [
+            "accounts.stage.mozaws.net",
+            "api-accounts.stage.mozaws.net",
+            "oauth.stage.mozaws.net",
+            "profile.stage.mozaws.net",
+        ]
+    elif fxa_env == "prod":
+        return [
+            "accounts.firefox.com",
+            "api.accounts.firefox.com",
+            "oauth.accounts.firefox.com",
+            "profile.accounts.firefox.com",
+        ]
+
+
+@pytest.fixture(autouse=True)
+def fxa_waf_bypass(driver, fxa_url, fxa_hosts):
+    """
+    When fxa_env is set and CI_WAF_TOKEN is available, add the fxa-ci
+    WAF-bypass header to the browser's requests for the FxA hosts.
+    """
+    waf_token = os.environ.get("CI_WAF_TOKEN")
+    if not (fxa_url and waf_token):
+        yield
+        return
+    fxa = FxaHome(driver)
+    fxa.install_waf_bypass_header(waf_token, fxa_hosts)
+    yield
+    fxa.cleanup_waf_bypass_header()

@@ -1,6 +1,18 @@
-import pytest
+import datetime
+import logging
+import time
+from os import environ
+from pathlib import Path
 
-from modules.browser_object import SmartWindow
+import psutil
+import pytest
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver import Firefox
+
+from modules.browser_object import SmartWindow, SmartWindowChat
+from modules.classes.recording import Recording
+from modules.mock_server import MLPA_STAGE_URL, MockServer
+from modules.taskcluster import get_tc_secret
 
 
 @pytest.fixture()
@@ -9,18 +21,61 @@ def suite_id():
 
 
 @pytest.fixture()
-def prefs_list():
+def prefs_list(add_to_prefs_list: dict, mock_server_session: MockServer):
     """
     Smart Window ships disabled by default; every test in this suite needs the
     feature available before the window opens.
+
+    First-run onboarding is marked complete with a model chosen, so a Smart
+    Window opens straight to its normal view. Tests of sign-up or onboarding
+    override add_to_prefs_list to reset these two prefs.
+
+    With first run complete, Firefox opens the AI sidebar whenever a window
+    becomes Smart; openByDefault is turned off so a newly activated Smart
+    Window starts with the sidebar closed.
+
+    LLM and web search requests go to the mock server, never to MLPA. The
+    ML engine that sends them is off under automation unless browser.ml.enable
+    is set.
     """
-    return [("browser.smartwindow.enabled", True)]
+    prefs = [
+        ("browser.smartwindow.enabled", True),
+        ("browser.smartwindow.firstrun.hasCompleted", True),
+        # Choice id "1" (Gemini today). Set before launch, so it can't be
+        # picked by name like SmartWindowFirstRun.select_model does.
+        ("browser.smartwindow.firstrun.modelChoice", "1"),
+        ("browser.smartwindow.sidebar.openByDefault", False),
+        ("browser.ml.enable", True),
+        ("browser.smartwindow.endpoint", mock_server_session.endpoint_url),
+        (
+            "browser.smartwindow.searchQuery.endpointURL",
+            mock_server_session.search_url,
+        ),
+    ]
+    prefs.extend(add_to_prefs_list)
+    return prefs
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    return []
 
 
 @pytest.fixture()
 def smart_window(driver):
     """Provide the Smart Window BOM for a window still in the Classic state."""
     return SmartWindow(driver)
+
+
+@pytest.fixture()
+def fxa_env():
+    # On Taskcluster, read the secret at the task's own level (PRs: 1, main/cron: 3)
+    level = environ.get("MOZ_SCM_LEVEL")
+    if level:
+        fxa_keys = get_tc_secret("ci_waf_token", level=int(level))
+        if fxa_keys and fxa_keys.get("stage"):
+            environ["CI_WAF_TOKEN"] = fxa_keys["stage"]
+    return "stage"
 
 
 @pytest.fixture()
@@ -35,3 +90,179 @@ def active_smart_window(driver):
     sw = SmartWindow(driver)
     sw.activate_smart_window()
     return sw
+
+
+@pytest.fixture(scope="session")
+def mock_server_session():
+    """The mock server, started once per worker. Tests use mock_server."""
+    server = MockServer().start()
+    yield server
+    server.stop()
+
+
+@pytest.fixture()
+def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
+    """
+    Point the mock server at this test's recording, in the --mock-mode given.
+
+    See recording_path for where the recording lives. Replay fails the test
+    if Firefox sent a chat or search request that isn't recorded. Record and
+    live forward to stage MLPA with the prod FxA token in
+    MOZ_FXA_BEARER_TOKEN; record then saves the recording.
+    """
+    path = recording_path(request.node)
+    if opt_mock_mode == "replay":
+        mock_server_session.reset(Recording.load(path))
+    else:
+        token = environ.get("MOZ_FXA_BEARER_TOKEN")
+        if not token:
+            pytest.fail(
+                f"--mock-mode={opt_mock_mode} needs a prod FxA token in "
+                "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md)"
+            )
+        recording = Recording(
+            meta={
+                "upstream": MLPA_STAGE_URL,
+                "firefox_version": request.getfixturevalue("version"),
+                "recorded_at": datetime.date.today().isoformat(),
+            }
+        )
+        mock_server_session.reset(recording, opt_mock_mode, MLPA_STAGE_URL, token)
+
+    yield mock_server_session
+
+    server = mock_server_session
+    server.wait_until_idle()
+    unmatched, upstream_errors = server.unmatched, server.upstream_errors
+    if opt_mock_mode == "record" and not upstream_errors:
+        server.recording.save(path)
+    server.reset()
+    if unmatched:
+        missing = sorted(
+            {u.get("last_user_message") or u.get("query") for u in unmatched}
+        )
+        problem = (
+            f"{path} has no recording for: {missing}"
+            if path.exists()
+            else f"This test has no recording yet ({path} doesn't exist)"
+        )
+        pytest.fail(
+            f"{problem}. Record it with a prod FxA token in "
+            "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md):\n"
+            f'  pytest "{request.node.nodeid}" --mock-mode=record'
+        )
+    if upstream_errors:
+        pytest.fail(
+            f"MLPA returned errors: {upstream_errors}. A 401 means "
+            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token."
+        )
+
+
+@pytest.fixture()
+def smart_window_chat(
+    active_smart_window: SmartWindow, mock_server: MockServer, driver
+) -> SmartWindowChat:
+    """
+    Provide the chat BOM ready to chat: Smart Window active, replies from the
+    mock server, and a stand-in FxA token so Firefox sends requests without
+    being signed in.
+    """
+    active_smart_window.stub_fxa_token()
+    return SmartWindowChat(driver)
+
+
+def recording_path(node: pytest.Item) -> Path:
+    """
+    Return where a test's recording lives:
+    data/recordings/<suite>/<test file name>.json, or
+    data/recordings/<suite>/<test file name>/<parameter id>.json for each case
+    of a parametrized test, since its cases send different requests.
+    """
+    folder = Path("data", "recordings", node.path.parent.name)
+    callspec = getattr(node, "callspec", None)
+    if callspec:
+        return folder / node.path.stem / f"{callspec.id}.json"
+    return folder / f"{node.path.stem}.json"
+
+
+def _driver_process_tree(driver) -> list[int]:
+    """PIDs behind a driver: its geckodriver, plus every Firefox child."""
+    proc = getattr(getattr(driver, "service", None), "process", None)
+    if proc is None:
+        return []
+    try:
+        parent = psutil.Process(proc.pid)
+        return [child.pid for child in parent.children(recursive=True)] + [proc.pid]
+    except psutil.Error:
+        return []
+
+
+def _reap(pids: list[int], timeout: int = 10) -> None:
+    """Wait for `pids` to exit, killing any that outlive `timeout`."""
+    if not pids:
+        return
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not any(psutil.pid_exists(pid) for pid in pids):
+            return
+        time.sleep(0.2)
+    # Leaving these alive would contaminate the next test, so do not just warn.
+    for pid in (p for p in pids if psutil.pid_exists(p)):
+        logging.warning(f"restart_browser: killing leftover pid {pid}")
+        try:
+            psutil.Process(pid).kill()
+        except psutil.Error:
+            pass
+
+
+@pytest.fixture()
+def restart_browser(launch_firefox, opt_headless, persistent_profile_dir):
+    """
+    Return a function that quits Firefox and relaunches it on the same profile.
+
+    Needs `use_persistent_profile` True. The quit matters: Firefox flushes
+    session state on the way out, so it must close cleanly rather than be
+    killed.
+
+    Quitting also invalidates the driver other fixtures hold, so a restart
+    test should override fxa_env to None unless it needs FxA -- the autouse
+    fxa_waf_bypass talks to the driver in teardown.
+    """
+    spawned = []
+
+    def _restart(driver: Firefox) -> Firefox:
+        if not persistent_profile_dir:
+            raise AssertionError(
+                "restart_browser requires a use_persistent_profile fixture "
+                "returning True; otherwise the profile is a discarded copy"
+            )
+        # Collected before the quit, while the tree is still there to read.
+        old_pids = _driver_process_tree(driver)
+        # Set before quitting: if quit() raises, the driver fixture must
+        # still know not to quit this one again in teardown.
+        driver.closed_by_restart = True
+        driver.quit()
+        # quit() returns once geckodriver acks, which is before Firefox has
+        # finished flushing session state and released the profile lock.
+        # Reopening the directory while it is still held prompts for a new
+        # profile, so wait the old tree out before relaunching on it.
+        _reap(old_pids)
+
+        restarted = launch_firefox()
+        spawned.append(restarted)
+        return restarted
+
+    yield _restart
+
+    for extra in spawned:
+        pids = _driver_process_tree(extra)
+        try:
+            extra.quit()
+        except WebDriverException as exc:  # already gone, or never came up
+            logging.info(f"restart_browser cleanup: {exc}")
+        _reap(pids)
+
+    # Headed only: the relaunched window overlaps the next test's and the
+    # panel-menu tests lose focus (measured 10/12 without, 12/12 with).
+    if spawned and not opt_headless:
+        time.sleep(1)

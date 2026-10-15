@@ -57,12 +57,12 @@ def test_edit_autofill_after_pp_dismissed(driver: Firefox):
     # Dismiss the primary password prompt without entering the password
     about_logins.dismiss_pp_if_appears()
 
-    # Go to the test website. Because the prompt was dismissed, the still-locked
-    # login store re-prompts (natively) when the page tries to autofill; enter the
-    # correct Primary Password to unlock it so the fields become editable.
+    # Go to the test website. The still-locked store prompts again on autofill;
+    # answer it with the Primary Password so the fields become editable.
+    about_logins.answer_next_primary_password_prompt(PRIMARY_PASSWORD)
     tabs.open_and_switch_to_new_tab()
     login_autofill.open()
-    about_logins.enter_primary_password_native(PRIMARY_PASSWORD)
+    about_logins.wait_for_primary_password_unlocked()
 
     # Clear any autofilled values, then fill in new credentials and submit.
     login_form = LoginAutofill.LoginForm(login_autofill)

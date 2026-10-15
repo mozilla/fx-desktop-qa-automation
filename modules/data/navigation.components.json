@@ -202,12 +202,47 @@
       "location": "Address bar"
     }
   },
+  "searchmode-switcher-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "searchmode-switcher",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Inner search mode switcher button; its aria-label names the selected or default engine",
+      "location": "Address bar"
+    }
+  },
   "legacy-searchmode-switcher": {
     "selectorData": "#searchbar-new .searchmode-switcher",
     "strategy": "css",
     "groups": [
       "doNotCache"
     ]
+  },
+  "legacy-searchmode-switcher-button": {
+    "selectorData": "main-button",
+    "strategy": "id",
+    "shadowParent": "legacy-searchmode-switcher",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine button in the searchbar",
+      "location": "Searchbar"
+    }
+  },
+  "legacy-searchmode-switcher-title": {
+    "selectorData": "#searchbar-new .searchmode-switcher-title",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Name of the engine selected in the search bar switcher",
+      "location": "Search bar"
+    }
   },
   "legacy-searchbar-switcher-popup": {
     "selectorData": "searchmode-switcher-panel-list",
@@ -275,6 +310,50 @@
       "location": "Search mode switcher dropdown of awesomebar"
     }
   },
+  "searchbar-switcher-focused": {
+    "selectorData": "#searchbar-new .searchmode-switcher:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine button in the searchbar when it has keyboard focus",
+      "location": "Searchbar"
+    }
+  },
+  "searchbar-switcher-popup": {
+    "selectorData": "#searchbar-new .searchmode-switcher-panel-list",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine dropdown of the searchbar",
+      "location": "Searchbar"
+    }
+  },
+  "searchbar-switcher-option-focused": {
+    "selectorData": "#searchbar-new panel-item.searchmode-switcher-installed[label*='{title}']:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Installed engine option in the search mode switcher list when it has keyboard focus",
+      "location": "Search mode switcher dropdown"
+    }
+  },
+  "searchbar-switcher-prefs-focused": {
+    "selectorData": "#searchbar-new panel-item.searchmode-switcher-panel-search-settings-button:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Search Settings button in the search mode switcher list when it has keyboard focus",
+      "location": "Search mode switcher dropdown"
+    }
+  },
   "downloads-button": {
     "selectorData": "downloads-button",
     "strategy": "id",
@@ -303,11 +382,24 @@
     }
   },
   "addon-suggestion": {
-    "selectorData": "urlbarView-row-body",
-    "strategy": "class",
-    "groups": [],
+    "selectorData": "#urlbar-results div.urlbarView-row[type='rust_amo']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
-      "description": "Addon suggestion in the URL bar search results",
+      "description": "Addon suggestion (Firefox Suggest AMO result) in the URL bar search results",
+      "location": "URL bar search results"
+    }
+  },
+  "addon-suggestion-title": {
+    "selectorData": "#urlbar-results div.urlbarView-row[type='rust_amo'] .urlbarView-title",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Title (add-on name) of the add-on suggestion row",
       "location": "URL bar search results"
     }
   },
@@ -363,6 +455,17 @@
     ],
     "comment": {
       "description": "Search result autofill adaptive element",
+      "location": "URL bar search results"
+    }
+  },
+  "suggestion-url-by-title": {
+    "selectorData": ".urlbarView-url[title*='{url}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "URL bar suggestion matching a URL in its title",
       "location": "URL bar search results"
     }
   },
@@ -492,6 +595,17 @@
     "comment": {
       "description": "Fingerprints subpanel",
       "location": "Inside the shield incon in fingerprints subpanel"
+    }
+  },
+  "taskbar-tabs-button": {
+    "selectorData": "taskbar-tabs-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Add tab to taskbar page action",
+      "location": "URL bar"
     }
   },
   "star-button": {
@@ -729,6 +843,17 @@
     "comment": {
       "description": "Browser popup body, e.g. permission to use camera",
       "location": "Appears from \"chrome area\" top of window"
+    }
+  },
+  "screen-sharing-notification": {
+    "selectorData": "webRTC-shareDevices-notification",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Media-sharing permission prompt used for screen capture",
+      "location": "Address bar permission popup"
     }
   },
   "popup-notification-primary-button": {
@@ -1013,6 +1138,17 @@
       "doNotCache"
     ]
   },
+  "searchbar-go-button": {
+    "selectorData": "#searchbar-new .urlbar-go-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Go arrow in the new search bar",
+      "location": "Searchbar"
+    }
+  },
   "searchbar-suggestions": {
     "selectorData": "#searchbar-results div.urlbarView-row",
     "strategy": "css",
@@ -1100,6 +1236,24 @@
     "comment": {
       "description": "Switch to tab from awesome bar",
       "location": "Address bar"
+    }
+  },
+  "switch-to-tab-url": {
+    "selectorData": ".urlbarView-url",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "URL of a switch-to-tab result. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
+    }
+  },
+  "switch-to-tab-action": {
+    "selectorData": ".urlbarView-action",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Action chiclet of a switch-to-tab result. Reads 'Switch to Tab', or 'Move Tab to Split View' while a Split View tab is selected. Resolved against one specific result row",
+      "location": "Switch-to-tab row of the URL bar results"
     }
   },
   "tab-container-label": {
@@ -1316,6 +1470,17 @@
     "comment": {
       "description": "Password saved! confirmation",
       "location": "In the Navigation bar, next to the url input field"
+    }
+  },
+  "taskbar-tab-window-root": {
+    "selectorData": ":root[taskbartab]",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Root element of a Taskbar Tab window",
+      "location": "Root of the browser window, only present in Taskbar Tab windows"
     }
   }
 }

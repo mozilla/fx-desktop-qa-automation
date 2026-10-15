@@ -35,6 +35,17 @@ def env_true(name: str) -> bool:
     return os.environ.get(name, "").strip().lower() in ("1", "true")
 
 
+def parse_window_size(opt_window_size: str) -> list[int]:
+    """Parse a window size like "1152x864", also accepting by / , / space."""
+    separator = "x"
+    if separator not in opt_window_size:
+        for alt in ("by", ",", " "):
+            if alt in opt_window_size:
+                separator = alt
+                break
+    return [int(part) for part in opt_window_size.split(separator)]
+
+
 class Utilities:
     """
     Methods that may be useful, that have nothing to do with Selenium.
@@ -893,6 +904,37 @@ class PomUtils:
                 return node
 
         return None
+
+    def element_has_focus(self, element: WebElement) -> bool:
+        """
+        Report whether focus is on `element`, its shadow host, or its inner
+        control. Both directions are needed -- components.json resolves to
+        either -- and only shadow boundaries are hopped, so a focused
+        light-DOM container does not match.
+        """
+        active = self.driver.switch_to.active_element
+        if active == element:
+            return True
+        return bool(
+            self.driver.execute_script(
+                """
+                function hostChainHits(from, target) {
+                    let node = from;
+                    while (node) {
+                        if (node === target) return true;
+                        const root = node.getRootNode && node.getRootNode();
+                        node = root && root.host ? root.host : null;
+                    }
+                    return false;
+                }
+                const active = arguments[0], element = arguments[1];
+                return hostChainHits(element, active)
+                    || hostChainHits(active, element);
+                """,
+                active,
+                element,
+            )
+        )
 
     def find_shadow_element(
         self,

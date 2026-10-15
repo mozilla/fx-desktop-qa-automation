@@ -96,6 +96,20 @@ Launch the build manually one time to navigate through any system permission dia
   - rerun the test suite as above - run: `pytest`
   - or just the failed test; i.e.: `pytest test_amazon.py`
 
+### Firefox Accounts (FxA) and Smart Window tests
+- Tests in `sync_and_fxa` and the Smart Window sign-up/onboarding tests run against the FxA
+  stage environment and create throwaway restmail.net accounts.
+- They need the `CI_WAF_TOKEN` environment variable.
+- A suite or test chooses the FxA environment by overriding the `fxa_env` fixture.
+
+### Smart Window mock server
+- Smart Window chat tests never talk to the real LLM service. Firefox sends its chat and web
+  search requests to a local mock server, which replays recordings from `data/recordings/`.
+- Runs need no setup or token: `pytest tests/smart_window` replays, and CI does the same.
+- Recording new responses (`--mock-mode=record`) needs a prod Firefox Account token in
+  `MOZ_FXA_BEARER_TOKEN`; never commit it.
+- How to write, record and maintain these tests: [SMART_WINDOW_MOCK_SERVER.md](SMART_WINDOW_MOCK_SERVER.md).
+
 ### Documentation
 
 We are trying documentation with [pdoc](https://pdoc.dev), run the following in your virtual env:
@@ -110,6 +124,9 @@ like to have documentation on.
 
 The Glean telemetry suite follows its own dataset-driven pattern, documented in
 [GLEAN.md](GLEAN.md).
+
+Smart Window chat tests run against a local mock server, documented in
+[SMART_WINDOW_MOCK_SERVER.md](SMART_WINDOW_MOCK_SERVER.md).
 
 ### IDE Pycharm Configuration
 Note: you may need to install Rust for PyCharm to work properly.
@@ -233,8 +250,8 @@ If you are outside of Mozilla and would like to contribute to this project:
   - Ask to be allowed to take the bug to work on it.
   - A Mozilla DTE will either assign you the bug or suggest another test case bug for you to work on.
   - They will give you, as a comment in the bug, the test steps, from our test case repository, TestRail.
-- Fork the repo and create your test case based on the test steps given.
-- Submit your PR to this repo.
+- Clone the repo, create branch in the form <yourfirstname>/<branch name> and create your test case based on the test steps given in the bug you selected.
+- Submit your PR (commit and push) to this repo.
 - A Mozilla DTE will review your PR
   - Address any review comments
 - Once approved your test code will be landed in this repo.

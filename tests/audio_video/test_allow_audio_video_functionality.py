@@ -12,7 +12,7 @@ from modules.page_object_prefs import AboutPrefs
 
 @pytest.fixture()
 def test_case():
-    return "330155"
+    return "4108464"
 
 
 TEST_URL = "https://www.mlb.com/video/rockies-black-agree-on-extension"
@@ -69,7 +69,7 @@ def video_is_playing(driver: Firefox) -> bool:
 @pytest.mark.noxvfb
 def test_allow_audio_video_functionality(driver: Firefox):
     """
-    C330155: 'Allow Audio and Video' functionality.
+    C4108464: 'Allow Audio and Video' functionality.
     """
     about_prefs = AboutPrefs(driver, category="permissionsData")
     tabs = TabBar(driver)

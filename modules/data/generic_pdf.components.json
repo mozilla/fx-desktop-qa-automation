@@ -19,6 +19,20 @@
       "location": "any element that supports the attribute (usually text)"
     }
   },
+  "pdf-text-span": {
+    "selectorData": ".textLayer span",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "pdf-text-containing": {
+    "selectorData": "//div[contains(@class, 'textLayer')]//span[contains(text(), '{text}')]",
+    "strategy": "xpath",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "html-body": {
     "selectorData": "html",
     "strategy": "tag",
@@ -61,6 +75,15 @@
     "groups": [],
     "comment": {
       "description": "The save button",
+      "location": "The pdf viewer toolbar"
+    }
+  },
+  "print-button": {
+    "selectorData": "printButton",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "The print button",
       "location": "The pdf viewer toolbar"
     }
   },
@@ -240,6 +263,96 @@
     "strategy": "id",
     "groups": []
   },
+  "toolbar-highlight": {
+    "selectorData": "editorHighlightButton",
+    "strategy": "id",
+    "groups": []
+  },
+  "added-highlight": {
+    "selectorData": ".highlightEditor",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "selection-comment-button": {
+    "selectorData": "button[data-l10n-id='pdfjs-comment-floating-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Adds a comment and highlight to selected PDF text",
+      "location": "The floating toolbar below a PDF text selection"
+    }
+  },
+  "highlight-comment-button": {
+    "selectorData": "button[data-l10n-id='pdfjs-editor-add-comment-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "highlight-comment-indicator": {
+    "selectorData": ".highlightEditor button[data-l10n-id='pdfjs-show-comment-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-indicator": {
+    "selectorData": "button[data-l10n-id='pdfjs-show-comment-button']:not(.hidden)",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-popup-text": {
+    "selectorData": "#commentPopup .commentPopupText",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-popup-edit": {
+    "selectorData": "#commentPopup .commentPopupEdit",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-popup-delete": {
+    "selectorData": "#commentPopup .commentPopupDelete",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Deletes the comment while preserving its annotation",
+      "location": "The PDF viewer comment popup"
+    }
+  },
+  "comment-dialog": {
+    "selectorData": "commentManagerDialog",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-input": {
+    "selectorData": "commentManagerTextInput",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "comment-save": {
+    "selectorData": "commentManagerSaveButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ]
+  },
   "draw-options": {
     "selectorData": "editorInkParamsToolbar",
     "strategy": "id",
@@ -265,6 +378,21 @@
     "strategy": "id",
     "groups": []
   },
+  "text-options": {
+    "selectorData": "editorFreeTextParamsToolbar",
+    "strategy": "id",
+    "groups": []
+  },
+  "text-color": {
+    "selectorData": "editorFreeTextColor",
+    "strategy": "id",
+    "groups": []
+  },
+  "text-font-size": {
+    "selectorData": "editorFreeTextFontSize",
+    "strategy": "id",
+    "groups": []
+  },
   "added-drawing": {
     "selectorData": ".canvasWrapper svg.draw path:not([d=''])",
     "strategy": "css",
@@ -278,5 +406,175 @@
     "groups": [
       "doNotCache"
     ]
+  },
+  "added-text-content": {
+    "selectorData": ".freeTextEditor .internal",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ]
+  },
+  "required-field": {
+    "selectorData": "input[name='required']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The empty \"required\" text input field",
+      "location": "showcase.apryse.com/gallery/form.pdf page content"
+    }
+  },
+  "pages-sidebar-toggle": {
+    "selectorData": "viewsManagerToggleButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Opens the PDF pages sidebar",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnails": {
+    "selectorData": "#thumbnailsView > .thumbnail",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Page thumbnails in document order",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnail-image": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > .thumbnailImageContainer:not(.placeholder)",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Draggable image of the numbered PDF page",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-thumbnail-checkbox": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > input[type='checkbox']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Selects the numbered PDF page",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "selected-page-checkboxes": {
+    "selectorData": "#thumbnailsView > .thumbnail > input:checked",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Checked page selection boxes",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-drag-placeholder": {
+    "selectorData": "#thumbnailsView .placeholder",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Placeholder left at the dragged page origin",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-drop-guide": {
+    "selectorData": "#thumbnailsView > .dragMarker",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Guide line indicating the page drop position",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "manage-dropdown-button": {
+    "selectorData": "viewsManagerStatusActionButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Opens the Manage menu (Copy, Cut, Delete, Export) for the selected pages",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "dragged-page-group": {
+    "selectorData": "#thumbnailsView .draggingThumbnail.multiple",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Stacked preview and page count of the dragged selection",
+      "location": "The PDF viewer Pages sidebar during a multiple-page drag"
+    }
+  },
+  "focused-page-thumbnail": {
+    "selectorData": "#thumbnailsView > .thumbnail:focus-within",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Page thumbnail containing keyboard focus",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-text-layer": {
+    "selectorData": "#viewer > .page[data-page-number='{number}'] .textLayer",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Rendered text of the currently numbered page after reordering",
+      "location": "The PDF document page view"
+    }
+  },
+  "manage-copy-option": {
+    "selectorData": "viewsManagerStatusActionCopy",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Copies the selected pages",
+      "location": "The Manage menu in the PDF viewer Pages sidebar"
+    }
+  },
+  "manage-cut-option": {
+    "selectorData": "viewsManagerStatusActionCut",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Cuts the selected pages",
+      "location": "The Manage menu in the PDF viewer Pages sidebar"
+    }
+  },
+  "paste-after-page-button": {
+    "selectorData": "#thumbnailsView > .thumbnail[page-number='{number}'] > .thumbnailPasteButton[data-l10n-id='pdfjs-views-manager-paste-button-after']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Pastes the cut or copied pages after the numbered page, as numbered after the cut",
+      "location": "The PDF viewer Pages sidebar"
+    }
   }
 }

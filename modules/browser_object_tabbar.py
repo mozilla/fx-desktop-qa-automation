@@ -504,6 +504,20 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
+    def create_split_view_from_tab(
+        self, identifier: Union[str, int], context_menu: ContextMenu
+    ) -> BasePage:
+        """
+        Create a Split View from a single tab using the tab context menu.
+        """
+        tab = self.get_tab(identifier)
+        self.click_on(tab)
+        self.expect(lambda _: tab.get_attribute("selected") == "true")
+        self.context_click(tab)
+        context_menu.click_and_hide_menu("context-menu-add-split-view")
+        return self
+
+    @BasePage.context_chrome
     def get_tab_group_color(self) -> str:
         """Return the color attribute of the first tab group"""
         return self.get_element("tabgroup").get_attribute("color")

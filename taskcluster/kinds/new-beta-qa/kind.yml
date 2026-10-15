@@ -33,6 +33,10 @@ tasks:
       cwd: "{checkout}"
       command: |-
         export PATH=$HOME/.local/bin:$PWD:$PATH
+        git config user.name "dteautomation"
+        git config user.email "dte-automation@mozilla.com"
+        git fetch
+        git pull origin main --rebase
         mkdir -p artifacts;
         pip3 install 'uv==0.11.18' --break-system-packages;
         uv run python scripts/switch_config.py ci;

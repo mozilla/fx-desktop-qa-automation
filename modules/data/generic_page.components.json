@@ -44,6 +44,17 @@
       "location": "python.org"
     }
   },
+  "wiki-english-link": {
+    "selectorData": "js-link-box-en",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The English Wikipedia link on the portal page",
+      "location": "wikipedia.org"
+    }
+  },
   "wiki-search-bar": {
     "selectorData": "searchInput",
     "strategy": "id",
