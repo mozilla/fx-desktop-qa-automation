@@ -139,9 +139,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--fx-channel",
         action="store",
-        default="Beta",
-        help="Firefox channel to test: Beta (default), Nightly, Firefox, or Custom. "
-        "See README for exact paths to builds.",
+        default="Custom",
+        help="Firefox channel to test. See README for exact paths to builds",
     )
 
     parser.addoption(
@@ -289,8 +288,6 @@ def fx_executable(request, sys_platform):
     if sys_platform == "Windows":
         if version == "Firefox":
             location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
-        elif version == "Beta":
-            location = r"C:\Program Files\Firefox Beta\firefox.exe"
         elif version == "Nightly":
             location = r"C:\Program Files\Firefox Nightly\firefox.exe"
         elif version == "Custom":
@@ -298,8 +295,6 @@ def fx_executable(request, sys_platform):
     elif sys_platform == "Darwin":
         if version == "Firefox":
             location = "/Applications/Firefox.app/Contents/MacOS/firefox"
-        elif version == "Beta":
-            location = "/Applications/Firefox Beta.app/Contents/MacOS/firefox"
         elif version == "Nightly":
             location = "/Applications/Firefox Nightly.app/Contents/MacOS/firefox"
         elif version == "Custom":
@@ -308,8 +303,6 @@ def fx_executable(request, sys_platform):
         user = os.environ.get("USER")
         if version == "Firefox":
             location = f"/home/{user}/Desktop/Firefox/firefox"
-        elif version == "Beta":
-            location = f"/home/{user}/Desktop/Firefox Beta/firefox"
         elif version == "Nightly":
             location = f"/home/{user}/Desktop/Firefox Nightly/firefox"
         elif version == "Custom":
