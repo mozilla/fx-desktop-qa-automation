@@ -1,7 +1,8 @@
 import pytest
-from modules.browser_object import Navigation
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
+
+from modules.browser_object import Navigation
 
 
 @pytest.fixture()
