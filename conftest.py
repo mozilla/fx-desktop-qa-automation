@@ -8,7 +8,7 @@ from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-import psutil
+# import psutil
 import pytest
 import requests
 from fxa.errors import Error as FxaError
@@ -27,7 +27,7 @@ from modules import testrail_integration as tri
 from modules.classes.fxa_session import FxaSession
 from modules.page_object import FxaHome
 from modules.taskcluster import get_tc_secret
-from modules.util import env_true, parse_window_size
+from modules.util import env_true
 from scripts import collect_executables
 
 ABOUT_FIREFOX = "chrome://browser/content/aboutDialog.xhtml"
@@ -332,22 +332,6 @@ def use_profile():
     yield False
 
 
-@pytest.fixture()
-def use_persistent_profile():
-    """True when state must survive a restart; options.profile runs from a copy."""
-    yield False
-
-
-@pytest.fixture()
-def persistent_profile_dir(tmp_path, use_persistent_profile):
-    """The profile directory shared across restarts, or None when unused."""
-    if not use_persistent_profile:
-        return None
-    path = tmp_path / "persistent_profile"
-    path.mkdir(parents=True, exist_ok=True)
-    return path
-
-
 @pytest.fixture(scope="session")
 def version(fx_executable: str):
     """Return the Firefox version string"""
@@ -423,6 +407,8 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
+        import psutil
+
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -490,26 +476,32 @@ def hard_quit():
     return False
 
 
-@pytest.fixture()
-def launch_firefox(
-    fx_executable: str,
+@pytest.fixture(autouse=True)
+def driver(
+    build_version,
+    create_profiles,
+    env_prep,
+    fx_executable,
     fxa_url: str | None,
     geckodriver: str,
+    hard_quit,
+    json_metadata,
+    machine_config: str,
     opt_ci: bool,
     opt_headless: bool,
     opt_implicit_timeout: int,
     opt_window_size: str,
-    persistent_profile_dir: Path | None,
     prefs_list: dict,
+    request,
+    suite_id: str,
+    test_case: str,
     tmp_path: str,
     use_profile: str | bool,
-) -> Callable[[], Firefox]:
+):
     """
-    Return a function that launches Firefox configured for this test.
+    Return the webdriver object.
 
-    The driver fixture calls it once. A fixture that restarts Firefox mid-test
-    calls it again, so the relaunch is the same browser rather than a second
-    copy of the same settings that has to be kept in step by hand.
+    All arguments are fixtures being requested, rather than parameters.
 
     Fixtures
     --------
@@ -539,39 +531,30 @@ def launch_firefox(
     use_profile: Union[bool, str]
         Location inside ./profiles to find the profile to use, False if no profile needed.
 
-    persistent_profile_dir: Path | None
-        Profile directory to run from in place, so state survives a restart.
-        None unless use_persistent_profile is True; not usable with use_profile.
+    build_version: str
+        The result of calling collect_executables with "-n".
 
+    env_prep: None
+        Fixture that does other environment work, like set logging levels.
     """
-    if persistent_profile_dir and use_profile:
-        raise AssertionError(
-            "use_persistent_profile and use_profile are mutually exclusive"
-        )
+    options = Options()
+    service_args = ["--allow-system-access"]
+    # options.log.level = "trace"
+    options.binary_location = fx_executable
+    # options.set_preference("app.update.disabledForTesting", False)
 
-    def _launch() -> Firefox:
-        options = Options()
-        service_args = ["--allow-system-access"]
-        # options.log.level = "trace"
-        options.binary_location = fx_executable
-        # options.set_preference("app.update.disabledForTesting", False)
+    if use_profile:
+        profile_path = tmp_path / use_profile
+        unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
+        options.profile = profile_path
 
-        if persistent_profile_dir:
-            # -profile as an argument, not options.profile: the latter is copied.
-            options.add_argument("-profile")
-            options.add_argument(str(persistent_profile_dir))
-        elif use_profile:
-            profile_path = tmp_path / use_profile
-            unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
-            options.profile = profile_path
-
-        if opt_headless:
-            options.add_argument("--headless")
-        if fxa_url:
-            options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
-        for opt, value in prefs_list:
-            options.set_preference(opt, value)
-
+    if opt_headless:
+        options.add_argument("--headless")
+    if fxa_url:
+        options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
+    for opt, value in prefs_list:
+        options.set_preference(opt, value)
+    try:
         if geckodriver:
             service = Service(executable_path=geckodriver, service_args=service_args)
         else:
@@ -583,52 +566,22 @@ def launch_firefox(
         #    if proc.info["name"] and "firefox" in proc.info["name"].lower():
         #        print(proc.info)
 
-        driver.set_window_size(*parse_window_size(opt_window_size))
+        separator = "x"
+        if separator not in opt_window_size:
+            if "by" in opt_window_size:
+                separator = "by"
+            elif "," in opt_window_size:
+                separator = ","
+            elif " " in opt_window_size:
+                separator = " "
+        winsize = [int(s) for s in opt_window_size.split(separator)]
+        driver.set_window_size(*winsize)
 
         timeout = 30 if opt_ci else opt_implicit_timeout
         driver.implicitly_wait(timeout)
         WebDriverWait(driver, timeout=40).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        return driver
-
-    return _launch
-
-
-@pytest.fixture(autouse=True)
-def driver(
-    build_version,
-    create_profiles,
-    env_prep,
-    hard_quit,
-    json_metadata,
-    launch_firefox,
-    machine_config: str,
-    request,
-    suite_id: str,
-    test_case: str,
-):
-    """
-    Return the webdriver object.
-
-    All arguments are fixtures being requested, rather than parameters.
-
-    Fixtures
-    --------
-
-    launch_firefox: Callable[[], Firefox]
-        Launches Firefox configured for this test; see that fixture for the
-        configuration it reads.
-
-    build_version: str
-        The result of calling collect_executables with "-n".
-
-    env_prep: None
-        Fixture that does other environment work, like set logging levels.
-    """
-    driver = None
-    try:
-        driver = launch_firefox()
 
         json_metadata["fx_version"] = build_version
         json_metadata["machine_config"] = machine_config
@@ -647,8 +600,7 @@ def driver(
         raise
 
     finally:
-        # None if Firefox() threw; flagged if restart_browser already closed it.
-        if driver and not getattr(driver, "closed_by_restart", False):
+        if ("driver" in locals() or "driver" in globals()) and driver:
             driver.quit()
 
 
