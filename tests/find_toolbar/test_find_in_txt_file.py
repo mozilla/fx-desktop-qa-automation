@@ -12,7 +12,7 @@ def test_case():
 
 @pytest.fixture()
 def add_to_prefs_list():
-    """Enlarge plain text so the short .txt file is long enough to scroll"""
+    """Enlarge plain text to force scrollbars"""
     return [("font.size.monospace.x-western", 48)]
 
 
