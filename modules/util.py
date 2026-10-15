@@ -35,17 +35,6 @@ def env_true(name: str) -> bool:
     return os.environ.get(name, "").strip().lower() in ("1", "true")
 
 
-def parse_window_size(opt_window_size: str) -> list[int]:
-    """Parse a window size like "1152x864", also accepting by / , / space."""
-    separator = "x"
-    if separator not in opt_window_size:
-        for alt in ("by", ",", " "):
-            if alt in opt_window_size:
-                separator = alt
-                break
-    return [int(part) for part in opt_window_size.split(separator)]
-
-
 class Utilities:
     """
     Methods that may be useful, that have nothing to do with Selenium.
