@@ -575,6 +575,8 @@ def launch_firefox(
             options.add_argument("-profile")
             options.add_argument(str(persistent_profile_dir))
         elif use_profile:
+            # Reached once per test: only restarts call _launch twice, and
+            # launch_firefox rejects use_profile with a persistent profile.
             profile_path = tmp_path / use_profile
             unpack_archive(os.path.join("profiles", f"{use_profile}.zip"), profile_path)
             options.profile = profile_path

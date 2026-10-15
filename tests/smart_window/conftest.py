@@ -264,7 +264,8 @@ def restart_browser(launch_firefox, opt_headless, persistent_profile_dir):
             extra.quit()
         except WebDriverException as exc:  # already gone, or never came up
             logging.info(f"restart_browser cleanup: {exc}")
-        _reap(pids)
+        finally:
+            _reap(pids)
 
     # Headed only: the relaunched window overlaps the next test's and the
     # panel-menu tests lose focus (measured 10/12 without, 12/12 with).
