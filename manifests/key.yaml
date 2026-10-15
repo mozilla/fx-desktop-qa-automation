@@ -261,7 +261,7 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
-  test_suggestion_engine_selection:
+  test_search_suggestion_for_engine_selection:
     result: pass
     splits:
     - functional1
