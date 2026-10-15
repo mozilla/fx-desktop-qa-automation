@@ -1,8 +1,13 @@
 import datetime
+import logging
+import time
 from os import environ
 from pathlib import Path
 
+import psutil
 import pytest
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver import Firefox
 
 from modules.browser_object import SmartWindow, SmartWindowChat
 from modules.classes.recording import Recording
@@ -178,3 +183,90 @@ def recording_path(node: pytest.Item) -> Path:
     if callspec:
         return folder / node.path.stem / f"{callspec.id}.json"
     return folder / f"{node.path.stem}.json"
+
+
+def _driver_process_tree(driver) -> list[int]:
+    """PIDs behind a driver: its geckodriver, plus every Firefox child."""
+    proc = getattr(getattr(driver, "service", None), "process", None)
+    if proc is None:
+        return []
+    try:
+        parent = psutil.Process(proc.pid)
+        return [child.pid for child in parent.children(recursive=True)] + [proc.pid]
+    except psutil.Error as exc:
+        logging.warning(f"restart_browser: cannot read process tree: {exc}")
+        return []
+
+
+def _reap(pids: list[int], timeout: int = 10) -> None:
+    """Wait for `pids` to exit, killing any that outlive `timeout`."""
+    if not pids:
+        return
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not any(psutil.pid_exists(pid) for pid in pids):
+            return
+        time.sleep(0.2)
+    # Leaving these alive would contaminate the next test, so do not just warn.
+    for pid in (p for p in pids if psutil.pid_exists(p)):
+        logging.warning(f"restart_browser: killing leftover pid {pid}")
+        try:
+            psutil.Process(pid).kill()
+        except psutil.Error:
+            pass
+
+
+@pytest.fixture()
+def restart_browser(launch_firefox, opt_headless, persistent_profile_dir):
+    """
+    Return a function that quits Firefox and relaunches it on the same profile.
+
+    Needs `use_persistent_profile` True. The quit matters: Firefox flushes
+    session state on the way out, so it must close cleanly rather than be
+    killed.
+
+    Quitting also invalidates the driver other fixtures hold, so a restart
+    test should override fxa_env to None unless it needs FxA -- the autouse
+    fxa_waf_bypass talks to the driver in teardown.
+    """
+    spawned = []
+
+    def _restart(driver: Firefox) -> Firefox:
+        if not persistent_profile_dir:
+            raise AssertionError(
+                "restart_browser requires a use_persistent_profile fixture "
+                "returning True; otherwise the profile is a discarded copy"
+            )
+        # Collected before the quit, while the tree is still there to read.
+        old_pids = _driver_process_tree(driver)
+        # Set before quitting: if quit() raises, the driver fixture must
+        # still know not to quit this one again in teardown.
+        driver.closed_by_restart = True
+        try:
+            driver.quit()
+        except WebDriverException as exc:  # already gone, or never came up
+            logging.info(f"restart_browser: quit before relaunch: {exc}")
+        # quit() returns once geckodriver acks, which is before Firefox has
+        # finished flushing session state and released the profile lock.
+        # Reopening the directory while it is still held prompts for a new
+        # profile, so wait the old tree out before relaunching on it.
+        _reap(old_pids)
+
+        restarted = launch_firefox()
+        spawned.append(restarted)
+        return restarted
+
+    yield _restart
+
+    for extra in spawned:
+        pids = _driver_process_tree(extra)
+        try:
+            extra.quit()
+        except WebDriverException as exc:  # already gone, or never came up
+            logging.info(f"restart_browser cleanup: {exc}")
+        _reap(pids)
+
+    # Headed only: the relaunched window overlaps the next test's and the
+    # panel-menu tests lose focus (measured 10/12 without, 12/12 with).
+    if spawned and not opt_headless:
+        time.sleep(1)
