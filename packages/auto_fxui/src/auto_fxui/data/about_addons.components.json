@@ -1,0 +1,103 @@
+{
+  "sidebar-options": {
+    "selectorData": "moz-page-nav-button[view='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Selects an option in about:addons(sidebar)",
+      "location": "Left side of about:addons page"
+    }
+  },
+  "theme-card": {
+    "selectorData": "div.card[aria-labelledby='{name}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Takes the name of the intended theme to use",
+      "location": "Theme cards on about:addons page"
+    }
+  },
+  "enable-theme": {
+    "selectorData": "theme-enable-button",
+    "strategy": "class",
+    "groups": []
+  },
+  "back-button": {
+    "selectorData": "back-button",
+    "strategy": "class",
+    "groups": []
+  },
+  "enabled-theme-title": {
+    "selectorData": ".theme-enabled-section .addon-name",
+    "strategy": "css",
+    "groups": []
+  },
+  "find-more-themes-button": {
+    "selectorData": "button[data-l10n-id='find-more-themes']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Find more themes footer button. CSS hides it under browser.nova.enabled, the default from Fx157 on",
+      "location": "about:addons Themes view footer"
+    }
+  },
+  "find-more-themes-promo-button": {
+    "selectorData": "moz-button[data-l10n-id='find-more-themes-promo-open-amo-button']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Explore themes button, which replaces find-more-themes-button under browser.nova.enabled (Fx157+)",
+      "location": "about:addons Themes view, promo card at the bottom"
+    }
+  },
+  "install-theme-button": {
+    "selectorData": "button[data-l10n-id='install-theme-button']",
+    "strategy": "css",
+    "groups": []
+  },
+  "languages-addon-list": {
+    "selectorData": "locale-enabled-section",
+    "strategy": "class",
+    "groups": []
+  },
+  "languages-addon-list-card": {
+    "selectorData": "addon-card",
+    "strategy": "tag",
+    "groups": []
+  },
+  "addon-card-more-options-button": {
+    "selectorData": "addon-card[addon-id='{id}'] moz-button.more-options-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Three-dot menu button on one add-on card, found by add-on id",
+      "location": "about:addons add-on card"
+    }
+  },
+  "addon-card-remove-menu-item": {
+    "selectorData": "addon-card[addon-id='{id}'] panel-item[action='remove']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Remove item in one add-on card's three-dot menu, found by add-on id",
+      "location": "about:addons add-on card three-dot menu"
+    }
+  },
+  "addon-card": {
+    "selectorData": "addon-card[addon-id='{id}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "One add-on card, found by add-on id",
+      "location": "about:addons add-on list"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+    "main-logo": {
+        "selectorData": "about-private-browsing-logo",
+        "strategy": "id",
+        "groups": [
+            "requiredForPage"
+        ]
+    }
+
+}
