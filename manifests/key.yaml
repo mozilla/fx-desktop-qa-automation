@@ -149,6 +149,10 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_new_search_box_with_vertical_tabs:
+    result: pass
+    splits:
+    - functional1
   test_no_search_engine_suggestions_in_private_window:
     result: pass
     splits:
@@ -327,6 +331,10 @@ address_bar_and_search:
   test_tile_menu_options:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2021941
     result: unstable
+    splits:
+    - functional1
+  test_unchecked_engines_not_in_unified_search_button:
+    result: pass
     splits:
     - functional1
   test_use_different_search_shortcut_while_already_in_search_mode:
