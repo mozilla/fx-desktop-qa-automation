@@ -5,7 +5,7 @@ run-name: Nightly tests for ${{ inputs.target_info || 'scheduled run' }}
 
 on:
   schedule:
-    - cron: "0 12 * * 2,4"
+    - cron: "0 14 * * 2,4"
 
   workflow_dispatch:
     inputs:
