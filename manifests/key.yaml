@@ -457,6 +457,10 @@ bookmarks_and_history:
     splits:
     - functional1
 desktop_integration:
+  test_context_menu_open_link_not_in_taskbar_tab:
+    result: pass
+    splits:
+    - functional1
   test_in_scope_navigation_stays_in_taskbar_tab:
     result:
       linux: out of scope
