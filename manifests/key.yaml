@@ -105,6 +105,14 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_new_search_box_no_url_navigation:
+    result: pass
+    splits:
+    - functional1
+  test_new_search_box_search_in_background_tab:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_searches:
     result: pass
     splits:
@@ -494,6 +502,13 @@ bookmarks_and_history:
     - functional1
     - nightly
 desktop_integration:
+  test_context_menu_open_link_not_in_taskbar_tab:
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
+    splits:
+    - functional1
   test_in_scope_navigation_stays_in_taskbar_tab:
     result:
       linux: out of scope
