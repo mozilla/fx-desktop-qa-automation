@@ -54,7 +54,7 @@ def test_unchecked_engines_not_in_unified_search_button(driver: Firefox):
     engines.remove(MOVED_ENGINE)
     engines.insert(1, MOVED_ENGINE)
 
-    # Step 1: Untick some engines.
+    # Step 1 (continued): Untick some engines.
     for engine in DISABLED_ENGINES:
         prefs.click_on("search-shortcuts-engine-toggle", labels=[engine])
         engines.remove(engine)
