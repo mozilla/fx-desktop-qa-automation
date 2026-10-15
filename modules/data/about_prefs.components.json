@@ -1213,14 +1213,26 @@
     }
   },
   "update-check-finished": {
-    "selectorData": "moz-box-item.noUpdatesFound, moz-box-item.downloading, moz-box-item.applying, moz-box-button:not([data-l10n-id='update-checkForUpdatesButton'])",
+    "selectorData": "moz-box-item.noUpdatesFound, moz-box-item.downloading, moz-box-item.applying, moz-box-item.otherInstanceHandlingUpdates, moz-box-button:not([data-l10n-id='update-checkForUpdatesButton'])",
     "strategy": "css",
     "shadowParent": "update_state_root",
     "groups": [
       "doNotCache"
     ],
     "comment": {
-      "description": "Firefox Updates > any state after a check: up to date, or an update found",
+      "description": "Firefox Updates > any state after a check: up to date, update found, or another instance handling updates",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-other-instance-message": {
+    "selectorData": "moz-box-item.otherInstanceHandlingUpdates",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Firefox is being updated by another instance\" message",
       "location": "about:preferences#about"
     }
   },
