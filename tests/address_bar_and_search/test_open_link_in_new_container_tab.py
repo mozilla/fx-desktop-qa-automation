@@ -18,6 +18,8 @@ def add_to_prefs_list():
     return [
         ("privacy.userContext.enabled", True),
         ("browser.newtabpage.activity-stream.testing.shouldInitializeFeeds", True),
+        # Sponsored tiles load late and shift the Wikipedia tile
+        ("browser.newtabpage.activity-stream.showSponsoredTopSites", False),
     ]
 
 
@@ -45,6 +47,7 @@ def test_open_link_in_new_container_tab(driver: Firefox) -> None:
     context_menu.open_link_in_container()
 
     # Switch to new tab and verify URL and container
+    tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
     nav.url_contains(TOPSITE_URL)
     nav.expect_container_label(EXPECTED_CONTAINER)

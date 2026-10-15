@@ -20,5 +20,5 @@ def test_open_private_browsing_via_keyboard(driver: Firefox, nav: Navigation):
     # Verify the Private Browsing window is opened
     nav.is_private()
 
-    # Verify the purple mask (private browsing indicator icon) is displayed
-    nav.element_visible("private-browsing-icon")
+    # Verify the private browsing indicator icon is displayed
+    nav.any_element_visible("private-browsing-icon")

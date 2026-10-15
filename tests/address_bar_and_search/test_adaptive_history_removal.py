@@ -1,15 +1,20 @@
 import pytest
+from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
+from modules.browser_object import Navigation, PanelUi, TabBar
 
-TEST_URL = "https://www.nationalgeographic.com/science/"
-TYPED_TEXT = "nat"
+TYPED_TEXT = "loc"
 EXPECTED_IN_TITLE = "Science"
-EXPECTED_TYPE = "autofill_adaptive"
-EXPECTED_URL = "nationalgeographic.com/science"
+
+
+@pytest.fixture()
+def test_url(httpserver: HTTPServer) -> str:
+    httpserver.expect_request("/science/").respond_with_data(
+        f"<html><head><title>{EXPECTED_IN_TITLE}</title></head><body>Science</body></html>",
+        content_type="text/html",
+    )
+    return httpserver.url_for("/science/").replace("127.0.0.1", "localhost")
 
 
 @pytest.fixture()
@@ -22,7 +27,7 @@ def add_to_prefs_list():
     return [("browser.urlbar.autoFill.adaptiveHistory.enabled", True)]
 
 
-def test_remove_adaptive_history_entry(driver: Firefox) -> None:
+def test_adaptive_history_removal(driver: Firefox, test_url: str) -> None:
     """
     C3029071 - Verify adaptive history entry is deleted from history and
     not suggested in address bar.
@@ -31,9 +36,10 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     nav = Navigation(driver)
     tabs = TabBar(driver)
     panel = PanelUi(driver)
+    expected_url = test_url.removeprefix("http://").rstrip("/")
 
     # Visit the test site and verify title
-    nav.search(TEST_URL)
+    nav.search(test_url)
     tabs.expect_title_contains(EXPECTED_IN_TITLE)
 
     # Open new tab, close the original
@@ -44,7 +50,7 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     # Type in address bar, then click adaptive suggestion
     nav.type_in_awesome_bar(TYPED_TEXT)
     nav.click_firefox_suggest()
-    nav.url_contains(TEST_URL)
+    nav.url_contains(test_url)
 
     # Open new tab and check for autofill suggestion
     tabs.new_tab_by_button()
@@ -52,7 +58,9 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
     nav.type_in_awesome_bar(TYPED_TEXT)
     # Adaptive autofill is done through Fx Suggest, url in title attr
     nav.element_attribute_contains(
-        "search-result-autofill-adaptive-element", "title", EXPECTED_URL
+        "search-result-autofill-adaptive-element",
+        "title",
+        expected_url,
     )
 
     # Delete the adaptive history entry
@@ -62,10 +70,13 @@ def test_remove_adaptive_history_entry(driver: Firefox) -> None:
 
     # Open new tab and verify the adaptive suggestion is removed
     tabs.new_tab_by_button()
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(driver.window_handles[-1])
     tabs.close_first_tab_by_icon()
     nav.type_in_awesome_bar(TYPED_TEXT)
     nav.wait_for_suggestions_present()
-    # Fx Suggest elements always exist and are populated based on search,
-    # so we need to check that element has "" in the title attr
-    nav.element_attribute_is("search-result-autofill-adaptive-element", "title", "")
+    nav.wait_for_suggestions_complete(TYPED_TEXT)
+    # Firefox removes the suggestion when its history entry is deleted.
+    nav.element_not_visible(
+        "suggestion-url-by-title",
+        labels=[expected_url],
+    )

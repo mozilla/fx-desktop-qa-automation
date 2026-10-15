@@ -9,12 +9,15 @@ from selenium.common.exceptions import (
     NoAlertPresentException,
     StaleElementReferenceException,
     TimeoutException,
+    UnexpectedAlertPresentException,
     WebDriverException,
 )
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
 from modules.page_base import BasePage
@@ -494,26 +497,44 @@ class AboutLogins(BasePage):
             pass
         return self
 
-    def enter_primary_password_native(self, primary_password, timeout=10) -> BasePage:
-        """
-        Unlock the login store by answering Firefox's native Primary Password prompt.
+    def answer_next_primary_password_prompt(self, primary_password) -> BasePage:
+        """Fill and accept the next Primary Password prompt; call before it opens."""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            # Fill in and accept the Primary Password prompt as soon as it opens.
+            self.driver.execute_script(
+                """
+                const password = arguments[0];
+                const answer = win => {
+                  const box = win.document.getElementById("password1Textbox");
+                  if (!box || box.hidden) return;
+                  Services.obs.removeObserver(answer, "common-dialog-loaded");
+                  box.value = password;
+                  win.document.getElementById("commonDialog").acceptDialog();
+                };
+                Services.obs.addObserver(answer, "common-dialog-loaded");
+                """,
+                primary_password,
+            )
+        return self
 
-        Firefox 154 presents the Primary Password request for login-form autofill as
-        a native tab-modal ``promptPassword`` dialog (not the older in-content page
-        handled by :meth:`enter_primary_password`). Marionette rejects
-        ``Alert.send_keys`` on it, so type via OS keystrokes and accept — the same
-        approach used for the CSV-export re-auth prompt. Entering the correct
-        password unlocks the store for the session, which stops it re-prompting on
-        later reads (a cancel instead leaves it re-prompting persistently). Waits for
-        the prompt, types, and waits for it to clear.
-        """
-        WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
-        # Brief settle so the native prompt has keyboard focus before typing; it is
-        # not in the DOM, so its readiness cannot be polled directly.
-        sleep(self._NATIVE_PROMPT_SETTLE_S)
-        self.gui.write(primary_password, interval=0.05)
-        self.gui.press("enter")
-        WebDriverWait(self.driver, timeout).until_not(EC.alert_is_present())
+    def wait_for_primary_password_unlocked(self, timeout=10) -> BasePage:
+        """Wait until the Primary Password has unlocked the login store."""
+
+        def _unlocked(_):
+            with self.driver.context(self.driver.CONTEXT_CHROME):
+                # Check if the Primary Password has unlocked the login store.
+                return self.driver.execute_script(
+                    """
+                    return Cc["@mozilla.org/security/internalkeytoken;1"]
+                      .createInstance(Ci.nsIPKCS11Token)
+                      .isLoggedIn;
+                    """
+                )
+
+        # A poll can hit the open prompt; Marionette closes it and it comes back.
+        WebDriverWait(
+            self.driver, timeout, ignored_exceptions=[UnexpectedAlertPresentException]
+        ).until(_unlocked, message="Primary Password prompt was not answered")
         return self
 
     def assert_username_present(self, username: str) -> BasePage:
@@ -535,6 +556,67 @@ class AboutLogins(BasePage):
         self.add_login(origin, username, password)
         self.assert_username_present(username)
         return self
+
+
+class AboutOpentabs(BasePage):
+    """
+    POM for about:opentabs, the tab picker Firefox loads into the empty side of a
+    new Split View. Lists every open tab that is not pinned and not already in a
+    Split View, and lets one be searched for and picked.
+    """
+
+    URL_TEMPLATE = "about:opentabs"
+
+    @BasePage.context_content
+    def search_tabs(self, query: str) -> BasePage:
+        """
+        Type `query` into the Search tabs box.
+
+        The box debounces before filtering, so wait on the filtered list rather
+        than assuming it has updated by the time this returns.
+        """
+        search_input = self.get_element("opentabs-search-input")
+        search_input.click()
+        search_input.clear()
+        search_input.send_keys(query)
+        return self
+
+    @BasePage.context_content
+    def get_listed_tab_links(self) -> list[WebElement]:
+        """
+        Return the clickable link of every tab row currently listed, honouring any
+        search query in effect.
+        """
+        return [
+            self.utils.find_shadow_element(
+                row, self.get_selector("opentabs-tab-row-link")
+            )
+            for row in self.get_elements("opentabs-tab-row")
+        ]
+
+    @BasePage.context_content
+    def get_listed_tab_titles(self) -> list[str]:
+        """Return the title of every tab row currently listed."""
+        return [link.text.strip() for link in self.get_listed_tab_links()]
+
+    def expect_listed_tab_titles(self, titles: list[str]) -> BasePage:
+        """Wait until exactly `titles` are listed, in any order."""
+        self.expect(lambda _: sorted(self.get_listed_tab_titles()) == sorted(titles))
+        return self
+
+    @BasePage.context_content
+    def select_tab_by_title(self, title: str) -> BasePage:
+        """
+        Click the listed tab whose title is `title`, adding it to the Split View
+        in place of this page.
+        """
+        for link in self.get_listed_tab_links():
+            if link.text.strip() == title:
+                link.click()
+                return self
+        raise AssertionError(
+            f"No tab titled {title!r} is listed, found: {self.get_listed_tab_titles()}"
+        )
 
 
 class AboutPrivatebrowsing(BasePage):
@@ -817,4 +899,44 @@ class AboutGlean(BasePage):
             )
         )
         self.get_element("ping-submit-button").click()
+        return self
+
+
+class AboutTranslations(BasePage):
+    """POM for about:translations"""
+
+    URL_TEMPLATE = "about:translations"
+
+    def select_language(self, picker: str, lang_code: str) -> "AboutTranslations":
+        """Pick a language in the source or target dropdown.
+
+        The dropdown fills in asynchronously, so wait for the option first.
+
+        Args:
+            picker: "source-select" or "target-select"
+            lang_code: The language code to pick (e.g. 'de')
+        """
+        self.wait.until(
+            lambda _: any(
+                opt.get_attribute("value") == lang_code
+                for opt in self.get_element(f"{picker}-inner").find_elements(
+                    By.TAG_NAME, "option"
+                )
+            )
+        )
+        Select(self.get_element(f"{picker}-inner")).select_by_value(lang_code)
+        self.element_attribute_is(picker, "value", lang_code)
+        return self
+
+    def translate_text(self, text: str, timeout: int) -> "AboutTranslations":
+        """Type text and wait until the translation shows up.
+
+        Args:
+            text: The text to translate
+            timeout: Seconds to wait for the translation
+        """
+        self.get_element("source-textarea").send_keys(text)
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_element("target-textarea").get_attribute("value")
+        )
         return self

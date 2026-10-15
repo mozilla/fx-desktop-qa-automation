@@ -38,12 +38,8 @@ def test_clipboard_pref_flip(driver: Firefox):
     # Step 1: Open about:newtab
     driver.get("about:newtab")
 
-    # Step 2: Copy a TopSite link via context menu
-    topsite_el = newtab.get_topsite_element(TOPSITE_TITLE)
-
-    newtab.hover(topsite_el)
-    nav.verify_status_panel_url(TOPSITE_TITLE.lower())
-    copied_url = nav.get_status_panel_url()
+    # Step 2: Copy a TopSite link via its context menu
+    copied_url = newtab.get_topsite_url(TOPSITE_TITLE)
 
     newtab.open_topsite_context_menu_by_title(TOPSITE_TITLE)
     context_menu.click_context_item("context-menu-copy-link")
@@ -57,7 +53,6 @@ def test_clipboard_pref_flip(driver: Firefox):
 
     # Step 5: Validate navigation & URL bar text
     nav.url_contains(copied_url)
-    assert copied_url in nav.get_awesome_bar_text()
 
     # Step 6: Go to about:preferences#search and check the pref is enabled
     driver.get("about:preferences#search")

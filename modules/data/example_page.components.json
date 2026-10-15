@@ -1,11 +1,11 @@
 {
   "title-header": {
-    "selectorData": "h1",
+    "selectorData": "p",
     "strategy": "tag",
     "groups": [],
     "comment": {
-      "description": "\"Example Domain\" title",
-      "location": "The title of example.com page"
+      "description": "Domain description text (example.com dropped its <h1> title)",
+      "location": "The body paragraph of example.com page"
     }
   },
   "take-screenshot-box": {

@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutLogins
+from modules.page_object import AboutLogins
 
 URL_TO_TEST = "https://mozilla.github.io/"
 USERNAME = "username"
@@ -32,16 +32,25 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     about_logins.click_on("edit-login")
 
     # Change username and the password
-    about_logins.get_element("about-logins-page-username-field").send_keys(NEW_USERNAME)
+    about_logins.expect(
+        lambda _: not about_logins.get_element(
+            "about-logins-page-username-field"
+        ).get_property("readOnly")
+    )
+    about_logins.fill(
+        "about-logins-page-username-field", NEW_USERNAME, press_enter=False
+    )
     about_logins.get_element("about-logins-page-password-hidden").send_keys(
         ADD_TO_PASSWORD
     )
 
     # Click the "Save" button
     about_logins.click_on("save-changes-button")
+    about_logins.element_not_visible("save-changes-button")
+    about_logins.element_visible("edit-login")
 
     # Verify the username field is changed
-    about_logins.element_attribute_contains(
+    about_logins.element_attribute_is(
         "about-logins-page-username-field", "value", NEW_USERNAME
     )
 
@@ -49,6 +58,6 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
     about_logins.click_on("show-password-checkbox")
 
     # Verify the newly entered password is correctly displayed
-    about_logins.element_attribute_contains(
+    about_logins.element_attribute_is(
         "about-logins-page-password-revealed", "value", NEW_PASSWORD
     )

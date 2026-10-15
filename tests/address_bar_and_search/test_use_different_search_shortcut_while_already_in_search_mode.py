@@ -14,7 +14,7 @@ def test_case():
     return "3028851"
 
 
-def test_use_search_shortcut_for_a_different_search_engine_while_already_in_search_mode(
+def test_use_different_search_shortcut_while_already_in_search_mode(
     driver: Firefox,
 ):
     """
