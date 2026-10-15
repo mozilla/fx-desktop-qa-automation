@@ -277,6 +277,17 @@
       "location": "Search mode switcher dropdown of awesomebar"
     }
   },
+  "search-mode-switcher-engines": {
+    "selectorData": "#searchmode-switcher-panel-list-{location} panel-item.searchmode-switcher-installed",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Installed engines in one search mode switcher list; {location} is urlbar or searchbar",
+      "location": "Search mode switcher dropdown"
+    }
+  },
   "search-mode-local-option": {
     "selectorData": "panel-item.searchmode-switcher-local.search-button-{function}",
     "strategy": "css",
