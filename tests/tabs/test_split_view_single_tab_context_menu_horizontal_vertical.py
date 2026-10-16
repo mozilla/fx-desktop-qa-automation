@@ -21,8 +21,6 @@ def add_to_prefs_list():
     [(False, None), (True, True), (True, False)],
     ids=["horizontal_tabs", "vertical_tabs_expanded", "vertical_tabs_collapsed"],
 )
-
-
 def test_split_view_single_tab_context_menu_horizontal_vertical(
     driver: Firefox, vertical_tabs: bool, sidebar_expanded: bool
 ):
