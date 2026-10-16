@@ -507,7 +507,7 @@ def launch_firefox(
     opt_window_size: str,
     persistent_profile_dir: Path | None,
     prefs_list: dict,
-    tmp_path: str,
+    tmp_path: Path,
     use_profile: str | bool,
 ) -> Callable[[], Firefox]:
     """
@@ -652,7 +652,7 @@ def driver(
         json_metadata["test_case"] = test_case
 
         yield driver
-        if hard_quit:
+        if hard_quit and not getattr(driver, "closed_by_restart", False):
             if hasattr(driver, "service") and driver.service is not None:
                 logging.warning("Attempting to force close Firefox")
                 driver.service.stop()
