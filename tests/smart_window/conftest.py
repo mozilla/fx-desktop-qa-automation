@@ -251,6 +251,10 @@ def restart_browser(launch_firefox, opt_headless, persistent_profile_dir):
         # Reopening the directory while it is still held prompts for a new
         # profile, so wait the old tree out before relaunching on it.
         _reap(old_pids)
+        if not old_pids:
+            # Tree was unreadable, so nothing was waited on; fall back to a
+            # fixed settle rather than reopening the profile immediately.
+            time.sleep(2)
 
         restarted = launch_firefox()
         spawned.append(restarted)
