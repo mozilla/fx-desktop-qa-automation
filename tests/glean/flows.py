@@ -302,6 +302,7 @@ def _entry_follow_on_from_refine_on_incontent_search(
     # Wait for the first SERP impression to be recorded so Firefox has wired up in-content search
     # telemetry before we refine; otherwise the refinement is attributed as source='unknown'
     glean.poll_glean_metric("serp.impression", {"source": "urlbar"})
+    sleep(SERP_TELEMETRY_SETTLE_SECONDS)
 
     # Refine the search via the in-content search bar and verify both the original term
     # and the refinement remain in the URL (guards against the engine auto-selecting and
