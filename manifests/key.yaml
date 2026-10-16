@@ -865,11 +865,13 @@ language_packs:
     result: flaky
     splits:
     - functional2
+    - exclude_nightly
   test_language_pack_install_preferences:
     result: pass
     splits:
     - smoke
     - ci-extended
+    - exclude_nightly
 menus:
   test_copy_paste_actions:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2075426
