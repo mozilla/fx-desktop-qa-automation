@@ -541,9 +541,6 @@ desktop_integration:
       win: pass
     splits:
     - functional1
-    result: pass
-    splits:
-    - functional1
   test_context_menu_open_link_not_in_taskbar_tab:
     result:
       linux: out of scope
