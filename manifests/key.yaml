@@ -535,6 +535,12 @@ bookmarks_and_history:
     - nightly
 desktop_integration:
   test_add_to_taskbar_btn_not_in_private_window:
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
+    splits:
+    - functional1
     result: pass
     splits:
     - functional1
