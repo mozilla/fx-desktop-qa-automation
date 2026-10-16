@@ -91,13 +91,13 @@ jobs:
           git push origin "$branch"
 
           body_file=$(mktemp)
-          cat > "$body_file" <<~EOF
-          Backport of #${PR_NUMBER} to main.
-
-          Original commit is ${FIX_SHA}
-
-          This change will be validated against Beta.
-          EOF
+          printf '%s\n' \
+          "Backport of #${PR_NUMBER} to main." \
+          "" \
+          "Original commit is ${FIX_SHA}" \
+          "" \
+          "This change will be validated against Beta." \
+          > $body_file
 
           backport_url=$(gh pr create \
             --base main \

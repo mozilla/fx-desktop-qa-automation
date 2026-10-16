@@ -122,7 +122,7 @@ def dedupe(run_list: list) -> list:
     return run_list
 
 
-def remove_exclusions(run_list):
+def remove_exclusions(run_list, manifest):
     # Assign a split name to STARFOX_EXCLUDE to remove tests in that split from run
     exclusions = os.environ.get("STARFOX_EXCLUDE")
     if exclusions:
@@ -178,7 +178,7 @@ if __name__ == "__main__":
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
-        run_list = remove_exclusions(run_list)
+        run_list = remove_exclusions(run_list, manifest)
 
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
@@ -312,7 +312,7 @@ if __name__ == "__main__":
     run_list = dedupe(run_list)
     run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
-    run_list = remove_exclusions(run_list)
+    run_list = remove_exclusions(run_list, manifest)
 
     with open(OUTPUT_FILE, "w") as fh:
         fh.write("\n".join(run_list))
