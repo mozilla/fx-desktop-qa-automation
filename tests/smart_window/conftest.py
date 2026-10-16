@@ -103,7 +103,8 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     See recording_path for where the recording lives. Replay fails the test
     if Firefox sent a chat or search request that isn't recorded. Record and
     live forward to stage MLPA with the prod FxA token in
-    MOZ_FXA_BEARER_TOKEN; record then saves the recording.
+    MOZ_FXA_BEARER_TOKEN; record then saves the recording. Both report the
+    tokens used as the llm_usage user property.
     """
     path = recording_path(request.node)
     if opt_mock_mode == "replay":
@@ -115,6 +116,7 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
                 f"--mock-mode={opt_mock_mode} needs a prod FxA token in "
                 "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md)"
             )
+        recorded_tokens = Recording.load(path).meta.get("total_tokens")
         recording = Recording(
             meta={
                 "upstream": MLPA_STAGE_URL,
@@ -128,6 +130,15 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
 
     server = mock_server_session
     server.wait_until_idle()
+    if opt_mock_mode != "replay":
+        usage = {
+            "schemaVersion": 1,
+            "mode": opt_mock_mode,
+            "recorded_total_tokens": recorded_tokens,
+            **server.usage(),
+        }
+        request.node.user_properties.append(("llm_usage", usage))
+        server.recording.meta["total_tokens"] = usage["total_tokens"]
     unmatched, upstream_errors = server.unmatched, server.upstream_errors
     if opt_mock_mode == "record" and not upstream_errors:
         server.recording.save(path)
@@ -149,7 +160,8 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     if upstream_errors:
         pytest.fail(
             f"MLPA returned errors: {upstream_errors}. A 401 means "
-            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token."
+            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token; "
+            "a 429 means the account hit its MLPA rate limit."
         )
 
 

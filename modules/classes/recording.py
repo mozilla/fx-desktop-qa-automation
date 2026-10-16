@@ -111,6 +111,17 @@ def streamed_tool_calls(response: dict) -> list[dict]:
     ]
 
 
+def response_usage(response: dict) -> dict:
+    """
+    Return the token counts the LLM reported in a response, or {} if none.
+    Streamed replies carry them on the last chunk.
+    """
+    for part in [response.get("body") or {}, *response.get("events", [])]:
+        if part.get("usage"):
+            return part["usage"]
+    return {}
+
+
 def _without_volatile_fields(response: dict) -> dict:
     """
     Return a copy of `response` without VOLATILE_FIELDS or PROVIDER_FIELDS.
