@@ -55,11 +55,7 @@ class SplitView(BasePage):
 
     @BasePage.context_chrome
     def open_footer_menu(self) -> BasePage:
-        """
-        Open the three-dot menu in the Split View footer. The footer, with the
-        button at its right corner, is only shown on the side that is not
-        selected.
-        """
+        """Open the three-dot menu in the Split View footer."""
         column = self.RIGHT if self.get_selected_column() == self.LEFT else self.LEFT
         self.element_visible("split-view-footer-menu-button", labels=[column])
         self.click_on("split-view-footer-menu-button", labels=[column])
