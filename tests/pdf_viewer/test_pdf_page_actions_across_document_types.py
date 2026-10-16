@@ -89,6 +89,7 @@ def test_pdf_page_actions_across_document_types(
         pdf_viewer.actions.move_to_element(source).click_and_hold().move_by_offset(
             0, 15
         ).perform()
+        # Drop in the lower half without moving below the viewport edge.
         pdf_viewer.actions.move_to_element_with_offset(
             target, 0, int(target.size["height"] / 4)
         ).perform()
@@ -103,8 +104,9 @@ def test_pdf_page_actions_across_document_types(
         assert guide.rect["y"] >= target.rect["y"] + target.rect["height"], (
             "The guide should indicate a drop after the first pasted page."
         )
-        preview = pdf_viewer.get_element("dragged-page-preview")
+        preview = source
         if selection_size > 1:
+            preview = pdf_viewer.get_element("dragged-page-group")
             assert preview.get_attribute("data-multiple-count") == str(
                 selection_size
             ), "The drag preview should contain every selected page."
