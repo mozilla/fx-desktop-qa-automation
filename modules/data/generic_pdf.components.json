@@ -511,6 +511,50 @@
       "location": "The PDF viewer Pages sidebar"
     }
   },
+  "dragged-page-group": {
+    "selectorData": "#thumbnailsView .draggingThumbnail.multiple",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Stacked preview and page count of the dragged selection",
+      "location": "The PDF viewer Pages sidebar during a multiple-page drag"
+    }
+  },
+  "focused-page-thumbnail": {
+    "selectorData": "#thumbnailsView > .thumbnail:focus-within",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Page thumbnail containing keyboard focus",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "page-text-layer": {
+    "selectorData": "#viewer > .page[data-page-number='{number}'] .textLayer",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Rendered text of the currently numbered page after reordering",
+      "location": "The PDF document page view"
+    }
+  },
+  "manage-copy-option": {
+    "selectorData": "viewsManagerStatusActionCopy",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Copies the selected pages",
+      "location": "The Manage menu in the PDF viewer Pages sidebar"
+    }
+  },
   "manage-cut-option": {
     "selectorData": "viewsManagerStatusActionCut",
     "strategy": "id",
