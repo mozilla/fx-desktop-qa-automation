@@ -20,6 +20,11 @@ class SplitView(BasePage):
     LEFT = "0"
     RIGHT = "1"
 
+    # Split View menu options, by the command they run
+    SEPARATE_TABS = "separateTabs"
+    REVERSE_TABS = "reverseTabs"
+    CLOSE_BOTH_TABS = "closeTabs"
+
     def create_split_view(
         self, left_tab: Union[str, int], right_tab_title: str
     ) -> BasePage:
@@ -38,10 +43,6 @@ class SplitView(BasePage):
         AboutOpentabs(self.driver).select_tab_by_title(right_tab_title)
         self.expect(lambda _: self.get_panel_title(self.RIGHT) == right_tab_title)
         return self
-
-    SEPARATE_TABS = "separateTabs"
-    REVERSE_TABS = "reverseTabs"
-    CLOSE_BOTH_TABS = "closeTabs"
 
     def expect_split_view_active(self, active: bool = True) -> BasePage:
         """

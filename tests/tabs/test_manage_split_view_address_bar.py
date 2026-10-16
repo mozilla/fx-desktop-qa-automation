@@ -66,4 +66,5 @@ def test_manage_split_view_address_bar(driver: Firefox):
     # Pick Close Both Tabs, both tabs of the Split View are closed
     split_view.select_urlbar_menu_option(SplitView.CLOSE_BOTH_TABS)
     split_view.expect_split_view_count(0)
+    split_view.expect_split_view_active(False)
     tabs.wait_for_num_tabs(len(URLS) - 2)
