@@ -1,0 +1,109 @@
+name: Backport beta fixes
+
+on:
+  pull_request_target:
+    branches: [nightly]
+    types: [closed, labeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backport-main-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  backport:
+    if: >-
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'Beta Fix') &&
+      (
+        github.event.action == 'closed' ||
+        github.event.label.name == 'Beta Fix'
+      )
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: nightly
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Backport fix to main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          FIX_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          set -euo pipefail
+
+          branch="backport/pr-${PR_NUMBER}-to-main"
+
+          # Check for existing backport PR
+          existing_url=$(gh pr list \
+            --base main \
+            --head "$branch" \
+            --state all \
+            --json url \
+            --jq '.[0].url // empty')
+
+          if [[ -n "$existing_url" ]]; then
+            echo "Backport already exists: $existing_url"
+            exit 0
+          fi
+
+          git config user.name "DTE-Pushbot[bot]"
+          git config user.email \
+            "186870616+DTE-Pushbot[bot]@users.noreply.github.com"
+
+          git fetch origin main nightly
+          git switch --create "$branch" origin/main
+
+          # Reject merge-only commits, we can only use squash merges.
+          parents=$(git show --no-patch --format=%P "$FIX_SHA")
+          if [[ "$parents" == *" "* ]]; then
+            echo "::error::Expected a squash commit. Backport manually."
+            exit 1
+          fi
+
+          if ! git cherry-pick -x "$FIX_SHA"; then
+            git cherry-pick --abort
+
+            gh pr comment "$PR_NUMBER" --body \
+              "Automatic backport to main failed. Please cherry-pick ${FIX_SHA} onto a branch based on main, and open a beta fix PR."
+
+            exit 1
+          fi
+
+          git push origin "$branch"
+
+          body_file=$(mktemp)
+          printf '%s\n' \
+          "Backport of #${PR_NUMBER} to main." \
+          "" \
+          "Original commit is ${FIX_SHA}" \
+          "" \
+          "This change will be validated against Beta." \
+          > $body_file
+
+          backport_url=$(gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "[Beta fix] Backport #${PR_NUMBER}" \
+            --body-file "$body_file")
+
+          gh pr comment "$PR_NUMBER" --body \
+            "Beta backport opened: ${backport_url}"
