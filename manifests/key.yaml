@@ -2599,6 +2599,10 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_split_view_context_menu_two_distant_tabs:
+    result: pass
+    splits:
+    - functional3
   test_tab_hover_different_content_type:
     result: pass
     splits:
