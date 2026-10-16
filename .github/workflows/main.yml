@@ -113,7 +113,7 @@ jobs:
           "TESTRAIL_REPORT=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           if ($env:BASE_BRANCH -and $env:BASE_BRANCH -ne "main") {
             "FX_CHANNEL=$env:BASE_BRANCH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "STARFOX_EXCLUDE=exclude_$BASE_BRANCH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            "STARFOX_EXCLUDE=exclude_$env:BASE_BRANCH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
         env:
           TEST_SET: ${{ inputs.test_set }}
