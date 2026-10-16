@@ -576,5 +576,16 @@
       "description": "Pastes the cut or copied pages after the numbered page, as numbered after the cut",
       "location": "The PDF viewer Pages sidebar"
     }
+  },
+  "dragged-page-preview": {
+    "selectorData": "#thumbnailsView .draggingThumbnail",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Highlighted preview of the dragged page or page group",
+      "location": "The PDF viewer Pages sidebar during a drag"
+    }
   }
 }

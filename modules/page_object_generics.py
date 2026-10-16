@@ -860,6 +860,14 @@ class GenericPdf(BasePage):
         self.element_has_text("pdf-page", text, labels=[str(page_number)])
         return self
 
+    def select_pdf_pages(self, page_numbers: list[int]) -> BasePage:
+        """Select exactly the numbered pages in the open Pages sidebar."""
+        for checkbox in self.get_elements("selected-page-checkboxes"):
+            self.click_on(checkbox)
+        for number in page_numbers:
+            self.click_on("page-thumbnail-checkbox", labels=[str(number)])
+        return self
+
     def get_page_text(self, page_number: int) -> str:
         """Navigate to a text-bearing page and return normalized rendered text.
 
