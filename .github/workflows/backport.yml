@@ -52,7 +52,7 @@ jobs:
 
           branch="backport/pr-${PR_NUMBER}-to-main"
 
-          # Base backport PR on an existing PR.
+          # Check for existing backport PR
           existing_url=$(gh pr list \
             --base main \
             --head "$branch" \
@@ -60,7 +60,6 @@ jobs:
             --json url \
             --jq '.[0].url // empty')
 
-          # ...but not one for a backport.
           if [[ -n "$existing_url" ]]; then
             echo "Backport already exists: $existing_url"
             exit 0
@@ -68,7 +67,7 @@ jobs:
 
           git config user.name "DTE-Pushbot[bot]"
           git config user.email \
-            "186870616+github-actions[bot]@users.noreply.github.com"
+            "186870616+DTE-Pushbot[bot]@users.noreply.github.com"
 
           git fetch origin main nightly
           git switch --create "$branch" origin/main
@@ -92,7 +91,7 @@ jobs:
           git push origin "$branch"
 
           body_file=$(mktemp)
-          cat > "$body_file" <<EOF
+          cat > "$body_file" <<~EOF
           Backport of #${PR_NUMBER} to main.
 
           Original commit is ${FIX_SHA}
