@@ -1431,6 +1431,10 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_page_actions_across_document_types:
+    result: pass
+    splits:
+    - functional1
   test_pdf_pages_can_be_cut_from_manage_menu_with_keyboard:
     result: pass
     splits:
