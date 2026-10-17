@@ -54,7 +54,6 @@ def _assert_theme_enabled(
 
 def _assert_private_window_dark(current_bg: str, util: Utilities, context: str) -> None:
     expected_list = PRIVATE_WINDOW_DARK
-    print(f"\n>>> {context}: actual = {current_bg}\n")  # <-- временно
     assert any(
         util.colors_match(current_bg, exp, tolerance=0.05) for exp in expected_list
     ), f"{context}: got {current_bg}; expected one of {expected_list}"
