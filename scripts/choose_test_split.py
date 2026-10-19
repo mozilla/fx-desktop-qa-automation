@@ -98,13 +98,8 @@ def model_outline(source: str) -> tuple[dict, dict]:
 
 def changed_names(path: str) -> set | None:
     """
-    Return the methods (model file) or elements (components.json) that `path`
-    modifies or removes compared with main. Added ones are left out, since
-    no existing test can use them. Return None if the change can't be
-    narrowed down to those: a new or deleted file, other code or an import
-    changed, a method the framework calls (open, loaded, __init__...) is
-    changed or overridden, or a page's context or requiredForPage elements
-    changed.
+    Return the methods or elements `path` modifies or removes compared with
+    main, or None if the change can't be narrowed down to them.
     """
     try:
         old = check_output(
@@ -115,28 +110,15 @@ def changed_names(path: str) -> set | None:
             new = fh.read()
         if path.endswith(".json"):
             old, new = json.loads(old), json.loads(new)
-            versions = [
-                v
-                for k in old.keys() | new.keys()
-                if old.get(k) != new.get(k)
-                for v in (old.get(k), new.get(k))
-                if v is not None
-            ]
+            changed = {k for k in old.keys() | new.keys() if old.get(k) != new.get(k)}
+            # A page-wide setting such as "context" affects every element
             if any(
-                not isinstance(v, dict) or "requiredForPage" in v.get("groups", [])
-                for v in versions
+                not isinstance(old.get(k, {}), dict)
+                or not isinstance(new.get(k, {}), dict)
+                for k in changed
             ):
                 return None
-            names = {k for k in old if new.get(k) != old[k]}
-            while True:
-                children = {
-                    k
-                    for k, v in new.items()
-                    if isinstance(v, dict) and v.get("shadowParent") in names
-                }
-                if children <= names:
-                    return names
-                names |= children
+            return changed & old.keys()
         (old_methods, old_rest) = model_outline(old)
         (new_methods, new_rest) = model_outline(new)
     except (CalledProcessError, OSError, SyntaxError, ValueError):
@@ -201,12 +183,8 @@ def conftest_contents() -> dict:
 
 def get_tests_by_change(path: str, test_paths_and_contents: dict) -> list | None:
     """
-    Return the tests, or suites through their conftest.py, that use a method
-    or element changed in `path`, directly or through other functions in
-    modules/. Return None to fall back to every test using the model: when
-    the change can't be narrowed down, a changed name is never used by name
-    (built at runtime, or called by the framework, like __init__), or the
-    root conftest.py uses it.
+    Return the tests and suites that use a method or element changed in
+    `path`, directly or through modules/, or None to select by model instead.
     """
     names = changed_names(path)
     if names is None:
@@ -222,16 +200,20 @@ def get_tests_by_change(path: str, test_paths_and_contents: dict) -> list | None
             break
         affected |= callers
 
+    # Whole names only, so get_tab doesn't match get_tab_groups. Lookarounds
+    # rather than \b, which needs a word character at each end of the name.
     def name_re(name_set: set) -> re.Pattern:
         alternatives = "|".join(re.escape(n) for n in sorted(name_set))
         return re.compile(rf"(?<!\w)(?:{alternatives})(?!\w)")
 
     conftests = dict(conftest_contents())
     all_contents = "\n".join([*test_paths_and_contents.values(), *conftests.values()])
+    # A name never used literally is probably built at runtime
     used_in_modules = set().union(*references.values())
     if any(not name_re({n}).search(all_contents) for n in names - used_in_modules):
         return None
     uses_affected = name_re(affected).search
+    # The root conftest.py reaches every test
     if uses_affected(conftests.pop("conftest.py")):
         return None
 
