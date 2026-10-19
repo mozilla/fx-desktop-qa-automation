@@ -44,6 +44,8 @@ jobs:
 
             Note: The PR branch is already checked out in the current working directory.
 
+            Note: Please make feedback concise and brief.
+
             This runs on every push. First read what has already been posted:
             `gh pr view ${{ github.event.pull_request.number }} --comments` and
             `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments --paginate`.
