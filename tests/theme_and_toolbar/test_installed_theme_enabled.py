@@ -39,19 +39,17 @@ def test_find_more_themes(driver: Firefox) -> None:
         )
 
         new_handles = set(driver.window_handles) - original_handles
-        assert len(new_handles) == 1, (
-            f"Expected one new tab, found {len(new_handles)}"
-        )
+        assert len(new_handles) == 1, f"Expected one new tab, found {len(new_handles)}"
 
         new_handle = new_handles.pop()
         driver.switch_to.window(new_handle)
 
         def amo_themes_loaded(browser: Firefox) -> bool:
             url = urlsplit(browser.current_url)
-            return (
-                    url.hostname == AMO_HOST
-                    and url.path.rstrip("/").endswith("/firefox/themes")
+            return url.hostname == AMO_HOST and url.path.rstrip("/").endswith(
+                "/firefox/themes"
             )
+
         wait.until(
             amo_themes_loaded,
             message="The new tab did not navigate to the AMO themes page",

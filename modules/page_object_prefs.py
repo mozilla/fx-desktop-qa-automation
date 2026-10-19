@@ -2357,9 +2357,8 @@ class AboutAddons(BasePage):
         def enabled_theme_changed(_driver) -> bool:
             try:
                 current_theme = (
-                        self.get_element("enabled-theme-title")
-                        .get_attribute("innerText")
-                        or ""
+                    self.get_element("enabled-theme-title").get_attribute("innerText")
+                    or ""
                 ).strip()
                 return bool(current_theme) and current_theme != original_theme
             except (NoSuchElementException, StaleElementReferenceException):
