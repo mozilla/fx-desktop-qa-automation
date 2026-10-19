@@ -1,4 +1,4 @@
-name: Backport beta fixes
+name: Promote nightly fixes to main
 
 on:
   pull_request_target:
@@ -9,11 +9,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: backport-main-${{ github.event.pull_request.number }}
+  group: promote-main-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
-  backport:
+  promote:
     if: >-
       github.event.pull_request.merged == true &&
       contains(github.event.pull_request.labels.*.name, 'Beta Fix') &&
@@ -40,7 +40,7 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: Backport fix to main
+      - name: Promote fix to main
         shell: bash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -50,9 +50,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          branch="backport/pr-${PR_NUMBER}-to-main"
+          branch="promote/pr-${PR_NUMBER}-to-main"
 
-          # Check for existing backport PR
+          # Check for existing promote PR
           existing_url=$(gh pr list \
             --base main \
             --head "$branch" \
@@ -61,7 +61,7 @@ jobs:
             --jq '.[0].url // empty')
 
           if [[ -n "$existing_url" ]]; then
-            echo "Backport already exists: $existing_url"
+            echo "Promote PR already exists: $existing_url"
             exit 0
           fi
 
@@ -75,7 +75,7 @@ jobs:
           # Reject merge-only commits, we can only use squash merges.
           parents=$(git show --no-patch --format=%P "$FIX_SHA")
           if [[ "$parents" == *" "* ]]; then
-            echo "::error::Expected a squash commit. Backport manually."
+            echo "::error::Expected a squash commit. Promote manually."
             exit 1
           fi
 
@@ -83,7 +83,7 @@ jobs:
             git cherry-pick --abort
 
             gh pr comment "$PR_NUMBER" --body \
-              "Automatic backport to main failed. Please cherry-pick ${FIX_SHA} onto a branch based on main, and open a beta fix PR."
+              "Automatic promotion to main failed. Please cherry-pick ${FIX_SHA} onto a branch based on main, and open a beta fix PR."
 
             exit 1
           fi
@@ -92,18 +92,18 @@ jobs:
 
           body_file=$(mktemp)
           printf '%s\n' \
-          "Backport of #${PR_NUMBER} to main." \
+          "Promoting #${PR_NUMBER} to main." \
           "" \
           "Original commit is ${FIX_SHA}" \
           "" \
           "This change will be validated against Beta." \
           > $body_file
 
-          backport_url=$(gh pr create \
+          promote_url=$(gh pr create \
             --base main \
             --head "$branch" \
-            --title "[Beta fix] Backport #${PR_NUMBER}" \
+            --title "[Beta fix] promote #${PR_NUMBER}" \
             --body-file "$body_file")
 
           gh pr comment "$PR_NUMBER" --body \
-            "Beta backport opened: ${backport_url}"
+            "Beta promote PR opened: ${promote_url}"
