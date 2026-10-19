@@ -40,13 +40,22 @@ jobs:
             - Potential bugs or issues
             - Security implications
             - Performance considerations
+            - Departures from CLAUDE.md, including its comment rules
 
             Note: The PR branch is already checked out in the current working directory.
 
-            Note: Please make feedback concise and brief.
+            This runs on every push. First read what has already been posted:
+            `gh pr view ${{ github.event.pull_request.number }} --comments` and
+            `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments --paginate`.
+            Don't repeat a finding that is already there, fixed or not.
 
-            Use `gh pr comment` for top-level feedback.
-            Use `mcp__github_inline_comment__create_inline_comment` to highlight specific code issues.
+            - Post each new finding once, inline with `mcp__github_inline_comment__create_inline_comment`,
+              in one to three sentences. Add a `suggestion` block when the fix is small.
+            - Use `gh pr comment` only for new findings that don't fit inline. No PR summary,
+              no praise, no restating the inline comments.
+            - Skip "worth noting" remarks and anything the PR description already acknowledges.
+            - If there is nothing new, post nothing.
+
             Only post GitHub comments - don't submit review text as messages.
 
-          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob"'
+          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments:*),Read,Grep,Glob"'
