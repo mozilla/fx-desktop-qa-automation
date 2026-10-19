@@ -1198,6 +1198,66 @@
       "location": "about:preferences#general"
     }
   },
+  "update-checking-message": {
+    "selectorData": "moz-box-item.checkingForUpdates",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Checking for updates…\" message",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-checking-button": {
+    "selectorData": "moz-box-item.checkingForUpdates moz-button",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > grayed out Check for updates button while checking",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-up-to-date-message": {
+    "selectorData": "moz-box-item.noUpdatesFound",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Nightly is up to date\" message",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-check-finished": {
+    "selectorData": "moz-box-item.noUpdatesFound, moz-box-item.downloading, moz-box-item.applying, moz-box-item.otherInstanceHandlingUpdates, moz-box-button:not([data-l10n-id='update-checkForUpdatesButton'])",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > any state after a check: up to date, update found, or another instance handling updates",
+      "location": "about:preferences#about"
+    }
+  },
+  "update-other-instance-message": {
+    "selectorData": "moz-box-item.otherInstanceHandlingUpdates",
+    "strategy": "css",
+    "shadowParent": "update_state_root",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Firefox Updates > \"Firefox is being updated by another instance\" message",
+      "location": "about:preferences#about"
+    }
+  },
   "cookies-privacy-label": {
     "selectorData": "deleteOnCloseInfo",
     "strategy": "id",

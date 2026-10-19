@@ -597,6 +597,17 @@
       "location": "Inside the shield incon in fingerprints subpanel"
     }
   },
+  "taskbar-tabs-button": {
+    "selectorData": "taskbar-tabs-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Add tab to taskbar page action",
+      "location": "URL bar"
+    }
+  },
   "star-button": {
     "selectorData": "star-button-box",
     "strategy": "id",
@@ -1459,6 +1470,17 @@
     "comment": {
       "description": "Password saved! confirmation",
       "location": "In the Navigation bar, next to the url input field"
+    }
+  },
+  "taskbar-tab-window-root": {
+    "selectorData": ":root[taskbartab]",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Root element of a Taskbar Tab window",
+      "location": "Root of the browser window, only present in Taskbar Tab windows"
     }
   }
 }

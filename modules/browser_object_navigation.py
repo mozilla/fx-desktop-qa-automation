@@ -247,6 +247,27 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_taskbar_tab_window(self):
+        """
+        Wait for the Taskbar Tab window and switch to it. The moved tab keeps its
+        handle, so the driver stays on the discarded window until re-switched.
+        """
+
+        def _switch(_):
+            for handle in self.driver.window_handles:
+                try:
+                    self.driver.switch_to.window(handle)
+                    if self.get_elements("taskbar-tab-window-root"):
+                        return True
+                except NoSuchWindowException:
+                    # The original window closes while the tab moves
+                    continue
+            return False
+
+        self.wait.until(_switch)
+        return self
+
+    @BasePage.context_chrome
     def click_on_clipboard_suggestion(self) -> None:
         """
         Click the 'Visit from clipboard' suggestion in the URL bar.
