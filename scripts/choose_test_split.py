@@ -21,8 +21,7 @@ SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
-# The branch a pull request merges into: set by GitHub Actions, and by our
-# Taskcluster transforms. Other runs compare with main.
+
 BASE_BRANCH = (
     os.environ.get("GITHUB_BASE_REF") or os.environ.get("BASE_REF") or "main"
 ).removeprefix("refs/heads/")
