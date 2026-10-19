@@ -21,6 +21,11 @@ SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
+# The branch a pull request merges into: set by GitHub Actions, and by our
+# Taskcluster transforms. Other runs compare with main.
+BASE_BRANCH = (
+    os.environ.get("GITHUB_BASE_REF") or os.environ.get("BASE_REF") or "main"
+).removeprefix("refs/heads/")
 
 
 def snakify(pascal: str) -> str:
@@ -103,7 +108,7 @@ def changed_names(path: str) -> set | None:
     """
     try:
         old = check_output(
-            ["git", "show", f"origin/main:{path.replace(SLASH, '/')}"],
+            ["git", "show", f"origin/{BASE_BRANCH}:{path.replace(SLASH, '/')}"],
             stderr=DEVNULL,
         ).decode()
         with open(path, encoding="utf-8") as fh:
@@ -356,12 +361,12 @@ if __name__ == "__main__":
         re_obj[short_name] = re.compile(re_obj.get(k))
 
     run_list = []
-    check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
+    check_output(["git", "fetch", "--quiet", "--depth=1", "origin", BASE_BRANCH])
     git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
     rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
     if rev_hash:
         git_diff_cmd.append(rev_hash)
-    git_diff_cmd.append("origin/main")
+    git_diff_cmd.append(f"origin/{BASE_BRANCH}")
     committed_files = (
         check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
     )
