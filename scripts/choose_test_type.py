@@ -8,6 +8,9 @@ from subprocess import check_output
 ALL_TEST_TYPES = ["starfox", "l10n"]
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
+BASE_BRANCH = (
+    os.environ.get("GITHUB_BASE_REF") or os.environ.get("BASE_REF") or "main"
+).removeprefix("refs/heads/")
 
 file_subsets = {
     "starfox": ["modules/data", "modules/page", "modules/browser", "tests/"],
@@ -38,13 +41,13 @@ if len(sys.argv) > 1:
     print(sys.argv[1:])
     sys.exit(0)
 
-check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
+check_output(["git", "fetch", "--quiet", "--depth=1", "origin", BASE_BRANCH])
 
 git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
 rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
 if rev_hash:
     git_diff_cmd.append(rev_hash)
-git_diff_cmd.append("origin/main")
+git_diff_cmd.append(f"origin/{BASE_BRANCH}")
 committed_files = check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
 base_page = os.path.join("modules", "page_base.py")
 
