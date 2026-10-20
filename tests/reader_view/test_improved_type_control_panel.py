@@ -4,9 +4,9 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.browser_object import ReaderView
-from modules.components.dropdown import Dropdown
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import ReaderView
+from auto_fxui.components.dropdown import Dropdown
+from auto_fxui.page_object import GenericPage
 
 
 @pytest.fixture()

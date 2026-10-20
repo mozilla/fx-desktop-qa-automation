@@ -8,7 +8,7 @@ import pytest
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutProfiles
+from auto_fxui.page_object import AboutProfiles
 
 
 @pytest.fixture()

@@ -2,9 +2,9 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.page_object import AboutLogins
-from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
+from auto_fxui.page_object import AboutLogins
+from auto_fxui.page_object_prefs import AboutPrefs
+from auto_fxui.util import BrowserActions
 
 URL_TO_TEST = "https://mozilla.github.io/"
 USERNAME = "username"

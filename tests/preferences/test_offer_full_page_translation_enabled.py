@@ -4,8 +4,8 @@ import pytest
 from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TranslationsPanel
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import Navigation, TranslationsPanel
+from auto_fxui.page_object import AboutPrefs
 
 # Without this Nightly has no translation models, so nothing is offered.
 REMOTE_SETTINGS_SERVER = "https://firefox.settings.services.mozilla.com/v2"

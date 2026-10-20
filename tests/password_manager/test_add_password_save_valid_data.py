@@ -5,7 +5,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.page_object import AboutLogins
+from auto_fxui.page_object import AboutLogins
 
 WEBSITE_ADDRESS = "mozilla.org"
 USERNAME = "username"

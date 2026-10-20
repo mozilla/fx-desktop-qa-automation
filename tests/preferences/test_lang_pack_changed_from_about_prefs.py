@@ -4,8 +4,8 @@ import pytest
 from selenium.common import TimeoutException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, PanelUi, TabBar
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.browser_object import ContextMenu, Navigation, PanelUi, TabBar
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()

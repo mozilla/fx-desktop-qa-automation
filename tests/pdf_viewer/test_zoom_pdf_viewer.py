@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 
 @pytest.fixture()

@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from modules.browser_object import PrintPreview
+from auto_fxui.browser_object import PrintPreview
 
 DOWNLOAD_TIMEOUT_SEC = 10.0
 POLL_INTERVAL_SEC = 0.5

@@ -2,8 +2,8 @@ import pytest
 from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox, Keys
 
-from modules.browser_object import Navigation, TabBar
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 ENGINE_NAME = "Starfox Search"
 ENGINE_KEYWORD = "@starfox"

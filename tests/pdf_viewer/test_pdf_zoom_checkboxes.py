@@ -1,6 +1,6 @@
 import pytest
 
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 PDF_FILE_NAME = "i-9.pdf"
 CHECKBOX = "first-checkbox"
