@@ -145,8 +145,8 @@ class MockServer:
     def usage(self) -> dict:
         """
         Return the tokens MLPA reported for the LLM requests served since the
-        last reset, in total and by purpose. Always 0 in replay, since
-        recordings don't keep token counts.
+        last reset, in total and by purpose. Always 0 in replay, which sends
+        nothing upstream; a recording keeps what it used in meta.usage.
 
         Waits for forwarded replies to finish streaming first.
         """

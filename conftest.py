@@ -467,14 +467,16 @@ def pytest_sessionfinish(session):
 def pytest_terminal_summary(terminalreporter):
     """
     List the LLM tokens each Smart Window record or live test used, flagging
-    any that used twice as many as when it was recorded.
+    any that used twice as many as when it was recorded. Replay spends none,
+    so its recorded figures aren't listed.
     """
     usages = [
-        (report.nodeid, dict(report.user_properties)["llm_usage"])
+        (report.nodeid, usage)
         for reports in terminalreporter.stats.values()
         for report in reports
         if getattr(report, "when", None) == "teardown"
-        and "llm_usage" in dict(report.user_properties)
+        and (usage := dict(report.user_properties).get("llm_usage"))
+        and usage["mode"] != "replay"
     ]
     if not usages:
         return

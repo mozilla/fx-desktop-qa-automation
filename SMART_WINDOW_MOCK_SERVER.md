@@ -168,7 +168,7 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 
 `record` and `live` use real LLM tokens, counted against the FxA account's MLPA limits.
 After those runs pytest lists the tokens each test used, from the counts MLPA sends with each
-reply. Replay uses none, so it prints nothing.
+reply. Replay sends nothing to MLPA and uses none, so it prints nothing.
 
 ```
 =============================== LLM token usage ================================
@@ -176,15 +176,23 @@ reply. Replay uses none, so it prints nothing.
     1,255 tokens in total
 ```
 
-- Recording saves the test's total as `meta.total_tokens`. A later `record` or `live` run that
-  uses at least twice that is flagged, as above: usually a longer prompt or reply.
+- Recording saves the tokens it used in the recording's `meta.usage`, in the format below
+  without the first five fields. A later `record` or `live` run that uses at least twice its
+  total is flagged, as above: usually a longer prompt or reply.
 - Each test also gets an `llm_usage` user property, which ends up in `report.json`
-  (`tests[].user_properties`) for dashboards:
+  (`tests[].user_properties`) for dashboards. In `record` and `live` it's the tokens the run
+  spent. In `replay`, CI's mode, it's copied from `meta.usage`: what the test used when it was
+  recorded on `recorded_at` with Firefox `recorded_firefox_version`, not tokens spent by CI.
+  It changes only when the test is re-recorded, so don't add replay figures up as spend. Tests
+  whose recording has no `meta.usage` (built with `chat_reply()` and friends, or recorded
+  before it was saved) get none.
 
 ```json
 "llm_usage": {
   "schemaVersion": 1,
   "mode": "live",
+  "recorded_at": "2026-10-01",
+  "recorded_firefox_version": "159.0a1",
   "recorded_total_tokens": 500,
   "requests": 2,
   "prompt_tokens": 1200,
