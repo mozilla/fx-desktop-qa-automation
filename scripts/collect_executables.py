@@ -74,11 +74,7 @@ def get_gd_platform():
 
 
 def is_pull_request_run() -> bool:
-    """
-    True in CI runs for a pull request: GitHub Actions' pull_request event, or
-    Taskcluster level 1 (main and cron tasks are level 3). Only these may fall
-    back to an older Beta; scheduled runs exist to test the newest one.
-    """
+    """True in a pull request run: GitHub pull_request event or Taskcluster level 1."""
     return (
         environ.get("GITHUB_EVENT_NAME") == "pull_request"
         or environ.get("MOZ_SCM_LEVEL") == "1"
@@ -92,12 +88,11 @@ def get_build_dir(version: str, language: str) -> tuple[str, int]:
     build = 1
     if response.status_code < 300:
         soup = BeautifulSoup(response.text, "html.parser")
-        # Extract the text of each line
         for line in soup.find_all("a"):
             line_text = line.getText().split(".")
             if not line_text[0]:
                 continue
-            # Get the build number
+            # Links look like "build2/", so [-2] is the build number
             build = max(int(line_text[0][-2]), build)
         fx_download_dir_url = (
             f"{fx_download_dir_url}build{build}/{get_fx_platform()}/{language}/"
@@ -106,10 +101,7 @@ def get_build_dir(version: str, language: str) -> tuple[str, int]:
 
 
 def has_installer(build_dir_url: str) -> bool:
-    """
-    True once this platform's installer is in `build_dir_url`. On release day
-    a version's folders appear before every platform's installer is uploaded.
-    """
+    """True once this platform's installer is in `build_dir_url`."""
     response = requests.get(build_dir_url, timeout=REQUEST_TIMEOUT)
     return response.status_code < 300 and any(
         line.getText().split(".")[-1] == get_fx_executable_extension()
@@ -118,23 +110,20 @@ def has_installer(build_dir_url: str) -> bool:
 
 
 def previous_beta(version: str) -> str:
-    """
-    Return the Beta before `version`: 159.0b3 gives 159.0b2, and 159.0b1 gives
-    158.0's last Beta, which finding the newest version skips over.
-    """
+    """Return the Beta before `version`, e.g. 159.0b1 gives 158.0's last Beta."""
     (major_minor, beta) = version.split("b")
     if int(beta) > 1:
         return f"{major_minor}b{int(beta) - 1}"
     (major, minor) = (int(n) for n in major_minor.split("."))
     previous = f"{major}.{minor - 1}b1" if minor else f"{major - 1}.0b1"
+    # Walk up from b1 until the next Beta is missing
     while True:
         (major_minor, beta) = previous.split("b")
         next_beta = f"{major_minor}b{int(beta) + 1}"
         response = requests.get(
             f"{CANDIDATES_URL}/{next_beta}-candidates/", timeout=REQUEST_TIMEOUT
         )
-        # Only a 404 means the Beta doesn't exist. Fail on anything else
-        # rather than quietly test an older Beta.
+        # Only a 404 means no such Beta; fail on anything else rather than guess
         if response.status_code == 404:
             return previous
         response.raise_for_status()
@@ -300,6 +289,8 @@ def main(args):
                 latest_beta_ver = latest_beta_ver.replace("b1", "")
             (fx_download_dir_url, build) = get_build_dir(latest_beta_ver, language)
 
+            # On release day a Beta's folders appear before its installers, so
+            # PR runs fall back to the previous Beta
             if (
                 channel == "-beta"
                 and is_pull_request_run()
