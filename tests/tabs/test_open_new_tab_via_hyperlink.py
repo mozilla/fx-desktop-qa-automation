@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu
-from modules.page_object import ExamplePage
+from auto_fxui.browser_object import ContextMenu
+from auto_fxui.page_object import ExamplePage
 
 URL = "https://www.iana.org/help/example-domains"
 

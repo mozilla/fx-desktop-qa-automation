@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi
-from modules.page_object import AboutAddons
-from modules.util import Utilities
+from auto_fxui.browser_object import Navigation, PanelUi
+from auto_fxui.page_object import AboutAddons
+from auto_fxui.util import Utilities
 
 
 @pytest.fixture()

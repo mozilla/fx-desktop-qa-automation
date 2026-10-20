@@ -3,8 +3,8 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AboutDownloadsContextMenu, Navigation, PanelUi
-from modules.page_object import AboutDownloads, GenericPage
+from auto_fxui.browser_object import AboutDownloadsContextMenu, Navigation, PanelUi
+from auto_fxui.page_object import AboutDownloads, GenericPage
 
 
 @pytest.fixture()

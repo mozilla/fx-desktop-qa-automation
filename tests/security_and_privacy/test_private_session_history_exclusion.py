@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
+from auto_fxui.browser_object import PanelUi
 
 
 @pytest.fixture()

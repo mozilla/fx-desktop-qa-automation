@@ -3,8 +3,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import TabBar
-from modules.browser_object_navigation import Navigation
+from auto_fxui.browser_object import TabBar
+from auto_fxui.browser_object_navigation import Navigation
 
 
 @pytest.fixture()

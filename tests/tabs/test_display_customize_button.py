@@ -1,10 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
-from modules.page_object import ExamplePage
-from modules.page_object_customize_firefox import CustomizeFirefox
+from auto_fxui.browser_object_panel_ui import PanelUi
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object import ExamplePage
+from auto_fxui.page_object_customize_firefox import CustomizeFirefox
 
 
 @pytest.fixture()

@@ -5,7 +5,7 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import (
+from auto_fxui.browser_object import (
     MenuBar,
     Navigation,
     PanelUi,
@@ -13,8 +13,8 @@ from modules.browser_object import (
     TabBar,
     TrustPanel,
 )
-from modules.page_object import AboutCache, AboutDownloads, AboutPrefs, GenericPage
-from modules.util import BrowserActions
+from auto_fxui.page_object import AboutCache, AboutDownloads, AboutPrefs, GenericPage
+from auto_fxui.util import BrowserActions
 
 YOUTUBE_URL = "https://www.youtube.com/"
 FACEBOOK_URL = "https://www.facebook.com/"

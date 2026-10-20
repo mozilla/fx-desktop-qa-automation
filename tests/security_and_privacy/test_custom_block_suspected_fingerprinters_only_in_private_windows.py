@@ -2,8 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()

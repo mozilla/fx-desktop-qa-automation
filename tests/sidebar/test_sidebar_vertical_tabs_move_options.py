@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, TabBar
+from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 
 NUM_TABS = 3
 URLS = ["about:robots", "about:logo", "about:mozilla"]

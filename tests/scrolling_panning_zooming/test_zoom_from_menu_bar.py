@@ -4,9 +4,9 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object_menu_bar import MenuBar
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
+from auto_fxui.browser_object_menu_bar import MenuBar
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 
 
 @pytest.fixture()
