@@ -7,7 +7,7 @@ page loaded.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import SmartWindow, TabBar
+from auto_fxui.browser_object import SmartWindow, TabBar
 
 URL = "about:robots"
 

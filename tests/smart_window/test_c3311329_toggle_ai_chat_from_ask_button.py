@@ -6,7 +6,7 @@ closes it again when clicked a second time.
 
 import pytest
 
-from modules.browser_object import SmartWindow
+from auto_fxui.browser_object import SmartWindow
 
 
 @pytest.fixture()

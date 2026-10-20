@@ -9,7 +9,7 @@ import re
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import SmartBar, SmartWindow
+from auto_fxui.browser_object import SmartBar, SmartWindow
 
 QUERY = "kangaroo"
 

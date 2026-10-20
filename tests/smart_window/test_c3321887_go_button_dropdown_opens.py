@@ -6,7 +6,7 @@ Search with the default engine, and Search with…, plus the engine submenu.
 
 import pytest
 
-from modules.browser_object import (
+from auto_fxui.browser_object import (
     ACTION_MENU_GO_TO_SITE,
     ACTION_MENU_SEARCH_WITH,
     ACTION_MENU_SEARCH_WITH_DEFAULT,
