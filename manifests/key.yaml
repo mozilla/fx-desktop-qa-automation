@@ -2408,7 +2408,8 @@ theme_and_toolbar:
     - exclude_xvfb
     - exclude_nightly
   test_dark_theme_private_window:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081912
+    result: unstable
     splits:
     - functional3
   test_installed_theme_enabled:
