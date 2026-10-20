@@ -22,7 +22,6 @@ def test_case():
 def add_to_prefs_list():
     return [
         ("browser.search.widget.new", True),
-        # Step 1: Set browser.search.openintab to true.
         ("browser.search.openintab", True),
         ("browser.settings-redesign.enabled", True),
     ]
@@ -48,10 +47,7 @@ def engine_url(httpserver: HTTPServer) -> str:
 def test_new_search_box_opens_results_in_new_tab(
     driver: Firefox, test_url: str, engine_url: str
 ):
-    """
-    C3897583 - The new search box opens results in a new tab if
-    browser.search.openintab is set to true.
-    """
+    """C3897583 - Search box results open in a new tab with openintab on."""
     nav = Navigation(driver)
     tabs = TabBar(driver)
     prefs = AboutPrefs(driver, category="search")

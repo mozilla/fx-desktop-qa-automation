@@ -28,9 +28,7 @@ def add_to_prefs_list():
 
 
 def test_new_search_box_custom_alias(driver: Firefox):
-    """
-    C3897549 - Custom set aliases work as expected in the new search box.
-    """
+    """C3897549 - Custom set aliases work as expected in the new search box."""
     nav = Navigation(driver)
     tabs = TabBar(driver)
     prefs = AboutPrefs(driver, category="search")
