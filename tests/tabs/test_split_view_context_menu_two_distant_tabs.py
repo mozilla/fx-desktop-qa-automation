@@ -56,5 +56,7 @@ def test_split_view_context_menu_two_distant_tabs(driver: Firefox, sys_platform:
     assert split_view.count_tabs_in_split_view() == 2
 
     # The distant tab is brought next to the active tab in the tab strip
-    expected_order = [tabs.get_tab(index) for index in (ACTIVE_TAB, DISTANT_TAB, 2, 3)]
+    expected_indices = [i for i in range(1, len(URLS) + 1) if i != DISTANT_TAB]
+    expected_indices.insert(expected_indices.index(ACTIVE_TAB) + 1, DISTANT_TAB)
+    expected_order = [tabs.get_tab(index) for index in expected_indices]
     tabs.expect(lambda _: tabs.get_elements("all-tabs") == expected_order)
