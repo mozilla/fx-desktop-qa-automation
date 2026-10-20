@@ -20,6 +20,7 @@ BACKSTOP = "146.0b9"
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
 CANDIDATES_URL = "https://archive.mozilla.org/pub/firefox/candidates"
+REQUEST_TIMEOUT = 10
 
 
 def get_fx_platform():
@@ -87,7 +88,7 @@ def is_pull_request_run() -> bool:
 def get_build_dir(version: str, language: str) -> tuple[str, int]:
     """Return the URL of `version`'s latest build for this platform, and its number."""
     fx_download_dir_url = f"{CANDIDATES_URL}/{version}-candidates/"
-    response = requests.get(fx_download_dir_url)
+    response = requests.get(fx_download_dir_url, timeout=REQUEST_TIMEOUT)
     build = 1
     if response.status_code < 300:
         soup = BeautifulSoup(response.text, "html.parser")
@@ -109,7 +110,7 @@ def has_installer(build_dir_url: str) -> bool:
     True once this platform's installer is in `build_dir_url`. On release day
     a version's folders appear before every platform's installer is uploaded.
     """
-    response = requests.get(build_dir_url)
+    response = requests.get(build_dir_url, timeout=REQUEST_TIMEOUT)
     return response.status_code < 300 and any(
         line.getText().split(".")[-1] == get_fx_executable_extension()
         for line in BeautifulSoup(response.text, "html.parser").find_all("a")
@@ -129,8 +130,14 @@ def previous_beta(version: str) -> str:
     while True:
         (major_minor, beta) = previous.split("b")
         next_beta = f"{major_minor}b{int(beta) + 1}"
-        if requests.get(f"{CANDIDATES_URL}/{next_beta}-candidates/").status_code >= 300:
+        response = requests.get(
+            f"{CANDIDATES_URL}/{next_beta}-candidates/", timeout=REQUEST_TIMEOUT
+        )
+        # Only a 404 means the Beta doesn't exist. Fail on anything else
+        # rather than quietly test an older Beta.
+        if response.status_code == 404:
             return previous
+        response.raise_for_status()
         previous = next_beta
 
 
