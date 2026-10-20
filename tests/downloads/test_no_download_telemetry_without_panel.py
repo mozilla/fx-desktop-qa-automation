@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutTelemetry
-from modules.page_object_generics import GenericPage
+from auto_fxui.page_object_about_pages import AboutTelemetry
+from auto_fxui.page_object_generics import GenericPage
 
 TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]

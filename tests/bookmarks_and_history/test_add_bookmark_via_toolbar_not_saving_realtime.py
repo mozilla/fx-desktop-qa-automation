@@ -3,10 +3,10 @@ import time
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.classes.bookmark import Bookmark
-from modules.util import BrowserActions
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.browser_object_panel_ui import PanelUi
+from auto_fxui.classes.bookmark import Bookmark
+from auto_fxui.util import BrowserActions
 
 BOOKMARK = Bookmark(url="mozilla.org", name="Mozilla", tags="M", keyword="Mozz")
 BOOKMARK_DEFAULT_NAME = "New Bookmark"

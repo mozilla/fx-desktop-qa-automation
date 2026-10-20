@@ -3,10 +3,10 @@ import os
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object import AboutTelemetry, GenericPdf
+from auto_fxui.browser_object import ContextMenu
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object import AboutTelemetry, GenericPdf
 
 
 @pytest.fixture()

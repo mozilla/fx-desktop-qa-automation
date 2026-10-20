@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_find_toolbar import FindToolbar
-from modules.util import BrowserActions
+from auto_fxui.browser_object_find_toolbar import FindToolbar
+from auto_fxui.util import BrowserActions
 
 
 @pytest.fixture()

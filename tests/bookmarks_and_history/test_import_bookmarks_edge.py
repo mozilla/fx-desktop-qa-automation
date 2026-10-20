@@ -4,8 +4,8 @@ from shutil import copyfile
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutPrefs
 
 NEWS_ARTICLE_TITLE = "Level 1, 2 evacuations issued for fire burning in Chelan"
 

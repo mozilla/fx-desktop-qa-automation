@@ -4,8 +4,8 @@ import pytest
 from selenium.common.exceptions import NoAlertPresentException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object_generics import GenericPage
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.page_object_generics import GenericPage
 
 TEST_URL = "https://ash-speed.hetzner.com/"
 

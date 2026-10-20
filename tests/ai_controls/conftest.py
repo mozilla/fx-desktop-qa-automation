@@ -1,6 +1,6 @@
 import pytest
 
-from modules.page_object_prefs import AboutPrefs
+from auto_fxui.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

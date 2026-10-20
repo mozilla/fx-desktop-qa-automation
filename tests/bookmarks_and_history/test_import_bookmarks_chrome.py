@@ -7,8 +7,8 @@ from uuid import uuid4
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutPrefs
 
 TEST_PAGE_TITLE = "Home - Oregon State Parks"
 
