@@ -1,6 +1,6 @@
 from selenium.webdriver import ActionChains
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 
 class Sidebar(BasePage):

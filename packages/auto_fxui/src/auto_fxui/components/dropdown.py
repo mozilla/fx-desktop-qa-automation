@@ -4,7 +4,7 @@ from pypom import Region
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.util import PomUtils
+from ..util import PomUtils
 
 
 class Dropdown(Region):

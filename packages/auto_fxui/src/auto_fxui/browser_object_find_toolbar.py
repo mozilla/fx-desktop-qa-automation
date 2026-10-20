@@ -5,8 +5,8 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object_panel_ui import PanelUi
-from modules.page_base import BasePage
+from .browser_object_panel_ui import PanelUi
+from .page_base import BasePage
 
 
 class FindToolbar(BasePage):

@@ -14,12 +14,12 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 
-from modules.browser_object import Navigation
-from modules.classes.autofill_base import AutofillAddressBase
-from modules.classes.credit_card import CreditCardBase
-from modules.components.dropdown import Dropdown
-from modules.page_base import BasePage
-from modules.util import Utilities
+from .browser_object import Navigation
+from .classes.autofill_base import AutofillAddressBase
+from .classes.credit_card import CreditCardBase
+from .components.dropdown import Dropdown
+from .page_base import BasePage
+from .util import Utilities
 
 # Language models are tens of MB each, so the download can be slow.
 DOWNLOAD_LANGUAGE_TIMEOUT = 120

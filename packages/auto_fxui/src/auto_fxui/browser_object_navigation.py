@@ -17,12 +17,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_panel_ui import PanelUi
-from modules.classes.bookmark import Bookmark
-from modules.page_base import BasePage, Page
-from modules.page_object_customize_firefox import CustomizeFirefox
-from modules.util import BrowserActions
+from .browser_object_context_menu import ContextMenu
+from .browser_object_panel_ui import PanelUi
+from .classes.bookmark import Bookmark
+from .page_base import BasePage, Page
+from .page_object_customize_firefox import CustomizeFirefox
+from .util import BrowserActions
 
 
 class Navigation(BasePage):

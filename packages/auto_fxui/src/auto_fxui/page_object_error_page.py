@@ -1,4 +1,4 @@
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 
 class ErrorPage(BasePage):

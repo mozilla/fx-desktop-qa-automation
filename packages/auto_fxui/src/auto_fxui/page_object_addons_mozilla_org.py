@@ -1,4 +1,4 @@
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 # PLEASE add all AMO page models to this file
 

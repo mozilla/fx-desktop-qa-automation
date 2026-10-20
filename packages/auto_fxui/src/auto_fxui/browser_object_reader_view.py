@@ -3,7 +3,7 @@ import logging
 from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 
 class ReaderView(BasePage):

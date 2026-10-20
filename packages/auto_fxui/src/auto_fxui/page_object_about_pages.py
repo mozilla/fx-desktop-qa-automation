@@ -20,8 +20,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.page_base import BasePage
-from modules.util import BrowserActions
+from .page_base import BasePage
+from .util import BrowserActions
 
 
 class AboutCache(BasePage):

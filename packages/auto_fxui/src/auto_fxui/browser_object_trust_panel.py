@@ -11,8 +11,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.browser_object_navigation import Navigation
-from modules.page_base import BasePage
+from .browser_object_navigation import Navigation
+from .page_base import BasePage
 
 # Windows tracker detection can lag several seconds behind a reload; poll slowly so
 # each reload gets time to run detection instead of restarting it every ~0.5s.

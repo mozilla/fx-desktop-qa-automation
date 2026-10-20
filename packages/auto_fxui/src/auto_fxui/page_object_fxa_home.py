@@ -1,7 +1,7 @@
 import json
 
-from modules.classes.fxa_session import FxaSession
-from modules.page_base import BasePage
+from .classes.fxa_session import FxaSession
+from .page_base import BasePage
 
 
 class FxaHome(BasePage):

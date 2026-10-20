@@ -1,9 +1,9 @@
 from typing import Union
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_tabbar import TabBar
-from modules.page_base import BasePage
-from modules.page_object_about_pages import AboutOpentabs
+from .browser_object_context_menu import ContextMenu
+from .browser_object_tabbar import TabBar
+from .page_base import BasePage
+from .page_object_about_pages import AboutOpentabs
 
 
 class SplitView(BasePage):

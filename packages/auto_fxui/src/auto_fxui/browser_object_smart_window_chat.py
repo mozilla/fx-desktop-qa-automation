@@ -1,8 +1,8 @@
 import re
 
-from modules.browser_object_smart_bar import SmartBar
-from modules.browser_object_smart_window import CHAT_DOCUMENT_JS
-from modules.page_base import BasePage
+from .browser_object_smart_bar import SmartBar
+from .browser_object_smart_window import CHAT_DOCUMENT_JS
+from .page_base import BasePage
 
 # MESSAGE_ROLE.USER in the conversation model.
 USER_ROLE = 0
@@ -13,7 +13,7 @@ USER_ROLE = 0
 TAB_GROUP_CONFIRMATION = "tab-group-confirmation"
 ACTION_RESULT = "ai-action-result"
 
-# How the model names a tab in tool calls: §url_token: LOCALHOST_LASAGNA_HTML_1§
+# How the model names a tab in calls: §url_token: LOCALHOST_LASAGNA_HTML_1§
 URL_TOKEN_RE = re.compile(r"§url_token:\s*([A-Z0-9_]+_\d+)§")
 
 # Tool calls make a turn several LLM round trips; record and live modes wait

@@ -24,7 +24,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.util import PomUtils
+from .util import PomUtils
 
 # Convert "strategy" from the components json to Selenium By vals
 STRATEGY_MAP = {

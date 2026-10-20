@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 
 class GenericPage(BasePage):

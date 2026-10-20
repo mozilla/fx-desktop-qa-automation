@@ -26,8 +26,8 @@ from selenium.webdriver.remote.shadowroot import ShadowRoot
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
-from modules.classes.autofill_base import AutofillAddressBase
-from modules.classes.credit_card import CreditCardBase
+from .classes.autofill_base import AutofillAddressBase
+from .classes.credit_card import CreditCardBase
 
 
 def env_true(name: str) -> bool:

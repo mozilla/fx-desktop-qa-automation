@@ -11,7 +11,6 @@ from typing import Callable
 # import psutil
 import pytest
 import requests
-from auto_fxui import testrail_integration as tri
 from auto_fxui.classes.fxa_session import FxaSession
 from auto_fxui.page_object import FxaHome
 from auto_fxui.util import env_true
@@ -27,6 +26,7 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from modules import testrail_integration as tri
 from modules.taskcluster import get_tc_secret
 from scripts import collect_executables
 

@@ -2,8 +2,8 @@ from typing import Union
 
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.page_base import BasePage
+from .browser_object_context_menu import ContextMenu
+from .page_base import BasePage
 
 
 class CustomizeFirefox(BasePage):

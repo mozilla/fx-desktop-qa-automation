@@ -3,9 +3,9 @@ import logging
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object_smart_window import CHAT_DOCUMENT_JS, SmartWindow
-from modules.browser_object_tabbar import TabBar
-from modules.page_base import BasePage
+from .browser_object_smart_window import CHAT_DOCUMENT_JS, SmartWindow
+from .browser_object_tabbar import TabBar
+from .page_base import BasePage
 
 # The Smart Bar lives in the chat's document (see CHAT_DOCUMENT_JS) with the
 # editor two shadow roots down, so the accessors below script the traversal.

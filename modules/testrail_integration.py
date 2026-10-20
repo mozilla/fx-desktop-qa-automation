@@ -8,13 +8,13 @@ import sys
 import time
 
 from auto_fxui.util import env_true
-from manifests.testkey import TestKey
-from scripts.choose_l10n_ci_set import select_l10n_mappings
-from scripts.collect_executables import get_fx_version
 
+from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TESTRAIL_STATUS, APIError, TestRail
+from scripts.choose_l10n_ci_set import select_l10n_mappings
+from scripts.collect_executables import get_fx_version
 
 FX_PRERC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)[ab](\d\d?)-build(\d+)")
 FX_RC_VERSION_RE = re.compile(r"(\d+)\.(\d\d?)-build(\d+)")

@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 
 class ContextMenu(BasePage):

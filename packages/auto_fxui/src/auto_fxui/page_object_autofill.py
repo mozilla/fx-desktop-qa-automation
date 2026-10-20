@@ -5,11 +5,11 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.classes.autofill_base import AutofillAddressBase
-from modules.classes.credit_card import CreditCardBase
-from modules.page_base import BasePage
-from modules.util import BrowserActions, Utilities
+from .browser_object_autofill_popup import AutofillPopup
+from .classes.autofill_base import AutofillAddressBase
+from .classes.credit_card import CreditCardBase
+from .page_base import BasePage
+from .util import BrowserActions, Utilities
 
 BASE_CC_URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic_cc.html"
 BASE_ADDRESS_URL_TEMPLATE = "https://mozilla.github.io/form-fill-examples/basic.html"

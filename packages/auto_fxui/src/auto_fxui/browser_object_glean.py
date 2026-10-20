@@ -1,7 +1,7 @@
 import re
 import time
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 _GLEAN_METRIC_PATH_RE = re.compile(r"^[A-Za-z0-9_.]+$")
 

@@ -1,6 +1,6 @@
 from typing import Literal
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 Reason = Literal[
     "account",

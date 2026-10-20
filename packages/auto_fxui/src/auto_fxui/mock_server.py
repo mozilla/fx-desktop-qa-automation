@@ -7,7 +7,7 @@ import requests
 from pytest_httpserver import HTTPServer
 from werkzeug.wrappers import Request, Response
 
-from modules.classes.recording import (
+from .classes.recording import (
     SEARCH_PATH,
     Recording,
     is_chat_message,

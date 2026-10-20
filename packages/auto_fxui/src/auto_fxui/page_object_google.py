@@ -1,8 +1,8 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.page_base import BasePage
-from modules.page_object import GenericPage
+from .page_base import BasePage
+from .page_object import GenericPage
 
 
 class GoogleSearch(BasePage):

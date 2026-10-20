@@ -4,7 +4,7 @@ from typing import Literal
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
-from modules.page_base import BasePage
+from .page_base import BasePage
 
 AI_WINDOW_MODULE = "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.sys.mjs"
 OPENAI_ENGINE_MODULE = (
