@@ -1,7 +1,13 @@
+import ast
+import json
 import os
 import re
 import sys
-from subprocess import check_output
+from functools import cache
+from glob import glob
+from subprocess import DEVNULL, CalledProcessError, check_output
+
+from pypom import Page
 
 from manifests.testkey import TestKey
 
@@ -15,6 +21,10 @@ SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
 BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
+
+BASE_BRANCH = (
+    os.environ.get("GITHUB_BASE_REF") or os.environ.get("BASE_REF") or "main"
+).removeprefix("refs/heads/")
 
 
 def snakify(pascal: str) -> str:
@@ -66,6 +76,162 @@ def get_tests_by_model(
             matching_tests.append(localpath)
 
     return matching_tests
+
+
+def model_outline(source: str) -> tuple[dict, dict]:
+    """
+    Split a model file into its methods ({"Class.method": code}) and the rest
+    of each class ({"Class": code}, "" for module-level code, "import" for
+    imports), ignoring formatting.
+    """
+    methods, rest = {}, {"": [], "import": []}
+    for node in ast.parse(source).body:
+        if isinstance(node, ast.ClassDef):
+            defs = (ast.FunctionDef, ast.AsyncFunctionDef)
+            for item in node.body:
+                if isinstance(item, defs):
+                    methods[f"{node.name}.{item.name}"] = ast.dump(item)
+            node.body = [item for item in node.body if not isinstance(item, defs)]
+            rest[node.name] = ast.dump(node)
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            rest["import"].append(ast.dump(node))
+        else:
+            rest[""].append(ast.dump(node))
+    return methods, rest
+
+
+def changed_names(path: str) -> set | None:
+    """
+    Return the methods or elements `path` modifies or removes compared with
+    main, or None if the change can't be narrowed down to them.
+    """
+    try:
+        old = check_output(
+            ["git", "show", f"origin/{BASE_BRANCH}:{path.replace(SLASH, '/')}"],
+            stderr=DEVNULL,
+        ).decode()
+        with open(path, encoding="utf-8") as fh:
+            new = fh.read()
+        if path.endswith(".json"):
+            old, new = json.loads(old), json.loads(new)
+            changed = {k for k in old.keys() | new.keys() if old.get(k) != new.get(k)}
+            # A page-wide setting such as "context" affects every element
+            if any(
+                not isinstance(old.get(k, {}), dict)
+                or not isinstance(new.get(k, {}), dict)
+                for k in changed
+            ):
+                return None
+            return changed & old.keys()
+        (old_methods, old_rest) = model_outline(old)
+        (new_methods, new_rest) = model_outline(new)
+    except (CalledProcessError, OSError, SyntaxError, ValueError):
+        return None
+    if not set(old_rest.pop("import")) <= set(new_rest.pop("import")):
+        return None
+    if any(new_rest.get(k) != v for k, v in old_rest.items()):
+        return None
+    changed = {
+        name
+        for name in old_methods.keys() | new_methods.keys()
+        if old_methods.get(name) != new_methods.get(name)
+        and name.split(".")[0] in old_rest
+        and name.split(".")[0] not in BIG_MODELS
+    }
+    if any(name.split(".")[1] in framework_methods() for name in changed):
+        return None
+    return {name.split(".")[1] for name in changed if name in old_methods}
+
+
+@cache
+def framework_methods() -> set:
+    """Names of BasePage and pypom Page methods, which tests reach implicitly."""
+    with open(os.path.join("modules", "page_base.py"), encoding="utf-8") as fh:
+        tree = ast.parse(fh.read())
+    return set(dir(Page)) | {
+        node.name
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+
+
+@cache
+def function_references() -> dict:
+    """Map each function in modules/ to the names and strings it uses."""
+    references = {}
+    for path in glob(os.path.join("modules", "**", "*.py"), recursive=True):
+        with open(path, encoding="utf-8") as fh:
+            tree = ast.parse(fh.read())
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                refs = references.setdefault(node.name, set())
+                for n in ast.walk(node):
+                    if isinstance(n, ast.Attribute):
+                        refs.add(n.attr)
+                    elif isinstance(n, ast.Name):
+                        refs.add(n.id)
+                    elif isinstance(n, ast.Constant) and isinstance(n.value, str):
+                        refs.add(n.value)
+    return references
+
+
+@cache
+def conftest_contents() -> dict:
+    """Map each suite's conftest.py, and the root one, to its contents."""
+    contents = {}
+    for conftest in glob(os.path.join("tests", "*", "conftest.py")) + ["conftest.py"]:
+        with open(conftest, encoding="utf-8") as fh:
+            contents[conftest] = fh.read()
+    return contents
+
+
+def get_tests_by_change(path: str, test_paths_and_contents: dict) -> list | None:
+    """
+    Return the tests and suites that use a method or element changed in
+    `path`, directly or through modules/, or None to select by model instead.
+    """
+    names = changed_names(path)
+    if names is None:
+        return None
+    if not names:
+        return []
+
+    references = function_references()
+    affected = set(names)
+    while True:
+        callers = {f for f, refs in references.items() if refs & affected}
+        if callers <= affected:
+            break
+        affected |= callers
+
+    # Whole names only, so get_tab doesn't match get_tab_groups. Lookarounds
+    # rather than \b, which needs a word character at each end of the name.
+    def name_re(name_set: set) -> re.Pattern:
+        alternatives = "|".join(re.escape(n) for n in sorted(name_set))
+        return re.compile(rf"(?<!\w)(?:{alternatives})(?!\w)")
+
+    conftests = dict(conftest_contents())
+    all_contents = "\n".join([*test_paths_and_contents.values(), *conftests.values()])
+    # A name never used literally is probably built at runtime
+    used_in_modules = set().union(*references.values())
+    if any(not name_re({n}).search(all_contents) for n in names - used_in_modules):
+        return None
+    uses_affected = name_re(affected).search
+    # The root conftest.py reaches every test
+    if uses_affected(conftests.pop("conftest.py")):
+        return None
+
+    tests = [
+        localify(test)
+        for test, content in test_paths_and_contents.items()
+        if uses_affected(content)
+    ]
+    suites = [
+        f".{SLASH}{os.path.dirname(conftest)}"
+        for conftest, content in conftests.items()
+        if uses_affected(content)
+    ]
+    return tests + suites
 
 
 def get_tests_in_suite(path: str):
@@ -194,12 +360,12 @@ if __name__ == "__main__":
         re_obj[short_name] = re.compile(re_obj.get(k))
 
     run_list = []
-    check_output(["git", "fetch", "--quiet", "--depth=1", "origin", "main"])
+    check_output(["git", "fetch", "--quiet", "--depth=1", "origin", BASE_BRANCH])
     git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
     rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
     if rev_hash:
         git_diff_cmd.append(rev_hash)
-    git_diff_cmd.append("origin/main")
+    git_diff_cmd.append(f"origin/{BASE_BRANCH}")
     committed_files = (
         check_output(git_diff_cmd).decode().replace("/", SLASH).splitlines()
     )
@@ -257,15 +423,21 @@ if __name__ == "__main__":
             model_name = pascalify(filename.split(".")[0])
             if model_name in BIG_MODELS:
                 continue  # some models are too big to run all tests
-            for test_name in get_tests_by_model(
-                model_name, test_paths_and_contents, run_list
-            ):
-                run_list.append(test_name)
+            tests = get_tests_by_change(selector_file, test_paths_and_contents)
+            if tests is None:
+                tests = get_tests_by_model(
+                    model_name, test_paths_and_contents, run_list
+                )
+            run_list.extend(tests)
 
     if changed_models:
         for model_file in changed_models:
             # When we remove a file, it appears in the git diff, but not in real life
             if not os.path.exists(model_file):
+                continue
+            tests = get_tests_by_change(model_file, test_paths_and_contents)
+            if tests is not None:
+                run_list.extend(tests)
                 continue
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
