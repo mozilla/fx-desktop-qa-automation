@@ -1801,6 +1801,10 @@ preferences:
     splits:
     - functional2
 printing_ui:
+  test_noncontiguous_page_ranges:
+    result: pass
+    splits:
+    - functional2
   test_page_number_indicator_print_preview:
     result: pass
     splits:
