@@ -1750,6 +1750,10 @@ preferences:
     splits:
     - functional2
 printing_ui:
+  test_noncontiguous_page_ranges:
+    result: pass
+    splits:
+    - functional2
   test_page_number_indicator_print_preview:
     result: pass
     splits:
@@ -2368,11 +2372,6 @@ smart_window:
     splits:
     - functional1
   test_c3309854_open_classic_window_from_smart_window:
-    result: pass
-    splits:
-    - smart_window
-    - functional3
-  test_c3309859_smart_window_restored_after_restart:
     result: pass
     splits:
     - smart_window
