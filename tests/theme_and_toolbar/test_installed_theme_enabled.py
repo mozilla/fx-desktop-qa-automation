@@ -1,5 +1,9 @@
+from urllib.parse import urlsplit
+
 import pytest
 from selenium.webdriver import Firefox
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from modules.page_object import AboutAddons, AmoThemes
 
@@ -9,31 +13,61 @@ def test_case():
     return "118174"
 
 
-AMO_HOST: str = "addons.mozilla.org"
-AMO_THEMES_PATH: str = "firefox/themes"
+AMO_HOST = "addons.mozilla.org"
+AMO_THEMES_PATH = "/firefox/themes"
+WAIT_TIMEOUT = 30
 
 
-# Test is unstable in MacOS GHA for now
 def test_find_more_themes(driver: Firefox) -> None:
     """
-    C118174 (part 1): From about:addons > Themes, 'Find more themes' opens AMO in a new tab.
-    Verify AMO host and themes path are present in the URL.
+    From about:addons > Themes, 'Find more themes' opens AMO in a new tab.
     """
     about_addons = AboutAddons(driver).open()
     about_addons.choose_sidebar_option("theme")
-    about_addons.click_find_more_themes()
 
-    driver.switch_to.window(driver.window_handles[-1])
+    original_handle = driver.current_window_handle
+    original_handles = set(driver.window_handles)
+    new_handle = None
 
-    base = about_addons
-    base.url_contains(AMO_HOST)
-    base.url_contains(AMO_THEMES_PATH)
+    try:
+        about_addons.click_find_more_themes()
+
+        wait = WebDriverWait(driver, WAIT_TIMEOUT)
+        wait.until(
+            EC.new_window_is_opened(original_handles),
+            message="'Find more themes' did not open a new tab",
+        )
+
+        new_handles = set(driver.window_handles) - original_handles
+        assert len(new_handles) == 1, f"Expected one new tab, found {len(new_handles)}"
+
+        new_handle = new_handles.pop()
+        driver.switch_to.window(new_handle)
+
+        def amo_themes_loaded(browser: Firefox) -> bool:
+            url = urlsplit(browser.current_url)
+            return url.hostname == AMO_HOST and url.path.rstrip("/").endswith(
+                "/firefox/themes"
+            )
+
+        wait.until(
+            amo_themes_loaded,
+            message="The new tab did not navigate to the AMO themes page",
+        )
+    finally:
+        handles = driver.window_handles
+
+        if new_handle is not None and new_handle in handles:
+            driver.switch_to.window(new_handle)
+            driver.close()
+
+        if original_handle in driver.window_handles:
+            driver.switch_to.window(original_handle)
 
 
-# Test is unstable in MacOS GHA for now
 def test_installed_theme_enabled(driver: Firefox) -> None:
     """
-    C118174 (part 2): Install a recommended theme from AMO and ensure it becomes enabled immediately.
+    Install a recommended theme from AMO and ensure it becomes enabled immediately.
     """
     about_addons = AboutAddons(driver).open()
     about_addons.choose_sidebar_option("theme")
