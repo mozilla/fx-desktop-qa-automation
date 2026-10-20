@@ -672,13 +672,6 @@ class TabBar(BasePage):
         return self
 
     @BasePage.context_chrome
-    def get_tab_urls_in_order(self) -> list[str]:
-        """Return the URL of every tab, in the order they are shown in the tab strip."""
-        return self.driver.execute_script(
-            "return gBrowser.tabs.map(tab => tab.linkedBrowser.currentURI.spec);"
-        )
-
-    @BasePage.context_chrome
     def get_tab_position(self, tab_index: int):
         """
         Get the visual position of a tab in the tab strip. Returns the x-coordinate of the tab.
