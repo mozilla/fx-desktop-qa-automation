@@ -2,8 +2,8 @@ import pytest
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, PanelUi
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import Navigation, PanelUi
+from auto_fxui.page_object import AboutPrefs
 
 
 @pytest.fixture()

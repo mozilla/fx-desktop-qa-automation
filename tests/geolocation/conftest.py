@@ -1,7 +1,7 @@
 import pytest
 
-from modules.browser_object import Navigation, TabBar
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object import GenericPage
 
 
 @pytest.fixture()
