@@ -860,6 +860,24 @@ class GenericPdf(BasePage):
         self.element_has_text("pdf-page", text, labels=[str(page_number)])
         return self
 
+    def get_page_text(self, page_number: int) -> str:
+        """Navigate to a text-bearing page and return normalized rendered text.
+
+        Refresh max_page before navigation to account for copied or removed pages.
+        Blank or image-only pages are unsupported and raise TimeoutException.
+        """
+        self.max_page = int(self.get_element("page-input").get_attribute("max"))
+        self.jump_to_page(page_number)
+        return self.wait.until(
+            lambda _: " ".join(
+                self.get_element(
+                    "page-text-layer", labels=[str(page_number)]
+                ).text.split()
+            ),
+            message=f"Expected non-empty rendered text on PDF page {page_number}; "
+            "blank or image-only pages are unsupported.",
+        )
+
     def open_manage_pages_sidebar_with_keyboard(self) -> BasePage:
         """Tab to the Manage pages button and press Enter to open the Pages sidebar."""
         self.press_until_focused("pages-sidebar-toggle")

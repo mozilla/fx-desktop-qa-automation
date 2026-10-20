@@ -310,6 +310,50 @@
       "location": "Search mode switcher dropdown of awesomebar"
     }
   },
+  "searchbar-switcher-focused": {
+    "selectorData": "#searchbar-new .searchmode-switcher:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine button in the searchbar when it has keyboard focus",
+      "location": "Searchbar"
+    }
+  },
+  "searchbar-switcher-popup": {
+    "selectorData": "#searchbar-new .searchmode-switcher-panel-list",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Engine dropdown of the searchbar",
+      "location": "Searchbar"
+    }
+  },
+  "searchbar-switcher-option-focused": {
+    "selectorData": "#searchbar-new panel-item.searchmode-switcher-installed[label*='{title}']:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Installed engine option in the search mode switcher list when it has keyboard focus",
+      "location": "Search mode switcher dropdown"
+    }
+  },
+  "searchbar-switcher-prefs-focused": {
+    "selectorData": "#searchbar-new panel-item.searchmode-switcher-panel-search-settings-button:focus",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Search Settings button in the search mode switcher list when it has keyboard focus",
+      "location": "Search mode switcher dropdown"
+    }
+  },
   "downloads-button": {
     "selectorData": "downloads-button",
     "strategy": "id",
@@ -551,6 +595,17 @@
     "comment": {
       "description": "Fingerprints subpanel",
       "location": "Inside the shield incon in fingerprints subpanel"
+    }
+  },
+  "taskbar-tabs-button": {
+    "selectorData": "taskbar-tabs-button",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Add tab to taskbar page action",
+      "location": "URL bar"
     }
   },
   "star-button": {
@@ -1415,6 +1470,17 @@
     "comment": {
       "description": "Password saved! confirmation",
       "location": "In the Navigation bar, next to the url input field"
+    }
+  },
+  "taskbar-tab-window-root": {
+    "selectorData": ":root[taskbartab]",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Root element of a Taskbar Tab window",
+      "location": "Root of the browser window, only present in Taskbar Tab windows"
     }
   }
 }

@@ -10,6 +10,26 @@ A Python Selenium based set of tests for smoke testing of Firefox, including Fx 
 [TestRail Integration](./TESTRAIL_INTEGRATION.md)
 
 ### Build under test
+The default channel is **Beta**. Keep Beta and Nightly in separate installation
+directories and select the build with `--fx-channel`:
+
+| Platform | Beta | Nightly |
+|---|---|---|
+| Windows | `C:\Program Files\Firefox Beta\` | `C:\Program Files\Firefox Nightly\` |
+| macOS | `/Applications/Firefox Beta.app/` | `/Applications/Firefox Nightly.app/` |
+| Linux | `/home/<user>/Desktop/Firefox Beta/` | `/home/<user>/Desktop/Firefox Nightly/` |
+
+```bash
+pytest tests/tabs/test_open_new_tab.py --fx-channel=Beta
+pytest tests/tabs/test_open_new_tab.py --fx-channel=Nightly
+```
+
+These options select an installed executable; they do not download or update Firefox.
+When migrating from a Beta build installed as `Custom Firefox`, install Beta at the
+path above, or keep using `--fx-channel=Custom` until you move it.
+`--fx-executable=<path>` overrides channel selection for any installation location.
+
+For incident builds, use `--fx-channel=Custom` and the directories below.
 Get the build to be smoke tested from the [candidates](https://ftp.mozilla.org/pub/firefox/candidates/) directory. Incident testing: Ask 
 the RelMan contact for the current Incident what the build versions is. 
 
@@ -67,7 +87,7 @@ Launch the build manually one time to navigate through any system permission dia
 
 - ### Notable command line options
 - --run-headless (run the tests in headless mode)
-- --fx-channel=option (options are Custom(default), Firefox, Nightly)
+- --fx-channel=option (options are Beta(default), Nightly, Firefox, Custom)
 - --fx-executable=path (overrides `--fx-channel`, location of a Fx executable)
 - --html=report.html (creates an html report file, report.html, in top project directory)
 

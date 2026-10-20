@@ -122,6 +122,13 @@ def test_something_descriptive(driver: Firefox):
     # test steps using the fluent interface
 ```
 
+### Comments and Docstrings
+
+- Docstrings: one line on what the function does or returns. Add a numpy `Parameters`/`Returns` section only when names and types don't make the meaning clear.
+- Keep any comment or docstring well under half the length of the code it describes.
+- Explain why only where a reader would otherwise get it wrong, in one sentence. Do explain hard-to-read code: a regex, injected JS, a wait or retry that looks unnecessary.
+- Leave out history (what was tried, failure rates) and lists of every case handled; put history in the commit message or PR description.
+
 ### Manifest / Skip System (`manifests/key.yaml`)
 
 Controls which tests run and on which platforms. Values other than `pass` skip the test:

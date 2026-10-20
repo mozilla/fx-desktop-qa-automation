@@ -247,6 +247,27 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_taskbar_tab_window(self):
+        """
+        Wait for the Taskbar Tab window and switch to it. The moved tab keeps its
+        handle, so the driver stays on the discarded window until re-switched.
+        """
+
+        def _switch(_):
+            for handle in self.driver.window_handles:
+                try:
+                    self.driver.switch_to.window(handle)
+                    if self.get_elements("taskbar-tab-window-root"):
+                        return True
+                except NoSuchWindowException:
+                    # The original window closes while the tab moves
+                    continue
+            return False
+
+        self.wait.until(_switch)
+        return self
+
+    @BasePage.context_chrome
     def click_on_clipboard_suggestion(self) -> None:
         """
         Click the 'Visit from clipboard' suggestion in the URL bar.
@@ -1397,6 +1418,27 @@ class Navigation(BasePage):
         the first matching element — which may not be the highlighted one.
         """
         self.element_visible("searchbar-highlighted-suggestion")
+
+    @BasePage.context_chrome
+    def press_down_until_focused(
+        self, name: str, labels: list[str] | None = None, max_presses: int = 20
+    ) -> BasePage:
+        """Press Down until the named element has focus."""
+        # Short wait per press so slow machines don't skip past the item.
+        short_wait = self.custom_wait(timeout=1)
+        original = self.driver.timeouts.implicit_wait
+        self.driver.implicitly_wait(0)
+        try:
+            for _ in range(max_presses):
+                try:
+                    short_wait.until(lambda _: self.get_elements(name, labels=labels))
+                    break
+                except TimeoutException:
+                    self.perform_key_combo(Keys.DOWN)
+        finally:
+            self.driver.implicitly_wait(original)
+        self.element_visible(name, labels=labels)
+        return self
 
     @BasePage.context_chrome
     def click_exit_button_searchmode(self) -> None:

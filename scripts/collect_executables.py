@@ -19,6 +19,8 @@ BACKSTOP = "146.0b9"
 # latest geckodriver release: tests/meta/test_version.py compares the running
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
+CANDIDATES_URL = "https://archive.mozilla.org/pub/firefox/candidates"
+REQUEST_TIMEOUT = 10
 
 
 def get_fx_platform():
@@ -69,6 +71,63 @@ def get_gd_platform():
         if "64" in u.machine:
             return "win64"
         return "win32"
+
+
+def is_pull_request_run() -> bool:
+    """True in a pull request run: GitHub pull_request event or Taskcluster level 1."""
+    return (
+        environ.get("GITHUB_EVENT_NAME") == "pull_request"
+        or environ.get("MOZ_SCM_LEVEL") == "1"
+    )
+
+
+def get_build_dir(version: str, language: str) -> tuple[str, int]:
+    """Return the URL of `version`'s latest build for this platform, and its number."""
+    fx_download_dir_url = f"{CANDIDATES_URL}/{version}-candidates/"
+    response = requests.get(fx_download_dir_url, timeout=REQUEST_TIMEOUT)
+    build = 1
+    if response.status_code < 300:
+        soup = BeautifulSoup(response.text, "html.parser")
+        for line in soup.find_all("a"):
+            line_text = line.getText().split(".")
+            if not line_text[0]:
+                continue
+            # Links look like "build2/", so [-2] is the build number
+            build = max(int(line_text[0][-2]), build)
+        fx_download_dir_url = (
+            f"{fx_download_dir_url}build{build}/{get_fx_platform()}/{language}/"
+        )
+    return fx_download_dir_url, build
+
+
+def has_installer(build_dir_url: str) -> bool:
+    """True once this platform's installer is in `build_dir_url`."""
+    response = requests.get(build_dir_url, timeout=REQUEST_TIMEOUT)
+    return response.status_code < 300 and any(
+        line.getText().split(".")[-1] == get_fx_executable_extension()
+        for line in BeautifulSoup(response.text, "html.parser").find_all("a")
+    )
+
+
+def previous_beta(version: str) -> str:
+    """Return the Beta before `version`, e.g. 159.0b1 gives 158.0's last Beta."""
+    (major_minor, beta) = version.split("b")
+    if int(beta) > 1:
+        return f"{major_minor}b{int(beta) - 1}"
+    (major, minor) = (int(n) for n in major_minor.split("."))
+    previous = f"{major}.{minor - 1}b1" if minor else f"{major - 1}.0b1"
+    # Walk up from b1 until the next Beta is missing
+    while True:
+        (major_minor, beta) = previous.split("b")
+        next_beta = f"{major_minor}b{int(beta) + 1}"
+        response = requests.get(
+            f"{CANDIDATES_URL}/{next_beta}-candidates/", timeout=REQUEST_TIMEOUT
+        )
+        # Only a 404 means no such Beta; fail on anything else rather than guess
+        if response.status_code == 404:
+            return previous
+        response.raise_for_status()
+        previous = next_beta
 
 
 def main(args):
@@ -144,6 +203,24 @@ def main(args):
         if not language:
             language = "en-US"
 
+        if channel == "-nightly":
+            train_resp = requests.get(
+                "https://whattrainisitnow.com/api/release/schedule/?version=nightly"
+            )
+            train_resp.raise_for_status()
+            train_json = train_resp.json()
+            current_nightly = train_json.get("version")
+            alpha = f"{current_nightly}a1"
+            if number_only:
+                return alpha
+            pfm = get_fx_platform()
+            ext = get_fx_executable_extension()
+            if "linux" in pfm:
+                ext = "tar.xz"
+            elif "win" in pfm:
+                ext = "installer.exe"
+            return f"https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-{alpha}.en-US.{pfm}.{ext}"
+
         if channel == "-devedition":
             # Devedition has special requirements as it's testing a release
 
@@ -173,7 +250,7 @@ def main(args):
             )
 
         else:
-            # Anything but devedition
+            # Anything but devedition / nightly
 
             candidate_exists = True
             this_beta = BACKSTOP
@@ -228,26 +305,21 @@ def main(args):
             # Look for the latest build
             if channel == "-rc":
                 latest_beta_ver = latest_beta_ver.replace("b1", "")
-            fx_download_dir_url = (
-                "https://archive.mozilla.org/pub/firefox/candidates/"
-                f"{latest_beta_ver}-candidates/"
-            )
-            response = requests.get(fx_download_dir_url)
-            build = 1
-            if response.status_code < 300:
-                soup = BeautifulSoup(response.text, "html.parser")
-                executable_name = ""
-                # Extract the text of each line
-                for line in soup.find_all("a"):
-                    line_text = line.getText().split(".")
-                    if not line_text[0]:
-                        continue
-                    # Get the executable name
-                    build = max(int(line_text[0][-2]), build)
-                fx_download_dir_url = (
-                    "https://archive.mozilla.org/pub/firefox/candidates/"
-                    f"{latest_beta_ver}-candidates/build{build}/{get_fx_platform()}/{language}/"
+            (fx_download_dir_url, build) = get_build_dir(latest_beta_ver, language)
+
+            # On release day a Beta's folders appear before its installers, so
+            # PR runs fall back to the previous Beta
+            if (
+                channel == "-beta"
+                and is_pull_request_run()
+                and not has_installer(fx_download_dir_url)
+            ):
+                previous = previous_beta(latest_beta_ver)
+                logging.warning(
+                    f"No {get_fx_platform()} installer for {latest_beta_ver} yet, "
+                    f"so this pull request run uses {previous}"
                 )
+                (fx_download_dir_url, build) = get_build_dir(previous, language)
 
         # Get the corresponding executable
         response = requests.get(fx_download_dir_url)

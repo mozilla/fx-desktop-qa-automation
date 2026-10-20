@@ -145,6 +145,11 @@ That happens for a new test, a changed prompt, or Firefox sending a chat or sear
 recording doesn't have. Changing page objects, selectors or test steps doesn't need a
 re-record: the recording holds the model's replies, not Firefox's behaviour.
 
+The hook also fails, before starting Firefox, when a chat test you commit has no recording
+file, even one marked `unstable` or `headed`. Tests that build their replies (below) don't need
+one. When you commit shared mock-server code (`mock_server.py`, `recording.py`, the Smart
+Window page objects or the suite's `conftest.py`), the hook runs every chat test.
+
 ## Record or build?
 
 Instead of recording, a test can write the model's replies in code with the builders in
