@@ -2362,6 +2362,7 @@ smart_window:
     result: pass
     splits:
     - functional1
+    - smart_window_poc
   test_c3309849_switch_windows_while_visiting_website:
     result: pass
     splits:

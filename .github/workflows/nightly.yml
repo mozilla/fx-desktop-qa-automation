@@ -43,7 +43,7 @@ jobs:
     name: Run selected nightly tests
     uses: ./.github/workflows/core.yml
     with:
-      test_sets: '["smoke"]'
+      test_sets: '["smart_window_poc"]'
       win_installer_link: ${{ inputs.win_installer_link }}
       mac_installer_link: ${{ inputs.mac_installer_link }}
       linux_tarball_link: ${{ inputs.linux_tarball_link }}

@@ -774,6 +774,8 @@ jobs:
               --fx-executable="$FX_EXECUTABLE" \
               --geckodriver=geckodriver \
               "${tests[@]}" || exit_code=$?
+          # No headed tests in the selection is not a failure
+          if [[ "$exit_code" -eq 5 ]]; then exit_code=0; fi
 
           mkdir -p test-artifacts/headed
 
