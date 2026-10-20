@@ -19,6 +19,33 @@
       "location": "Browser window content area"
     }
   },
+  "split-view-footer-menu-button": {
+    "selectorData": ".split-view-panel-active[column='{column}'] split-view-footer toolbarbutton",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "The three-dot button at the right corner of the footer of one side of the displayed Split View, by column. Only shown on the side that is not selected",
+      "location": "Bottom of a Split View panel"
+    }
+  },
+  "split-view-menu": {
+    "selectorData": "#split-view-menu",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Menu opened from the three-dot button in a Split View footer",
+      "location": "Popup above a Split View footer"
+    }
+  },
+  "split-view-menuitem": {
+    "selectorData": "#split-view-menu menuitem[command='splitViewCmd_{command}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "An option of the Split View footer menu, by command: separateTabs, reverseTabs or closeTabs",
+      "location": "Split View footer menu"
+    }
+  },
   "split-view-splitter": {
     "selectorData": ".split-view-splitter",
     "strategy": "css",
