@@ -5,7 +5,7 @@ and web search requests to a local mock server, which answers with responses rec
 earlier. Tests get the same replies on every run, need no account, and take seconds.
 
 ```
-test → BOMs (SmartBar, SmartWindowChat) → Firefox
+test → BOMs (SmartBar, SmartWindowChat, TabBar) → Firefox
 Firefox ──(endpoint prefs)──► MockServer ──► replay: data/recordings/... JSON
                                        └──► record / live: stage MLPA, with your token
 ```
@@ -19,6 +19,7 @@ Run the existing chat tests. No token or setup is needed:
 
 ```bash
 pytest tests/smart_window/test_c3374375_continue_conversation_in_sidebar.py
+pytest tests/smart_window/test_c4438277_group_related_tabs.py
 ```
 
 pytest starts the mock server itself (the `mock_server_session` fixture), one per parallel
@@ -135,6 +136,27 @@ file, even one marked `unstable` or `headed`. Tests that build their replies (be
 one. When you commit shared mock-server code (`mock_server.py`, `recording.py`, the Smart
 Window page objects or the suite's `conftest.py`), the hook runs every chat test.
 
+## Tab management tests
+
+Tab actions (group, close and so on) are chat tests whose replies are tool calls. See
+`tests/smart_window/test_c4438277_group_related_tabs.py`.
+
+- Describe the scenario with `TabGroupingScenario` (`modules/classes/tab_grouping_scenario.py`):
+  the instruction, the pages to open as tabs, and the pages expected in the group.
+- Pages are small HTML files in `data/smart_window_pages/`. The `tab_pages` fixture serves them
+  and turns file names into URLs; open them with
+  `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`. They're kept out of
+  `data/pages/` because some tests copy every file in that folder.
+- After `chat.send(...)`:
+  - `mock_server.tool_calls("manage_tabs")` is what the model asked Firefox to do;
+  - `chat.confirm_tab_grouping_if_asked()` clicks Confirm if the model asked first;
+  - `TabBar.expect_tabs_grouped(...)` waits until Firefox has grouped the tabs the model asked
+    for, and fails if it doesn't;
+  - `scenario.check_grouping(...)` then checks the model chose the right tabs.
+
+The model only sees each tab's title and a URL token built from the host and path (for example
+`LOCALHOST_LASAGNA_HTML_1`), not the page content, unless it calls `get_page_content`.
+
 ## Record or build?
 
 Instead of recording, a test can write the model's replies in code with the builders in
@@ -204,5 +226,7 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | `modules/classes/recording.py` | `Recording`, matching, builders |
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |
-| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `smart_window_chat` |
+| `modules/classes/tab_grouping_scenario.py` | `TabGroupingScenario` |
+| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `smart_window_chat`, `tab_pages` |
 | `data/recordings/smart_window/` | Recordings, one per test |
+| `data/smart_window_pages/` | Pages opened as tabs |
