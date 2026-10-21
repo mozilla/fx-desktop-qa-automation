@@ -2614,6 +2614,10 @@ tabs:
     result: pass
     splits:
     - functional3
+  test_split_view_single_tab_context_menu_horizontal_vertical:
+    result: pass
+    splits:
+    - functional3
   test_tab_hover_different_content_type:
     result: pass
     splits:
