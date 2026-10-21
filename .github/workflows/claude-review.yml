@@ -52,13 +52,16 @@ jobs:
             Don't repeat a finding that is already there, fixed or not.
 
             - Post each new finding once, inline with `mcp__github_inline_comment__create_inline_comment`,
-              in one to three sentences. Add a `suggestion` block when the fix is small. The block
-              replaces exactly the commented lines, so the comment's range (`line`, plus `startLine`
-              for more than one line) must cover every line you change or delete, and nothing else.
-              To delete lines, comment on them with an empty block.
-            - Make each comment clear on its own: name the code it's about, say what to change, and
-              say whether it's blocking or optional. When you point to other code as an example,
-              check that it really does what you say.
+              in one to three sentences.
+            - Start each comment with **Blocking:** (a bug, a failing or flaky test, or a departure
+              from CLAUDE.md) or **Optional:** (anything else). Then name the code it's about and
+              say what to change.
+            - When you point to other code as an example, check that it does what you say.
+            - Add a `suggestion` block when the fix is small. It replaces exactly the commented
+              lines, so the comment's range (`line`, plus `startLine` for more than one line) must
+              cover every line you change or delete, and nothing else.
+            - If code is redundant, suggest deleting it (an empty block) rather than rewording it.
+            - A suggestion must itself follow CLAUDE.md, including any rule the comment cites.
             - Don't comment on formatting that `ruff format` accepts.
             - Use `gh pr comment` only for new findings that don't fit inline. No PR summary,
               no praise, no restating the inline comments.
