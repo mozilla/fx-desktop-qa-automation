@@ -3,7 +3,7 @@ name = "auto-fxui"
 version = "0.1.0"
 description = "Reusable Firefox UI page / browser component objects"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 license = "MPL-2.0"
 license-files = ["LICENSE"]
 dependencies = [
@@ -17,4 +17,4 @@ include = ["auto_fxui*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-fx_ui = ["data/*.components.json"]
+auto_fxui = ["data/*.components.json"]
