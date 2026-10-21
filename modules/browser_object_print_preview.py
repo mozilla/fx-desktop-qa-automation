@@ -169,3 +169,81 @@ class PrintPreview(BasePage):
         self._click_pagination_button("navigateEnd")
         self._wait_for_current_page(expected=total)
         return self
+
+    @BasePage.context_chrome
+    def _set_settings_control(self, element_id: str, value: str) -> None:
+        """Set a print-settings control and dispatch the event used by the UI."""
+        settings_browser = self.get_element("print-settings-browser")
+        self.driver.execute_script(
+            """
+            const element = arguments[0].contentDocument.getElementById(arguments[1]);
+            if (!element) throw new Error(`Missing print setting: ${arguments[1]}`);
+            element.value = arguments[2];
+            element.dispatchEvent(new Event("input", { bubbles: true }));
+            """,
+            settings_browser,
+            element_id,
+            value,
+        )
+
+    @BasePage.context_chrome
+    def set_custom_page_range(self, page_range: str) -> BasePage:
+        """Select Custom pages and enter a range such as '4-6,9'"""
+        settings_browser = self.get_element("print-settings-browser")
+
+        self.custom_wait(timeout=20).until(
+            lambda _: self.driver.execute_script(
+                """
+                const input = arguments[0].contentDocument.getElementById("custom-range");
+                return input && !input.disabled;
+                """,
+                settings_browser,
+            )
+        )
+        self._set_settings_control("range-picker", "custom")
+
+        self.custom_wait(timeout=10).until(
+            lambda _: self.driver.execute_script(
+                """
+                const input = arguments[0].contentDocument.getElementById("custom-range");
+                return input && !input.hidden;
+                """,
+                settings_browser,
+            )
+        )
+        self._set_settings_control("custom-range", page_range)
+        return self
+
+    @BasePage.context_chrome
+    def wait_for_sheet_count(self, expected: int, timeout: int = 20) -> BasePage:
+        """Wait until PrintPreview shows the expected number of sheets"""
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.get_sheet_indicator_values()[1] == expected
+        )
+        return self
+
+    @BasePage.context_chrome
+    def expect_invalid_custom_page_range(self, timeout: int = 10) -> BasePage:
+        """Wait for the custom-range error and verify the print form is invalid"""
+        settings_browser = self.get_element("print-settings-browser")
+
+        self.custom_wait(timeout=timeout).until(
+            lambda _: self.driver.execute_script(
+                """
+                const doc = arguments[0].contentDocument;
+                const input = doc.getElementById("custom-range");
+                const error = doc.getElementById("error-invalid-range");
+                const form = doc.getElementById("print");
+
+                return input
+                    && error
+                    && form
+                    && !error.hidden
+                    && !input.validity.valid
+                    && !form.checkValidity()
+                """,
+                settings_browser,
+            ),
+            message="Expected the invalid-range error and an invalid print form.",
+        )
+        return self
