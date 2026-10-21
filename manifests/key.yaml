@@ -775,7 +775,7 @@ menus:
     splits: []
 meta:
   test_selectors:
-    comment: Not part of feature functional test suites
+    comment: Not part of feature functional test suites (no need for http link)
     result: unstable
     splits: []
   test_version:
