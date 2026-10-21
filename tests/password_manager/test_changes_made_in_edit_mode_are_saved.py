@@ -33,9 +33,11 @@ def test_changes_made_in_edit_mode_are_saved(driver: Firefox):
 
     # Change username and the password
     about_logins.expect(
-        lambda _: not about_logins.get_element(
-            "about-logins-page-username-field"
-        ).get_property("readOnly")
+        lambda _: (
+            not about_logins.get_element(
+                "about-logins-page-username-field"
+            ).get_property("readOnly")
+        )
     )
     about_logins.fill(
         "about-logins-page-username-field", NEW_USERNAME, press_enter=False
