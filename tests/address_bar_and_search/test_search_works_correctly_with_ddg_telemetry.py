@@ -3,9 +3,9 @@ import time
 import pytest
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import Navigation
-from modules.page_object import AboutTelemetry
-from modules.util import Utilities
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutTelemetry
+from auto_fxui.util import Utilities
 
 WEBSITE_ADDRESS = "https://www.mozilla.com"
 

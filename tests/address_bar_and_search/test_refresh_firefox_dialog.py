@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from auto_fxui.browser_object import Navigation
 
 SEARCH_QUERY = "refresh firefox"
 REFRESH_BUTTON_ID = "refresh-button-awesome-bar"

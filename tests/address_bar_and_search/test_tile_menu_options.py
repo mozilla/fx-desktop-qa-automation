@@ -4,8 +4,8 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutNewtab
-from modules.util import Utilities
+from auto_fxui.page_object import AboutNewtab
+from auto_fxui.util import Utilities
 
 
 @pytest.fixture()

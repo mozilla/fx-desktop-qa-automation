@@ -1,10 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_error_page import ErrorPage
+from auto_fxui.browser_object import Navigation
+from auto_fxui.browser_object_panel_ui import PanelUi
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object_error_page import ErrorPage
 
 
 @pytest.fixture()

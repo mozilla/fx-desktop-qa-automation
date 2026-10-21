@@ -3,7 +3,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import Navigation
+from auto_fxui.browser_object import Navigation
 
 SEARCH_MODES = [
     ("Bing", "Bi", "https://www.bing.com"),

@@ -5,9 +5,9 @@ from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import Navigation, TabBar
-from modules.page_object import AboutPrefs
-from modules.page_object_generics import GenericPage
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object import AboutPrefs
+from auto_fxui.page_object_generics import GenericPage
 
 SEARCH_ENGINE = "Starfox Search"
 SEARCH_TERM = "mozilla"

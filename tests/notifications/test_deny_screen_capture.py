@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from auto_fxui.browser_object import Navigation
 
 TEST_URL = "https://storage.googleapis.com/desktop_test_assets/TestCases/ScreenShare/ShareScreen.html"
 

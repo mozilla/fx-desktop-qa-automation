@@ -3,8 +3,8 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 
-from modules.browser_object import Navigation
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import GenericPage
 
 
 @pytest.fixture()

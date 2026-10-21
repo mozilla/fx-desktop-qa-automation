@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation, TabBar
+from auto_fxui.browser_object import Navigation, TabBar
 
 DEFAULT_ENGINE_DOMAIN = "google.com"
 ENGINE = "Bing"
