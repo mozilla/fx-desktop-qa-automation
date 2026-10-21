@@ -1474,6 +1474,10 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_save_reordered_selected_pages:
+    result: pass
+    splits:
+    - functional1
   test_pdf_single_page_drag:
     result: pass
     splits:
