@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import yaml
 
-NUM_FUNCTIONAL_SPLITS = 3
+NUM_FUNCTIONAL_SPLITS = 2
 MAX_DEPTH = 5
 SUITE_TUPLE_RE = re.compile(r'\s+return \("S?(\d+)", ?".*"\)')
 DEFAULT_FUNCTIONAL_SPLIT = "functional1"
@@ -227,6 +227,7 @@ class TestKey:
             all_functs.extend(
                 self.gather_split(f"functional{splitnum}", pass_only=False)
             )
+        all_functs.sort()
         total_functs = len(all_functs)
         functs_per_split = total_functs // NUM_FUNCTIONAL_SPLITS
         remainder = total_functs % NUM_FUNCTIONAL_SPLITS
@@ -236,13 +237,15 @@ class TestKey:
             extra = 1 if remainder > 0 else 0
             remainder -= 1
             split_cutoffs.append(prev_cutoff + functs_per_split + extra)
+        this_suite = ""
+        splitnum = 0
         for i, test_filename in enumerate(all_functs):
-            splitnum = 0
-            for j in range(NUM_FUNCTIONAL_SPLITS):
-                if i > split_cutoffs[j]:
-                    splitnum = j + 1
             entry = self.get_entry_from_filename(test_filename)
             suite = list(entry.keys())[0]
+            for j in range(NUM_FUNCTIONAL_SPLITS):
+                if i > split_cutoffs[j] and suite != this_suite:
+                    splitnum = j + 1
+            this_suite = suite
             ptr = entry[suite]
             for _ in range(MAX_DEPTH):
                 if "splits" not in ptr:
