@@ -128,7 +128,7 @@ def test_something_descriptive(driver: Firefox):
 - Keep any comment or docstring well under half the length of the code it describes.
 - Explain why only where a reader would otherwise get it wrong, in one sentence. Do explain hard-to-read code: a regex, injected JS, a wait or retry that looks unnecessary.
 - Leave out history (what was tried, failure rates) and lists of every case handled; put history in the commit message or PR description.
-- `# Instantiate objects` above a test's POM/BOM setup is a repo convention, not a comment to remove.
+- `# Instantiate objects` (or a variant such as `# Instantiate object`) above a test's POM/BOM setup is a repo convention, not a comment to remove.
 
 ### Manifest / Skip System (`manifests/key.yaml`)
 
