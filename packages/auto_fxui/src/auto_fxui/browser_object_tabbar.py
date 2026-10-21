@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 from typing import Union
 
 from selenium.common.exceptions import NoSuchElementException

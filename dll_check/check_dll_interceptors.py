@@ -1,6 +1,6 @@
 import os
 from shutil import copyfile
-from subprocess import STDOUT, CalledProcessError, check_call, check_output, run
+from subprocess import STDOUT, CalledProcessError, check_call, check_output
 
 import requests
 import thclient
