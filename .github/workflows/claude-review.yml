@@ -53,8 +53,9 @@ jobs:
 
             - Post each new finding once, inline with `mcp__github_inline_comment__create_inline_comment`,
               in one to three sentences. Add a `suggestion` block when the fix is small. The block
-              replaces exactly the commented lines, so when it spans several lines pass `startLine`
-              and `line` covering every line it replaces.
+              replaces exactly the commented lines, so the comment's range (`line`, plus `startLine`
+              for more than one line) must cover every line you change or delete, and nothing else.
+              To delete lines, comment on them with an empty block.
             - Don't comment on formatting that `ruff format` accepts.
             - Use `gh pr comment` only for new findings that don't fit inline. No PR summary,
               no praise, no restating the inline comments.
