@@ -24,6 +24,20 @@ class Sidebar(BasePage):
         self.element_attribute_contains("sidebar-button", "tooltiptext", "Show sidebar")
         return self
 
+    @BasePage.context_chrome
+    def expect_sidebar_expanded(self, expanded: bool = True):
+        """Waits for the vertical tabs sidebar to be expanded or collapsed"""
+        self.expect(
+            lambda _: (
+                (
+                    self.get_element("sidebar-main").get_dom_attribute("expanded")
+                    is not None
+                )
+                == expanded
+            )
+        )
+        return self
+
     def hide_sidebar_via_context_menu(self):
         """Right-click the sidebar panel and select Hide Sidebar from the context menu"""
         self.context_click("sidebar-main")
