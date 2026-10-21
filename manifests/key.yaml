@@ -113,6 +113,10 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
+  test_new_search_box_custom_alias:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_keyboard_navigation:
     result: pass
     splits:
@@ -122,6 +126,10 @@ address_bar_and_search:
     splits:
     - functional1
   test_new_search_box_no_url_navigation:
+    result: pass
+    splits:
+    - functional1
+  test_new_search_box_opens_results_in_new_tab:
     result: pass
     splits:
     - functional1
@@ -1438,6 +1446,10 @@ pdf_viewer:
     splits:
     - smoke
     - ci-extended
+  test_pdf_page_actions_across_document_types:
+    result: pass
+    splits:
+    - functional1
   test_pdf_pages_can_be_cut_from_manage_menu_with_keyboard:
     result: pass
     splits:
@@ -1462,6 +1474,10 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_save_reordered_selected_pages:
+    result: pass
+    splits:
+    - functional1
   test_pdf_single_page_drag:
     result: pass
     splits:
