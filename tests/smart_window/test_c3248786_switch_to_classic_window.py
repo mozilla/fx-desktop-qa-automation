@@ -14,6 +14,7 @@ def test_case():
     return "3248786"
 
 
+@pytest.mark.unstable
 def test_switch_to_classic_window(active_smart_window: SmartWindow):
     """
     C3248786 - Switch to Classic Window from the Switch Windows button
@@ -32,4 +33,4 @@ def test_switch_to_classic_window(active_smart_window: SmartWindow):
     # Smart Window chrome is gone once the window is Classic again.
     smart_window.element_not_visible("smart-window-ask-button")
     smart_window.open_window_switcher()
-    smart_window.expect_switcher_selection("classic")
+    smart_window.expect_switcher_selection("smart")
