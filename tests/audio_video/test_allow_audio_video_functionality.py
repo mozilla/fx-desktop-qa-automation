@@ -1,12 +1,10 @@
 import pytest
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import AboutPrefs, GenericPage
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

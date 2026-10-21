@@ -3,14 +3,12 @@ from shutil import copyfile
 from time import sleep
 
 import pytest
+from auto_fxui.browser_object import ContextMenu, TabBar
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-from modules.browser_object import ContextMenu
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
