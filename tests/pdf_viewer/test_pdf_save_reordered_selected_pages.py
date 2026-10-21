@@ -9,11 +9,6 @@ def test_case():
 
 
 @pytest.fixture()
-def file_name():
-    return "boeing_brochure.pdf"
-
-
-@pytest.fixture()
 def add_to_prefs_list():
     return [
         ("pdfjs.enableSplitMerge", True),
