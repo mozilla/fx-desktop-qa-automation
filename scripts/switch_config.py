@@ -12,12 +12,10 @@ def dictmerge(a: dict, b: dict) -> dict:
     for key in set(list(a.keys()) + list(b.keys())):
         if isinstance(a.get(key), dict) and isinstance(b.get(key), dict):
             merged[key] = dictmerge(a[key], b[key])
-        elif key not in a:
-            merged[key] = b[key]
         elif key not in b:
             merged[key] = a[key]
         else:
-            merged[key] = a.get(key) + b.get(key)
+            merged[key] = b[key]
 
     return merged
 
