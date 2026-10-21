@@ -52,7 +52,10 @@ jobs:
             Don't repeat a finding that is already there, fixed or not.
 
             - Post each new finding once, inline with `mcp__github_inline_comment__create_inline_comment`,
-              in one to three sentences. Add a `suggestion` block when the fix is small.
+              in one to three sentences. Add a `suggestion` block when the fix is small. The block
+              replaces exactly the commented lines, so when it spans several lines pass `startLine`
+              and `line` covering every line it replaces.
+            - Don't comment on formatting that `ruff format` accepts.
             - Use `gh pr comment` only for new findings that don't fit inline. No PR summary,
               no praise, no restating the inline comments.
             - Skip "worth noting" remarks and anything the PR description already acknowledges.
