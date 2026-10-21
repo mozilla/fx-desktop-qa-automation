@@ -2424,6 +2424,10 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c4438277_group_related_tabs:
+    result: pass
+    splits:
+    - functional1
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
@@ -2606,6 +2610,14 @@ tabs:
     splits:
     - functional3
     - nightly
+  test_split_view_context_menu_two_distant_tabs:
+    result: pass
+    splits:
+    - functional3
+  test_split_view_single_tab_context_menu_horizontal_vertical:
+    result: pass
+    splits:
+    - functional3
   test_split_view_tab_link_correct_location:
     result: pass
     splits:

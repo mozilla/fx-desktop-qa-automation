@@ -528,6 +528,33 @@ class TabBar(BasePage):
         return self.get_element("tabgroup-label").text
 
     @BasePage.context_chrome
+    def get_tab_groups(self) -> list[dict]:
+        """
+        Return the window's tab groups, in tab strip order.
+
+        Returns
+        -------
+        list[dict]
+            Each with label and urls, the URLs of the group's tabs in order.
+        """
+        return self.driver.execute_script(
+            "return Array.from(gBrowser.tabGroups, group => ({"
+            "  label: group.label,"
+            "  urls: group.tabs.map(tab => tab.linkedBrowser.currentURI.spec),"
+            "}));"
+        )
+
+    def expect_tabs_grouped(self, urls: list[str]) -> BasePage:
+        """Wait until the tabs showing `urls` are all in tab groups."""
+
+        def _grouped(_) -> bool:
+            grouped = {url for group in self.get_tab_groups() for url in group["urls"]}
+            return all(url in grouped for url in urls)
+
+        self.wait.until(_grouped, message=f"Not all of {urls} were grouped")
+        return self
+
+    @BasePage.context_chrome
     def edit_tab_group(
         self, new_name: str = None, new_color: str = None, add_new_tab: bool = False
     ) -> "TabBar":
