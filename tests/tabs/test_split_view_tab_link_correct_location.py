@@ -47,6 +47,7 @@ def test_split_view_tab_link_correct_location(driver: Firefox, vertical_tabs: bo
     tabs.open_urls_in_tabs(URLS, open_first_in_current_tab=True)
     tabs.wait_for_num_tabs(len(URLS))
     split_view.create_split_view(LEFT_TAB, RIGHT_TAB)
+    tabs_before_link = [tabs.get_tab(index) for index in range(1, len(URLS) + 1)]
 
     # Select the left view and open a link in a new tab using the context menu
     tabs.click_tab_by_title(LEFT_TAB)
@@ -60,5 +61,12 @@ def test_split_view_tab_link_correct_location(driver: Firefox, vertical_tabs: bo
     # The link is opened right after the Split View: on its right side with
     # horizontal tabs, below it with vertical tabs
     split_view.expect_tab_next_to_split_view(LINK_URL, vertical=vertical_tabs)
-    expected_order = [URLS[0], URLS[1], LINK_URL, URLS[2], URLS[3]]
-    tabs.expect(lambda _: tabs.get_tab_urls_in_order() == expected_order)
+
+    # The other tabs keep their places: the two Split View tabs come first, then
+    # the new tab, then the rest
+    def _order_is_correct(_):
+        all_tabs = tabs.get_elements("all-tabs")
+        new_tabs = [tab for tab in all_tabs if tab not in tabs_before_link]
+        return all_tabs == tabs_before_link[:2] + new_tabs + tabs_before_link[2:]
+
+    tabs.expect(_order_is_correct)
