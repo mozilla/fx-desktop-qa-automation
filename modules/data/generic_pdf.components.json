@@ -434,6 +434,39 @@
       "location": "The PDF viewer Pages sidebar"
     }
   },
+  "pages-sidebar": {
+    "selectorData": "viewsManager",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Resizable sidebar containing the PDF Pages view",
+      "location": "Left side of the PDF viewer"
+    }
+  },
+  "pages-sidebar-resizer": {
+    "selectorData": "viewsManagerResizer",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Drag handle showing a blue guide when hovered",
+      "location": "Right edge of the PDF Pages sidebar"
+    }
+  },
+  "page-thumbnails-container": {
+    "selectorData": "thumbnailsView",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Wrapping container for PDF page thumbnails",
+      "location": "Inside the PDF Pages sidebar"
+    }
+  },
   "page-thumbnails": {
     "selectorData": "#thumbnailsView > .thumbnail",
     "strategy": "css",
