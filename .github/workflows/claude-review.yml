@@ -56,6 +56,9 @@ jobs:
               replaces exactly the commented lines, so the comment's range (`line`, plus `startLine`
               for more than one line) must cover every line you change or delete, and nothing else.
               To delete lines, comment on them with an empty block.
+            - Make each comment clear on its own: name the code it's about, say what to change, and
+              say whether it's blocking or optional. When you point to other code as an example,
+              check that it really does what you say.
             - Don't comment on formatting that `ruff format` accepts.
             - Use `gh pr comment` only for new findings that don't fit inline. No PR summary,
               no praise, no restating the inline comments.
