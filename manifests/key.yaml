@@ -564,7 +564,10 @@ desktop_integration:
     splits:
     - functional1
   test_theme_reflected_in_taskbar_tab:
-    result: pass
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
     splits:
     - functional1
 downloads:

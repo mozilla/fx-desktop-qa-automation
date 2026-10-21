@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation
-from modules.page_object import AboutAddons, GenericPage
+from modules.page_object import AboutAddons
 
 WIKIPEDIA_URL = "https://www.wikipedia.org/"
 DARK_CARD = "firefox-compact-dark_mozilla_org-heading"
@@ -24,7 +24,6 @@ def test_theme_reflected_in_taskbar_tab(driver: Firefox):
     # Instantiate objects
     nav = Navigation(driver)
     about_addons = AboutAddons(driver)
-    wikipedia = GenericPage(driver, url=WIKIPEDIA_URL)
 
     # Set the browser theme to Dark
     about_addons.open()
@@ -34,7 +33,7 @@ def test_theme_reflected_in_taskbar_tab(driver: Firefox):
 
     # Open Wikipedia in a new tab and move it into a Taskbar Tabs window
     nav.open_and_switch_to_new_window("tab")
-    wikipedia.open()
+    driver.get(WIKIPEDIA_URL)
     nav.click_on("taskbar-tabs-button")
     nav.wait_for_taskbar_tab_window()
     taskbar_handle = driver.current_window_handle
@@ -44,7 +43,6 @@ def test_theme_reflected_in_taskbar_tab(driver: Firefox):
 
     # Switch the main window to the Light theme
     driver.switch_to.window(main_handle)
-    about_addons.open()
     about_addons.choose_sidebar_option("theme")
     about_addons.activate_theme(nav, LIGHT_CARD, "", perform_assert=False)
     driver.switch_to.window(taskbar_handle)
