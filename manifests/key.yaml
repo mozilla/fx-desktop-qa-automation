@@ -113,6 +113,14 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
+  test_new_search_box_add_open_search_engine:
+    result: pass
+    splits:
+    - functional1
+  test_new_search_box_added_engine_default:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_custom_alias:
     result: pass
     splits:
