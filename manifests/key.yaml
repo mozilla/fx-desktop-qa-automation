@@ -153,6 +153,14 @@ address_bar_and_search:
     result: pass
     splits:
     - functional1
+  test_new_search_box_shift_click_engine_homepage:
+    result: pass
+    splits:
+    - functional1
+  test_new_search_box_shift_click_suggestion_new_window:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_suggestions_disabled:
     result: pass
     splits:
