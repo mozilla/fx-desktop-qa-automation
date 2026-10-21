@@ -9,7 +9,7 @@
     }
   },
   "theme-card": {
-    "selectorData": "div.card[aria-labelledby='{name}']",
+    "selectorData": ".card[aria-labelledby='{name}']",
     "strategy": "css",
     "groups": [],
     "comment": {
