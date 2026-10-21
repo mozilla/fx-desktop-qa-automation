@@ -1,4 +1,9 @@
+import hashlib
+import json
+from urllib.parse import quote
+
 import pytest
+import requests
 from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
 
@@ -9,6 +14,36 @@ def test_case():
 
 
 LANGUAGES = [("it", "Lingua")]
+NIGHTLY_LANGPACK_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/linux-x86_64/xpi/firefox-{version}.{locale}.langpack.xpi"
+
+
+@pytest.fixture()
+def add_to_prefs_list(version: str):
+    """On Nightly, list its own language packs, since AMO only has Beta and Release ones."""
+    if "a1" not in version:
+        return []
+    fx_version = version.split()[-1]
+    results = []
+    for locale, _ in LANGUAGES:
+        url = NIGHTLY_LANGPACK_URL.format(version=fx_version, locale=locale)
+        response = requests.get(url, timeout=60)
+        # The archive only keeps the newest Nightly's language packs
+        if response.status_code == 404:
+            pytest.skip(f"No Nightly language pack for {fx_version}: {url}")
+        response.raise_for_status()
+        sha256 = hashlib.sha256(response.content).hexdigest()
+        results.append(
+            {
+                "target_locale": locale,
+                "current_compatible_version": {
+                    "files": [
+                        {"platform": "all", "url": url, "hash": f"sha256:{sha256}"}
+                    ]
+                },
+            }
+        )
+    listing = quote(json.dumps({"results": results}))
+    return [("extensions.getAddons.langpacks.url", f"data:application/json,{listing}")]
 
 
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
