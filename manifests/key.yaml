@@ -520,6 +520,13 @@ desktop_integration:
       win: pass
     splits:
     - functional1
+  test_theme_reflected_in_taskbar_tab:
+    result:
+      linux: out of scope
+      mac: out of scope
+      win: pass
+    splits:
+    - functional1
 downloads:
   test_add_mime_type_doc:
     comment: Windows unstable in GHA, https://bugzilla.mozilla.org/show_bug.cgi?id=2043378
