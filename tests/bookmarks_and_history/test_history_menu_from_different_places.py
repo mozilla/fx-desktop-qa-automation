@@ -1,14 +1,13 @@
 import platform
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_menu_bar import MenuBar
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.browser_object_panel_ui import PanelUi
 from auto_fxui.browser_object_tabbar import TabBar
 from auto_fxui.page_base import BasePage
 from auto_fxui.page_object_customize_firefox import CustomizeFirefox
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

@@ -68,10 +68,10 @@ class BasePage(Page):
     """
     This class extends pypom.Page with a constructor and methods to support our testing.
 
-    Page objects will now expect a JSON entry in ./modules/data with info about elements'
+    Page objects will now expect a JSON entry in ./data with info about elements'
     selectors, locations in shadow DOM, and other categorizations. This JSON file should
     be name filename.components.json, where filename is the snake_case version of the
-    class name. E.g. AboutPrefs has ./modules/data/about_prefs.components.json.
+    class name. E.g. AboutPrefs has ./data/about_prefs.components.json.
 
     Elements in the "requiredForPage" group will be checked for presence before self.loaded
     can return True.
@@ -83,7 +83,7 @@ class BasePage(Page):
     driver: selenium.webdriver.Firefox
         The browser instance under test
 
-    utils: modules.utils.PomUtils
+    utils: auto_fxui.utils.PomUtils
         POM utilities for the object
 
     elements: dict
@@ -107,7 +107,7 @@ class BasePage(Page):
         sys_platform = self.sys_platform()
         if sys_platform == "Windows":
             root_dir = Path(os.getcwd())
-            json_path = root_dir.joinpath("modules", "data")
+            json_path = root_dir.joinpath("data")
             self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
         else:
             self.load_element_manifest(

@@ -1,7 +1,6 @@
 import os
 
 import pytest
-
 from auto_fxui.browser_object import AutofillPopup
 from auto_fxui.page_object import AboutPrefs, AddressFill, CreditCardFill
 from auto_fxui.util import Utilities

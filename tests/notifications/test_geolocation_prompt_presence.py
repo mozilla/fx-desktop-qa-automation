@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import GenericPage
 from selenium.common import NoSuchElementException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-
-from auto_fxui.browser_object import Navigation
-from auto_fxui.page_object import GenericPage
 
 
 @pytest.fixture()

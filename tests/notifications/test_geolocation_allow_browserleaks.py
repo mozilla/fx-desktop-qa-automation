@@ -1,8 +1,7 @@
 import pytest
-from selenium.common.exceptions import TimeoutException, UnexpectedAlertPresentException
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import GenericPage
+from selenium.common.exceptions import TimeoutException, UnexpectedAlertPresentException
 
 TEST_URL = "https://browserleaks.com/geo"
 

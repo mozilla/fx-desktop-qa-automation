@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_navigation import Navigation
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://addons.mozilla.org/en-US/firefox/addon/popup-blocker/"
 ADDON_NAME = "Popup Blocker (strict)"

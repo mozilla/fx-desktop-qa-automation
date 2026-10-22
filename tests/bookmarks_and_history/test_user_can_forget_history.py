@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ForgetPanel, Navigation, PanelUi, TabBar
 from auto_fxui.page_object import CustomizeFirefox
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

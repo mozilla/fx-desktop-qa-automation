@@ -5,10 +5,9 @@ from shutil import copyfileobj
 from uuid import uuid4
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 TEST_PAGE_TITLE = "Home - Oregon State Parks"
 
