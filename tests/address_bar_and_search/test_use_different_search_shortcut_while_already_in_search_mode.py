@@ -46,7 +46,7 @@ def test_use_different_search_shortcut_while_already_in_search_mode(
     nav.verify_domain(URL_DOMAIN)
 
     # Verify search term is also present in the URL. Wikipedia's "go" feature may land on
-    # the matching article (e.g. /wiki/Amazon_(company)) where the term is capitalized, so
+    # the matching article (e.g. /wiki/Google) where the term is capitalized, so
     # compare case-insensitively.
     term = SEARCH_TERM.lstrip("@").lower()
     nav.expect_in_content(lambda d: term in d.current_url.lower())
