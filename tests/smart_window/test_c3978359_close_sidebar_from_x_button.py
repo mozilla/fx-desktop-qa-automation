@@ -5,7 +5,7 @@ Verify that the Assistant chat sidebar can be dismissed with its own X button.
 
 import pytest
 
-from modules.browser_object import SmartWindow
+from auto_fxui.browser_object import SmartWindow
 
 
 @pytest.fixture()

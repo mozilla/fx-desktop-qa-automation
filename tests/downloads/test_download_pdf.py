@@ -3,7 +3,7 @@ import os
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 DUMMY_PDF_URL = (
     "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"

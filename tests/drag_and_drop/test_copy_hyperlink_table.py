@@ -3,7 +3,7 @@ from time import sleep
 import pytest
 from selenium.webdriver import Firefox, Keys
 
-from modules.page_object import GoogleSheets, Navigation
+from auto_fxui.page_object import GoogleSheets, Navigation
 
 
 @pytest.fixture()

@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.page_object import AboutAddons
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutAddons
 
 WIKIPEDIA_URL = "https://www.wikipedia.org/"
 DARK_CARD = "firefox-compact-dark_mozilla_org-heading"
