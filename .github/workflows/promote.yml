@@ -79,13 +79,21 @@ jobs:
             exit 1
           fi
 
-          if ! git cherry-pick -x "$FIX_SHA"; then
+          # --empty=drop skips the commit instead of failing when main
+          # already has the fix
+          if ! git cherry-pick -x --empty=drop "$FIX_SHA"; then
             git cherry-pick --abort
 
             gh pr comment "$PR_NUMBER" --body \
-              "Automatic promotion to main failed. Please cherry-pick ${FIX_SHA} onto a branch based on main, and open a beta fix PR."
+              "Automatic promotion to main failed. Please cherry-pick ${FIX_SHA} onto a branch based on main, and open a PR against main."
 
             exit 1
+          fi
+
+          if [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]]; then
+            gh pr comment "$PR_NUMBER" --body \
+              "No promote PR needed: main already has the changes from ${FIX_SHA}."
+            exit 0
           fi
 
           git push origin "$branch"
