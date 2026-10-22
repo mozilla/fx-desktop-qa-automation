@@ -20,7 +20,7 @@ PLATFORM_ALIASES = {
 }
 
 
-class Dumper(yaml.Dumper):
+class Dumper(yaml.SafeDumper):
     def increase_indent(self, flow=False, *args, **kwargs):
         return super().increase_indent(flow=flow, indentless=False)
 

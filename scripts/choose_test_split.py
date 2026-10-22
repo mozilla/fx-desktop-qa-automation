@@ -439,12 +439,14 @@ if __name__ == "__main__":
             if not os.path.exists(model_file):
                 continue
             tests = get_tests_by_change(model_file, test_paths_and_contents)
-            if len(tests) > MAX_TESTS_PER_CHANGE:
-                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
 
             if tests is not None:
                 run_list.extend(tests)
                 continue
+
+            if len(tests) > MAX_TESTS_PER_CHANGE:
+                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
+
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
