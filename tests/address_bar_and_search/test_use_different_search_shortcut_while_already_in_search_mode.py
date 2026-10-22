@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from modules.browser_object import Navigation
 
 SEARCH_ENGINE = "Wikipedia"
-SEARCH_TERM = "@amazon"
+SEARCH_TERM = "@google"
 URL_DOMAIN = "wikipedia.org"
 
 

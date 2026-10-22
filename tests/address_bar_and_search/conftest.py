@@ -49,7 +49,7 @@ def add_to_prefs_list():
 @pytest.fixture()
 def search_modes():
     return {
-        "site": ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay", "Wikipedia"],
+        "site": ["Google", "Bing", "DuckDuckGo", "eBay", "Wikipedia"],
         "browser": [
             ("*", "Bookmarks"),
             ("%", "Tabs"),
