@@ -12,6 +12,7 @@ from pypom import Page
 from manifests.testkey import TestKey
 
 MANIFEST_KEY = "manifests/key.yaml"
+MAX_TESTS_PER_CHANGE = 12
 SUPPORTED_OSES = ["mac", "win", "linux"]
 HEADED_MARK = "@pytest.mark.headed"
 MIN_RUN_SIZE = 7
@@ -267,7 +268,7 @@ def dedupe(run_list: list) -> list:
         elif os.path.isdir(entry_a):
             print(f"Removing {entry_a}: is a directory, adding tests")
             removes.append(i)
-            adds.extend(get_tests_in_suite(entry_a))
+            adds.extend(get_tests_in_suite(entry_a)[:MAX_TESTS_PER_CHANGE])
             continue
         for j, entry_b in enumerate(run_list):
             if i == j:
@@ -428,6 +429,8 @@ if __name__ == "__main__":
                 tests = get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 )
+            if len(tests) > MAX_TESTS_PER_CHANGE:
+                tests = tests[:MAX_TESTS_PER_CHANGE]
             run_list.extend(tests)
 
     if changed_models:
@@ -436,6 +439,9 @@ if __name__ == "__main__":
             if not os.path.exists(model_file):
                 continue
             tests = get_tests_by_change(model_file, test_paths_and_contents)
+            if len(tests) > MAX_TESTS_PER_CHANGE:
+                tests = tests[:MAX_TESTS_PER_CHANGE]
+
             if tests is not None:
                 run_list.extend(tests)
                 continue

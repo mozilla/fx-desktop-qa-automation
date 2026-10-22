@@ -20,6 +20,11 @@ PLATFORM_ALIASES = {
 }
 
 
+class Dumper(yaml.Dumper):
+    def increase_indent(self, flow=False, *args, **kwargs):
+        return super().increase_indent(flow=flow, indentless=False)
+
+
 def normalize_result_platforms(result: dict) -> dict:
     """Return a copy of a per-platform result dict with keys normalized to canonical names."""
     return {PLATFORM_ALIASES.get(k, k): v for k, v in result.items()}
@@ -125,7 +130,7 @@ class TestKey:
         Dump the manifest to the filename passed at initialization.
         """
         with open(self.manifest_file, "w") as fh:
-            yaml.safe_dump(self.manifest, fh)
+            yaml.dump(self.manifest, fh, Dumper=Dumper)
 
     def normalize_test_filename(self, suite, testfile, subtest=None):
         filename = os.path.join(self.test_root, suite, f"{testfile}.py")
