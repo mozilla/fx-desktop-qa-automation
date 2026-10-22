@@ -430,7 +430,7 @@ if __name__ == "__main__":
                     model_name, test_paths_and_contents, run_list
                 )
             if len(tests) > MAX_TESTS_PER_CHANGE:
-                tests = tests[:MAX_TESTS_PER_CHANGE]
+                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
             run_list.extend(tests)
 
     if changed_models:
@@ -440,7 +440,7 @@ if __name__ == "__main__":
                 continue
             tests = get_tests_by_change(model_file, test_paths_and_contents)
             if len(tests) > MAX_TESTS_PER_CHANGE:
-                tests = tests[:MAX_TESTS_PER_CHANGE]
+                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
 
             if tests is not None:
                 run_list.extend(tests)
