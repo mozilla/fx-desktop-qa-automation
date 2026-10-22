@@ -58,8 +58,7 @@ def test_split_view_tab_link_correct_location(driver: Firefox, vertical_tabs: bo
     context_menu.click_and_hide_menu("context-menu-open-link-in-tab")
     tabs.wait_for_num_tabs(len(URLS) + 1)
 
-    # The link is opened right after the Split View: on its right side with
-    # horizontal tabs, below it with vertical tabs
+    # Asserts the new tab appears immediately after the split view.
     split_view.expect_tab_next_to_split_view(LINK_URL, vertical=vertical_tabs)
 
     # The other tabs keep their places: the two Split View tabs come first, then
