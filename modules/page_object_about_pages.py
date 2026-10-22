@@ -610,13 +610,25 @@ class AboutOpentabs(BasePage):
         Click the listed tab whose title is `title`, adding it to the Split View
         in place of this page.
         """
-        for link in self.get_listed_tab_links():
-            if link.text.strip() == title:
-                link.click()
-                return self
-        raise AssertionError(
-            f"No tab titled {title!r} is listed, found: {self.get_listed_tab_titles()}"
-        )
+
+        # The list fills in after the page loads, so wait for the row to appear
+        def _find_link(_):
+            try:
+                for link in self.get_listed_tab_links():
+                    if link.text.strip() == title:
+                        return link
+            except StaleElementReferenceException:
+                pass
+            return False
+
+        try:
+            link = self.wait.until(_find_link)
+        except TimeoutException:
+            raise AssertionError(
+                f"No tab titled {title!r} is listed, found: {self.get_listed_tab_titles()}"
+            )
+        link.click()
+        return self
 
 
 class AboutPrivatebrowsing(BasePage):
