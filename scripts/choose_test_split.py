@@ -441,11 +441,10 @@ if __name__ == "__main__":
             tests = get_tests_by_change(model_file, test_paths_and_contents)
 
             if tests is not None:
+                if len(tests) > MAX_TESTS_PER_CHANGE:
+                    tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
                 run_list.extend(tests)
                 continue
-
-            if len(tests) > MAX_TESTS_PER_CHANGE:
-                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
 
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
