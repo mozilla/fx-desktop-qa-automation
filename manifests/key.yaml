@@ -269,11 +269,13 @@ address_bar_and_search:
       - functional1
       - nightly
   test_server_not_found_error:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085069
+    result: unstable
     splits:
       - functional1
   test_server_not_found_error_on_private_window:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085069
+    result: unstable
     splits:
       - functional1
   test_suggestions_for_empty_query_not_shown_in_search_mode:
@@ -556,7 +558,8 @@ downloads:
     result: covered-in-tree
     splits: []
   test_no_download_telemetry_without_panel:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085091
+    result: unstable
     splits:
       - functional1
       - nightly
@@ -1364,7 +1367,11 @@ preferences:
     splits:
       - functional2
   test_downloaded_languages_can_be_deleted:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085088
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
       - functional2
   test_edit_installed_engines:
@@ -1405,7 +1412,11 @@ preferences:
     result: covered-in-tree
     splits: []
   test_language_packs_can_be_downloaded_from_about_addons:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085085
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
       - functional2
   test_languages_can_be_downloaded:
@@ -1458,7 +1469,8 @@ preferences:
     splits:
       - functional2
   test_preferred_language_localisation_works:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085106
+    result: unstable
     splits:
       - functional2
   test_private_default_search_engine_dropdown:
@@ -1587,7 +1599,8 @@ security_and_privacy:
     result: deprecated
     splits: []
   test_blocking_fingerprinters:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085108
+    result: unstable
     splits:
       - functional2
   test_blocking_social_media_trackers:
@@ -1775,11 +1788,8 @@ security_and_privacy:
     result: covered-in-tree
     splits: []
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2064805
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085110
+    result: unstable
     splits:
       - functional2
   test_remember_decision_permissions_prompt:
@@ -1856,7 +1866,8 @@ session_restore:
     result: covered-in-tree
     splits: []
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085067
+    result: unstable
     splits:
       - functional2
       - nightly
@@ -2055,7 +2066,8 @@ smart_window:
     splits:
       - functional2
   test_c4438277_group_related_tabs:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085113
+    result: unstable
     splits:
       - functional2
 sync_and_fxa:
@@ -2136,7 +2148,11 @@ tabs:
     result: covered-in-tree
     splits: []
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085070
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
     splits:
       - functional2
       - nightly
@@ -2222,8 +2238,7 @@ tabs:
       - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081912
-    result: unstable
+    result: pass
     splits:
       - smoke
       - no_xvfb
