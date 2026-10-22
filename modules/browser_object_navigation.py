@@ -303,7 +303,6 @@ class Navigation(BasePage):
         mode : str | None
             If set, the name or keystroke shortcut of the search mode
         """
-        time.sleep(0.5)
         if mode:
             self.set_search_mode_via_awesome_bar(mode).type_in_awesome_bar(
                 term + Keys.ENTER
