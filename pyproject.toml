@@ -16,6 +16,7 @@ dependencies = [
   "astroid==2.15.8 ; python_full_version >= '3.7.2'",
   "asttokens==3.0.1 ; python_full_version >= '3.8'",
   "attrs==26.1.0 ; python_full_version >= '3.9'",
+  "auto-fxui",
   "autoflake==1.7.8 ; python_full_version >= '3.7'",
   "babel==2.18.0 ; python_full_version >= '3.8'",
   "bandit==1.9.4 ; python_full_version >= '3.10'",
@@ -205,6 +206,14 @@ markers = [
   "locale_gb: tests run in GB locale versions",
   "noxvfb: tests that should not run in xvfb sessions",
 ]
+
+[tool.uv.workspace]
+members = [
+    "packages/auto_fxui",
+]
+
+[tool.uv.sources]
+auto-fxui = { workspace = true }
 
 [dependency-groups]
 dev = [

@@ -3,8 +3,8 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import PanelUi
+from auto_fxui.page_object import GenericPage
 
 LABEL_TEXT = "Mozilla"
 

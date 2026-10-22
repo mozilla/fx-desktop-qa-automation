@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_generics import GenericPage
+from auto_fxui.page_object_generics import GenericPage
 
 
 @pytest.fixture()
