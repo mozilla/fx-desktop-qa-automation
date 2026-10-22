@@ -7,7 +7,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -23,6 +23,9 @@ from modules.util import Utilities
 
 # Language models are tens of MB each, so the download can be slow.
 DOWNLOAD_LANGUAGE_TIMEOUT = 120
+
+# The Smart Window AI model whose pref only commits once it is configured.
+CUSTOM_MODEL = "smart-window-model-custom"
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
@@ -2208,6 +2211,94 @@ class AboutPrefs(BasePage):
                 == state
             )
         )
+        return self
+
+    def navigate_to_smart_window_settings(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the Personalize Smart Window subpage.
+
+        The model controls exist in the DOM on about:preferences#ai too, but
+        are hidden there; only this hash renders them. So assert visibility
+        rather than existence when checking them.
+
+        Arguments:
+            verify: If True (default), wait for the model radio group to show.
+        """
+        self.driver.get("about:preferences#personalizeSmartWindow")
+        if verify:
+            self.element_visible("smart-window-model-group")
+        return self
+
+    def get_smart_window_models(self) -> list[dict]:
+        """
+        Describe every AI model offered on the personalize subpage.
+
+        Returns:
+            list[dict]: one entry per model, in page order, with its l10n id,
+                radio value, rendered label, description and checked state.
+        """
+        return [
+            {
+                "l10n": option.get_attribute("data-l10n-id"),
+                "value": option.get_attribute("value"),
+                "label": option.get_attribute("label"),
+                "description": option.get_attribute("description"),
+                "checked": option.get_property("checked"),
+            }
+            for option in self.get_elements("smart-window-model-options")
+        ]
+
+    def get_smart_window_model(self) -> str:
+        """
+        Return the l10n id of the currently selected AI model.
+        """
+        selected = [m for m in self.get_smart_window_models() if m["checked"]]
+        assert len(selected) == 1, f"expected one model checked, got {selected}"
+        return selected[0]["l10n"]
+
+    def expect_smart_window_model(self, l10n_id: str) -> BasePage:
+        """
+        Wait until `l10n_id` is the selected AI model.
+        """
+        self.expect(lambda _: self.get_smart_window_model() == l10n_id)
+        return self
+
+    def set_smart_window_model(self, l10n_id: str) -> BasePage:
+        """
+        Select an AI model on the personalize subpage.
+
+        Clicks near the top-left of the radio, not its centre. A moz-radio here
+        is a full-width row whose centre lands on the description text, where a
+        click does nothing; the control itself sits at the left edge. Plain
+        element.click() and keyboard both fail too -- the host reports "not
+        reachable by keyboard" and Marionette rejects its ShadowRoot -- so a
+        positioned pointer event is the only real interaction that works.
+
+        Arguments:
+            l10n_id: e.g. "smart-window-model-fast-v2"
+        """
+        option = self.get_element("smart-window-model-option", labels=[l10n_id])
+        value = option.get_attribute("value")
+        width, height = option.size["width"], option.size["height"]
+        ActionChains(self.driver).move_to_element_with_offset(
+            option, -(width // 2) + 12, -(height // 2) + 12
+        ).click().perform()
+        self.expect_smart_window_model(l10n_id)
+
+        # Custom only commits once a model has actually been configured, so its
+        # pref stays on the previous choice while the radio reads as selected.
+        if l10n_id != CUSTOM_MODEL:
+            # Same confirmation as set_ai_smart_window: prove the control wrote
+            # through to the pref rather than only moving the visual state.
+            self.expect(
+                lambda _: (
+                    self.driver.execute_script(
+                        "return Services.prefs.getStringPref("
+                        "'browser.smartwindow.firstrun.modelChoice', '');"
+                    )
+                    == value
+                )
+            )
         return self
 
     def cancel_ai_killswitch_click(self) -> BasePage:
