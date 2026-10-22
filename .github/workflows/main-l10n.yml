@@ -17,6 +17,11 @@ on:
         description: "Is this a PR?"
         default: false
         type: boolean
+      source_ref:
+        description: "Git ref to check out; empty uses the triggering event"
+        required: false
+        type: string
+        default: ""
       dry_run:
         description: "If true, skip downloads/installs/tests/uploads (safe dry run)"
         required: false
@@ -66,7 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: main
+          ref: ${{ inputs.source_ref }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -184,7 +189,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: main
+          ref: ${{ inputs.source_ref }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -307,7 +312,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: main
+          ref: ${{ inputs.source_ref }}
           persist-credentials: false
 
       - name: Dry-run notice
@@ -477,7 +482,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          ref: main
+          ref: ${{ inputs.source_ref }}
           persist-credentials: false
 
       - name: Set up Python 3.13

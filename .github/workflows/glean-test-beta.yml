@@ -73,6 +73,7 @@ jobs:
       job_to_run: Test-Windows
       test_set: glean
       trigger_event: ${{ github.event_name }}
+      source_ref: main
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -91,6 +92,7 @@ jobs:
       job_to_run: Test-MacOS
       test_set: glean
       trigger_event: ${{ github.event_name }}
+      source_ref: main
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}

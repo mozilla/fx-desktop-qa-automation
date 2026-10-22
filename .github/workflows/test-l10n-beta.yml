@@ -42,6 +42,7 @@ jobs:
     uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-MacOS
+      source_ref: main
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -56,6 +57,7 @@ jobs:
     uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-Windows
+      source_ref: main
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -70,6 +72,7 @@ jobs:
     uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-Linux
+      source_ref: main
     secrets:
       TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
