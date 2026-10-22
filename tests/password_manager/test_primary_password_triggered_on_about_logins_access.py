@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object import AboutLogins, AboutPrefs
-from modules.util import BrowserActions
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.page_object import AboutLogins, AboutPrefs
+from auto_fxui.util import BrowserActions
 
 PRIMARY_PASSWORD = "securePassword1"
 TEST_PAGE_URL = "mozilla.org"

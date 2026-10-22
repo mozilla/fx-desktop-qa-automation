@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutLogins, GenericPage
-from modules.page_object_autofill import LoginAutofill
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutLogins, GenericPage
+from auto_fxui.page_object_autofill import LoginAutofill
 
 REDDIT_LOGIN_URL = "https://www.reddit.com/login/"
 REDDIT_ORIGIN = "https://www.reddit.com"

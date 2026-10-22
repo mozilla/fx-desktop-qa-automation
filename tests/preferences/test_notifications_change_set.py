@@ -3,7 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()

@@ -3,7 +3,7 @@ import os
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import PrintPreview
+from auto_fxui.browser_object import PrintPreview
 
 
 @pytest.fixture()

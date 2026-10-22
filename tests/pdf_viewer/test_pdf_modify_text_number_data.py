@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver.common.keys import Keys
 
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 PDF_FILE_NAME = "i-9.pdf"
 TEXT_FIELD = "first-name-field"

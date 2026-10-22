@@ -4,8 +4,8 @@ import pytest
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutLogins, GenericPage
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutLogins, GenericPage
 
 SAUCEDEMO_URL = "https://www.saucedemo.com/"
 USERNAME = "username1"

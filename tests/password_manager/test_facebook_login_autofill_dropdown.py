@@ -2,8 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutLogins, GenericPage
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutLogins, GenericPage
 
 LOGIN_URL = "https://www.facebook.com/login/device-based/regular/login/"
 FACEBOOK_ORIGIN = "https://www.facebook.com/"

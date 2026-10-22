@@ -3,9 +3,9 @@ import os
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Devtools, Navigation
-from modules.page_object import ExamplePage
-from modules.util import Utilities
+from auto_fxui.browser_object import ContextMenu, Devtools, Navigation
+from auto_fxui.page_object import ExamplePage
+from auto_fxui.util import Utilities
 
 
 @pytest.fixture()

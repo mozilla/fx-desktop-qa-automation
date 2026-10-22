@@ -1,9 +1,9 @@
 import pytest
 
-from modules.browser_object import PanelUi, TabBar
-from modules.browser_object_navigation import Navigation
-from modules.components.dropdown import Dropdown
-from modules.page_object import AboutNewtab, AboutPrefs, GenericPage
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.components.dropdown import Dropdown
+from auto_fxui.page_object import AboutNewtab, AboutPrefs, GenericPage
 
 
 @pytest.fixture()

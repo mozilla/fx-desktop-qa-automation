@@ -3,8 +3,8 @@ import re
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Glean
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import Glean
+from auto_fxui.page_object import AboutPrefs
 from tests.glean.flows import (
     ENTRY_PREFS,
     SEARCH_TERM,

@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.page_object import AboutConfig, AboutNetworking, AboutPrefs
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import AboutConfig, AboutNetworking, AboutPrefs
 
 TEST_URL = "https://www.facebook.com/"
 TEST_HOST = "www.facebook.com"

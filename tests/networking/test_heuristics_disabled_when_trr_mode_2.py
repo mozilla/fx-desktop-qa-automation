@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutConfig
+from auto_fxui.page_object import AboutConfig
 
 TRR_MODE_PREF = "network.trr.mode"
 TRR_MODE_DOH_ENABLED = 2

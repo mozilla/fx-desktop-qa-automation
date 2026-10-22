@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutPrefs
+from auto_fxui.page_object import AboutPrefs
 
 MOBILE_PAGE_URL_PART = "firefox.com"
 MOBILE_PAGE_PATH_PART = "/mobile"

@@ -1,9 +1,9 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu
-from modules.page_object import GenericPdf
-from modules.util import Utilities
+from auto_fxui.browser_object import ContextMenu
+from auto_fxui.page_object import GenericPdf
+from auto_fxui.util import Utilities
 
 PDF_FILE_NAME = "i-9.pdf"
 NUMERIC_TEXT = "12345"

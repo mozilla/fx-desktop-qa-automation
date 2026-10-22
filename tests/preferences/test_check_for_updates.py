@@ -3,7 +3,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.page_object_prefs import AboutPrefs
+from auto_fxui.page_object_prefs import AboutPrefs
 
 # The Firefox Updates control shows one button whose label depends on update
 # state. We can't restart Firefox in an automated run, so we only confirm that

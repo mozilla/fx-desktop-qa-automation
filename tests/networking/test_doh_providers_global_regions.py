@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object import AboutPrefs
+from auto_fxui.page_object import AboutPrefs
 
 EXPECTED_PROVIDERS = ["Cloudflare", "NextDNS"]
 REGIONS = ["RO", "GB", "SE"]

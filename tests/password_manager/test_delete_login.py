@@ -1,7 +1,7 @@
 import pytest
 
-from modules.page_object_about_pages import AboutLogins
-from modules.page_object_autofill import LoginAutofill
+from auto_fxui.page_object_about_pages import AboutLogins
+from auto_fxui.page_object_autofill import LoginAutofill
 
 PASSWORD_COUNT = "6 passwords"
 PASSWORD_COUNT_DECREASED = "5 passwords"

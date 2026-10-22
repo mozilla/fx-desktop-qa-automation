@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutProfiles
+from auto_fxui.page_object_about_pages import AboutProfiles
 
 
 @pytest.fixture()

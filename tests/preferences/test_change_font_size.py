@@ -5,7 +5,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.select import Select
 
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 LOCAL_HTML = "font_settings_page.html"
 # Any size other than the default works here, and the test checks that below.
