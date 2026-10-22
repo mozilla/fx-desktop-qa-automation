@@ -7,6 +7,7 @@ import sys
 import time
 from copy import deepcopy
 from functools import wraps
+from importlib.resources import files
 from pathlib import Path
 from typing import List
 
@@ -64,6 +65,11 @@ def _get_gui_auto(sysname):
     return _gui_auto
 
 
+def load_components(manifest_name: str) -> dict:
+    resource = files("auto_fxui").joinpath("data").joinpath(manifest_name)
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
 class BasePage(Page):
     """
     This class extends pypom.Page with a constructor and methods to support our testing.
@@ -104,18 +110,12 @@ class BasePage(Page):
                 manifest_name += char
             else:
                 manifest_name += f"_{char.lower()}"
-        sys_platform = self.sys_platform()
-        if sys_platform == "Windows":
-            root_dir = Path(os.getcwd())
-            json_path = root_dir.joinpath("data")
-            self.load_element_manifest(rf"{json_path}\{manifest_name}.components.json")
-        else:
-            self.load_element_manifest(f"./data/{manifest_name}.components.json")
+        self.load_element_manifest(f"{manifest_name}.components.json")
         self.actions = ActionChains(self.driver)
         self.instawait = WebDriverWait(self.driver, 0)
 
         if not driver.capabilities.get("moz:headless", True):  # headless set to false
-            self.gui = _get_gui_auto(sys_platform)
+            self.gui = _get_gui_auto(self.sys_platform)
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
@@ -148,8 +148,7 @@ class BasePage(Page):
     def load_element_manifest(self, manifest_loc):
         """Populate self.elements with the parse of the elements JSON"""
         logging.info(f"Loading element manifest: {manifest_loc}")
-        with open(manifest_loc) as fh:
-            self.elements = json.load(fh)
+        self.elements = load_components(manifest_loc)
         # We should expect an key-value pair of "context": "chrome" for Browser Objs
         if "context" in self.elements:
             self.context = self.elements["context"]
