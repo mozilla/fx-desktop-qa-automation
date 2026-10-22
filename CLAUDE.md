@@ -122,6 +122,13 @@ def test_something_descriptive(driver: Firefox):
     # test steps using the fluent interface
 ```
 
+### Comments and Docstrings
+
+- Docstrings: one line on what the function does or returns. Add a numpy `Parameters`/`Returns` section only when names and types don't make the meaning clear.
+- Keep any comment or docstring well under half the length of the code it describes.
+- Explain why only where a reader would otherwise get it wrong, in one sentence. Do explain hard-to-read code: a regex, injected JS, a wait or retry that looks unnecessary.
+- Leave out history (what was tried, failure rates) and lists of every case handled; put history in the commit message or PR description.
+
 ### Manifest / Skip System (`manifests/key.yaml`)
 
 Controls which tests run and on which platforms. Values other than `pass` skip the test:
@@ -193,6 +200,16 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 - Record with `--mock-mode=record` and a prod FxA token in `MOZ_FXA_BEARER_TOKEN` (see `SMART_WINDOW_MOCK_SERVER.md`). Never write the token anywhere else. Replay's failure message gives the exact record command; saved recordings leave out fields that change every call (`VOLATILE_FIELDS`) and the proxy's `provider_specific_fields`.
 - Where only the reply text matters, build the recording with `chat_reply()`, `tool_call()` or `search_results()` from `modules/classes/recording.py` instead of recording one.
 - Which chat to use: the sidebar (`SmartBar.open_smart_bar()`) when the TestRail case is about the AI Chat Sidebar, otherwise the full-page chat (`SmartBar.open_full_page_chat()`, the Home page). Run both, with a `parametrize`, only where behaviour is known to differ between them; each case then gets its own recording.
+
+### Smart Window tab management tests
+
+- One TestRail case per scenario, so one test file each (see `test_c4438277_group_related_tabs.py`). Describe the scenario with `TabGroupingScenario` (`modules/classes/tab_grouping_scenario.py`): the instruction, the pages opened as tabs, and the pages expected in the group.
+- Pages are files in `data/smart_window_pages/`. The `tab_pages` fixture serves them and turns file names into URLs; open them with `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`.
+- After `chat.send(scenario.instruction)`:
+  - get what the model asked for with `mock_server.tool_calls("manage_tabs")`;
+  - call `SmartWindowChat.confirm_tab_grouping_if_asked()`, since the model chooses whether to ask first;
+  - wait with `TabBar.expect_tabs_grouped(chat.resolve_url_tokens(...))` until Firefox has grouped the tabs the model asked for;
+  - assert the model's choice with `scenario.check_grouping(TabBar.get_tab_groups())`.
 
 ### Firefox Build Setup
 

@@ -2350,8 +2350,22 @@ class AboutAddons(BasePage):
         return enabled_theme == expected_theme
 
     def check_theme_has_changed(self, original_theme: str) -> BasePage:
-        """
-        Ensure the theme has changed.
-        """
-        assert not self.enabled_theme_matches(original_theme)
+        """Wait until a different theme is shown as enabled."""
+        original_theme = original_theme.strip()
+        assert original_theme, "The starting enabled-theme title was empty"
+
+        def enabled_theme_changed(_driver) -> bool:
+            try:
+                current_theme = (
+                    self.get_element("enabled-theme-title").get_attribute("innerText")
+                    or ""
+                ).strip()
+                return bool(current_theme) and current_theme != original_theme
+            except (NoSuchElementException, StaleElementReferenceException):
+                return False
+
+        self.custom_wait(timeout=30).until(
+            enabled_theme_changed,
+            message=f"Enabled theme did not change from {original_theme!r}",
+        )
         return self

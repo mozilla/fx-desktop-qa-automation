@@ -32,7 +32,7 @@ tasks:
         git config user.name "dteautomation"
         git config user.email "dte-automation@mozilla.com"
         git fetch
-        git pull origin main --rebase
+        git pull origin $BASE_REF --rebase
         mkdir -p artifacts;
         # Gate first: a PR that doesn't touch glean shouldn't pay for uv and rustup
         if [[ ! $(python3 ./scripts/choose_test_type.py) =~ "glean" ]]; then exit 0; fi;

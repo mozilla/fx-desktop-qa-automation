@@ -382,6 +382,14 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def shift_click_search_bar_suggestion(self) -> BasePage:
+        """Shift+click the first search suggestion in the search bar."""
+        self.search_bar_has_suggestions()
+        suggestion = self.get_element("searchbar-external-suggestion-row")
+        self.actions.key_down(Keys.SHIFT).click(suggestion).key_up(Keys.SHIFT).perform()
+        return self
+
+    @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
         Type in search bar without hitting enter

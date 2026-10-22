@@ -20,7 +20,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SLASH = "/" if "/" in SCRIPT_DIR else "\\"
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 IGNORE_FILE_REGEXES = [rf"\{SLASH}glean", rf"l10n_CM\{SLASH}.*\.py"]
-BIG_MODELS = ["Navigation", "GenericPage", "AboutPrefs", "PanelUi"]
 
 BASE_BRANCH = (
     os.environ.get("GITHUB_BASE_REF") or os.environ.get("BASE_REF") or "main"
@@ -425,8 +424,6 @@ if __name__ == "__main__":
         for selector_file in changed_selectors:
             (_, filename) = os.path.split(selector_file)
             model_name = pascalify(filename.split(".")[0])
-            if model_name in BIG_MODELS:
-                continue  # some models are too big to run all tests
             tests = get_tests_by_change(selector_file, test_paths_and_contents)
             if tests is None:
                 tests = get_tests_by_model(
