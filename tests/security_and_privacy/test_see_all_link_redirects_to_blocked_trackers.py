@@ -2,8 +2,8 @@ import pytest
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TrustPanel
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import TrustPanel
+from auto_fxui.page_object import GenericPage
 
 TEST_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 MAX_ATTEMPTS = 3

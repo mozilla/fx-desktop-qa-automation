@@ -3,7 +3,7 @@ import logging
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
+from auto_fxui.browser_object import TabBar
 
 NUM_TABS = 20
 

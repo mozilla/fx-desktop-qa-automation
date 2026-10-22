@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TrustPanel
-from modules.page_object import AboutPrefs, AboutProtections
+from auto_fxui.browser_object import TabBar, TrustPanel
+from auto_fxui.page_object import AboutPrefs, AboutProtections
 
 TEST_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 

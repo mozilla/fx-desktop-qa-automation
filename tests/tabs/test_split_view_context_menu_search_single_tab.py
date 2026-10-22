@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, SplitView, TabBar
-from modules.page_object import AboutOpentabs
+from auto_fxui.browser_object import ContextMenu, Navigation, SplitView, TabBar
+from auto_fxui.page_object import AboutOpentabs
 
 URLS = ["about:about", "about:mozilla", "about:license"]
 SEARCH_TERM = "mozilla firefox"

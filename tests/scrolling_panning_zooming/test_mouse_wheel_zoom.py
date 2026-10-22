@@ -5,8 +5,8 @@ from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 
 
 @pytest.fixture()

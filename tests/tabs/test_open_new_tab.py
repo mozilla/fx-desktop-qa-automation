@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 
-from modules.browser_object import TabBar
+from auto_fxui.browser_object import TabBar
 
 URL = "about:robots"
 EXPECTED_TEXT = "Firefox"

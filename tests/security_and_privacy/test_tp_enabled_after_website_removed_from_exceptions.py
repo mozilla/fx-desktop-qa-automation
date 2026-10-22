@@ -1,10 +1,10 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.browser_object_trust_panel import TrustPanel
-from modules.page_object_generics import GenericPage
-from modules.page_object_prefs import AboutPrefs
+from auto_fxui.browser_object import TabBar
+from auto_fxui.browser_object_trust_panel import TrustPanel
+from auto_fxui.page_object_generics import GenericPage
+from auto_fxui.page_object_prefs import AboutPrefs
 
 TEST_WEBSITE = "https://edition.cnn.com/"
 

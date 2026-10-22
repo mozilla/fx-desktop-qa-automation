@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.page_object import AboutPrefs
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import AboutPrefs
 
 PDF_URL = "https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
 VIDEO_URL = "https://www.w3schools.com/html/mov_bbb.mp4"

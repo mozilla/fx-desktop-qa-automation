@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar, TrustPanel
-from modules.page_object import AboutPrefs, GenericPage
+from auto_fxui.browser_object import TabBar, TrustPanel
+from auto_fxui.page_object import AboutPrefs, GenericPage
 
 FINGERPRINTERS_URL = "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting_and_cryptomining_and_cookies.html"
 

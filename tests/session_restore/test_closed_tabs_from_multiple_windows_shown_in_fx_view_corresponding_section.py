@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import TabBar
-from modules.page_object_firefox_view import FirefoxView
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object_firefox_view import FirefoxView
 
 
 @pytest.fixture()

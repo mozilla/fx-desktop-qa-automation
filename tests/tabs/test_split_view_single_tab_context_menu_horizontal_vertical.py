@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import ContextMenu, Navigation, Sidebar, SplitView, TabBar
+from auto_fxui.browser_object import ContextMenu, Navigation, Sidebar, SplitView, TabBar
 
 URLS = ["https://example.com/", "https://www.wikipedia.org/"]
 

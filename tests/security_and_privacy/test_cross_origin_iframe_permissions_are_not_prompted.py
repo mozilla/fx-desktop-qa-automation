@@ -3,8 +3,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
 
-from modules.browser_object import Navigation
-from modules.page_object import GenericPage
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import GenericPage
 
 TEST_URL = "https://joo.uber.space/frame-permissions.html"
 

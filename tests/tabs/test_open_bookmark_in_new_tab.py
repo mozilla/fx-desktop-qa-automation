@@ -3,8 +3,8 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import Navigation, TabBar
-from modules.page_object_generics import GenericPage
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object_generics import GenericPage
 
 
 @pytest.fixture()

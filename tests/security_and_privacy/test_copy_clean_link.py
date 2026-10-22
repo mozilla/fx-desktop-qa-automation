@@ -6,7 +6,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import Navigation
+from auto_fxui.browser_object import Navigation
 
 SOURCE_URL = "https://www.example.com/?fbclid=1234"
 
