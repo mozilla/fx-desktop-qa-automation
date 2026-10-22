@@ -400,7 +400,6 @@ class Navigation(BasePage):
         self.actions.key_down(Keys.SHIFT).click(suggestion).key_up(Keys.SHIFT).perform()
         return self
 
-    @BasePage.context_chrome
     def _middle_click(self, element: WebElement) -> BasePage:
         """Middle-click an element (pointer button 1 is the middle button)."""
         self.actions.move_to_element(element).perform()
