@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Print Range Test Fixture</title>
+    <style>
+      @page {
+        size: letter;
+        margin: 0.5in;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .print-page {
+        box-sizing: border-box;
+        height: 9in;
+        break-after: page;
+        page-break-after: always;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+      }
+
+      .print-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
+      .marker {
+        font-size: 32pt;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_1</h1><p>Unique printable content for page 1.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_2</h1><p>Unique printable content for page 2.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_3</h1><p>Unique printable content for page 3.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_4</h1><p>Unique printable content for page 4.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_5</h1><p>Unique printable content for page 5.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_6</h1><p>Unique printable content for page 6.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_7</h1><p>Unique printable content for page 7.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_8</h1><p>Unique printable content for page 8.</p></section>
+      <section class="print-page"><h1 class="marker">PRINT_PAGE_9</h1><p>Unique printable content for page 9.</p></section>
+    </main>
+  </body>
+</html>

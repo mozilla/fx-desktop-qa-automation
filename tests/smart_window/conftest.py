@@ -3,11 +3,14 @@ from os import environ
 from pathlib import Path
 
 import pytest
+from pytest_httpserver import HTTPServer
 
 from modules.browser_object import SmartWindow, SmartWindowChat
 from modules.classes.recording import Recording
 from modules.mock_server import MLPA_STAGE_URL, MockServer
 from modules.taskcluster import get_tc_secret
+
+TAB_PAGES = Path("data", "smart_window_pages")
 
 
 @pytest.fixture()
@@ -178,3 +181,37 @@ def recording_path(node: pytest.Item) -> Path:
     if callspec:
         return folder / node.path.stem / f"{callspec.id}.json"
     return folder / f"{node.path.stem}.json"
+
+
+@pytest.fixture(scope="session")
+def tab_pages_server():
+    """
+    Serve the pages in data/smart_window_pages/ on localhost, once per worker.
+
+    Its own server rather than pytest-httpserver's shared one: that server
+    is created once per worker by whichever suite asks first, and the address
+    bar suite pins it to 127.0.0.1. The host is part of each tab's URL token,
+    so on 127.0.0.1 the tokens no longer match the recordings.
+    """
+    server = HTTPServer(host="localhost", port=0)
+    for page in TAB_PAGES.glob("*.html"):
+        server.expect_request(f"/{page.name}").respond_with_data(
+            page.read_text(), content_type="text/html"
+        )
+    server.start()
+    yield server
+    server.clear()
+    server.stop()
+
+
+@pytest.fixture()
+def tab_pages(tab_pages_server: HTTPServer):
+    """
+    Return a function that turns page file names in data/smart_window_pages/
+    into their URLs.
+
+    The pages are served from localhost on a random port. Smart Window's URL
+    tokens are built from host and path only, so recordings don't depend on
+    the port.
+    """
+    return lambda names: [tab_pages_server.url_for(f"/{name}") for name in names]
