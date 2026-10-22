@@ -19,6 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: main
           persist-credentials: false
       - name: Check if the l10n run is reportable
         id: l10n-reportable
@@ -38,7 +39,7 @@ jobs:
   Run-L10N-Mac-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.mac_l10n_reportable == 'True' }}
-    uses: ./.github/workflows/main-l10n.yml
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-MacOS
     secrets:
@@ -52,7 +53,7 @@ jobs:
   Run-L10N-Win-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.win_l10n_reportable == 'True' }}
-    uses: ./.github/workflows/main-l10n.yml
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-Windows
     secrets:
@@ -66,7 +67,7 @@ jobs:
   Run-L10N-Linux-Smoke:
     needs: Check-Beta-Version
     if: ${{ needs.Check-Beta-Version.outputs.linux_l10n_reportable == 'True' }}
-    uses: ./.github/workflows/main-l10n.yml
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main-l10n.yml@main
     with:
       job_to_run: L10N-Linux
     secrets:

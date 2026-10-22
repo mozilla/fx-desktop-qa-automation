@@ -26,6 +26,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: main
           persist-credentials: false
 
       - name: Setup dependencies
@@ -51,6 +52,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
+          ref: main
           persist-credentials: false
 
       - name: Print plan and job summary
@@ -70,7 +72,7 @@ jobs:
         needs.Check-Beta-Version.outputs.win_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
       }}
-    uses: ./.github/workflows/main.yml
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main.yml@main
     with:
       job_to_run: Test-Windows
       test_set: smoke
@@ -92,7 +94,7 @@ jobs:
         needs.Check-Beta-Version.outputs.mac_reportable == 'True' &&
         !( github.event.inputs.preview_only == 'true' )
       }}
-    uses: ./.github/workflows/main.yml
+    uses: mozilla/fx-desktop-qa-automation/.github/workflows/main.yml@main
     with:
       job_to_run: Test-MacOS
       test_set: smoke
