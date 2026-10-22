@@ -53,7 +53,9 @@ class SplitView(BasePage):
         return len(self.get_elements("split-view-wrapper-tab"))
 
     @BasePage.context_chrome
-    def expect_tab_next_to_split_view(self, url: str, vertical: bool = False) -> BasePage:
+    def expect_tab_next_to_split_view(
+        self, url: str, vertical: bool = False
+    ) -> BasePage:
         """
         Wait until the tab loaded with `url` is shown right after the Split View
         in the tab strip: to its right with horizontal tabs, below it with
