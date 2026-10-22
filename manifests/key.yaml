@@ -1308,7 +1308,7 @@ pocket:
       result: deprecated
       splits: []
     test_new_tab_about_blank:
-      result: pass
+      result: deprecated
       splits: []
 preferences:
   test_add_search_engine_option:
