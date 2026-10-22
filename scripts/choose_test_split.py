@@ -135,7 +135,6 @@ def changed_names(path: str) -> set | None:
         for name in old_methods.keys() | new_methods.keys()
         if old_methods.get(name) != new_methods.get(name)
         and name.split(".")[0] in old_rest
-        and name.split(".")[0] not in BIG_MODELS
     }
     if any(name.split(".")[1] in framework_methods() for name in changed):
         return None
@@ -443,8 +442,6 @@ if __name__ == "__main__":
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
-                if model_name in BIG_MODELS:
-                    continue  # model too big, don't run all tests
                 for test_name in get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 ):
