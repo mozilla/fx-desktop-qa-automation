@@ -1315,6 +1315,10 @@ pdf_viewer:
     splits:
     - functional2
     - nightly
+  test_pdf_save_changes_on_tab_close:
+    result: pass
+    splits:
+    - functional2
   test_pdf_save_reordered_selected_pages:
     result: pass
     splits:
