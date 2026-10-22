@@ -247,6 +247,17 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_taskbar_tab_theme(self, theme_id: str):
+        """Wait until the current Taskbar Tab window has the given theme applied."""
+        self.wait.until(
+            lambda _: self.get_element("taskbar-tab-window-root").get_attribute(
+                "theme-effective-id"
+            )
+            == theme_id
+        )
+        return self
+
+    @BasePage.context_chrome
     def wait_for_taskbar_tab_window(self):
         """
         Wait for the Taskbar Tab window and switch to it. The moved tab keeps its
@@ -379,6 +390,14 @@ class Navigation(BasePage):
         self.element_visible("search-mode-switcher-option", labels=[engine])
         option = self.get_element("search-mode-switcher-option", labels=[engine])
         self.actions.key_down(Keys.SHIFT).click(option).key_up(Keys.SHIFT).perform()
+        return self
+
+    @BasePage.context_chrome
+    def shift_click_search_bar_suggestion(self) -> BasePage:
+        """Shift+click the first search suggestion in the search bar."""
+        self.search_bar_has_suggestions()
+        suggestion = self.get_element("searchbar-external-suggestion-row")
+        self.actions.key_down(Keys.SHIFT).click(suggestion).key_up(Keys.SHIFT).perform()
         return self
 
     @BasePage.context_chrome

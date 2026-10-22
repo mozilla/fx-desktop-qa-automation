@@ -9,6 +9,23 @@ DOWNLOAD_TIMEOUT_SEC = 10.0
 POLL_INTERVAL_SEC = 0.5
 
 
+def _file_is_complete(file_path):
+    """Wait for PDFs to finish writing; preserve existence check for other files."""
+    try:
+        size = os.path.getsize(file_path)
+        if size <= 0:
+            return False
+
+        if not file_path.lower().endswith(".pdf"):
+            return True
+
+        with open(file_path, "rb") as file:
+            file.seek(max(0, size - 1024))
+            return b"%%EOF" in file.read()
+    except OSError:
+        return False
+
+
 @pytest.fixture()
 def wait_for_file_download():
     """Return a helper that blocks until a file finishes downloading."""
@@ -18,7 +35,7 @@ def wait_for_file_download():
     ) -> bool:
         start = time.time()
         while time.time() - start < timeout:
-            if os.path.exists(file_path):
+            if os.path.exists(file_path) and _file_is_complete(file_path):
                 return True
             time.sleep(interval)
         return False
