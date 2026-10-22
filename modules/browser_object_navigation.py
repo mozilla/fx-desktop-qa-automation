@@ -246,6 +246,17 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def wait_for_taskbar_tab_theme(self, theme_id: str):
+        """Wait until the current Taskbar Tab window has the given theme applied."""
+        self.wait.until(
+            lambda _: self.get_element("taskbar-tab-window-root").get_attribute(
+                "theme-effective-id"
+            )
+            == theme_id
+        )
+        return self
+
+    @BasePage.context_chrome
     def wait_for_taskbar_tab_window(self):
         """
         Wait for the Taskbar Tab window and switch to it. The moved tab keeps its

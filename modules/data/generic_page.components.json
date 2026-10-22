@@ -350,6 +350,17 @@
       "location": "bing.com SERP"
     }
   },
+  "ecosia-search-result": {
+    "selectorData": "article[data-test-id='organic-result'] a.result__link",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "An organic (non-sponsored) result title link on the Ecosia SERP; clicked for serp.engagement target='non_ads_link'.",
+      "location": "ecosia.org SERP"
+    }
+  },
   "ecosia-related-search-shortcut": {
     "selectorData": "a.related-queries__link-bottom",
     "strategy": "css",

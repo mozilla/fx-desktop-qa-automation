@@ -26,5 +26,6 @@ tasks:
         export EXIT_CODE=$?;
         python3 -m ruff format --check;
         export EXIT_CODE=$(( $EXIT_CODE || $? ));
+        python3 -m ruff check;
         python3 -m ruff check --select I;
         exit $(( $EXIT_CODE || $? ));
