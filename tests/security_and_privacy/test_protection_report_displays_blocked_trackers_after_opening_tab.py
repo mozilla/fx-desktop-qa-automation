@@ -16,7 +16,7 @@ def test_case():
 def add_to_prefs_list():
     # Tracker lists come from Remote Settings, which WebDriver points at a dummy server
     return [
-        ("services.settings.server", "https://firefox.settings.services.mozilla.com/v1")
+        ("services.settings.server", "https://firefox.settings.services.mozilla.com/v2")
     ]
 
 
