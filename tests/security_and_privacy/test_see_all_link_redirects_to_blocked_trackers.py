@@ -5,7 +5,7 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import GenericPage
 
-TEST_URL = "https://edition.cnn.com/"
+TEST_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 MAX_ATTEMPTS = 3
 
 
