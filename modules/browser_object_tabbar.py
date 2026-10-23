@@ -115,7 +115,6 @@ class TabBar(BasePage):
         self.expect(lambda _: tab.get_attribute("selected") == "true")
         return self
 
-    @BasePage.context_chrome
     def _tab_panel_number(self, index: int) -> int:
         """Map a 1-based tab index in the current window to its linkedpanel number."""
         if self.driver.current_window_handle == self.driver.window_handles[0]:
