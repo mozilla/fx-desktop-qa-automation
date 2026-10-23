@@ -2244,8 +2244,7 @@ theme_and_toolbar:
       - no_xvfb
       - ci
   test_dark_theme_private_window:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081912
-    result: unstable
+    result: pass
     splits:
       - functional3
   test_installed_theme_enabled:
