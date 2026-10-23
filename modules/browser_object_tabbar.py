@@ -1,7 +1,10 @@
 import logging
 from typing import Union
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -107,16 +110,33 @@ class TabBar(BasePage):
     @BasePage.context_chrome
     def click_tab_by_index(self, index: int) -> BasePage:
         """Given a tab index (int), click the corresponding tab and wait for it to be selected"""
-        tab = self.get_element("tab-by-index", labels=[str(index)])
+        tab = self.get_tab(index)
         tab.click()
         self.expect(lambda _: tab.get_attribute("selected") == "true")
         return self
+
+    def _tab_panel_number(self, index: int) -> int:
+        """Map a 1-based tab index in the current window to its linkedpanel number."""
+        if self.driver.current_window_handle == self.driver.window_handles[0]:
+            return index
+        panel_numbers = []
+        for tab in self.get_elements("all-tabs"):
+            try:
+                panel_numbers.append(
+                    int(tab.get_attribute("linkedpanel").rsplit("-", 1)[1])
+                )
+            except StaleElementReferenceException:
+                # A tab that is still closing can leave the DOM mid-loop
+                continue
+        return min(panel_numbers) + index - 1
 
     @BasePage.context_chrome
     def get_tab(self, identifier: Union[str, int]) -> Union[WebElement, None]:
         """Return a tab root based on either a title or an index"""
         if isinstance(identifier, int):
-            tab = self.get_element("tab-by-index", labels=[str(identifier)])
+            tab = self.get_element(
+                "tab-by-index", labels=[str(self._tab_panel_number(identifier))]
+            )
         elif isinstance(identifier, str):
             tab = self.get_element("tab-by-title", labels=[identifier])
         else:
