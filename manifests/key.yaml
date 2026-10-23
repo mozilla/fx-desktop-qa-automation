@@ -2118,6 +2118,10 @@ tabs:
   test_list_all_tabs:
     result: covered-in-tree
     splits: []
+  test_manage_split_view_address_bar:
+    result: pass
+    splits:
+      - functional2
   test_move_multi_selected_tabs:
     result: pass
     splits:
