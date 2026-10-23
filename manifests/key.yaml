@@ -1804,8 +1804,7 @@ security_and_privacy:
     result: covered-in-tree
     splits: []
   test_see_all_link_redirects_to_blocked_trackers:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081822
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_sidebar_removed_on_end_private_session:
