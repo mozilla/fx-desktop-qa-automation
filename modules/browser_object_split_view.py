@@ -1,5 +1,7 @@
 from typing import Union
 
+from selenium.common.exceptions import TimeoutException
+
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_tabbar import TabBar
 from modules.page_base import BasePage
@@ -77,6 +79,39 @@ class SplitView(BasePage):
         self.click_on("split-view-urlbar-button")
         self.element_visible("split-view-menu-item", labels=[action])
         self.click_and_hide_menu("split-view-menu-item", labels=[action])
+        return self
+
+    @BasePage.context_chrome
+    def get_footer_menu_state(self) -> str:
+        """Return the state of the footer menu: closed, showing, open or hiding."""
+        return self.driver.execute_script(
+            "return document.getElementById('split-view-menu')?.state ?? 'closed';"
+        )
+
+    @BasePage.context_chrome
+    def open_footer_menu(self) -> BasePage:
+        """Open the three-dot menu in the Split View footer."""
+        column = self.RIGHT if self.get_selected_column() == self.LEFT else self.LEFT
+        self.element_visible("split-view-footer-menu-button", labels=[column])
+        self.click_on("split-view-footer-menu-button", labels=[column])
+
+        # Read the popup state, as headless Firefox never sets its open attribute
+        try:
+            self.expect(lambda _: self.get_footer_menu_state() == "open")
+        except TimeoutException:
+            raise AssertionError(
+                "Split View footer menu did not open, its state is "
+                f"{self.get_footer_menu_state()!r}"
+            )
+        return self
+
+    def select_footer_menu_option(self, command: str) -> BasePage:
+        """
+        Pick an option from the Split View footer menu, by command:
+        SEPARATE_TABS, REVERSE_TABS or CLOSE_BOTH_TABS.
+        """
+        self.open_footer_menu()
+        self.click_and_hide_menu("split-view-menu-item", labels=[command])
         return self
 
     @BasePage.context_chrome
