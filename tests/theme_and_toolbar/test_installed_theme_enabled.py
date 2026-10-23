@@ -16,6 +16,7 @@ def test_case():
 
 WAIT_TIMEOUT = 30
 
+
 # Test is unstable in MacOS GHA for now
 def test_find_more_themes(driver: Firefox) -> None:
     """
@@ -46,7 +47,7 @@ def test_find_more_themes(driver: Firefox) -> None:
         def amo_themes_loaded(browser: Firefox) -> bool:
             url = urlsplit(browser.current_url)
             return url.hostname == AMO_HOST and url.path.rstrip("/").endswith(
-                "/firefox/themes"
+                AMO_THEMES_PATH
             )
 
         wait.until(
