@@ -1788,8 +1788,7 @@ security_and_privacy:
     result: covered-in-tree
     splits: []
   test_protection_report_displays_blocked_trackers_after_opening_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085110
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_remember_decision_permissions_prompt:
