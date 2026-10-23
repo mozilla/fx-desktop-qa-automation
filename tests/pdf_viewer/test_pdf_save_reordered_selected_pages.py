@@ -44,18 +44,7 @@ def test_pdf_save_reordered_selected_pages(
 
     # Step 3: Drag the first page after the second and verify the new order.
     pdf_viewer.select_pdf_pages([1])
-    source = pdf_viewer.get_element("page-thumbnail-image", labels=["1"])
-    target = pdf_viewer.get_element("page-thumbnail-image", labels=["2"])
-    try:
-        pdf_viewer.actions.move_to_element(source).click_and_hold().move_by_offset(
-            0, 15
-        ).perform()
-        pdf_viewer.actions.move_to_element_with_offset(
-            target, 0, int(target.size["height"] / 4)
-        ).perform()
-        pdf_viewer.element_visible("page-drop-guide")
-    finally:
-        pdf_viewer.actions.release().perform()
+    pdf_viewer.drag_page_after(1, 2)
     reordered_pages = [original_pages[1], original_pages[0], *original_pages[2:]]
     pdf_viewer.wait.until(
         lambda _: pdf_viewer.get_elements("page-thumbnails") == reordered_pages,
