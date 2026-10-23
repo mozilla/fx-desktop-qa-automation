@@ -57,7 +57,7 @@
             "choices": [
               {
                 "delta": {
-                  "content": " of otters is called a romp, raft, or bevy."
+                  "content": " of otters is called a romp or a raft."
                 },
                 "index": 0
               }
@@ -219,7 +219,36 @@
   ],
   "meta": {
     "firefox_version": "Mozilla Firefox 159.0a1",
-    "recorded_at": "2026-10-01",
-    "upstream": "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1"
+    "recorded_at": "2026-10-20",
+    "upstream": "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1",
+    "usage": {
+      "by_purpose": {
+        "chat": {
+          "completion_tokens": 30,
+          "model": "gemini-3.1-flash-lite",
+          "prompt_tokens": 16642,
+          "requests": 2,
+          "total_tokens": 16672
+        },
+        "convo-starters-sidebar": {
+          "completion_tokens": 17,
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "prompt_tokens": 1247,
+          "requests": 1,
+          "total_tokens": 1264
+        },
+        "title-generation": {
+          "completion_tokens": 6,
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "prompt_tokens": 169,
+          "requests": 1,
+          "total_tokens": 175
+        }
+      },
+      "completion_tokens": 53,
+      "prompt_tokens": 18058,
+      "requests": 4,
+      "total_tokens": 18111
+    }
   }
 }

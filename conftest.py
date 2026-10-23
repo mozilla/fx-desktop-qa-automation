@@ -464,6 +464,39 @@ def pytest_sessionfinish(session):
         logging.warning("No test results found.")
 
 
+def pytest_terminal_summary(terminalreporter):
+    """
+    List the LLM tokens each Smart Window record or live test used, flagging
+    any that used twice as many as when it was recorded. Replay spends none,
+    so its recorded figures aren't listed.
+    """
+    usages = [
+        (report.nodeid, usage)
+        for reports in terminalreporter.stats.values()
+        for report in reports
+        if getattr(report, "when", None) == "teardown"
+        and (usage := dict(report.user_properties).get("llm_usage"))
+        and usage["mode"] != "replay"
+    ]
+    if not usages:
+        return
+    terminalreporter.write_sep("=", "LLM token usage")
+    for nodeid, usage in sorted(usages, key=lambda u: -u[1]["total_tokens"]):
+        total, recorded = usage["total_tokens"], usage["recorded_total_tokens"]
+        jump = (
+            f"  ({total / recorded:.1f}x recorded)"
+            if recorded and total >= 2 * recorded
+            else ""
+        )
+        terminalreporter.write_line(
+            f"{total:>9,} tokens ({usage['prompt_tokens']:,} in, "
+            f"{usage['completion_tokens']:,} out, {usage['requests']} requests)  "
+            f"{nodeid}{jump}"
+        )
+    run_total = sum(usage["total_tokens"] for _, usage in usages)
+    terminalreporter.write_line(f"{run_total:>9,} tokens in total")
+
+
 @pytest.fixture()
 def hard_quit():
     return False

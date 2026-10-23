@@ -83,8 +83,15 @@ Only tests that use the mock server read the flag. Every other test ignores it.
 
 ## Record a test
 
-**Get a token.** Recording needs a prod Firefox Account token. Sign in to Smart Window in a
-normal Firefox, open the Browser Console (Cmd/Ctrl+Shift+J) and run:
+**Get a token.** Recording needs a prod Firefox Account token. In a normal Firefox:
+
+1. Sign in to Smart Window.
+2. In `about:config`, set `devtools.chrome.enabled` to `true`. Without it the Browser Console
+   has no input line.
+3. Open the **Browser Console** (Cmd/Ctrl+Shift+J, or Tools → Browser Tools → Browser
+   Console). It opens in its own window. Not the Web Console (F12): it can't run this and
+   fails with `ChromeUtils is not defined`.
+4. Run this. It returns the token:
 
 ```js
 await (async () => {
@@ -107,8 +114,16 @@ MOZ_FXA_BEARER_TOKEN='<token>' pytest tests/smart_window/test_c<ID>_<description
 ```
 
 To keep the token out of your shell history, put `MOZ_FXA_BEARER_TOKEN=<token>` in a file
-outside the repo (for example `~/.starfox-record.env`) and load it, or point a VS Code launch
-configuration at it with `"envFile"`.
+outside the repo (for example `~/.starfox-record.env`, readable only by you with
+`chmod 600`) and load it:
+
+```bash
+set -a; . ~/.starfox-record.env; set +a
+pytest tests/smart_window/test_c<ID>_<description>.py --mock-mode=record
+```
+
+Or point a VS Code launch configuration at the file with `"envFile"`. When the token expires,
+get a new one the same way and replace the line in the file.
 
 **Review the diff before committing.** Look at the `request` entries, any `tool_calls`, and
 the reply `content`. Fields that change on every call (ids, timestamps, token counts) and the
@@ -171,6 +186,47 @@ Instead of recording, a test can write the model's replies in code with the buil
 Built replies can't be checked in `live` mode, since live uses the real model. So far only
 `chat_reply()` has been tried in Firefox.
 
+## Token usage
+
+`record` and `live` use real LLM tokens, counted against the FxA account's MLPA limits.
+After those runs pytest lists the tokens each test used, from the counts MLPA sends with each
+reply. Replay sends nothing to MLPA and uses none, so it prints nothing.
+
+```
+=============================== LLM token usage ================================
+    1,255 tokens (1,200 in, 55 out, 2 requests)  tests/smart_window/test_x.py::test_x  (2.5x recorded)
+    1,255 tokens in total
+```
+
+- Recording saves the tokens it used in the recording's `meta.usage`, in the format below
+  without the first five fields. A later `record` or `live` run that uses at least twice its
+  total is flagged, as above: usually a longer prompt or reply.
+- Each test also gets an `llm_usage` user property, which ends up in `report.json`
+  (`tests[].user_properties`) for dashboards. In `record` and `live` it's the tokens the run
+  spent. In `replay`, CI's mode, it's copied from `meta.usage`: what the test used when it was
+  recorded on `recorded_at` with Firefox `recorded_firefox_version`, not tokens spent by CI.
+  It changes only when the test is re-recorded, so don't add replay figures up as spend. Tests
+  whose recording has no `meta.usage` (built with `chat_reply()` and friends, or recorded
+  before it was saved) get none.
+
+```json
+"llm_usage": {
+  "schemaVersion": 1,
+  "mode": "live",
+  "recorded_at": "2026-10-01",
+  "recorded_firefox_version": "159.0a1",
+  "recorded_total_tokens": 500,
+  "requests": 2,
+  "prompt_tokens": 1200,
+  "completion_tokens": 55,
+  "total_tokens": 1255,
+  "by_purpose": {
+    "chat": {"model": "gemini-3.1-flash-lite", "requests": 1, "prompt_tokens": 1000, "completion_tokens": 50, "total_tokens": 1050},
+    "title-generation": {"model": "qwen3-235b-a22b-instruct-2507-maas", "requests": 1, "prompt_tokens": 200, "completion_tokens": 5, "total_tokens": 205}
+  }
+}
+```
+
 ## How it works
 
 - **Prefs.** The suite's `prefs_list` (`tests/smart_window/conftest.py`) sets, for every Smart
@@ -204,7 +260,9 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 |---|---|
 | "No recording … Record it with …" | The recording is missing an entry. Run the command it prints. |
 | "MLPA returned errors: [(401, …)]" | The token has expired or isn't a prod token. Get a new one. |
+| "MLPA returned errors: [(429, …)]" | The account hit its MLPA rate limit. Wait, or record fewer tests at once. |
 | "needs a prod FxA token in MOZ_FXA_BEARER_TOKEN" | `record` or `live` without a token. |
+| `ChromeUtils is not defined` when getting a token | The snippet ran in the Web Console. Use the Browser Console (see Record a test). |
 | "No chat reply was served for '…'" | The chat request had no recording; the "No recording" error for the same test has the fix. |
 | "The assistant never finished turn N" | No reply arrived in time; usually a failed request. Check the log above it. |
 | "Mock server is not answering … title-generation" (INFO) | A background request has no recording. Expected and harmless. |
@@ -222,7 +280,7 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 
 | Path | What |
 |---|---|
-| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `tool_calls` |
+| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `tool_calls`, `usage` |
 | `modules/classes/recording.py` | `Recording`, matching, builders |
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |

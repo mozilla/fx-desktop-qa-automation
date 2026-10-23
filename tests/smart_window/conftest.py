@@ -106,11 +106,14 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     See recording_path for where the recording lives. Replay fails the test
     if Firefox sent a chat or search request that isn't recorded. Record and
     live forward to stage MLPA with the prod FxA token in
-    MOZ_FXA_BEARER_TOKEN; record then saves the recording.
+    MOZ_FXA_BEARER_TOKEN; record then saves the recording, with the tokens
+    it used in meta.usage. The llm_usage user property reports the tokens
+    used: spent by this run in record and live, or as recorded in replay.
     """
     path = recording_path(request.node)
+    saved = Recording.load(path)
     if opt_mock_mode == "replay":
-        mock_server_session.reset(Recording.load(path))
+        mock_server_session.reset(saved)
     else:
         token = environ.get("MOZ_FXA_BEARER_TOKEN")
         if not token:
@@ -131,6 +134,31 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
 
     server = mock_server_session
     server.wait_until_idle()
+    recorded = saved.meta.get("usage")
+    if opt_mock_mode == "replay":
+        # Replay sends nothing upstream, so report what recording used.
+        usage = recorded
+    else:
+        usage = server.usage()
+        server.recording.meta["usage"] = usage
+    if usage:
+        version = saved.meta.get("firefox_version")
+        if version:
+            # "Mozilla Firefox 159.0a1" -> "159.0a1", like fx_version.
+            version = version.split()[-1]
+        request.node.user_properties.append(
+            (
+                "llm_usage",
+                {
+                    "schemaVersion": 1,
+                    "mode": opt_mock_mode,
+                    "recorded_at": saved.meta.get("recorded_at"),
+                    "recorded_firefox_version": version,
+                    "recorded_total_tokens": (recorded or {}).get("total_tokens"),
+                    **usage,
+                },
+            )
+        )
     unmatched, upstream_errors = server.unmatched, server.upstream_errors
     if opt_mock_mode == "record" and not upstream_errors:
         server.recording.save(path)
@@ -152,7 +180,8 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     if upstream_errors:
         pytest.fail(
             f"MLPA returned errors: {upstream_errors}. A 401 means "
-            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token."
+            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token; "
+            "a 429 means the account hit its MLPA rate limit."
         )
 
 

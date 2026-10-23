@@ -8,9 +8,11 @@ from pytest_httpserver import HTTPServer
 from werkzeug.wrappers import Request, Response
 
 from modules.classes.recording import (
+    CHAT_PATH,
     SEARCH_PATH,
     Recording,
     is_chat_message,
+    response_usage,
     streamed_text,
     streamed_tool_calls,
     summarize_request,
@@ -19,6 +21,8 @@ from modules.classes.recording import (
 # Stage MLPA, the LLM proxy behind Smart Window. It accepts prod FxA tokens
 # only, the same as Firefox's own eval tooling (toolkit/components/ml/eval).
 MLPA_STAGE_URL = "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1"
+
+USAGE_FIELDS = ("prompt_tokens", "completion_tokens", "total_tokens")
 
 # Not forwarded upstream: hop-by-hop headers, and Authorization, which is
 # replaced with the real token.
@@ -138,6 +142,32 @@ class MockServer:
             if call["name"] == name
         ]
 
+    def usage(self) -> dict:
+        """
+        Return the tokens MLPA reported for the LLM requests served since the
+        last reset, in total and by purpose. Always 0 in replay, which sends
+        nothing upstream; a recording keeps what it used in meta.usage.
+
+        Waits for forwarded replies to finish streaming first.
+        """
+        self.wait_until_idle()
+        with self._lock:
+            served = [
+                (i["request"], response_usage(i["response"]))
+                for i in self.served
+                if i["request"]["path"] == CHAT_PATH and i["response"]
+            ]
+        by_purpose = {}
+        for request, usage in served:
+            by_purpose.setdefault(request["purpose"], []).append((request, usage))
+        return {
+            **_usage_totals(served),
+            "by_purpose": {
+                purpose: {"model": calls[-1][0]["model"], **_usage_totals(calls)}
+                for purpose, calls in by_purpose.items()
+            },
+        }
+
     def _chat_responses(self) -> list[tuple[dict, dict]]:
         """(request, response) for each streamed chat reply served, oldest first."""
         self.wait_until_idle()
@@ -244,6 +274,13 @@ class MockServer:
         with self._idle:
             self._in_flight -= 1
             self._idle.notify_all()
+
+
+def _usage_totals(calls: list[tuple[dict, dict]]) -> dict:
+    return {
+        "requests": len(calls),
+        **{f: sum(usage.get(f) or 0 for _, usage in calls) for f in USAGE_FIELDS},
+    }
 
 
 def _to_response(response: dict) -> Response:
