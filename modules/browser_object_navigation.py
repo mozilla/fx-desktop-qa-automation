@@ -52,7 +52,6 @@ class Navigation(BasePage):
     VALID_SEARCH_MODES = {
         "Google",
         "eBay",
-        "Amazon.com",
         "Bing",
         "DuckDuckGo",
         "Wikipedia (en)",
