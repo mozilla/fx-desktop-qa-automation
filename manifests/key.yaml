@@ -2226,6 +2226,10 @@ tabs:
     result: pass
     splits:
       - functional2
+  test_split_view_open_in_split_view_context_menu:
+    result: pass
+    splits:
+      - functional2
   test_split_view_single_tab_context_menu_horizontal_vertical:
     result: pass
     splits:
