@@ -19,11 +19,11 @@ NIGHTLY_LANGPACK_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-m
 
 
 @pytest.fixture()
-def add_to_prefs_list(version: str):
-    """On Nightly, list its own language packs, since AMO only has Beta and Release ones."""
-    if "a1" not in version:
-        return []
-    fx_version = version.split()[-1]
+def nightly_langpacks(driver: Firefox, browser_name: str):
+    """On Nightly, point Firefox at its own language packs, since AMO only has Beta and Release ones."""
+    if browser_name != "Nightly":
+        return
+    fx_version = driver.capabilities["browserVersion"]
     results = []
     for locale, _ in LANGUAGES:
         url = NIGHTLY_LANGPACK_URL.format(version=fx_version, locale=locale)
@@ -44,9 +44,14 @@ def add_to_prefs_list(version: str):
             }
         )
     listing = quote(json.dumps({"results": results}))
-    return [("extensions.getAddons.langpacks.url", f"data:application/json,{listing}")]
+    with driver.context(driver.CONTEXT_CHROME):
+        driver.execute_script(
+            "Services.prefs.setStringPref('extensions.getAddons.langpacks.url', arguments[0]);",
+            f"data:application/json,{listing}",
+        )
 
 
+@pytest.mark.usefixtures("nightly_langpacks")
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
 def test_language_pack_install_about_preferences(
     driver: Firefox, shortform: str, localized_text: str
