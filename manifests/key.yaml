@@ -113,6 +113,10 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
+  test_new_search_box_contextual_search:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_keyboard_navigation:
     result: pass
     splits:
@@ -2368,11 +2372,6 @@ smart_window:
     splits:
     - functional1
   test_c3309854_open_classic_window_from_smart_window:
-    result: pass
-    splits:
-    - smart_window
-    - functional3
-  test_c3309859_smart_window_restored_after_restart:
     result: pass
     splits:
     - smart_window
