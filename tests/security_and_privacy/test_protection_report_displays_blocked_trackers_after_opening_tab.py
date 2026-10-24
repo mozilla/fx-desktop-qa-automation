@@ -12,6 +12,14 @@ def test_case():
     return "448309"
 
 
+@pytest.fixture()
+def add_to_prefs_list():
+    # Tracker lists come from Remote Settings, which WebDriver points at a dummy server
+    return [
+        ("services.settings.server", "https://firefox.settings.services.mozilla.com/v2")
+    ]
+
+
 def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: Firefox):
     """
     C448309 - Trackers are being displayed as blocked in Protection report only after opening the tab
