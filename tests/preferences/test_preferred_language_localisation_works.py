@@ -1,8 +1,18 @@
 import pytest
+import requests
 from selenium.webdriver import Firefox
 
 from modules.browser_object import Navigation, PanelUi, TabBar
 from modules.page_object import AboutPrefs
+
+# Locale code, and the Browser language heading once that locale is applied.
+LANGUAGES = [("fr", "Langue du navigateur"), ("de", "Browser-Sprache")]
+
+# Where Firefox looks up the language packs it can download (extensions.getAddons.langpacks.url)
+LANGPACKS_URL = (
+    "https://services.addons.mozilla.org/api/v4/addons/language-tools/"
+    "?app=firefox&type=language&appversion={version}"
+)
 
 
 @pytest.fixture()
@@ -27,8 +37,19 @@ def add_to_prefs_list():
     ]
 
 
-# Locale code, and the Browser language heading once that locale is applied.
-LANGUAGES = [("fr", "Langue du navigateur"), ("de", "Browser-Sprache")]
+@pytest.fixture()
+def require_language_packs(driver: Firefox):
+    """Skip unless addons.mozilla.org has the test's language packs for this Firefox version."""
+    version = driver.capabilities["browserVersion"]
+    response = requests.get(LANGPACKS_URL.format(version=version), timeout=30)
+    response.raise_for_status()
+    available = {pack["target_locale"] for pack in response.json()["results"]}
+    missing = [language for language, _ in LANGUAGES if language not in available]
+    if missing:
+        pytest.skip(
+            f"addons.mozilla.org has no {', '.join(missing)} language packs for "
+            f"Firefox {version} yet"
+        )
 
 
 def test_preferred_language_localisation_works(
@@ -37,6 +58,7 @@ def test_preferred_language_localisation_works(
     nav: Navigation,
     panel_ui: PanelUi,
     tabs: TabBar,
+    require_language_packs,
 ):
     """
     C3399151 - Preferred language localisation works as expected.
