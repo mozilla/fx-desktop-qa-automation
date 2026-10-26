@@ -13,9 +13,11 @@ from typing import List
 
 from pypom import Page
 from selenium.common import NoAlertPresentException
-from selenium.common.exceptions import (NoSuchElementException,
-                                        NoSuchWindowException,
-                                        TimeoutException)
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    NoSuchWindowException,
+    TimeoutException,
+)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys

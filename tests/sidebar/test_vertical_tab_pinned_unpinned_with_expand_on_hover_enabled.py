@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation, Sidebar, TabBar
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

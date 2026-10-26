@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 ETP_TITLE = "Enhanced Tracking Protection"
 # The brand name sits in the middle of the ETP message and changes per channel,

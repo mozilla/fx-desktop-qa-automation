@@ -2,11 +2,10 @@ from pathlib import Path
 from shutil import copyfile
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, PanelUi
 from auto_fxui.page_base import BasePage
 from auto_fxui.page_object import AboutPrefs, GenericPage
+from selenium.webdriver import Firefox
 
 DEFAULT_ZOOM_110 = 110
 DEFAULT_ZOOM_100 = 100

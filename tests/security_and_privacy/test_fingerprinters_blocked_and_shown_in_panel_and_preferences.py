@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import TrustPanel
 from auto_fxui.page_object import AboutPrefs, GenericPage
+from selenium.webdriver import Firefox
 
 FINGERPRINTERS_URL = (
     "https://senglehardt.com/test/trackingprotection/test_pages/fingerprinting.html"

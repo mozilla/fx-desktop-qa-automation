@@ -2,11 +2,10 @@ import sys
 from urllib.parse import urlsplit, urlunsplit
 
 import pytest
+from auto_fxui.browser_object import Navigation
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from auto_fxui.browser_object import Navigation
 
 SOURCE_URL = "https://www.example.com/?fbclid=1234"
 

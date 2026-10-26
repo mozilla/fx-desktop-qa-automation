@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_trust_panel import TrustPanel
 from auto_fxui.page_object_generics import GenericPage
 from auto_fxui.page_object_prefs import AboutPrefs
+from selenium.webdriver import Firefox
 
 TRACKING_CONTENT_URL = "https://senglehardt.com/test/trackingprotection/test_pages/cryptomining_and_trackers"
 

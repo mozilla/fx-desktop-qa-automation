@@ -1,10 +1,9 @@
 import logging
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import AboutDownloadsContextMenu, Navigation, PanelUi
 from auto_fxui.page_object import AboutDownloads, GenericPage
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, TabBar
+from selenium.webdriver import Firefox
 
 NUM_TABS = 2
 GROUP_NAME = ["group1", "group2", "group3"]

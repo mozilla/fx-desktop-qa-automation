@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation, PanelUi, TabBar
+from selenium.webdriver import Firefox
 
 URL = "about:robots"
 BOOKMARK_TITLE = "Gort! Klaatu barada nikto!"

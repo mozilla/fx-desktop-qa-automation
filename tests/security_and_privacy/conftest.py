@@ -1,10 +1,4 @@
 import pytest
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    StaleElementReferenceException,
-)
-from selenium.webdriver.common.by import By
-
 from auto_fxui.browser_object import (
     MenuBar,
     Navigation,
@@ -15,6 +9,11 @@ from auto_fxui.browser_object import (
 )
 from auto_fxui.page_object import AboutCache, AboutDownloads, AboutPrefs, GenericPage
 from auto_fxui.util import BrowserActions
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
+from selenium.webdriver.common.by import By
 
 YOUTUBE_URL = "https://www.youtube.com/"
 FACEBOOK_URL = "https://www.facebook.com/"

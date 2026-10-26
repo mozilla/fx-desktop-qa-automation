@@ -1,9 +1,8 @@
 import logging
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, TabBar
+from selenium.webdriver import Firefox
 
 # --- Expected Title Constants ---
 EXPECTED_MOZILLA_TITLE = "Mozilla"

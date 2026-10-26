@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, Sidebar
+from selenium.webdriver import Firefox
 
 WEBSITE = "https://en.wikipedia.org/wiki/Main_Page"
 

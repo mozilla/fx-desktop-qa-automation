@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, TabBar, TrustPanel
 from auto_fxui.page_object import GenericPage
+from selenium.webdriver import Firefox
 
 YOUTUBE_URL = "https://www.youtube.com"
 PREFERENCES_URL = "about:preferences#privacy"

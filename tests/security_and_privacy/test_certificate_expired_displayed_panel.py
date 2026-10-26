@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_trust_panel import TrustPanel
 from auto_fxui.page_object_generics import GenericPage
+from selenium.webdriver import Firefox
 
 CERTIFICATE_EXPIRED_URL = "https://expired.badssl.com/"
 

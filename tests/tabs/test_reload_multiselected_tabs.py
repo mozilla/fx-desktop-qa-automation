@@ -1,10 +1,9 @@
 from shutil import copyfile
 
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 
 RELOAD_SELECTED_TABS = "context-menu_reload-selected-tabs"
 

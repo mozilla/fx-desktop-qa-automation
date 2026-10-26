@@ -1,11 +1,10 @@
 from collections.abc import Callable
 
 import pytest
+from auto_fxui.page_object import ExamplePage
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
-
-from auto_fxui.page_object import ExamplePage
 
 TEST_URL = "https://www.iana.org/help/example-domains"
 LINK_ELEMENT = "learn-more"

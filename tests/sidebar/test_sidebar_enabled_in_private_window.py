@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import PanelUi, Sidebar
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

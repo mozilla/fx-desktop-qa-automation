@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.browser_object import TabBar
 
 

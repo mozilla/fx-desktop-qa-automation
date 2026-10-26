@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
+from selenium.webdriver import Firefox
 
 GROUP_NAME = ["group1", "group2", "group3"]
 URLS = ["https://example.com", "https://example.org"]

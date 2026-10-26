@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, TrustPanel
 from auto_fxui.page_object_prefs import AboutPrefs
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

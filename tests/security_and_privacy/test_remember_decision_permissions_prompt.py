@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import GenericPage
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://jan-ivar.github.io/dummy/iframe_iframe_gum_starcross2.html"
 

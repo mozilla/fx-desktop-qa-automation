@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, PanelUi, TabBar
 from auto_fxui.page_object import AboutDownloads, GenericPage
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 DOWNLOAD_FILE_NAME = "sample2.doc"
