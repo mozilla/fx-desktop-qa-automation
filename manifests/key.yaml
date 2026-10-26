@@ -1524,6 +1524,10 @@ preferences:
     splits:
       - functional2
 printing_ui:
+  test_custom_page_range:
+    result: pass
+    splits:
+      - functional2
   test_noncontiguous_page_ranges:
     result: pass
     splits:
