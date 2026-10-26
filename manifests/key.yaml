@@ -2238,6 +2238,10 @@ tabs:
     result: pass
     splits:
       - functional2
+  test_split_view_tab_link_correct_location:
+    result: pass
+    splits:
+      - functional2
   test_tab_hover_different_content_type:
     result: pass
     splits:

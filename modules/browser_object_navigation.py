@@ -249,10 +249,12 @@ class Navigation(BasePage):
     def wait_for_taskbar_tab_theme(self, theme_id: str):
         """Wait until the current Taskbar Tab window has the given theme applied."""
         self.wait.until(
-            lambda _: self.get_element("taskbar-tab-window-root").get_attribute(
-                "theme-effective-id"
+            lambda _: (
+                self.get_element("taskbar-tab-window-root").get_attribute(
+                    "theme-effective-id"
+                )
+                == theme_id
             )
-            == theme_id
         )
         return self
 
