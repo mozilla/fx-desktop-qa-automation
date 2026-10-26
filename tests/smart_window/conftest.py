@@ -8,6 +8,7 @@ from auto_fxui.classes.recording import Recording
 from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
 from pytest_httpserver import HTTPServer
 
+from modules.fxa_token import LOGIN_COMMAND, get_access_token
 from modules.taskcluster import get_tc_secret
 
 TAB_PAGES = Path("data", "smart_window_pages")
@@ -98,6 +99,12 @@ def mock_server_session():
     server.stop()
 
 
+@pytest.fixture(scope="session")
+def mlpa_token():
+    """A prod FxA access token for stage MLPA, fetched once per worker."""
+    return get_access_token()
+
+
 @pytest.fixture()
 def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     """
@@ -105,18 +112,18 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
 
     See recording_path for where the recording lives. Replay fails the test
     if Firefox sent a chat or search request that isn't recorded. Record and
-    live forward to stage MLPA with the prod FxA token in
-    MOZ_FXA_BEARER_TOKEN; record then saves the recording.
+    live forward to stage MLPA with a prod FxA token (mlpa_token); record
+    then saves the recording.
     """
     path = recording_path(request.node)
     if opt_mock_mode == "replay":
         mock_server_session.reset(Recording.load(path))
     else:
-        token = environ.get("MOZ_FXA_BEARER_TOKEN")
+        token = request.getfixturevalue("mlpa_token")
         if not token:
             pytest.fail(
-                f"--mock-mode={opt_mock_mode} needs a prod FxA token in "
-                "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md)"
+                f"--mock-mode={opt_mock_mode} needs a prod Mozilla account. Sign in "
+                f"once with: {LOGIN_COMMAND} (see SMART_WINDOW_MOCK_SERVER.md)"
             )
         recording = Recording(
             meta={
@@ -145,14 +152,14 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
             else f"This test has no recording yet ({path} doesn't exist)"
         )
         pytest.fail(
-            f"{problem}. Record it with a prod FxA token in "
-            "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md):\n"
+            f"{problem}. Record it, after signing in once with {LOGIN_COMMAND} "
+            "(see SMART_WINDOW_MOCK_SERVER.md):\n"
             f'  pytest "{request.node.nodeid}" --mock-mode=record'
         )
     if upstream_errors:
         pytest.fail(
-            f"MLPA returned errors: {upstream_errors}. A 401 means "
-            "MOZ_FXA_BEARER_TOKEN is missing, expired or not a prod token."
+            f"MLPA returned errors: {upstream_errors}. A 401 means MLPA "
+            f"rejected the FxA token; sign in again with: {LOGIN_COMMAND}"
         )
 
 

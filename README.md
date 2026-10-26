@@ -106,8 +106,8 @@ Launch the build manually one time to navigate through any system permission dia
 - Smart Window chat tests never talk to the real LLM service. Firefox sends its chat and web
   search requests to a local mock server, which replays recordings from `data/recordings/`.
 - Runs need no setup or token: `pytest tests/smart_window` replays, and CI does the same.
-- Recording new responses (`--mock-mode=record`) needs a prod Firefox Account token in
-  `MOZ_FXA_BEARER_TOKEN`; never commit it.
+- Recording new responses (`--mock-mode=record`) needs your prod Mozilla account: sign in once
+  with `uv run python -m scripts.fxa_login`.
 - How to write, record and maintain these tests: [SMART_WINDOW_MOCK_SERVER.md](SMART_WINDOW_MOCK_SERVER.md).
 
 ### Documentation
