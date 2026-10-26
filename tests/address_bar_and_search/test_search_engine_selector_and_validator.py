@@ -7,9 +7,9 @@ SEARCH_ENGINES = [
     "Google",
     "Bing",
     "DuckDuckGo",
+    "eBay",
     "Wikipedia (en)",
 ]
-# eBay disabled; temporary site malfunction
 
 
 @pytest.fixture()
