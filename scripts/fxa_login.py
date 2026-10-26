@@ -96,7 +96,11 @@ def logout():
     if not token:
         print("No saved sign-in.")
         return
-    revoke(token)
+    try:
+        revoke(token)
+    except requests.RequestException as e:
+        # Kept so --logout can be retried; deleting it would leave it active.
+        sys.exit(f"Couldn't revoke the sign-in ({e}); it's still saved. Try again.")
     delete_refresh_token()
     print("Signed out.")
 
