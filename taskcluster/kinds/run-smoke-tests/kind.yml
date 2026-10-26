@@ -30,6 +30,7 @@ tasks:
         git config user.name "dteautomation"
         git config user.email "dte-automation@mozilla.com"
         git fetch
+        git reset --hard
         git pull origin $BASE_REF --rebase
         mkdir -p artifacts;
         pip3 install 'uv==0.11.18' --break-system-packages;
@@ -44,6 +45,9 @@ tasks:
         uv run python3 -c 'import pyautogui; print("pyautogui import ok")' || PYAUTOGUI_IMPORT_EXIT_CODE=$?
         if [ "${PYAUTOGUI_WAYLAND_PROBE_ONLY:-0}" = "1" ]; then
           exit "$PYAUTOGUI_IMPORT_EXIT_CODE"
+        fi
+        if [[ "$BASE_REF" && "$BASE_REF" != "main" ]]; then
+           FX_CHANNEL="$BASE_REF";
         fi
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
