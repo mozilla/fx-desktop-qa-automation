@@ -14,6 +14,7 @@ def test_case():
 
 
 LANGUAGES = [("it", "Lingua")]
+# Language packs work on any platform, and there's no Windows Nightly folder for them
 NIGHTLY_LANGPACK_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/linux-x86_64/xpi/firefox-{version}.{locale}.langpack.xpi"
 
 
