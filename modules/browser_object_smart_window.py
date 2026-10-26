@@ -94,9 +94,6 @@ class SmartWindow(BasePage):
         Make Firefox send Smart Window requests with a stand-in FxA token, so
         chat works without signing in. Only for use with the mock server,
         which ignores the token (or swaps in a real one when recording).
-
-        Firefox 160 moved the token to AuthProvider.getToken; older versions
-        use openAIEngine.getFxAccountToken, so both are stubbed.
         """
         self.driver.execute_script(
             f"""
