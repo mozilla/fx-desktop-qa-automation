@@ -57,6 +57,8 @@ on:
         type: string
 env:
   FX_CHANNEL: ${{ inputs.channel }}
+  # PR runs test the newest Beta or Nightly as of the PR's creation, unless it has the fx-latest label
+  FX_BUILD_BEFORE: ${{ !contains(github.event.pull_request.labels.*.name, 'fx-latest') && github.event.pull_request.created_at || '' }}
   TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
   TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}

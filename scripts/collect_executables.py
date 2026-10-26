@@ -2,9 +2,11 @@
 Use -g to get geckodriver, otherwise you will get Fx. Use -n to just get the Fx version number.
 Set env var FX_CHANNEL to get non-beta, blank string for Release.
 Set env var FX_LOCALE to get a different locale build.
-Set env var FX_PLATFORM to get a platform other than current system."""
+Set env var FX_PLATFORM to get a platform other than current system.
+Set env var FX_BUILD_BEFORE (ISO time) to get the newest Beta or Nightly published by then."""
 
 import logging
+from datetime import datetime, timedelta, timezone
 from os import environ
 from platform import uname
 from sys import argv, exit
@@ -20,7 +22,10 @@ BACKSTOP = "146.0b9"
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
 CANDIDATES_URL = "https://archive.mozilla.org/pub/firefox/candidates"
-NIGHTLY_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central"
+NIGHTLY_ARCHIVE_URL = "https://archive.mozilla.org/pub/firefox/nightly"
+NIGHTLY_URL = f"{NIGHTLY_ARCHIVE_URL}/latest-mozilla-central"
+# Steps back from the newest Beta before giving up on a pinned one
+MAX_PIN_STEPS = 30
 REQUEST_TIMEOUT = 10
 
 
@@ -101,13 +106,60 @@ def get_build_dir(version: str, language: str) -> tuple[str, int]:
     return fx_download_dir_url, build
 
 
+def build_numbers(version: str) -> list[int]:
+    """Return `version`'s candidate build numbers, newest first."""
+    names = listing(f"{CANDIDATES_URL}/{version}-candidates/")
+    return sorted(
+        (int(n[5:-1]) for n in names if n.startswith("build") and n[5:-1].isdigit()),
+        reverse=True,
+    )
+
+
+def build_cutoff() -> datetime | None:
+    """Return FX_BUILD_BEFORE (a PR's creation time) as a UTC datetime, or None."""
+    value = environ.get("FX_BUILD_BEFORE")
+    if not value:
+        return None
+    cutoff = datetime.fromisoformat(value)
+    return (
+        cutoff if cutoff.tzinfo else cutoff.replace(tzinfo=timezone.utc)
+    ).astimezone(timezone.utc)
+
+
+def listing(dir_url: str) -> dict[str, datetime | None]:
+    """Return each entry of an archive.mozilla.org folder with its upload time (UTC)."""
+    response = requests.get(dir_url, timeout=REQUEST_TIMEOUT)
+    if response.status_code >= 300:
+        return {}
+    entries = {}
+    for row in BeautifulSoup(response.text, "html.parser").find_all("tr"):
+        cells = row.find_all("td")
+        if len(cells) < 4 or not cells[1].a:
+            continue
+        uploaded = cells[3].getText().strip()
+        entries[cells[1].a.getText()] = (
+            datetime.strptime(uploaded, "%d-%b-%Y %H:%M").replace(tzinfo=timezone.utc)
+            if uploaded
+            else None
+        )
+    return entries
+
+
+def installer_uploaded_at(build_dir_url: str) -> datetime | None:
+    """Return when this platform's installer was uploaded to `build_dir_url`, or None."""
+    return next(
+        (
+            uploaded
+            for name, uploaded in listing(build_dir_url).items()
+            if name.split(".")[-1] == get_fx_executable_extension()
+        ),
+        None,
+    )
+
+
 def has_installer(build_dir_url: str) -> bool:
     """True once this platform's installer is in `build_dir_url`."""
-    response = requests.get(build_dir_url, timeout=REQUEST_TIMEOUT)
-    return response.status_code < 300 and any(
-        line.getText().split(".")[-1] == get_fx_executable_extension()
-        for line in BeautifulSoup(response.text, "html.parser").find_all("a")
-    )
+    return installer_uploaded_at(build_dir_url) is not None
 
 
 def previous_beta(version: str) -> str:
@@ -145,6 +197,35 @@ def nightly_versions(platform: str, ext: str) -> list[str]:
         if name.startswith("firefox-") and name.endswith(suffix)
     ]
     return sorted(versions, key=lambda v: int(v.split(".")[0]), reverse=True)
+
+
+def nightly_build_before(
+    cutoff: datetime, platform: str, ext: str
+) -> tuple[str, str] | None:
+    """Return the URL and version of the newest Nightly for `platform` uploaded by `cutoff`."""
+    stamp = f"{cutoff:%Y-%m-%d-%H-%M-%S}"
+    # Folders are named after the build's start time (UTC); look back a month at most
+    for month in (cutoff, cutoff.replace(day=1) - timedelta(days=1)):
+        month_url = f"{NIGHTLY_ARCHIVE_URL}/{month:%Y/%m}/"
+        builds = sorted(
+            (
+                name
+                for name in listing(month_url)
+                if name.endswith("-mozilla-central/") and name[:19] <= stamp
+            ),
+            reverse=True,
+        )
+        for build in builds:
+            for name, uploaded in listing(f"{month_url}{build}").items():
+                if (
+                    name.startswith("firefox-")
+                    and name.endswith(f".en-US.{platform}.{ext}")
+                    and uploaded
+                    and uploaded <= cutoff
+                ):
+                    version = name.removeprefix("firefox-").split(".en-US.")[0]
+                    return f"{month_url}{build}{name}", version
+    return None
 
 
 def main(args):
@@ -234,6 +315,15 @@ def main(args):
                 ext = "tar.xz"
             elif "win" in pfm:
                 ext = "installer.exe"
+
+            cutoff = build_cutoff()
+            pinned = nightly_build_before(cutoff, pfm, ext) if cutoff else None
+            if pinned:
+                (url, version) = pinned
+                logging.warning(f"Pinned to {url}, the newest Nightly by {cutoff}")
+                return version if number_only else url
+            if cutoff:
+                logging.warning(f"No {pfm} Nightly by {cutoff}, so using the newest")
 
             # On merge day the new version is announced before its first Nightly
             # is built, so PR runs use the newest Nightly that has an installer
@@ -341,10 +431,37 @@ def main(args):
             if channel == "-rc":
                 latest_beta_ver = latest_beta_ver.replace("b1", "")
             (fx_download_dir_url, build) = get_build_dir(latest_beta_ver, language)
+            cutoff = build_cutoff() if channel == "-beta" else None
+
+            # Pinned PR runs step back to the newest Beta build uploaded by the
+            # cutoff; a respin (build2) after the cutoff falls back to build1
+            if cutoff:
+                pinned = None
+                version = latest_beta_ver
+                for _ in range(MAX_PIN_STEPS):
+                    for number in build_numbers(version):
+                        build_dir = (
+                            f"{CANDIDATES_URL}/{version}-candidates/build{number}/"
+                            f"{get_fx_platform()}/{language}/"
+                        )
+                        uploaded = installer_uploaded_at(build_dir)
+                        if uploaded and uploaded <= cutoff:
+                            pinned = (build_dir, number)
+                            break
+                    if pinned:
+                        break
+                    version = previous_beta(version)
+                if pinned:
+                    (fx_download_dir_url, build) = pinned
+                    logging.warning(
+                        f"Pinned to {version}-build{build}, the newest Beta by {cutoff}"
+                    )
+                else:
+                    logging.warning(f"No Beta by {cutoff}, so using the newest")
 
             # On release day a Beta's folders appear before its installers, so
             # PR runs fall back to the previous Beta
-            if (
+            elif (
                 channel == "-beta"
                 and is_pull_request_run()
                 and not has_installer(fx_download_dir_url)
