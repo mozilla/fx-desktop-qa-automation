@@ -95,6 +95,7 @@ Credential Manager or Secret Service). Your password is never saved. Each record
 then gets its own token. Set `CI_WAF_TOKEN_PROD` (the prod `fxa-ci` token, not the stage
 `CI_WAF_TOKEN`) first, or FxA may block the sign-in.
 
+- Signing in again replaces the saved token and revokes the old one.
 - `uv run python -m scripts.fxa_login --logout` revokes it and removes it from the keychain.
 - `MOZ_FXA_BEARER_TOKEN`, if set, is used instead (an access token you got some other way).
 - `MOZ_FXA_REFRESH_TOKEN`, if set, is used instead of the keychain (for CI).

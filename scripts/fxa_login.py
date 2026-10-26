@@ -16,6 +16,7 @@ from modules.fxa_token import (
     delete_refresh_token,
     load_refresh_token,
     save_refresh_token,
+    saved_refresh_token,
 )
 
 FXA_API_URL = "https://api.accounts.firefox.com"
@@ -66,24 +67,36 @@ def login():
             },
             auth=session._auth,
         )
+        old_token = saved_refresh_token()
         save_refresh_token(resp["refresh_token"])
     finally:
         # The refresh token outlives the session, so nothing else needs it.
         session.destroy_session()
+    if old_token:
+        try:
+            revoke(old_token)
+        except requests.RequestException as e:
+            print(
+                f"Couldn't revoke the previous sign-in ({e}); remove it in your account."
+            )
     print("Signed in. Recording and live runs now get their own tokens.")
 
 
-def logout():
-    """Revoke the saved refresh token and remove it from the keychain."""
-    token = load_refresh_token()
-    if not token:
-        print("No saved sign-in.")
-        return
+def revoke(token: str):
     requests.post(
         f"{FXA_API_URL}/v1/oauth/destroy",
         json={"client_id": CLIENT_ID, "token": token},
         timeout=30,
     ).raise_for_status()
+
+
+def logout():
+    """Revoke the saved refresh token and remove it from the keychain."""
+    token = saved_refresh_token()
+    if not token:
+        print("No saved sign-in.")
+        return
+    revoke(token)
     delete_refresh_token()
     print("Signed out.")
 

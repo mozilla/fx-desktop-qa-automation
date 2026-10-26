@@ -13,15 +13,17 @@ KEYRING_USER = "refresh-token"
 LOGIN_COMMAND = "uv run python -m scripts.fxa_login"
 
 
-def load_refresh_token() -> str | None:
-    """Return the refresh token from MOZ_FXA_REFRESH_TOKEN (CI) or the OS keychain."""
-    token = os.environ.get("MOZ_FXA_REFRESH_TOKEN")
-    if token:
-        return token
+def saved_refresh_token() -> str | None:
+    """Return the refresh token saved in the OS keychain by scripts/fxa_login.py."""
     try:
         return keyring.get_password(KEYRING_SERVICE, KEYRING_USER)
     except KeyringError:
         return None
+
+
+def load_refresh_token() -> str | None:
+    """Return the refresh token from MOZ_FXA_REFRESH_TOKEN (CI) or the OS keychain."""
+    return os.environ.get("MOZ_FXA_REFRESH_TOKEN") or saved_refresh_token()
 
 
 def save_refresh_token(token: str):
