@@ -89,8 +89,12 @@ def logout():
 
 
 def check():
-    """Print a reminder when no sign-in is saved. Never fails."""
-    if not (os.environ.get("MOZ_FXA_BEARER_TOKEN") or load_refresh_token()):
+    """Say whether a sign-in is saved. Never fails."""
+    if os.environ.get("MOZ_FXA_BEARER_TOKEN"):
+        print("Recording uses the token in MOZ_FXA_BEARER_TOKEN.")
+    elif load_refresh_token():
+        print("Signed in. Recording and live runs get their own tokens.")
+    else:
         print(f"To record Smart Window chat tests, sign in once with: {LOGIN_COMMAND}")
 
 
