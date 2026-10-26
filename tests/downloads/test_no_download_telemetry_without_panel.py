@@ -4,7 +4,12 @@ from selenium.webdriver import Firefox
 from modules.page_object_about_pages import AboutTelemetry
 from modules.page_object_generics import GenericPage
 
-TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
+# A page with one link to the sample file; opening the file directly would hang
+# driver.get, which waits for a page load that never comes
+TEST_URL = (
+    'data:text/html,<a href="https://filesamples.com/samples/document/doc/sample2.doc">'
+    "sample2.doc</a>"
+)
 DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]
 
 
