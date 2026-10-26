@@ -13,11 +13,9 @@ from typing import List
 
 from pypom import Page
 from selenium.common import NoAlertPresentException
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    NoSuchWindowException,
-    TimeoutException,
-)
+from selenium.common.exceptions import (NoSuchElementException,
+                                        NoSuchWindowException,
+                                        TimeoutException)
 from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -115,7 +113,7 @@ class BasePage(Page):
         self.instawait = WebDriverWait(self.driver, 0)
 
         if not driver.capabilities.get("moz:headless", True):  # headless set to false
-            self.gui = _get_gui_auto(self.sys_platform)
+            self.gui = _get_gui_auto(self.sys_platform())
 
     _xul_source_snippet = (
         'xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"'
