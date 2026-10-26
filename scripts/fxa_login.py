@@ -47,16 +47,15 @@ def login():
         )
     del password
 
-    if not session.verified:
-        if session.verificationMethod == "totp-2fa":
-            session.totp_verify(input("Code from your authenticator app: ").strip())
-        else:
-            code = input("Code we emailed you: ").strip()
-            session.apiclient.post(
-                "/session/verify_code", {"code": code}, auth=session._auth
-            )
-
     try:
+        if not session.verified:
+            if session.verificationMethod == "totp-2fa":
+                session.totp_verify(input("Code from your authenticator app: ").strip())
+            else:
+                code = input("Code we emailed you: ").strip()
+                session.apiclient.post(
+                    "/session/verify_code", {"code": code}, auth=session._auth
+                )
         resp = session.apiclient.post(
             "/oauth/token",
             {
