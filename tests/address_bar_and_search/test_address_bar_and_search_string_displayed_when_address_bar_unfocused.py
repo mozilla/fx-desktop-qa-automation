@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.browser_object_panel_ui import PanelUi
+from selenium.webdriver import Firefox
 
 TEXT = "Firefox"
 

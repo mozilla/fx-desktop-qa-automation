@@ -1,12 +1,11 @@
 from pathlib import Path
 
 import pytest
-from pytest_httpserver import HTTPServer
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import AboutPrefs
 from auto_fxui.page_object_generics import GenericPage
+from pytest_httpserver import HTTPServer
+from selenium.webdriver import Firefox
 
 SEARCH_ENGINE = "Starfox Search"
 LOCAL_HTML = "open_search_page.html"

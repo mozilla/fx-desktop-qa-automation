@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-
-from auto_fxui.browser_object import Navigation, TabBar
-from auto_fxui.page_object import GenericPage
 
 FIRST_URL = "cnn.com"
 SECOND_URL = "mozilla.org"

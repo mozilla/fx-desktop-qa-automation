@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
-
 from auto_fxui.browser_object import Navigation, TabBar
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 SEARCH_TERM = "mozilla"
 

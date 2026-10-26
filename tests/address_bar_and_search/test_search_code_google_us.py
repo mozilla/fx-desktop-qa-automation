@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 from auto_fxui.page_object import ExamplePage
+from selenium.webdriver import Firefox
 
 EXPECTED_TITLE = "google.com"
 FX_SEARCH_CODE = "client%3Dfirefox-b-1-d"

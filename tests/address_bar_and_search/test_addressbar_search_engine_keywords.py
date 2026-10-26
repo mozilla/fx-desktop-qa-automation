@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.browser_object_navigation import Navigation
+from selenium.webdriver import Firefox, Keys
 
 ENGINE_KEYWORD = "@bing"
 SEARCH_TERM = "mozilla"

@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.browser_object_tabbar import TabBar
 from auto_fxui.page_object_error_page import ErrorPage

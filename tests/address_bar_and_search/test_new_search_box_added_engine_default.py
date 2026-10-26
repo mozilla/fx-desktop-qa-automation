@@ -1,13 +1,12 @@
 from pathlib import Path
 
 import pytest
-from pytest_httpserver import HTTPServer
-from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
-
 from auto_fxui.browser_object import Navigation, TabBar
 from auto_fxui.page_object import AboutPrefs
 from auto_fxui.page_object_generics import GenericPage
+from pytest_httpserver import HTTPServer
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 SEARCH_ENGINE = "Starfox Search"
 SEARCH_TERM = "mozilla"

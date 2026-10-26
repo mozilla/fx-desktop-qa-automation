@@ -3,9 +3,8 @@ import logging
 from time import sleep, time
 
 import pytest
-from selenium.common.exceptions import WebDriverException
-
 from auto_fxui.util import Utilities
+from selenium.common.exceptions import WebDriverException
 
 LOGGER = logging.getLogger(__name__)
 

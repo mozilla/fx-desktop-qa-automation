@@ -2,10 +2,9 @@ import logging
 from time import sleep
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutNewtab
 from auto_fxui.util import Utilities
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

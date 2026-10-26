@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, TabBar
+from selenium.webdriver import Firefox
 
 ENGINE = "DuckDuckGo"
 ENGINE_HOMEPAGE = "https://duckduckgo.com/"

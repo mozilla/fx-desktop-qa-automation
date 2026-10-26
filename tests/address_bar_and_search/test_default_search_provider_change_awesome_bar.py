@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 SEARCH_ENGINE = "DuckDuckGo"
 EXPECTED_PLACEHOLDER = f"Search with {SEARCH_ENGINE} or enter address"

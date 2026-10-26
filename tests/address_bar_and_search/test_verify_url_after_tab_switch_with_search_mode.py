@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.browser_object_tabbar import TabBar
+from selenium.webdriver import Firefox
 
 TEST_WEBSITE = "https://www.wikipedia.org/"
 OPTION = "History"

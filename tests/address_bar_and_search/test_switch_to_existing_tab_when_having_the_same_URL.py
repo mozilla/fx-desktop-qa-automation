@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.browser_object_tabbar import TabBar
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://example.com"
 SITE_HOST = "example.com"

@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.browser_object import Navigation
+from selenium.webdriver import Firefox, Keys
 
 TEST_WEBSITE = "https://www.firefox.com/"
 TEXT = "https"

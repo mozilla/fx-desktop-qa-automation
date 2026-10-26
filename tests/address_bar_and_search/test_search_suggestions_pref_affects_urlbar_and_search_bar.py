@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object_prefs import AboutPrefs
 

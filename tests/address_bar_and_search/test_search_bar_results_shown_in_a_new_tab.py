@@ -1,10 +1,9 @@
 import pytest
-from selenium.webdriver import Firefox
-from selenium.webdriver.common.keys import Keys
-
 from auto_fxui.browser_object import Navigation, PanelUi, TabBar
 from auto_fxui.page_object import AboutPrefs, CustomizeFirefox
 from auto_fxui.page_object_generics import GenericPage
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 
 @pytest.fixture()

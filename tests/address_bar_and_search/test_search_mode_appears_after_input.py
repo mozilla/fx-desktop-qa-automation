@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver.support import expected_conditions as EC
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object_prefs import AboutPrefs
 from auto_fxui.util import BrowserActions
+from selenium.webdriver.support import expected_conditions as EC
 
 GENERAL_ENGINE = "Bing"
 QUERY = "cobra kai"

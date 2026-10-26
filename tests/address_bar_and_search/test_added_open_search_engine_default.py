@@ -1,10 +1,9 @@
 import pytest
-from pytest_httpserver import HTTPServer
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.browser_object_tabbar import TabBar
 from auto_fxui.page_object_prefs import AboutPrefs
+from pytest_httpserver import HTTPServer
+from selenium.webdriver import Firefox, Keys
 
 SEARCH_ENGINE = "Starfox Search"
 TEXT = "test"

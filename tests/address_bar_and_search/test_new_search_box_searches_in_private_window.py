@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from auto_fxui.browser_object import Navigation
 
 DEFAULT_TERMS = ["mozilla", "firefox"]
 OTHER_ENGINES = [("Bing", "bing.com"), ("DuckDuckGo", "duckduckgo.com")]
