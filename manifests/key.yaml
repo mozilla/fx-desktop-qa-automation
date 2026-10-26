@@ -2064,8 +2064,7 @@ smart_window:
     splits:
       - functional2
   test_c4438277_group_related_tabs:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085113
-    result: unstable
+    result: pass
     splits:
       - functional2
 sync_and_fxa:
