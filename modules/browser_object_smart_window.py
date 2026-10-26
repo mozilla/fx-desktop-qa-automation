@@ -95,7 +95,7 @@ class SmartWindow(BasePage):
         chat works without signing in. Only for use with the mock server,
         which ignores the token (or swaps in a real one when recording).
 
-        Firefox 161 moved the token to AuthProvider.getToken; older versions
+        Firefox 160 moved the token to AuthProvider.getToken; older versions
         use openAIEngine.getFxAccountToken, so both are stubbed.
         """
         self.driver.execute_script(
@@ -106,7 +106,7 @@ class SmartWindow(BasePage):
             try {{
               ({{ AuthProvider }} = ChromeUtils.importESModule("{AUTH_PROVIDER_MODULE}"));
             }} catch {{
-              // Before Firefox 161 there is no AuthProvider module.
+              // Before Firefox 160 there is no AuthProvider module.
             }}
             if (AuthProvider) {{
               AuthProvider.getToken = async () => "mock-fxa-token";
