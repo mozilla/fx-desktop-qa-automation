@@ -2122,6 +2122,10 @@ tabs:
     result: pass
     splits:
       - functional2
+  test_manage_split_view_footer_menu:
+    result: pass
+    splits:
+      - functional2
   test_move_multi_selected_tabs:
     result: pass
     splits:
