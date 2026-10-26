@@ -187,6 +187,15 @@ class PrintPreview(BasePage):
         )
 
     @BasePage.context_chrome
+    def select_page_range(self, value: str) -> BasePage:
+        """Select a page-range option such as 'all' or 'custom'."""
+        self._set_settings_control("range-picker", value)
+        self.custom_wait(timeout=10).until(
+            lambda _: self.custom_page_range_is_visible() == (value == "custom")
+        )
+        return self
+
+    @BasePage.context_chrome
     def set_custom_page_range(self, page_range: str) -> BasePage:
         """Select Custom pages and enter a range such as '4-6,9'"""
         settings_browser = self.get_element("print-settings-browser")
@@ -213,6 +222,18 @@ class PrintPreview(BasePage):
         )
         self._set_settings_control("custom-range", page_range)
         return self
+
+    @BasePage.context_chrome
+    def custom_page_range_is_visible(self) -> bool:
+        """Return whether the custom page-range input is visible."""
+        settings_browser = self.get_element("print-settings-browser")
+        return self.driver.execute_script(
+            """
+            const input = arguments[0].contentDocument.getElementById("custom-range");
+            return !!input && !input.hidden;
+            """,
+            settings_browser,
+        )
 
     @BasePage.context_chrome
     def wait_for_sheet_count(self, expected: int, timeout: int = 20) -> BasePage:
