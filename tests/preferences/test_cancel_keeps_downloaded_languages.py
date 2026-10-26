@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 # Without this Nightly has no translation models, so the pickers stay disabled.
 REMOTE_SETTINGS_SERVER = "https://firefox.settings.services.mozilla.com/v2"

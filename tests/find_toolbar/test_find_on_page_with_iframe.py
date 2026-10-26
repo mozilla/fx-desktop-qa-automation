@@ -3,10 +3,9 @@ from pathlib import Path
 from shutil import copyfile
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import FindToolbar
 from auto_fxui.page_object import GenericPage
+from selenium.webdriver import Firefox
 
 PARENT_HTML = "find_in_iframe_page.html"
 FRAME_HTML = "find_in_iframe_frame.html"

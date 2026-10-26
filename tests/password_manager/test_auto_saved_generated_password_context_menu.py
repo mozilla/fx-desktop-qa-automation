@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import AutofillPopup, ContextMenu, Navigation, TabBar
 from auto_fxui.page_object import AboutLogins, LoginAutofill
+from selenium.webdriver import Firefox
 
 UPDATE_DOORHANGER_TEXT = "Update password for mozilla.github.io?"
 TEST_WEBSITE = "https://mozilla.github.io/"

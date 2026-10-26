@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.page_object import GenericPdf
 
 ORIGINAL_COMMENT = "Original paragraph comment"

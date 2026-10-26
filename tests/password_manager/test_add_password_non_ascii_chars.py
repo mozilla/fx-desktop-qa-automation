@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutLogins
+from selenium.webdriver import Firefox
 
 WEBSITE_ADDRESS = "mozilla.org"
 USERNAME = "Â£$Âµâ†’â€œ"

@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import FindToolbar
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
-
-from auto_fxui.browser_object import FindToolbar
 
 
 @pytest.fixture()

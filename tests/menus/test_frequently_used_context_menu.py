@@ -1,11 +1,10 @@
 import os
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Devtools, Navigation
 from auto_fxui.page_object import ExamplePage
 from auto_fxui.util import Utilities
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

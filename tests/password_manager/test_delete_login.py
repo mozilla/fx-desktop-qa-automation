@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.page_object_about_pages import AboutLogins
 from auto_fxui.page_object_autofill import LoginAutofill
 

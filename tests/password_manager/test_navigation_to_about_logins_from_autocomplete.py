@@ -1,10 +1,9 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_autofill_popup import AutofillPopup
 from auto_fxui.browser_object_tabbar import TabBar
 from auto_fxui.page_object_about_pages import AboutLogins
 from auto_fxui.page_object_autofill import LoginAutofill
+from selenium.webdriver import Firefox
 
 TEST_PAGE_URL = "https://mozilla.github.io/"
 USERNAME = "username1"

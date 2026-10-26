@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver.common.keys import Keys
-
 from auto_fxui.page_object import AboutLogins
 from auto_fxui.util import BrowserActions
+from selenium.webdriver.common.keys import Keys
 
 
 @pytest.fixture()

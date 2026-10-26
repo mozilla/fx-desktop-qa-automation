@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import FindToolbar
 from auto_fxui.page_base import BasePage
 from auto_fxui.page_object import GenericPdf
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

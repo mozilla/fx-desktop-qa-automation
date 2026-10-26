@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.components.dropdown import Dropdown
 from auto_fxui.page_object import AboutConfig, AboutPrefs, AboutPrivatebrowsing
+from selenium.webdriver import Firefox
 
 FEATURE_GATE_PREF = "browser.search.separatePrivateDefault.featureGate"
 FIRST_ENGINE = "DuckDuckGo"

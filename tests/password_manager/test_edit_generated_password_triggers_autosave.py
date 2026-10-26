@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import AutofillPopup, Navigation, TabBar
 from auto_fxui.page_object import AboutLogins, LoginAutofill
+from selenium.webdriver import Firefox
 
 EDIT_PASSWORD = "GG"
 SECOND_EDIT_PASSWORD = "RR"

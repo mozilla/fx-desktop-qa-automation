@@ -1,10 +1,9 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.browser_object_autofill_popup import AutofillPopup
 from auto_fxui.browser_object_tabbar import TabBar
 from auto_fxui.page_object_about_pages import AboutLogins
 from auto_fxui.page_object_generics import GenericPage
+from selenium.webdriver import Firefox, Keys
 
 TEST_PAGE = "https://www.facebook.com/"
 USERNAME = "username1"

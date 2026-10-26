@@ -1,11 +1,10 @@
 from time import sleep
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, TabBar
 from auto_fxui.page_object import AboutPrefs
 from auto_fxui.util import BrowserActions
+from selenium.webdriver import Firefox
 
 DOWNLOADED_PDF_REGEX = r"pdf-example-bookmarks\.pdf"
 

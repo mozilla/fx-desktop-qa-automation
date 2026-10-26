@@ -1,8 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Glean
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
+
 from tests.glean.flows import (
     ENTRY_PREFS,
     RELATED_SEARCH_TERM,

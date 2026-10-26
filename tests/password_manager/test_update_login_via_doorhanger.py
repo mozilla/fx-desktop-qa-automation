@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation
 from auto_fxui.browser_object_autofill_popup import AutofillPopup
 from auto_fxui.page_object import LoginAutofill
+from selenium.webdriver import Firefox
 
 USERNAME = "testUser"
 PASSWORD = "testPassword"

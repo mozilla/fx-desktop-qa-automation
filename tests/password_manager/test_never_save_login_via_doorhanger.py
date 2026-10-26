@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import AutofillPopup, Navigation
 from auto_fxui.page_object import AboutPrefs, LoginAutofill
 from auto_fxui.util import BrowserActions
+from selenium.webdriver import Firefox
 
 USERNAME = "testUser"
 PASSWORD = "testPassword"

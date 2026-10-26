@@ -1,12 +1,11 @@
 import pytest
+from auto_fxui.browser_object import FindToolbar, Navigation
+from auto_fxui.page_object_generics import GenericPage
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
 )
 from selenium.webdriver import Firefox
-
-from auto_fxui.browser_object import FindToolbar, Navigation
-from auto_fxui.page_object_generics import GenericPage
 
 
 @pytest.fixture()

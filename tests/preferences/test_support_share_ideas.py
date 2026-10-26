@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 CONNECT_PAGE_URL_PART = "connect.mozilla.org"
 

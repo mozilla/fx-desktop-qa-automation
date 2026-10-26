@@ -1,11 +1,10 @@
 from platform import system
 
 import pytest
-from selenium.common import TimeoutException
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, Navigation, PanelUi, TabBar
 from auto_fxui.page_object import AboutPrefs, GenericPage
+from selenium.common import TimeoutException
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

@@ -2,9 +2,8 @@ import logging
 import os
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import GenericPdf
+from selenium.webdriver import Firefox
 
 # Source PDF in data/ opened by the viewer; the saved copy uses a unique name
 # so this test can run in parallel without colliding with other PDF downloads.

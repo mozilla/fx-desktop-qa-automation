@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutConfig, AboutPrefs
+from selenium.webdriver import Firefox
 
 QUAD9_URL = "https://dns.quad9.net/dns-query"
 CUSTOM_PROVIDER_VALUE = "custom"

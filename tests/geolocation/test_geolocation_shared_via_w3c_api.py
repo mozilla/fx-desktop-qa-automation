@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation, TabBar
 from auto_fxui.page_object import GenericPage
+from selenium.webdriver import Firefox
 
 # Mock the network geolocation provider so coordinates resolve deterministically,
 # independent of OS location services or a build-substituted Google API key.

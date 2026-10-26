@@ -3,7 +3,6 @@ import time
 from shutil import copyfile
 
 import pytest
-
 from auto_fxui.page_object import GenericPdf
 
 DOWNLOAD_TIMEOUT_SEC = 5.0

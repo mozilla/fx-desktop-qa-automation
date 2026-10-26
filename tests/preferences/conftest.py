@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.browser_object import PanelUi, TabBar
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.components.dropdown import Dropdown

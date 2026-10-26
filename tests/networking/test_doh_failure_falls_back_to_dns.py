@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import TabBar
 from auto_fxui.page_object import AboutNetworking
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://www.wikipedia.org/"
 TEST_HOST = "www.wikipedia.org"

@@ -1,5 +1,4 @@
 import pytest
-
 from auto_fxui.page_object import GenericPdf
 
 PDF_FILE_NAME = "interactiveform_enabled.pdf"

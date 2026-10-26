@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object_about_pages import AboutLogins
 from auto_fxui.page_object_autofill import LoginAutofill
+from selenium.webdriver import Firefox
 
 TEST_PAGE_URL = "https://mozilla.github.io/form-fill-examples/password_manager/login_and_pw_change_forms.html"
 USERNAME = "username1"

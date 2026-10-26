@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import ContextMenu, TabBar
 from auto_fxui.page_object import AboutLogins, AboutPrefs, LoginAutofill
 from auto_fxui.util import BrowserActions
+from selenium.webdriver import Firefox
 
 CREDENTIAL_ORIGIN = "https://facebook.com"
 USERNAME = "username"

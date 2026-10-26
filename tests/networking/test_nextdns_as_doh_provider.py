@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutConfig, AboutPrefs
+from selenium.webdriver import Firefox
 
 NEXTDNS_URL = "https://firefox.dns.nextdns.io/"
 TRR_PREF = "network.trr.uri"

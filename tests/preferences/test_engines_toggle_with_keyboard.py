@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox, Keys
 
 ENGINE_NAME = "Google"
 MAX_TAB_STOPS = 60

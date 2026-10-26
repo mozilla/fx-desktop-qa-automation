@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import PanelUi, TabBar
+from selenium.webdriver import Firefox
 
 ABOUT_LOGINS_PAGE_TITLE = "Passwords"
 

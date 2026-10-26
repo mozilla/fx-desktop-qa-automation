@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver.common.keys import Keys
-
 from auto_fxui.page_object import GenericPdf
+from selenium.webdriver.common.keys import Keys
 
 ORIGINAL_COMMENT = "Original paragraph comment"
 EDITED_COMMENT = "Edited paragraph comment"

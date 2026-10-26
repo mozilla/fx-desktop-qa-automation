@@ -2,7 +2,6 @@ import os
 import time
 
 import pytest
-
 from auto_fxui.browser_object import PrintPreview
 
 DOWNLOAD_TIMEOUT_SEC = 10.0

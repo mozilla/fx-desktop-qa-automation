@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object_prefs import AboutPrefs
 from auto_fxui.util import BrowserActions
+from selenium.webdriver import Firefox
 
 PRIMARY_PASSWORD = "securePassword1"
 ALERT_MESSAGE = "Primary Password successfully changed."

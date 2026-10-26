@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutConfig, AboutPrefs
+from selenium.webdriver import Firefox
 
 CLOUDFLARE_URL = "https://mozilla.cloudflare-dns.com/dns-query"
 TRR_PREF = "network.trr.default_provider_uri"

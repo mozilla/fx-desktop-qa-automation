@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.page_object import AboutAddons, AboutPrefs, AmoLanguages
+from selenium.webdriver import Firefox
 
 AMO_LANGUAGE_TOOLS_URL = "addons.mozilla.org/en-US/firefox/language-tools"
 

@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox, Keys
-
 from auto_fxui.browser_object import Navigation, TabBar
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox, Keys
 
 ENGINE_ID = "wikipedia"
 ENGINE_NAME = "Wikipedia (en)"

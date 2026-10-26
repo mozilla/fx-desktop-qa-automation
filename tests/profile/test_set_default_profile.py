@@ -5,10 +5,9 @@ from shutil import rmtree
 from zipfile import ZipFile
 
 import pytest
+from auto_fxui.page_object import AboutProfiles
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import Firefox
-
-from auto_fxui.page_object import AboutProfiles
 
 
 @pytest.fixture()

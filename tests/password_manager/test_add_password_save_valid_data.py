@@ -1,11 +1,10 @@
 import logging
 
 import pytest
+from auto_fxui.page_object import AboutLogins
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
-
-from auto_fxui.page_object import AboutLogins
 
 WEBSITE_ADDRESS = "mozilla.org"
 USERNAME = "username"

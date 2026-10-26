@@ -1,10 +1,9 @@
 from shutil import copyfile
 
 import pytest
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-
-from auto_fxui.page_object import AboutPrefs
 
 # Two local pages stand in for "several websites"
 PAGE_FILENAMES = ["basic_webpage.html", "article_page.html"]

@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver.common.by import By
-
 from auto_fxui.page_object import GenericPdf
+from selenium.webdriver.common.by import By
 
 PDF_FILE_NAME = "i-9.pdf"
 DROPDOWN_FIELD = "state-dropdown-field"
