@@ -4,7 +4,6 @@ Verify that the Web Extensions AI API is disabled when Blocking all AI enhanceme
 """
 
 import pytest
-
 from auto_fxui.page_object_prefs import AboutPrefs
 
 

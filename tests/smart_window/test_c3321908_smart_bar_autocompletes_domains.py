@@ -5,9 +5,8 @@ domain resolves as a navigation.
 """
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import SmartBar, SmartWindow
+from selenium.webdriver import Firefox
 
 DOMAIN = "example.com"
 

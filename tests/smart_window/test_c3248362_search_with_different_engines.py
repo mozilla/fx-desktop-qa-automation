@@ -5,9 +5,8 @@ query to that engine.
 """
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import SmartBar, SmartWindow
+from selenium.webdriver import Firefox
 
 QUERY = "kangaroo"
 ENGINE = "Bing"

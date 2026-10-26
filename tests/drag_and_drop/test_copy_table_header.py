@@ -2,10 +2,9 @@ import platform
 import time
 
 import pytest
+from auto_fxui.page_object import GoogleSheets, Navigation
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from auto_fxui.page_object import GoogleSheets, Navigation
 
 
 @pytest.fixture()

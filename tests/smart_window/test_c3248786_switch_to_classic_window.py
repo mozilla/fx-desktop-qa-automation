@@ -5,7 +5,6 @@ Windows panel, and that the Smart Window chrome is torn down with it.
 """
 
 import pytest
-
 from auto_fxui.browser_object import SmartWindow
 
 

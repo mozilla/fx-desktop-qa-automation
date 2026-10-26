@@ -1,9 +1,8 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.page_object_about_pages import AboutTelemetry
 from auto_fxui.page_object_generics import GenericPage
+from selenium.webdriver import Firefox
 
 TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
 OPEN_DOWNLOADS_TELEMETRY_DATA = ["downloads.file_opened", "1"]

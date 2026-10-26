@@ -5,7 +5,6 @@ completed with a chosen model, and its choices are honored.
 """
 
 import pytest
-
 from auto_fxui.browser_object import SmartWindow
 from auto_fxui.classes.fxa_session import FxaSession
 from auto_fxui.page_object import FxaHome, SmartWindowFirstRun

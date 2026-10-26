@@ -5,7 +5,6 @@ holding exactly the recipe tabs.
 """
 
 import pytest
-
 from auto_fxui.browser_object import SmartBar, SmartWindowChat, TabBar
 from auto_fxui.classes.tab_grouping_scenario import TabGroupingScenario
 from auto_fxui.mock_server import MockServer

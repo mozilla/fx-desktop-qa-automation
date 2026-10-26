@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object_navigation import Navigation
 from auto_fxui.page_object_generics import GenericPage
+from selenium.webdriver import Firefox
 
 EPUB_URL = "https://www.gutenberg.org/ebooks/68473.epub.noimages?session_id=f8278dd40b5d1ac1078d21601c5f150d9b35b4ad"
 EPUB_NAME_REGEX = r".*\.epub(\s\(\d+\))?$"

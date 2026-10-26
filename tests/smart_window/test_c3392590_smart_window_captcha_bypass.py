@@ -6,10 +6,9 @@ the Smart Window first run.
 """
 
 import pytest
-from fxa.tests.utils import TestEmailAccount
-
 from auto_fxui.browser_object import SmartWindow
 from auto_fxui.page_object import FxaHome
+from fxa.tests.utils import TestEmailAccount
 
 FXA_STAGE_HOST = "accounts.stage.mozaws.net"
 

@@ -5,9 +5,8 @@ it is neither private-plus-smart nor missing its private state.
 """
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import PanelUi, SmartWindow
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

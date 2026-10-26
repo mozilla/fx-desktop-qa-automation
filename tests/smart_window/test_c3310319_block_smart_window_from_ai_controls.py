@@ -5,10 +5,9 @@ button, and that unblocking it brings the button back.
 """
 
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import SmartWindow
 from auto_fxui.page_object import AboutPrefs
+from selenium.webdriver import Firefox
 
 
 @pytest.fixture()

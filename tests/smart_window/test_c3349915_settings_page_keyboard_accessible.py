@@ -6,10 +6,9 @@ Verify the Smart Window controls in AI settings can be reached by TAB.
 import logging
 
 import pytest
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from auto_fxui.page_object import AboutPrefs
 
 # Measured: the select is stop 16 and the link 17. 40 leaves room for rows
 # that appear when other AI features are enabled.

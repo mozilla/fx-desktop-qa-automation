@@ -4,7 +4,6 @@ Verify that Enabled features remain Enabled after unblocking All AI features fro
 """
 
 import pytest
-
 from auto_fxui.page_object_prefs import AboutPrefs
 
 

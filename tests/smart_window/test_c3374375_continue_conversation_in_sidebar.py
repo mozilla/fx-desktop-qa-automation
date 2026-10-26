@@ -5,7 +5,6 @@ conversation, below the first exchange.
 """
 
 import pytest
-
 from auto_fxui.browser_object import SmartBar, SmartWindowChat
 from auto_fxui.mock_server import MockServer
 

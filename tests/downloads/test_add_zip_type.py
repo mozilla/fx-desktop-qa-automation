@@ -1,8 +1,7 @@
 import pytest
-from selenium.webdriver import Firefox
-
 from auto_fxui.browser_object import Navigation
 from auto_fxui.page_object import AboutPrefs, GenericPage
+from selenium.webdriver import Firefox
 
 ZIP_URL = "https://ftp.mozilla.org/pub/firefox/releases/0.9rc/"
 

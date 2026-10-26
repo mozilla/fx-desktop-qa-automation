@@ -4,7 +4,6 @@ Verify that the user can Cancel Blocking all AI enhancements from the Block AI E
 """
 
 import pytest
-
 from auto_fxui.page_object_prefs import AboutPrefs
 
 
