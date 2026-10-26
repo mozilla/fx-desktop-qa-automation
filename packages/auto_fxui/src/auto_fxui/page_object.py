@@ -2,6 +2,7 @@ from .page_object_about_pages import *
 from .page_object_addons_mozilla_org import *
 from .page_object_autofill import *
 from .page_object_customize_firefox import *
+from .page_object_error_page import *
 from .page_object_example_page import *
 from .page_object_fxa_home import *
 from .page_object_generics import *

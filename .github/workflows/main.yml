@@ -121,9 +121,9 @@ jobs:
             "FX_CHANNEL=$env:BASE_BRANCH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             "STARFOX_EXCLUDE=exclude_$env:BASE_BRANCH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           }
-          git fetch $env.GITHUB_BASE_REF
-          git fetch $env.GITHUB_HEAD_REF
-          $merge_base = (git merge-base $env.GITHUB_BASE_REF $env.GITHUB_HEAD_REF)
+          git fetch $env:GITHUB_BASE_REF
+          git fetch $env:GITHUB_HEAD_REF
+          $merge_base = (git merge-base $env:GITHUB_BASE_REF $env:GITHUB_HEAD_REF)
           "MERGE_BASE=$merge_base" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         env:
           TEST_SET: ${{ inputs.test_set }}
@@ -385,7 +385,7 @@ jobs:
           git fetch "$GITHUB_BASE_REF"
           git fetch "$GITHUB_HEAD_REF"
           export merge_base=$(git merge-base "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF")
-          echo "MERGE_BASE=${merge_base}" >> "$GITHUB_ENV
+          echo "MERGE_BASE=${merge_base}" >> "$GITHUB_ENV"
         env:
           TEST_SET: ${{ inputs.test_set }}
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
