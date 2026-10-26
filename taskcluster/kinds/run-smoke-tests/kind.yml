@@ -32,6 +32,7 @@ tasks:
         git fetch
         git reset --hard
         git pull origin $BASE_REF --rebase
+        git --no-pager show -s --format='%H %P %s' HEAD
         mkdir -p artifacts;
         pip3 install 'uv==0.11.18' --break-system-packages;
         uv run python scripts/switch_config.py ci;
@@ -47,7 +48,7 @@ tasks:
           exit "$PYAUTOGUI_IMPORT_EXIT_CODE"
         fi
         if [[ "$BASE_REF" && "$BASE_REF" != "main" ]]; then
-           FX_CHANNEL="$BASE_REF";
+           export FX_CHANNEL="$BASE_REF";
         fi
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;

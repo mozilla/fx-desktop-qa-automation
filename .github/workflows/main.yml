@@ -429,6 +429,7 @@ jobs:
         if: ${{ inputs.test_set != 'glean' }}
         run: |
           uv sync;
+          git --no-pager show -s --format='%H %P %s' HEAD
           uv run python -m scripts.choose_test_split
 
       - name: Print Selected Tests (MacOS)
