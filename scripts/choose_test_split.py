@@ -364,8 +364,9 @@ if __name__ == "__main__":
 
     run_list = []
     check_output(["git", "fetch", "--quiet", "--depth=1", "origin", BASE_BRANCH])
+
     git_diff_cmd = ["git", "--no-pager", "diff", "--name-only"]
-    rev_hash = os.environ.get("FX_DESKTOP_QA_AUTOMATION_HEAD_REV")
+    rev_hash = os.environ.get("MERGE_BASE")
     if rev_hash:
         git_diff_cmd.append(rev_hash)
     git_diff_cmd.append(f"origin/{BASE_BRANCH}")
