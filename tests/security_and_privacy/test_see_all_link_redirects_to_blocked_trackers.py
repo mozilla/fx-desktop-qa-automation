@@ -5,13 +5,21 @@ from selenium.webdriver import Firefox
 from modules.browser_object import TrustPanel
 from modules.page_object import GenericPage
 
-TEST_URL = "https://edition.cnn.com/"
+TEST_URL = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 MAX_ATTEMPTS = 3
 
 
 @pytest.fixture()
 def test_case():
     return "3054033"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    # Tracker lists come from Remote Settings, which WebDriver points at a dummy server
+    return [
+        ("services.settings.server", "https://firefox.settings.services.mozilla.com/v2")
+    ]
 
 
 def test_see_all_link_redirects_to_blocked_trackers(

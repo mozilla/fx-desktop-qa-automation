@@ -12,6 +12,7 @@ from pypom import Page
 from manifests.testkey import TestKey
 
 MANIFEST_KEY = "manifests/key.yaml"
+MAX_TESTS_PER_CHANGE = 12
 SUPPORTED_OSES = ["mac", "win", "linux"]
 HEADED_MARK = "@pytest.mark.headed"
 MIN_RUN_SIZE = 7
@@ -135,7 +136,6 @@ def changed_names(path: str) -> set | None:
         for name in old_methods.keys() | new_methods.keys()
         if old_methods.get(name) != new_methods.get(name)
         and name.split(".")[0] in old_rest
-        and name.split(".")[0] not in BIG_MODELS
     }
     if any(name.split(".")[1] in framework_methods() for name in changed):
         return None
@@ -268,7 +268,7 @@ def dedupe(run_list: list) -> list:
         elif os.path.isdir(entry_a):
             print(f"Removing {entry_a}: is a directory, adding tests")
             removes.append(i)
-            adds.extend(get_tests_in_suite(entry_a))
+            adds.extend(get_tests_in_suite(entry_a)[:MAX_TESTS_PER_CHANGE])
             continue
         for j, entry_b in enumerate(run_list):
             if i == j:
@@ -284,6 +284,21 @@ def dedupe(run_list: list) -> list:
     run_list.extend(adds)
 
     run_list.sort()
+    return run_list
+
+
+def remove_exclusions(run_list, manifest):
+    # Assign a split name to STARFOX_EXCLUDE to remove tests in that split from run
+    exclusions = os.environ.get("STARFOX_EXCLUDE")
+    if exclusions:
+        for excluded_split in exclusions.split(","):
+            print(f"Excluding tests from split: {excluded_split}...", end="")
+            exclude_count = 0
+            for exclude in dedupe(manifest.gather_split(excluded_split)):
+                if exclude in run_list:
+                    exclude_count += 1
+                    run_list.remove(exclude)
+            print(f"excluded {exclude_count} entries.")
     return run_list
 
 
@@ -328,18 +343,7 @@ if __name__ == "__main__":
         run_list = manifest.gather_split(os.environ["STARFOX_SPLIT"])
         run_list = dedupe(run_list)
         run_list = manifest.filter_filenames_by_pass(run_list)
-
-        # Assign a split name to STARFOX_EXCLUDE to remove tests in that split from run
-        exclusions = os.environ.get("STARFOX_EXCLUDE")
-        if exclusions:
-            for excluded_split in exclusions.split(","):
-                print(f"Excluding tests from split: {excluded_split}...", end="")
-                exclude_count = 0
-                for exclude in dedupe(manifest.gather_split(excluded_split)):
-                    if exclude in run_list:
-                        exclude_count += 1
-                        run_list.remove(exclude)
-                print(f"excluded {exclude_count} entries.")
+        run_list = remove_exclusions(run_list, manifest)
 
         with open(OUTPUT_FILE, "w") as fh:
             fh.write("\n".join(run_list))
@@ -425,6 +429,8 @@ if __name__ == "__main__":
                 tests = get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 )
+            if len(tests) > MAX_TESTS_PER_CHANGE:
+                tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
             run_list.extend(tests)
 
     if changed_models:
@@ -433,14 +439,16 @@ if __name__ == "__main__":
             if not os.path.exists(model_file):
                 continue
             tests = get_tests_by_change(model_file, test_paths_and_contents)
+
             if tests is not None:
+                if len(tests) > MAX_TESTS_PER_CHANGE:
+                    tests = dedupe(tests)[:MAX_TESTS_PER_CHANGE]
                 run_list.extend(tests)
                 continue
+
             model_file_contents = "".join([line for line in open(model_file)])
             classes = re_obj.get("class_re").findall(model_file_contents)
             for model_name in classes:
-                if model_name in BIG_MODELS:
-                    continue  # model too big, don't run all tests
                 for test_name in get_tests_by_model(
                     model_name, test_paths_and_contents, run_list
                 ):
@@ -477,5 +485,7 @@ if __name__ == "__main__":
     run_list = dedupe(run_list)
     run_list = manifest.filter_filenames_by_pass(run_list)
     run_list = [entry for entry in run_list if os.path.exists(entry.split("::")[0])]
+    run_list = remove_exclusions(run_list, manifest)
+
     with open(OUTPUT_FILE, "w") as fh:
         fh.write("\n".join(run_list))

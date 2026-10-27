@@ -469,12 +469,19 @@ def hard_quit():
     return False
 
 
+@pytest.fixture()
+def firefox_options():
+    """Allow tests to configure capabilities before the browser session starts."""
+    return Options()
+
+
 @pytest.fixture(autouse=True)
 def driver(
     build_version,
     create_profiles,
     env_prep,
     fx_executable,
+    firefox_options,
     fxa_url: str | None,
     geckodriver: str,
     hard_quit,
@@ -501,6 +508,9 @@ def driver(
 
     fx_executable: str
         Location of the Firefox executable.
+
+    firefox_options: Options
+        Browser options, optionally extended by a test before session creation.
 
     fxa_url: str | None
         FxA content server for identity.fxaccounts.autoconfig.uri, None to leave Firefox's default.
@@ -530,7 +540,7 @@ def driver(
     env_prep: None
         Fixture that does other environment work, like set logging levels.
     """
-    options = Options()
+    options = firefox_options
     service_args = ["--allow-system-access"]
     # options.log.level = "trace"
     options.binary_location = fx_executable

@@ -1,5 +1,7 @@
 from typing import Union
 
+from selenium.common.exceptions import TimeoutException
+
 from modules.browser_object_context_menu import ContextMenu
 from modules.browser_object_tabbar import TabBar
 from modules.page_base import BasePage
@@ -19,6 +21,11 @@ class SplitView(BasePage):
 
     LEFT = "0"
     RIGHT = "1"
+
+    # Split View menu options, by the command they run
+    SEPARATE_TABS = "separateTabs"
+    REVERSE_TABS = "reverseTabs"
+    CLOSE_BOTH_TABS = "closeTabs"
 
     def create_split_view(
         self, left_tab: Union[str, int], right_tab_title: str
@@ -40,7 +47,11 @@ class SplitView(BasePage):
         return self
 
     def expect_split_view_active(self, active: bool = True) -> BasePage:
-        """Wait until the window does (or does not) have a Split View."""
+        """
+        Wait until a Split View is (or is not) displayed, i.e. the selected tab
+        belongs to a Split View. Other Split Views in the window are ignored, use
+        expect_split_view_count for those.
+        """
         if active:
             self.element_exists("split-view-tabpanels")
         else:
@@ -48,9 +59,95 @@ class SplitView(BasePage):
         return self
 
     @BasePage.context_chrome
+    def count_split_views(self) -> int:
+        """Return the number of Split Views in the window."""
+        return len(self.get_elements("split-view-wrapper"))
+
+    def expect_split_view_count(self, count: int) -> BasePage:
+        """Wait until the window has exactly `count` Split Views."""
+        self.expect(lambda _: self.count_split_views() == count)
+        return self
+
+    @BasePage.context_chrome
+    def select_urlbar_menu_option(self, action: str) -> BasePage:
+        """
+        Open the Split View menu from the address bar button and pick `action`,
+        one of SEPARATE_TABS, REVERSE_TABS or CLOSE_BOTH_TABS. A Split View tab
+        must be selected for the button to show.
+        """
+        self.element_visible("split-view-urlbar-button")
+        self.click_on("split-view-urlbar-button")
+        self.element_visible("split-view-menu-item", labels=[action])
+        self.click_and_hide_menu("split-view-menu-item", labels=[action])
+        return self
+
+    @BasePage.context_chrome
+    def get_footer_menu_state(self) -> str:
+        """Return the state of the footer menu: closed, showing, open or hiding."""
+        return self.driver.execute_script(
+            "return document.getElementById('split-view-menu')?.state ?? 'closed';"
+        )
+
+    @BasePage.context_chrome
+    def open_footer_menu(self) -> BasePage:
+        """Open the three-dot menu in the Split View footer."""
+        column = self.RIGHT if self.get_selected_column() == self.LEFT else self.LEFT
+        self.element_visible("split-view-footer-menu-button", labels=[column])
+        self.click_on("split-view-footer-menu-button", labels=[column])
+
+        # Read the popup state, as headless Firefox never sets its open attribute
+        try:
+            self.expect(lambda _: self.get_footer_menu_state() == "open")
+        except TimeoutException:
+            raise AssertionError(
+                "Split View footer menu did not open, its state is "
+                f"{self.get_footer_menu_state()!r}"
+            )
+        return self
+
+    def select_footer_menu_option(self, command: str) -> BasePage:
+        """
+        Pick an option from the Split View footer menu, by command:
+        SEPARATE_TABS, REVERSE_TABS or CLOSE_BOTH_TABS.
+        """
+        self.open_footer_menu()
+        self.click_and_hide_menu("split-view-menu-item", labels=[command])
+        return self
+
+    @BasePage.context_chrome
     def count_tabs_in_split_view(self) -> int:
         """Return the number of tabs currently sitting in a Split View."""
         return len(self.get_elements("split-view-wrapper-tab"))
+
+    @BasePage.context_chrome
+    def expect_tab_next_to_split_view(
+        self, url: str, vertical: bool = False
+    ) -> BasePage:
+        """
+        Wait until the tab loaded with `url` is shown right after the Split View
+        in the tab strip: to its right with horizontal tabs, below it with
+        vertical tabs.
+        """
+        wrapper = self.get_element("split-view-wrapper")
+        self.expect(
+            lambda _: self.driver.execute_script(
+                """
+                const [wrapper, url, vertical] = arguments;
+                const tab = gBrowser.tabs.find(
+                  t => t.linkedBrowser.currentURI.spec === url
+                );
+                if (!tab) return false;
+                const view = wrapper.getBoundingClientRect();
+                const rect = tab.getBoundingClientRect();
+                if (vertical) return rect.top >= view.bottom - 1;
+                return rect.left >= view.right - 1 && rect.top < view.bottom;
+                """,
+                wrapper,
+                url,
+                vertical,
+            )
+        )
+        return self
 
     @BasePage.context_chrome
     def get_selected_column(self) -> str:

@@ -868,6 +868,22 @@ class GenericPdf(BasePage):
             self.click_on("page-thumbnail-checkbox", labels=[str(number)])
         return self
 
+    def drag_page_after(self, source_number: int, target_number: int) -> BasePage:
+        """Drag a thumbnail after another page in the open Pages sidebar."""
+        source = self.get_element("page-thumbnail-image", labels=[str(source_number)])
+        target = self.get_element("page-thumbnail-image", labels=[str(target_number)])
+        try:
+            self.actions.move_to_element(source).click_and_hold().move_by_offset(
+                0, 15
+            ).perform()
+            self.actions.move_to_element_with_offset(
+                target, 0, int(target.size["height"] / 4)
+            ).perform()
+            self.element_visible("page-drop-guide")
+        finally:
+            self.actions.release().perform()
+        return self
+
     def get_page_text(self, page_number: int) -> str:
         """Navigate to a text-bearing page and return normalized rendered text.
 

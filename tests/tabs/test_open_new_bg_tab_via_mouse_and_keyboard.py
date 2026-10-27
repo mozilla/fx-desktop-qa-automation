@@ -37,6 +37,8 @@ def _verify_link_opens_in_background(
     try:
         example.element_clickable(LINK_ELEMENT)
         link = example.get_element(LINK_ELEMENT)
+        # Pointer actions fail if the link is below a small CI viewport.
+        example.scroll_to_element(link)
         click_action(link)
 
         def _new_tab_handle(current_driver):
