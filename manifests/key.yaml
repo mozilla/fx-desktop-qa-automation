@@ -2151,11 +2151,7 @@ tabs:
     result: covered-in-tree
     splits: []
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085070
-    result:
-      linux: unstable
-      mac: unstable
-      win: pass
+    result: pass
     splits:
       - functional2
       - nightly
