@@ -1,0 +1,50 @@
+---
+name: Smart Window Nightly Tests
+
+run-name: Nightly Smart Window tests triggered by ${{ github.actor }}
+
+# Dispatch only, runs the smart_window test set on the supplied nightly build.
+
+on:
+  workflow_dispatch:
+    inputs:
+      win_installer_link:
+        description: 'The Windows ZIP URL for the Firefox build under test'
+        required: false
+        type: string
+
+      mac_installer_link:
+        description: 'The macOS installer URL for the Firefox build under test'
+        required: false
+        type: string
+
+      linux_tarball_link:
+        description: 'The Linux tarball URL for the Firefox build under test'
+        required: false
+        type: string
+
+      dry_run:
+        description: 'Select Smart Window tests without downloading or running Firefox'
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: read
+
+# One group per platform, so a run never cancels another platform or the smoke runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.win_installer_link && 'win' || inputs.mac_installer_link && 'mac' || inputs.linux_tarball_link && 'linux' || 'none' }}
+  cancel-in-progress: false
+
+jobs:
+  Run:
+    name: Run Smart Window nightly tests
+    uses: ./.github/workflows/core.yml
+    with:
+      test_sets: '["smart_window"]'
+      win_installer_link: ${{ inputs.win_installer_link }}
+      mac_installer_link: ${{ inputs.mac_installer_link }}
+      linux_tarball_link: ${{ inputs.linux_tarball_link }}
+      dry_run: ${{ inputs.dry_run }}
+      fx_channel: nightly

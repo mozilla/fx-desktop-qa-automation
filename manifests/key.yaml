@@ -1988,37 +1988,39 @@ smart_window:
   test_c3248361_perform_a_classic_search:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3248362_search_with_different_engines:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3248785_switch_to_smart_window_prompts_signin:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3248786_switch_to_classic_window:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3309849_switch_windows_while_visiting_website:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3309851_smart_window_missing_in_private_browsing:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3309853_open_private_window_from_smart_window:
     result: pass
     splits:
-      - functional2
-  test_c3309854_open_classic_window_from_smart_window:
-    result: pass
-    splits:
       - smart_window
       - functional2
-  test_c3309859_smart_window_restored_after_restart:
+  test_c3309854_open_classic_window_from_smart_window:
     result: pass
     splits:
       - smart_window
@@ -2026,26 +2028,32 @@ smart_window:
   test_c3310319_block_smart_window_from_ai_controls:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3311329_toggle_ai_chat_from_ask_button:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3321887_go_button_dropdown_opens:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3371305_smart_window_onboarding_new_account:
     result: pass
@@ -2054,6 +2062,7 @@ smart_window:
   test_c3374375_continue_conversation_in_sidebar:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c3392590_smart_window_captcha_bypass:
     result: pass
@@ -2062,10 +2071,12 @@ smart_window:
   test_c3978359_close_sidebar_from_x_button:
     result: pass
     splits:
+      - smart_window
       - functional2
   test_c4438277_group_related_tabs:
     result: pass
     splits:
+      - smart_window
       - functional2
 sync_and_fxa:
   test_existing_fxa:
