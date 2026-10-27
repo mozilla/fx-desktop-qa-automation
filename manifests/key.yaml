@@ -908,7 +908,8 @@ notifications:
     result: covered-in-tree
     splits: []
   test_webextension_completed_installation_successfully_displayed:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2082171
+    result: unstable
     splits:
       - functional1
 password_manager:

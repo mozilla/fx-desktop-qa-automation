@@ -1,10 +1,9 @@
 from time import sleep
 
 import pytest
+from auto_fxui.browser_object import Navigation
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
-
-from modules.browser_object import Navigation
 
 # The locale segment is present for some add-ons and absent for others.
 ADDONS_URL_PATTERN = r"addons\.mozilla\.org/(\w\w-\w\w/)?firefox/addon/{}/"

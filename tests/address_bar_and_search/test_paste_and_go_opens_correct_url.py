@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox, Keys
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
 
 CLIPBOARD_PAGE = "https://bug1320502.bmoattachments.org/attachment.cgi?id=8814655"
 URL = "https://developer.mozilla.org"
