@@ -1,9 +1,10 @@
 from typing import Union
 
-from .browser_object_context_menu import ContextMenu
-from .browser_object_tabbar import TabBar
+from selenium.common.exceptions import TimeoutException
+
+from .browser_object import ContextMenu, TabBar
 from .page_base import BasePage
-from .page_object_about_pages import AboutOpentabs
+from .page_object import AboutOpentabs
 
 
 class SplitView(BasePage):
