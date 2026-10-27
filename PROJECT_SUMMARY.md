@@ -16,11 +16,12 @@
 
 ### Design Pattern — Page/Browser Object Models (POM/BOM)
 
-All Firefox UI elements are modeled as Python classes inheriting from `BasePage`. The project uses a **Fluent Interface** strategy where methods return `self` to allow readable, chain-style test code.
+All Firefox UI elements are modeled as Python classes inheriting from `BasePage`. The project uses a **Fluent Interface** strategy where methods return `self` to allow readable, chain-style test code. The BasePage and object code is packaged locally as "auto-fxui"
+Package root: ./packages/auto_fxui/src/auto_fxui
 
-- Page Object files: `modules/page_object_*.py`
-- Browser Object files: `modules/browser_object_*.py`
-- Shared utilities: `modules/util.py` (e.g., `BrowserActions`, `PomUtils`)
+- Page Object files: `<package root>/page_object_*.py`
+- Browser Object files: `<package root>/browser_object_*.py`
+- Shared utilities: `<package root>/util.py` (e.g., `BrowserActions`, `PomUtils`)
 
 ### Test Organization
 
@@ -78,7 +79,7 @@ Handles additional CI tasks specifically for linting but also for all scheduled 
 ## Key Files & Directories
 
 ```
-modules/          # POMs, BOMs, utilities, and support classes
+packages/src/auto_fxui/src   # POMs, BOMs, utilities, and support classes
 tests/            # Functional and smoke test suites
 l10n_CM/          # Localization and Credit Manager test suites
 taskcluster/      # Taskcluster CI configuration and scripts

@@ -221,4 +221,5 @@ dev = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"modules/*.py" = [ "F403",]
+"packages/src/auto_fxui/src/*.py" = ["F403"]
+"modules/*.py" = [ "F401","F403",]
