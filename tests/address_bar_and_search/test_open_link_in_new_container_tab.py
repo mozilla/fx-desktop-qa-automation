@@ -1,11 +1,11 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_generics import GenericPage
-from modules.page_object_newtab import AboutNewtab
+from auto_fxui.browser_object_context_menu import ContextMenu
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object_generics import GenericPage
+from auto_fxui.page_object_newtab import AboutNewtab
 
 
 @pytest.fixture()

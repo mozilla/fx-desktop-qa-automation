@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
-from modules.browser_object import Navigation, PanelUi
+from auto_fxui.browser_object import Navigation, PanelUi
 
 
 @pytest.fixture()

@@ -1,8 +1,8 @@
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
-from modules.browser_object_tabbar import TabBar
+from auto_fxui.browser_object import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
 
 TEST_URL = "https://www.nationalgeographic.com/science/"
 EXPECTED_IN_TITLE = "Science"

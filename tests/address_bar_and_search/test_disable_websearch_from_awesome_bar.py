@@ -1,8 +1,8 @@
 import pytest
 
-from modules.browser_object import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_error_page import ErrorPage
+from auto_fxui.browser_object import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object_error_page import ErrorPage
 
 KEYWORD = "google"
 SEARCH_TERM = "firefox browser"

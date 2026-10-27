@@ -2,8 +2,8 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import ContextMenu, Navigation, TabBar
-from modules.page_object import ExamplePage
+from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
+from auto_fxui.page_object import ExamplePage
 
 FX_SEARCH_CODE = "client%3Dfirefox-b-d"
 SEARCH_TERM = "soccer"

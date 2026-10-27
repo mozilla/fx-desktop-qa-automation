@@ -5,7 +5,7 @@ from time import sleep, time
 import pytest
 from selenium.common.exceptions import WebDriverException
 
-from modules.util import Utilities
+from auto_fxui.util import Utilities
 
 LOGGER = logging.getLogger(__name__)
 
