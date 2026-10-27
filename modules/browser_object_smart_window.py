@@ -10,6 +10,9 @@ AI_WINDOW_MODULE = "moz-src:///browser/components/aiwindow/ui/modules/AIWindow.s
 OPENAI_ENGINE_MODULE = (
     "moz-src:///browser/components/aiwindow/models/openAIEngine.sys.mjs"
 )
+AUTH_PROVIDER_MODULE = (
+    "moz-src:///browser/components/aiwindow/models/AuthProvider.sys.mjs"
+)
 
 # Chrome JS locating the chat the user is in, for the Smart Bar and chat BOMs.
 # In full page the chat is the selected tab's own document (aiWindow.html,
@@ -91,14 +94,20 @@ class SmartWindow(BasePage):
         Make Firefox send Smart Window requests with a stand-in FxA token, so
         chat works without signing in. Only for use with the mock server,
         which ignores the token (or swaps in a real one when recording).
-
-        This is the stub Firefox's own tests use: MockEngineManager in
-        browser/components/aiwindow/ui/test/AIWindowTestUtils.sys.mjs.
         """
         self.driver.execute_script(
             f"""
             const {{ openAIEngine }} = ChromeUtils.importESModule("{OPENAI_ENGINE_MODULE}");
             openAIEngine.getFxAccountToken = async () => "mock-fxa-token";
+            let AuthProvider;
+            try {{
+              ({{ AuthProvider }} = ChromeUtils.importESModule("{AUTH_PROVIDER_MODULE}"));
+            }} catch {{
+              // Before Firefox 160 there is no AuthProvider module.
+            }}
+            if (AuthProvider) {{
+              AuthProvider.getToken = async () => "mock-fxa-token";
+            }}
             """
         )
         return self
@@ -110,10 +119,12 @@ class SmartWindow(BasePage):
         """
         self.expect(
             lambda _: (
-                self.get_element("main-window").get_attribute("aiwindow-first-run")
-                is not None
+                (
+                    self.get_element("main-window").get_attribute("aiwindow-first-run")
+                    is not None
+                )
+                == active
             )
-            == active
         )
         return self
 

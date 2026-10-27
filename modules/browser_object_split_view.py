@@ -120,6 +120,36 @@ class SplitView(BasePage):
         return len(self.get_elements("split-view-wrapper-tab"))
 
     @BasePage.context_chrome
+    def expect_tab_next_to_split_view(
+        self, url: str, vertical: bool = False
+    ) -> BasePage:
+        """
+        Wait until the tab loaded with `url` is shown right after the Split View
+        in the tab strip: to its right with horizontal tabs, below it with
+        vertical tabs.
+        """
+        wrapper = self.get_element("split-view-wrapper")
+        self.expect(
+            lambda _: self.driver.execute_script(
+                """
+                const [wrapper, url, vertical] = arguments;
+                const tab = gBrowser.tabs.find(
+                  t => t.linkedBrowser.currentURI.spec === url
+                );
+                if (!tab) return false;
+                const view = wrapper.getBoundingClientRect();
+                const rect = tab.getBoundingClientRect();
+                if (vertical) return rect.top >= view.bottom - 1;
+                return rect.left >= view.right - 1 && rect.top < view.bottom;
+                """,
+                wrapper,
+                url,
+                vertical,
+            )
+        )
+        return self
+
+    @BasePage.context_chrome
     def get_selected_column(self) -> str:
         """
         Return the column of the selected Split View panel, i.e. the one the
