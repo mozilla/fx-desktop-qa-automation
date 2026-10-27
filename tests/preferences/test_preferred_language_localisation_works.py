@@ -47,7 +47,6 @@ def require_language_packs(driver: Firefox):
     except requests.exceptions.RequestException as e:
         pytest.skip(f"Could not reach addons.mozilla.org: {e}")
     available = {pack["target_locale"] for pack in response.json()["results"]}
-    available = {pack["target_locale"] for pack in response.json()["results"]}
     missing = [language for language, _ in LANGUAGES if language not in available]
     if missing:
         pytest.skip(
