@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutLogins, GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutLogins, GenericPage
 
 GOOGLE_LOGIN_URL = "https://accounts.google.com/signin/v2/identifier?&passive=true&continue=https%3A%2F%2Fwww.google.com%2F&flowName=GlifWebSignIn&flowEntry=ServiceLogin"
 GOOGLE_ORIGIN = "https://accounts.google.com"

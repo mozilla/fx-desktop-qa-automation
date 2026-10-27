@@ -1,9 +1,8 @@
 import math
 
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver.support.color import Color
-
-from modules.page_object import GenericPdf
 
 
 @pytest.fixture()

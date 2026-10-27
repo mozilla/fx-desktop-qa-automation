@@ -3,8 +3,7 @@ import os
 import re
 
 import pytest
-
-from modules.page_object import AboutLogins
+from auto_fxui.page_object import AboutLogins
 
 PASSWORDS_FILE = "passwords_correctness.csv"
 

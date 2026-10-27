@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.page_object import GenericPdf
+from auto_fxui.util import Utilities
 from selenium.webdriver.common.keys import Keys
-
-from modules.page_object import GenericPdf
-from modules.util import Utilities
 
 PDF_FILE_NAME = "i-9.pdf"
 
