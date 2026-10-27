@@ -32,7 +32,8 @@ def test_user_can_manage_pinned_extensions_on_the_sidebar(driver: Firefox):
     nav.element_clickable("popup-notification-add")
     nav.js_click_on("popup-notification-add")
 
-    # Verify the extension is pinned to the sidebar
+    # Open the sidebar and verify the extension is pinned to it
+    sidebar.click_sidebar_button()
     sidebar.expect_extension_pinned_to_sidebar(EXTENSION_ID)
 
     # Open the Customize Sidebar panel and click Manage Extensions
