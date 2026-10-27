@@ -4,8 +4,9 @@ from .browser_object_smart_bar import SmartBar
 from .browser_object_smart_window import CHAT_DOCUMENT_JS
 from .page_base import BasePage
 
-# MESSAGE_ROLE.USER in the conversation model.
+# MESSAGE_ROLE.USER and MESSAGE_ROLE.TOOL in the conversation model.
 USER_ROLE = 0
+TOOL_ROLE = 3
 
 # uiTypes of the card the assistant shows when it asks before grouping tabs,
 # and of the card that shows an action's result (it replaces the first once
@@ -184,6 +185,21 @@ class SmartWindowChat(BasePage):
             "const c = aw && aw.conversation;"
             "return c ? c.messages.filter(m => m.toolUIData)"
             "  .map(m => m.toolUIData.uiType) : [];"
+        )
+
+    def get_tool_results(self, name: str) -> list:
+        """
+        Return what Firefox sent back to the model for each call to tool
+        `name`, oldest first.
+        """
+        return self._ai_window_script(
+            "const aw = aiWindow();"
+            "const c = aw && aw.conversation;"
+            "return c ? c.messages"
+            "  .filter(m => m.role === arguments[0] && m.content?.name === arguments[1])"
+            "  .map(m => m.content.body) : [];",
+            TOOL_ROLE,
+            name,
         )
 
     def get_last_tool_ui_type(self) -> str | None:

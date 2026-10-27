@@ -2063,6 +2063,10 @@ smart_window:
     result: pass
     splits:
       - functional2
+  test_c4433196_unsupported_tab_action_is_rejected:
+    result: pass
+    splits:
+      - functional2
   test_c4438277_group_related_tabs:
     result: pass
     splits:
