@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
 
 APK_URL = "https://github.com/appium/android-apidemos/releases/download/v6.0.3/ApiDemos-debug.apk"
 APK_NAME_REGEX = r".*\.apk(\s\(\d+\))?$"

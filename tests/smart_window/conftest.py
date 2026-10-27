@@ -3,11 +3,11 @@ from os import environ
 from pathlib import Path
 
 import pytest
+from auto_fxui.browser_object import SmartWindow, SmartWindowChat
+from auto_fxui.classes.recording import Recording
+from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
 from pytest_httpserver import HTTPServer
 
-from modules.browser_object import SmartWindow, SmartWindowChat
-from modules.classes.recording import Recording
-from modules.mock_server import MLPA_STAGE_URL, MockServer
 from modules.taskcluster import get_tc_secret
 
 TAB_PAGES = Path("data", "smart_window_pages")

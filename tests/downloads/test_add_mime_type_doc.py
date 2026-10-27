@@ -2,10 +2,9 @@ from subprocess import run
 from time import sleep
 
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutPrefs, GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation
-from modules.page_object import AboutPrefs, GenericPage
 
 
 @pytest.fixture()
