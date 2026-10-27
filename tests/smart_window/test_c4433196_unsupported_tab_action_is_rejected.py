@@ -25,9 +25,7 @@ def test_unsupported_tab_action_is_rejected(
     """
     C4433196 - Verify that an unsupported tab action name is rejected
     """
-    # The model looks up the tabs first, so its manage_tabs call names a real
-    # tab and only the action is wrong. Without asking, a valid action would
-    # act straight away. manage_tabs ends the turn: the model isn't asked again.
+    # get_open_tabs runs first so manage_tabs names a real tab; only the action is wrong.
     built_replies.add(tool_call(PROMPT, "get_open_tabs", {}))
     built_replies.add(
         tool_call(
