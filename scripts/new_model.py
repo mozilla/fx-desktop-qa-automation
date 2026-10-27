@@ -6,6 +6,7 @@ import os
 import re
 import sys
 
+PACKAGE_ROOT = os.path.join("packages", "auto_fxui", "src", "auto_fxui")
 SNAKE_RE = re.compile(r"^[a-z]+([_a-z][a-z])*$")
 PASCAL_RE = re.compile(r"^[A-Z][a-zA-Z]*[a-z]$")
 
@@ -96,17 +97,17 @@ if __name__ == "__main__":
 
     model_type_name = "page" if model_type == "pom" else "browser"
 
-    manifest = os.path.join("modules", "data", f"{model_name}.components.json")
+    manifest = os.path.join(PACKAGE_ROOT, "data", f"{model_name}.components.json")
     if not os.path.exists(manifest):
         with open(manifest, "w") as fh:
             fh.write("{\n\n}")
 
-    model = os.path.join("modules", f"{model_type_name}_object_{model_name}.py")
+    model = os.path.join(PACKAGE_ROOT, f"{model_type_name}_object_{model_name}.py")
     if not os.path.exists(model):
         with open(model, "w") as fh:
-            fh.write("from modules.page_base import BasePage\n")
+            fh.write("from .page_base import BasePage\n")
             fh.write(f"\nclass {pascalify(model_name)}(BasePage):")
 
         generic_model = os.path.join("modules", f"{model_type_name}_object.py")
         with open(generic_model, "a") as fh:
-            fh.write(f"\nfrom modules.{model_type_name}_object_{model_name} import *")
+            fh.write(f"\nfrom .{model_type_name}_object_{model_name} import *")
