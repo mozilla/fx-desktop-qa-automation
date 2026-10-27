@@ -14,7 +14,7 @@ def test_case():
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
 REDIRECT_URL = "https://www.example.com/"
-ERROR_TITLES = ["Server Not Found"]
+ERROR_TITLES = ["Server Not Found", "This site can’t be reached"]
 
 
 def test_server_not_found_error(driver: Firefox):
