@@ -10,7 +10,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-
 SCHEDULE_URL = "https://whattrainisitnow.com/api/release/schedule/"
 LOG = logging.getLogger(__name__)
 
@@ -66,10 +65,14 @@ def rollover(
     if requested_version is not None and version != requested_version:
         raise ValueError("API returned a different version than requested")
     if version < first_version:
-        report(f"Skipped Firefox {version}: first automated version is {first_version}.")
+        report(
+            f"Skipped Firefox {version}: first automated version is {first_version}."
+        )
         return
     if (now or datetime.now(timezone.utc)) < released_at:
-        report(f"Skipped Firefox {version}: release is scheduled for {released_at.isoformat()}.")
+        report(
+            f"Skipped Firefox {version}: release is scheduled for {released_at.isoformat()}."
+        )
         return
 
     archive = f"refs/heads/fx{version}"
@@ -79,7 +82,9 @@ def rollover(
         return
 
     git(
-        "fetch", "--no-tags", "origin",
+        "fetch",
+        "--no-tags",
+        "origin",
         "+refs/heads/beta:refs/remotes/origin/beta",
         "+refs/heads/nightly:refs/remotes/origin/nightly",
     )
@@ -90,33 +95,44 @@ def rollover(
         f"update beta to nightly `{nightly_sha}`. Dry run: {dry_run}."
     )
     command = [
-        "push", "--atomic",
+        "push",
+        "--atomic",
         f"--force-with-lease={archive}:",
         f"--force-with-lease=refs/heads/beta:{beta_sha}",
     ]
     if dry_run:
         command.append("--dry-run")
     # Both updates succeed together.
-    command.extend([
-        "origin", f"{beta_sha}:{archive}",
-        f"{nightly_sha}:refs/heads/beta",
-    ])
+    command.extend(
+        [
+            "origin",
+            f"{beta_sha}:{archive}",
+            f"{nightly_sha}:refs/heads/beta",
+        ]
+    )
     git(*command)
-    report("Preview complete; branches were not changed." if dry_run else "Rollover complete.")
+    report(
+        "Preview complete; branches were not changed."
+        if dry_run
+        else "Rollover complete."
+    )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--first-release-version", type=positive_major,
+        "--first-release-version",
+        type=positive_major,
         default=os.environ.get("FIRST_RELEASE_VERSION") or None,
     )
     parser.add_argument(
-        "--release-version", type=positive_major,
+        "--release-version",
+        type=positive_major,
         default=os.environ.get("RELEASE_VERSION") or None,
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         default=os.environ.get("DRY_RUN", "false").lower() == "true",
     )
     args = parser.parse_args()
@@ -124,8 +140,10 @@ def main() -> None:
         parser.error("Set FIRST_RELEASE_VERSION or pass --first-release-version")
     try:
         rollover(
-            fetch_schedule(args.release_version), args.first_release_version,
-            args.dry_run, args.release_version,
+            fetch_schedule(args.release_version),
+            args.first_release_version,
+            args.dry_run,
+            args.release_version,
         )
     except subprocess.CalledProcessError as error:
         LOG.error("Git operation failed: %s", error.stderr.strip())
@@ -138,4 +156,3 @@ def main() -> None:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     main()
-
