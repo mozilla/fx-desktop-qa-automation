@@ -79,7 +79,7 @@ Handles additional CI tasks specifically for linting but also for all scheduled 
 ## Key Files & Directories
 
 ```
-packages/src/auto_fxui/src   # POMs, BOMs, utilities, and support classes
+packages/auto_fxui/src/auto_fxui/   # POMs, BOMs, utilities, and support classes
 tests/            # Functional and smoke test suites
 l10n_CM/          # Localization and Credit Manager test suites
 taskcluster/      # Taskcluster CI configuration and scripts
