@@ -41,8 +41,12 @@ def add_to_prefs_list():
 def require_language_packs(driver: Firefox):
     """Skip unless addons.mozilla.org has the test's language packs for this Firefox version."""
     version = driver.capabilities["browserVersion"]
-    response = requests.get(LANGPACKS_URL.format(version=version), timeout=30)
-    response.raise_for_status()
+    try:
+        response = requests.get(LANGPACKS_URL.format(version=version), timeout=30)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        pytest.skip(f"Could not reach addons.mozilla.org: {e}")
+    available = {pack["target_locale"] for pack in response.json()["results"]}
     available = {pack["target_locale"] for pack in response.json()["results"]}
     missing = [language for language, _ in LANGUAGES if language not in available]
     if missing:
