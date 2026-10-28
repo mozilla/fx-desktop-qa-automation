@@ -1,17 +1,10 @@
 """Create the Smart Window smoke-automation tickets under epic DTE-5295.
 
-One child issue per functional group from the smoke suite, each listing the
-TestRail cases it covers. Groups and case lists are the same ones the TestRail
-script tags as "Smoke & Sanity", so the two stay in step.
+One ticket per functional group, plus the research spikes, labelled for the
+board. Groups match what the TestRail script tags, so the two stay in step.
+Idempotent by summary, so a re-run only creates what is missing.
 
-Idempotent: an issue whose summary already exists under the epic is left alone,
-so re-running after a partial failure only creates what is missing.
-
-Credentials come from jira_credentials.env (gitignored). Dry run by default;
-pass --apply to create.
-
-    python scripts/create_smoke_automation_jira_tickets.py
-    python scripts/create_smoke_automation_jira_tickets.py --apply
+Credentials come from jira_credentials.env. Dry run by default; --apply writes.
 """
 
 import argparse
@@ -446,7 +439,7 @@ def main():
     parser.add_argument(
         "--spike-type",
         default=None,
-        help="Spike issue type (default: Spike if the project has one, else --issue-type)",
+        help="Spike issue type (default: Story, matching the board's existing spikes)",
     )
     args = parser.parse_args()
 
