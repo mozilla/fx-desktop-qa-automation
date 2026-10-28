@@ -134,16 +134,22 @@ version = "0.1.0"
 source = { editable = "packages/auto_fxui" }
 dependencies = [
     { name = "pypom" },
-    { name = "pytest" },
     { name = "selenium" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pypom", specifier = "==2.2.4" },
-    { name = "pytest", specifier = "==9.0.3" },
     { name = "selenium", specifier = "==4.23.1" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = "==9.0.3" }]
 
 [[package]]
 name = "autoflake"

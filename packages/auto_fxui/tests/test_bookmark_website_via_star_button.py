@@ -1,7 +1,6 @@
 import pytest
-from auto_fxui.browser_object_navigation import Navigation
-from auto_fxui.browser_object_panel_ui import PanelUi
-from auto_fxui.page_object_generics import GenericPage
+from auto_fxui.browser_object import Navigation, PanelUi
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
 
 

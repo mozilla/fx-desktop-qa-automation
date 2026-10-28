@@ -9,6 +9,10 @@ license-files = ["LICENSE"]
 dependencies = [
     "selenium==4.23.1",
     "pypom==2.2.4",
+]
+
+[dependency-groups]
+dev = [
     "pytest==9.0.3",
 ]
 
