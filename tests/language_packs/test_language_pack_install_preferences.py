@@ -52,6 +52,8 @@ def nightly_langpacks(driver: Firefox, browser_name: str):
         )
     listing = quote(json.dumps({"results": results}))
     with driver.context(driver.CONTEXT_CHROME):
+        # Replace AMO's language pack listing with the one built above, as a
+        # data: URL, so about:preferences offers and installs Nightly's packs
         driver.execute_script(
             "Services.prefs.setStringPref('extensions.getAddons.langpacks.url', arguments[0]);",
             f"data:application/json,{listing}",
