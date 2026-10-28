@@ -107,7 +107,7 @@ GROUPS = [
 # label but are deliberately NOT parented to the smoke epic.
 SPIKES = [
     (
-        "Spike: monkey testing for Smart Window",
+        "[SPIKE] - fx-desktop-qa-automation - Smart Window Monkey Testing",
         "Can randomised/fuzz interaction find Smart Window defects that scripted "
         "scenarios miss?",
         [
@@ -124,7 +124,7 @@ SPIKES = [
         ],
     ),
     (
-        "Spike: visual testing for the Nova redesign cases",
+        "[SPIKE] - fx-desktop-qa-automation - Smart Window Visual Testing (Nova redesign)",
         "About 100 of the 289 Smart Window scenarios are visual-design checks "
         "(gradients, glow, rounded corners, spacing, animation). They are the single "
         "largest not-automatable block. Is a visual-baseline approach worth it for a "
@@ -143,7 +143,7 @@ SPIKES = [
         ],
     ),
     (
-        "Spike: report functionality covered, not test cases added",
+        "[SPIKE] - fx-desktop-qa-automation - Functionality Coverage Reporting",
         "Weekly reporting currently counts test cases added, which does not say how much "
         "of the feature is actually covered. Work out how to report coverage by "
         "functionality instead.",
@@ -258,28 +258,31 @@ class Jira:
     def issue(self, key):
         return self._request("GET", f"issue/{key}")
 
+    def _search(self, jql):
+        """Run a JQL search, following pagination so nothing is truncated."""
+        found, start = {}, 0
+        while True:
+            page = self._request(
+                "GET",
+                f"search/jql?jql={urllib.parse.quote(jql)}"
+                f"&fields=summary&maxResults=100&startAt={start}",
+            )
+            issues = page.get("issues", [])
+            found.update({i["fields"]["summary"]: i["key"] for i in issues})
+            start += len(issues)
+            if len(issues) < 100 or start >= page.get("total", start):
+                return found
+
     def children_of(self, key):
-        jql = urllib.parse.quote(f'parent = "{key}" ORDER BY created ASC')
-        found = self._request(
-            "GET", f"search/jql?jql={jql}&fields=summary&maxResults=100"
-        )
-        return {i["fields"]["summary"]: i["key"] for i in found.get("issues", [])}
+        return self._search(f'parent = "{key}" ORDER BY created ASC')
 
     def summaries_in_project(self, project, label):
-        jql = urllib.parse.quote(f'project = "{project}" AND labels = "{label}"')
-        found = self._request(
-            "GET", f"search/jql?jql={jql}&fields=summary&maxResults=200"
-        )
-        return {i["fields"]["summary"]: i["key"] for i in found.get("issues", [])}
+        return self._search(f'project = "{project}" AND labels = "{label}"')
 
     def issue_types(self, project):
-        meta = self._request(
-            "GET", f"issue/createmeta?projectKeys={project}&expand=projects.issuetypes"
-        )
-        for proj in meta.get("projects", []):
-            if proj["key"] == project:
-                return [t["name"] for t in proj.get("issuetypes", [])]
-        return []
+        # The projectKeys+expand form of createmeta is deprecated.
+        meta = self._request("GET", f"issue/createmeta/{project}/issuetypes")
+        return [t["name"] for t in meta.get("issueTypes", [])]
 
     def create(self, fields):
         return self._request("POST", "issue", {"fields": fields})
@@ -482,7 +485,7 @@ def main():
     if types:
         logging.info("Issue types in %s: %s", project, ", ".join(types))
     if args.spike_type is None:
-        args.spike_type = "Spike" if "Spike" in types else args.issue_type
+        args.spike_type = "Story" if "Story" in types else args.issue_type
     for name, label in (
         (args.issue_type, "--issue-type"),
         (args.spike_type, "--spike-type"),

@@ -1,22 +1,15 @@
-"""Maintain the Smart Window (S70279) smoke suite and automation fields in TestRail.
+"""Maintain the Smart Window (S70279) smoke suite and automation fields.
 
-Three idempotent edits, driven by the groups in
-``~/Documents/starfox/s70279_smoke_suite_and_jira_plan.md``:
+Tags the smoke suite "Smoke & Sanity", sets automated cases to Completed with
+coverage judged per case, and sets the rest to Suitable so a filter on the tag
+reads as a progress view.
 
-* every case in the smoke suite gains the "Smoke & Sanity" sub test suite,
-  keeping whatever it already carries;
-* cases with a test in ``tests/smart_window/`` are set to automation status
-  Completed, with coverage judged per case (Full only where the test asserts
-  every expected result in the TestRail case);
-* smoke cases that are not automated yet are set to Suitable, so a filter on
-  "Smoke & Sanity" reads as a progress view rather than a flat list.
+Option ids come from get_case_fields: the mapping in testrail_status_analyses.py
+is wrong on both the labels and the option count. custom_sub_test_suites is
+multi-select and TestRail replaces rather than appends, so existing values are
+merged.
 
-Option ids are resolved from ``get_case_fields``; the mapping in
-``testrail_status_analyses.py`` is wrong on both the labels and the option
-count. ``custom_sub_test_suites`` is multi-select and TestRail replaces rather
-than appends, so the existing value is read back and merged.
-
-Dry run by default. Pass ``--apply`` to write.
+Dry run by default; pass --apply to write.
 """
 
 import argparse
@@ -72,6 +65,10 @@ PARTIAL_COVERAGE = [
     3392590,
 ]
 AUTOMATED_CASES = FULL_COVERAGE + PARTIAL_COVERAGE
+
+# C3321887 and C3349915 are automated but deliberately not in SMOKE_GROUPS: a
+# minor dropdown affordance, and a case belonging to the Accessibility
+# sub-suite. They get an automation status but no smoke tag.
 
 # Smoke cases with no test yet: automatable with today's harness, so Suitable.
 SUITABLE_CASES = [c for c in SMOKE_CASES if c not in AUTOMATED_CASES]
