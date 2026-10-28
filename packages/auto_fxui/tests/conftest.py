@@ -72,5 +72,5 @@ def driver(tmp_path, prefs_list, timeout):
         raise
 
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        if "driver" in locals() and driver:
             driver.quit()
