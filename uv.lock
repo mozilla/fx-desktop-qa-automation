@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -134,12 +134,14 @@ version = "0.1.0"
 source = { editable = "packages/auto_fxui" }
 dependencies = [
     { name = "pypom" },
+    { name = "pytest" },
     { name = "selenium" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pypom", specifier = "==2.2.4" },
+    { name = "pytest", specifier = "==9.0.3" },
     { name = "selenium", specifier = "==4.23.1" },
 ]
 
