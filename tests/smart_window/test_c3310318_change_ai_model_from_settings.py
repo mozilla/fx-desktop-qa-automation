@@ -7,7 +7,6 @@ selected, and that the choice is written through to the backing pref.
 import pytest
 from selenium.webdriver import Firefox
 
-from modules.browser_object import SmartWindow
 from modules.page_object import AboutPrefs
 
 FAST = "smart-window-model-fast-v2"
@@ -21,7 +20,7 @@ def test_case():
     return "3310318"
 
 
-def test_change_ai_model_from_settings(driver: Firefox, smart_window: SmartWindow):
+def test_change_ai_model_from_settings(driver: Firefox):
     """
     C3310318 - Change the AI model from the Settings page
     """

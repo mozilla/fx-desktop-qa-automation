@@ -17,6 +17,9 @@ EXPECTED_MODEL = "smart-window-model-fast-v2"
 # Labels read "<name>: <type>", e.g. "Gemini 3.1 Flash Lite: Fast".
 LABEL = re.compile(r"^.+: .+$")
 
+# A model id such as gemini-3.1-flash-lite or mistral-small-2603.
+MODEL_ID = re.compile(r"[a-z0-9]+(?:[.-][a-z0-9]+){2,}")
+
 
 @pytest.fixture()
 def test_case():
@@ -38,7 +41,8 @@ def test_ai_model_type_displayed_in_settings(driver: Firefox):
     built_in = [m for m in models if m["l10n"] != "smart-window-model-custom"]
     for model in built_in:
         assert LABEL.match(model["label"] or ""), f"no name/type in {model['label']!r}"
-        assert "Full name:" in (model["description"] or ""), (
+        # The id itself, not the "Full name:" label, which is localised.
+        assert MODEL_ID.search(model["description"] or ""), (
             f"no model id in {model['l10n']} description: {model['description']!r}"
         )
 
