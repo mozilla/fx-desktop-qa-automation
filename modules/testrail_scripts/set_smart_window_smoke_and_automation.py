@@ -48,7 +48,16 @@ SMOKE_CASES = [c for group in SMOKE_GROUPS.values() for c in group]
 # Coverage is judged per case: Full only where the test asserts every expected
 # result in the TestRail case, Partial where a named expected result is out of
 # reach. Reasoning per case is in s70279_smoke_selection.md.
-FULL_COVERAGE = [3248361, 3309851, 3309853, 3309854, 3321887, 3321908, 3978359]
+FULL_COVERAGE = [
+    3248361,
+    3309851,
+    3309853,
+    3309854,
+    3310316,
+    3321887,
+    3321908,
+    3978359,
+]
 PARTIAL_COVERAGE = [
     3240165,
     3248362,
@@ -56,6 +65,7 @@ PARTIAL_COVERAGE = [
     3248786,
     3309849,
     3309859,
+    3310318,
     3310319,
     3311329,
     3313457,
@@ -113,6 +123,8 @@ def fetch_cases(tr, project_id, suite_id):
     """Fetch every case in a suite, following pagination."""
     cases, offset, limit = {}, 0, 240
     while True:
+        # Direct send_get: get_cases_in_suite takes no limit, and the default
+        # page size would silently truncate a suite this size.
         response = tr.client.send_get(
             f"get_cases/{project_id}&suite_id={suite_id}&limit={limit}&offset={offset}"
         )
@@ -184,12 +196,12 @@ def main():
         ids.update(option_ids(tr, "custom_automation_coverage"))
         cases = fetch_cases(tr, PROJECT_ID, SUITE_ID)
     except APIError as error:
-        if "401" in str(error):
+        if "HTTP 401" in str(error):
             raise SystemExit(
                 "TestRail rejected the credentials. Generate a fresh key at "
                 "TestRail > My Settings > API Keys and put it in testrail_credentials.env."
             ) from error
-        if "403" in str(error):
+        if "HTTP 403" in str(error):
             raise SystemExit(
                 "TestRail refused the write. Project 17's default role is Read-only, so "
                 "the account needs a project role or a group that carries one."
