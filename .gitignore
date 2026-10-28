@@ -201,4 +201,5 @@ testrail_credentials.env
 
 # Do not ignore
 !data/goomy.png
+!data/visual_baselines/**/*.png
 !tests/downloads

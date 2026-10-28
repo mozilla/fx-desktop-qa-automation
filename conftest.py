@@ -186,6 +186,13 @@ def pytest_addoption(parser):
         help="How the mock server answers Smart Window requests: replay "
         "recordings (default), record new ones, or pass through live",
     )
+    parser.addoption(
+        "--update-visual-baselines",
+        action="store_true",
+        default=False,
+        help="Write visual baselines from this run instead of asserting "
+        "against them. Review the image diff before committing.",
+    )
 
 
 def _screenshot(filename: str, driver: Firefox, opt_ci: bool):
@@ -248,6 +255,11 @@ def opt_window_size(request):
 @pytest.fixture(scope="session")
 def opt_mock_mode(request):
     return request.config.getoption("--mock-mode")
+
+
+@pytest.fixture(scope="session")
+def opt_update_visual_baselines(request):
+    return request.config.getoption("--update-visual-baselines")
 
 
 @pytest.fixture(scope="session")

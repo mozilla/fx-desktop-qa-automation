@@ -13,6 +13,7 @@ from modules.browser_object import SmartWindow, SmartWindowChat
 from modules.classes.recording import Recording
 from modules.mock_server import MLPA_STAGE_URL, MockServer
 from modules.taskcluster import get_tc_secret
+from modules.visual_baseline import VisualBaseline
 
 
 @pytest.fixture()
@@ -59,6 +60,17 @@ def prefs_list(add_to_prefs_list: dict, mock_server_session: MockServer):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def visual_baseline(driver, sys_platform, opt_update_visual_baselines):
+    """
+    Compare chrome elements against the references in data/visual_baselines/.
+
+    Only macOS baselines exist so far, so the tests that use this are gated to
+    Darwin; see modules/visual_baseline.py for the tolerance and how to refresh.
+    """
+    return VisualBaseline(driver, sys_platform, opt_update_visual_baselines)
 
 
 @pytest.fixture()
