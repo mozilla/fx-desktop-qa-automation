@@ -2217,12 +2217,8 @@ class AboutPrefs(BasePage):
         """
         Navigate to the Personalize Smart Window subpage.
 
-        The model controls exist in the DOM on about:preferences#ai too, but
-        are hidden there; only this hash renders them. So assert visibility
-        rather than existence when checking them.
-
-        Arguments:
-            verify: If True (default), wait for the model radio group to show.
+        The model controls also exist on #ai but are hidden there, so callers
+        must assert visibility rather than existence.
         """
         self.driver.get("about:preferences#personalizeSmartWindow")
         if verify:
@@ -2230,13 +2226,7 @@ class AboutPrefs(BasePage):
         return self
 
     def get_smart_window_models(self) -> list[dict]:
-        """
-        Describe every AI model offered on the personalize subpage.
-
-        Returns:
-            list[dict]: one entry per model, in page order, with its l10n id,
-                radio value, rendered label, description and checked state.
-        """
+        """Describe every AI model offered, in page order."""
         return [
             {
                 "l10n": option.get_attribute("data-l10n-id"),
@@ -2248,13 +2238,14 @@ class AboutPrefs(BasePage):
             for option in self.get_elements("smart-window-model-options")
         ]
 
-    def get_smart_window_model(self) -> str:
+    def get_smart_window_model(self) -> str | None:
         """
-        Return the l10n id of the currently selected AI model.
+        Return the selected model's l10n id, or None if not exactly one is
+        checked. Returns rather than asserts: this runs inside expect()'s
+        wait, which only retries on NoSuchElementException.
         """
         selected = [m for m in self.get_smart_window_models() if m["checked"]]
-        assert len(selected) == 1, f"expected one model checked, got {selected}"
-        return selected[0]["l10n"]
+        return selected[0]["l10n"] if len(selected) == 1 else None
 
     def expect_smart_window_model(self, l10n_id: str) -> BasePage:
         """
@@ -2265,17 +2256,10 @@ class AboutPrefs(BasePage):
 
     def set_smart_window_model(self, l10n_id: str) -> BasePage:
         """
-        Select an AI model on the personalize subpage.
+        Select an AI model, e.g. "smart-window-model-fast-v2".
 
-        Clicks near the top-left of the radio, not its centre. A moz-radio here
-        is a full-width row whose centre lands on the description text, where a
-        click does nothing; the control itself sits at the left edge. Plain
-        element.click() and keyboard both fail too -- the host reports "not
-        reachable by keyboard" and Marionette rejects its ShadowRoot -- so a
-        positioned pointer event is the only real interaction that works.
-
-        Arguments:
-            l10n_id: e.g. "smart-window-model-fast-v2"
+        Clicks the radio's top-left, not its centre: the centre lands on the
+        description text where a click does nothing.
         """
         option = self.get_element("smart-window-model-option", labels=[l10n_id])
         value = option.get_attribute("value")
@@ -2285,11 +2269,8 @@ class AboutPrefs(BasePage):
         ).click().perform()
         self.expect_smart_window_model(l10n_id)
 
-        # Custom only commits once a model has actually been configured, so its
-        # pref stays on the previous choice while the radio reads as selected.
+        # Custom leaves the pref on the previous model until one is configured.
         if l10n_id != CUSTOM_MODEL:
-            # Same confirmation as set_ai_smart_window: prove the control wrote
-            # through to the pref rather than only moving the visual state.
             self.expect(
                 lambda _: (
                     self.driver.execute_script(
