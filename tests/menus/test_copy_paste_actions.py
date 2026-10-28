@@ -2,12 +2,11 @@ import logging
 from shutil import copyfile
 
 import pytest
+from auto_fxui.browser_object import ContextMenu
+from auto_fxui.page_object import GenericPage, LoginAutofill, TextAreaFormAutofill
+from auto_fxui.util import Utilities
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object import ContextMenu
-from modules.page_object import GenericPage, LoginAutofill, TextAreaFormAutofill
-from modules.util import Utilities
 
 SEARCH_HTML = "search_page.html"
 

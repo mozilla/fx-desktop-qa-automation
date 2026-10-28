@@ -1,12 +1,11 @@
 import logging
 
 import pytest
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import AboutPrefs
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-
-from modules.browser_object import TabBar
-from modules.page_object import AboutPrefs
-from modules.page_object_generics import GenericPage
 
 TEST_URL = "https://www.example.com"
 DEFAULT_ZOOM_PERCENT = 150

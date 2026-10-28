@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation, PanelUi, TabBar
 from pytest_httpserver import HTTPServer
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation, PanelUi, TabBar
 
 TYPED_TEXT = "loc"
 EXPECTED_IN_TITLE = "Science"

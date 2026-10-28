@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object_autofill_popup import AutofillPopup
+from auto_fxui.page_object_autofill import AddressFill
 from selenium.webdriver import Firefox
-
-from modules.browser_object_autofill_popup import AutofillPopup
-from modules.page_object_autofill import AddressFill
 
 
 @pytest.fixture()

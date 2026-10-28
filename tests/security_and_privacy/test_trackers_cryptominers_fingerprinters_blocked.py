@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TrustPanel
+from auto_fxui.page_object import AboutPrefs, GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import TrustPanel
-from modules.page_object import AboutPrefs, GenericPage
 
 MAX_ATTEMPTS = 3
 

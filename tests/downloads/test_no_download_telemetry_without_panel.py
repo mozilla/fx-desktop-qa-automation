@@ -1,10 +1,13 @@
 import pytest
+from auto_fxui.page_object_about_pages import AboutTelemetry
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
 
-from modules.page_object_about_pages import AboutTelemetry
-from modules.page_object_generics import GenericPage
-
-TEST_URL = "https://sapphire-hendrika-5.tiiny.site/"
+# Link page, since opening the file directly hangs driver.get
+TEST_URL = (
+    'data:text/html,<a href="https://filesamples.com/samples/document/doc/sample2.doc">'
+    "sample2.doc</a>"
+)
 DOWNLOADS_TELEMETRY_DATA = ["downloads.panel_shown"]
 
 

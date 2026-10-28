@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object_context_menu import ContextMenu
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_newtab import AboutNewtab
+from auto_fxui.page_object_prefs import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.browser_object_context_menu import ContextMenu
-from modules.browser_object_navigation import Navigation
-from modules.page_object_newtab import AboutNewtab
-from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

@@ -7,11 +7,12 @@ import subprocess
 import sys
 import time
 
+from auto_fxui.util import env_true
+
 from manifests.testkey import TestKey
 from modules import taskcluster as tc
 from modules import testrail as tr
 from modules.testrail import TESTRAIL_STATUS, APIError, TestRail
-from modules.util import env_true
 from scripts.choose_l10n_ci_set import select_l10n_mappings
 from scripts.collect_executables import get_fx_version
 

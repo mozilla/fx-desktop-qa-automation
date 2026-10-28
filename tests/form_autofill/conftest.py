@@ -1,10 +1,9 @@
 import os
 
 import pytest
-
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutPrefs, AddressFill, CreditCardFill
-from modules.util import Utilities
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutPrefs, AddressFill, CreditCardFill
+from auto_fxui.util import Utilities
 
 
 # bump

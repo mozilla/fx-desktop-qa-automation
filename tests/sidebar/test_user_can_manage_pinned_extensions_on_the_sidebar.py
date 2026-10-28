@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation, Sidebar
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation, Sidebar
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()
