@@ -1186,6 +1186,10 @@ pdf_viewer:
     result: pass
     splits:
       - functional2
+  test_pdf_global_save_changes:
+    result: pass
+    splits:
+      - functional1
   test_pdf_highlight_comment_can_be_added:
     result: pass
     splits:
