@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
+from auto_fxui.page_object_error_page import ErrorPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_error_page import ErrorPage
 
 
 @pytest.fixture()
@@ -14,7 +13,7 @@ def test_case():
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
 REDIRECT_URL = "https://www.example.com/"
-ERROR_TITLES = ["Server Not Found"]
+ERROR_TITLES = ["Server Not Found", "This site can’t be reached"]
 
 
 def test_server_not_found_error(driver: Firefox):

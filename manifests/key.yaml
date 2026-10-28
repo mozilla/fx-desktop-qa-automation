@@ -269,13 +269,11 @@ address_bar_and_search:
       - functional1
       - nightly
   test_server_not_found_error:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085069
-    result: unstable
+    result: pass
     splits:
       - functional1
   test_server_not_found_error_on_private_window:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085069
-    result: unstable
+    result: pass
     splits:
       - functional1
   test_suggestions_for_empty_query_not_shown_in_search_mode:
@@ -558,8 +556,7 @@ downloads:
     result: covered-in-tree
     splits: []
   test_no_download_telemetry_without_panel:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085091
-    result: unstable
+    result: pass
     splits:
       - functional1
       - nightly
@@ -911,7 +908,7 @@ notifications:
     result: covered-in-tree
     splits: []
   test_webextension_completed_installation_successfully_displayed:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081813
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2082171
     result: unstable
     splits:
       - functional1
@@ -2063,8 +2060,7 @@ smart_window:
     splits:
       - functional2
   test_c4438277_group_related_tabs:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085113
-    result: unstable
+    result: pass
     splits:
       - functional2
 sync_and_fxa:
@@ -2153,11 +2149,7 @@ tabs:
     result: covered-in-tree
     splits: []
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085070
-    result:
-      linux: unstable
-      mac: unstable
-      win: pass
+    result: pass
     splits:
       - functional2
       - nightly
@@ -2232,6 +2224,10 @@ tabs:
     splits:
       - functional2
   test_split_view_single_tab_context_menu_horizontal_vertical:
+    result: pass
+    splits:
+      - functional2
+  test_split_view_tab_link_correct_location:
     result: pass
     splits:
       - functional2

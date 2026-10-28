@@ -1,6 +1,5 @@
 import pytest
-
-from modules.browser_object import TabBar
+from auto_fxui.browser_object import TabBar
 
 
 @pytest.fixture()

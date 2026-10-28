@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.page_object import AboutPrefs
 
 SUPPORT_PAGE_URL_PART = "support.mozilla.org"
 SUPPORT_PAGE_ARTICLE_PART = "how-do-i-use-firefox-spell-checker"

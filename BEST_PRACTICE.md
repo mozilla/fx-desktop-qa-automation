@@ -10,7 +10,7 @@ Selenium to perform actions in the browser. Here are a few pointers:
 
 ### Individual Tests
 
-Each test file is going to be named test_xxxxx.py, where the _xxxxx_ is a 
+Each test file is going to be named test_xxxxx.py, where the _xxxxx_ is a
 description of the test, in snake_case. These filenames should be unique and self-
 explanatory, but do not have to be long.
 
@@ -54,12 +54,12 @@ also be set inside an individual test file.
 
 ### Support methods and classes
 
-Certain utilities are bundled in `./modules/util.py`. These are organized by
+Certain utilities are bundled in `./packages/auto_fxui/src/auto_fxui/util.py`. These are organized by
 general use case as classes, e.g. BrowserActions for helper functions that make
 Selenium easier to use or PomUtils that help organize object models. Import the
 class, but instantiate it inside the object model or test you're writing:
 ```Python
-from modules.util import BrowserActions
+from auto_fxui.util import BrowserActions
 
 def test_something(driver):
     ba = BrowserActions(driver)
@@ -119,5 +119,5 @@ plan on finding and if necessary creating some documentation around the framewor
 
 #### Finding Tricky Selectors
 
-Please see 
+Please see
 [our guide to tricky selectors](https://mozilla-hub.atlassian.net/wiki/spaces/QA/pages/606503037/HOWTO+Find+difficult+selectors).

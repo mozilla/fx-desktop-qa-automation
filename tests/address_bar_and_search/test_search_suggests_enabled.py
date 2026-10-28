@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_prefs import AboutPrefs
+from auto_fxui.util import BrowserActions
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 # Constants
 SEARCH_TERM_SPONSORED = "amazon"

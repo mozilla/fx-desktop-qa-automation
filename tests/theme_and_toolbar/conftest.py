@@ -1,6 +1,5 @@
 import pytest
-
-from modules.util import Utilities
+from auto_fxui.util import Utilities
 
 
 @pytest.fixture()

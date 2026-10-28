@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import Navigation, SplitView, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation, SplitView, TabBar
 
 URLS = ["https://www.youtube.com", "https://www.wikipedia.org"]
 SECOND_SPLIT_TAB = "Wikipedia"

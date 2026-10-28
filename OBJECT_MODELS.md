@@ -20,9 +20,9 @@ can do the same thing we do for web pages/apps for the browser itself.
 
 # File Structure
 
-Page and Browser Object files live in `./modules`, where they are all
-imported (and thus re-exported) by either `page_object.py` or
-`browser_object.py`. The filename for an individual Page Object should be
+Page and Browser Object files live in `./packages/auto_fxui/src/auto_fxui`,
+where they are all imported (and thus re-exported) by either `page_object.py`
+or `browser_object.py`. The filename for an individual Page Object should be
 `page_object_xxxx.py` where `xxxx` is replaced by a very short name for the
 page being described. All constants, attributes, and functions for the page
 should be contained in the file unless that would make the file unsuitably
@@ -33,7 +33,7 @@ chrome context aren't explicitly defined, please use caution when creating
 a new Browser Object file so as to avoid overlap in concerns.
 
 All Page and Browser Object files should include the line:
-`from modules.page_base import BasePage` and all POM/BOM classes should
+`from auto_fxui.page_base import BasePage` and all POM/BOM classes should
 inherit from `BasePage`.
 
 # The Fluent Interface Strategy

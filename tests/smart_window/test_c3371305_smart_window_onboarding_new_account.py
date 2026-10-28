@@ -6,10 +6,9 @@ onboarding with a chosen model, and its choices take effect.
 """
 
 import pytest
+from auto_fxui.browser_object import SmartWindow
+from auto_fxui.page_object import FxaHome, SmartWindowFirstRun
 from fxa.tests.utils import TestEmailAccount
-
-from modules.browser_object import SmartWindow
-from modules.page_object import FxaHome, SmartWindowFirstRun
 
 
 @pytest.fixture()
