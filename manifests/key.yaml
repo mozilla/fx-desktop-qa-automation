@@ -2383,11 +2383,10 @@ smart_window:
     splits:
     - smart_window
     - functional3
-  test_c3309859_smart_window_restored_after_restart:
+  test_c3309861_smart_window_auto_restored:
     result: pass
     splits:
-    - smart_window
-    - functional3
+    - functional1
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
