@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
 
 TEST_URL = (
     "https://drive.google.com/file/d/1XgNzc9QM-QNLZQcha-qtbAtAdd5iyTHk/view?hl=en"

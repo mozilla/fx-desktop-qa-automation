@@ -5,9 +5,8 @@ place of "New Smart Window", and that it opens a Classic Window.
 """
 
 import pytest
+from auto_fxui.browser_object import PanelUi, SmartWindow
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi, SmartWindow
 
 
 @pytest.fixture()

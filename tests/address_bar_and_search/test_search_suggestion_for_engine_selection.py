@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation
 from selenium.webdriver import Firefox, Keys
 from selenium.webdriver.support import expected_conditions as EC
-
-from modules.browser_object import Navigation
 
 
 @pytest.fixture()
@@ -10,7 +9,8 @@ def test_case():
     return "3028780"
 
 
-sites = ["Google", "Bing", "DuckDuckGo", "eBay"]
+sites = ["Google", "Bing", "DuckDuckGo"]
+# eBay temporary site malfunction 2026-10-26
 
 
 @pytest.mark.parametrize("site", sites)

@@ -1,10 +1,9 @@
 import os
 
 import pytest
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object import GenericPdf
 
 
 @pytest.fixture()

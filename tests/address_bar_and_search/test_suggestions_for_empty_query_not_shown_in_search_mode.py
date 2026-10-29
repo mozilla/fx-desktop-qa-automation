@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object_prefs import AboutPrefs
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object import Navigation
-from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

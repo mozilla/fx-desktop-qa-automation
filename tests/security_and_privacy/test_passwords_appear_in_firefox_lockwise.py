@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation, TabBar
+from auto_fxui.page_object import AboutLogins, AboutProtections
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation, TabBar
-from modules.page_object import AboutLogins, AboutProtections
 
 TEST_PAGE_URL = "https://mozilla.github.io/"
 USERNAME = "username1"

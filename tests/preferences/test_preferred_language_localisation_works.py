@@ -1,9 +1,8 @@
 import pytest
 import requests
+from auto_fxui.browser_object import Navigation, PanelUi, TabBar
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation, PanelUi, TabBar
-from modules.page_object import AboutPrefs
 
 # Locale code, and the Browser language heading once that locale is applied.
 LANGUAGES = [("fr", "Langue du navigateur"), ("de", "Browser-Sprache")]

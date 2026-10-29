@@ -3,10 +3,9 @@ from pathlib import Path
 from shutil import copyfile
 
 import pytest
+from auto_fxui.browser_object import PrintPreview
+from auto_fxui.page_object_generics import GenericPdf
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PrintPreview
-from modules.page_object_generics import GenericPdf
 
 
 @pytest.fixture()

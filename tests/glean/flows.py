@@ -1,10 +1,9 @@
 from time import sleep
 
 import pytest
+from auto_fxui.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
+from auto_fxui.page_object import AboutNewtab, ExamplePage, GenericPage
 from selenium.webdriver import Firefox, Keys
-
-from modules.browser_object import ContextMenu, Glean, Navigation, PanelUi, TabBar
-from modules.page_object import AboutNewtab, ExamplePage, GenericPage
 
 SEARCH_TERM = "firefox"
 # Commercial query so engines render the related-searches component that open_in_new_tab clicks.

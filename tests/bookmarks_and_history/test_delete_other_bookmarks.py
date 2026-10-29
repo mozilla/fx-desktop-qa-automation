@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.classes.bookmark import Bookmark
+from auto_fxui.page_object import GenericPage
+from auto_fxui.util import BrowserActions
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation
-from modules.classes.bookmark import Bookmark
-from modules.page_object import GenericPage
-from modules.util import BrowserActions
 
 CACHE_PAGE_URL = "about:cache"
 ROBOTS_BOOKMARK = Bookmark(

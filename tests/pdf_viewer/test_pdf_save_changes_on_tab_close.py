@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import GenericPdf
 from selenium.common.exceptions import NoAlertPresentException, NoSuchWindowException
-
-from modules.browser_object import TabBar
-from modules.page_object import GenericPdf
 
 
 @pytest.fixture()

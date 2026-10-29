@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.page_object import AboutLogins
+from auto_fxui.page_object_prefs import AboutPrefs
+from auto_fxui.util import BrowserActions
 from selenium.webdriver import Firefox
-
-from modules.page_object import AboutLogins
-from modules.page_object_prefs import AboutPrefs
-from modules.util import BrowserActions
 
 TEST_PAGE_URL = "https://mozilla.github.io/"
 USERNAME = "username1"

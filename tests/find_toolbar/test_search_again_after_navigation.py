@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.browser_object import FindToolbar
+from auto_fxui.page_object_generics import GenericPage
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
-
-from modules.browser_object import FindToolbar
-from modules.page_object_generics import GenericPage
 
 
 @pytest.fixture()

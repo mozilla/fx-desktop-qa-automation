@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation
+from auto_fxui.page_object import ExamplePage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, Navigation
-from modules.page_object import ExamplePage
 
 
 @pytest.fixture()

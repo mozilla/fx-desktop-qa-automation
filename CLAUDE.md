@@ -47,7 +47,7 @@ tests/                     # Test files, organized by feature suite
   <suite_name>/
     conftest.py            # Suite-level fixtures (suite_id, prefs_list)
     test_*.py              # Individual test files (one test per file)
-modules/                   # Page/Browser Object Models and utilities
+packages/auto_fxui/src/auto_fxui/                   # Page/Browser Object Models and utilities
   page_base.py             # BasePage — all POM/BOM classes inherit from this
   page_object.py           # Re-exports all page objects (wildcard imports)
   browser_object.py        # Re-exports all browser objects (wildcard imports)
@@ -68,7 +68,7 @@ data/                      # Test data files (secrets, autofill forms, etc.)
 
 ### The POM/BOM System
 
-All page and browser object models inherit from `BasePage` (`modules/page_base.py`), which itself extends `pypom.Page`. Each POM/BOM class automatically loads its element definitions from a JSON manifest at `modules/data/<snake_case_class_name>.components.json`.
+All page and browser object models inherit from `BasePage` (`page_base.py` in the auto_fxui package), which itself extends `pypom.Page`. Each POM/BOM class automatically loads its element definitions from a JSON manifest at `<package root>/data/<snake_case_class_name>.components.json`.
 
 **JSON manifest format:**
 ```json
@@ -158,8 +158,8 @@ After adding a test, run `python scripts/addtests.py` to register it (this also 
 Import from the aggregate modules, not individual files:
 
 ```python
-from modules.page_object import AboutLogins, AboutPrefs, Navigation
-from modules.browser_object import TabBar, Navigation, ContextMenu
+from auto_fxui.page_object import AboutLogins, AboutPrefs, Navigation
+from auto_fxui.browser_object import TabBar, Navigation, ContextMenu
 ```
 
 ### Key Fixtures (root conftest.py)
@@ -194,17 +194,17 @@ from modules.browser_object import TabBar, Navigation, ContextMenu
 ### Smart Window mock server
 
 - Full guide for people: `SMART_WINDOW_MOCK_SERVER.md`. Keep it in step with changes to the mock server, fixtures or recording format.
-- The Smart Window suite points Firefox's LLM and web search endpoints at a local `MockServer` (`modules/mock_server.py`), so no test reaches the real service.
+- The Smart Window suite points Firefox's LLM and web search endpoints at a local `MockServer` (`<package root>/mock_server.py`), so no test reaches the real service.
 - Chat tests use the `smart_window_chat` fixture, which returns the `SmartWindowChat` BOM with Smart Window active, a stand-in FxA token and `mock_server` loaded. Open the chat, then `chat.send(prompt)` sends and returns once the assistant has answered, tool calls included; read `get_last_reply()` / `get_messages()`. Only a test that acts while the assistant is still answering uses `SmartBar.submit_chat()` and `expect_turn_complete(turn)` directly. Compare with what was served using `mock_server.chat_reply_text(prompt)`.
 - The chat renders in a remote page Selenium can't reach. New chat actions go through `SmartWindowChat._chat_script(body, *args)`, which runs `body` in that page.
-- Each test's responses live in `data/recordings/<suite>/<test file name>.json`, or `<test file name>/<parameter id>.json` per case of a parametrized test (`Recording`, `modules/classes/recording.py`). Replay matches chat messages (streamed, purpose `chat`) by prompt and tool round, and background requests (anything else: title generation, conversation starters) by purpose. A missing chat or search recording fails the test; missing background ones are answered with a 503.
+- Each test's responses live in `data/recordings/<suite>/<test file name>.json`, or `<test file name>/<parameter id>.json` per case of a parametrized test (`Recording`, `<package root>/classes/recording.py`). Replay matches chat messages (streamed, purpose `chat`) by prompt and tool round, and background requests (anything else: title generation, conversation starters) by purpose. A missing chat or search recording fails the test; missing background ones are answered with a 503.
 - Record with `--mock-mode=record` and a prod FxA token in `MOZ_FXA_BEARER_TOKEN` (see `SMART_WINDOW_MOCK_SERVER.md`). Never write the token anywhere else. Replay's failure message gives the exact record command; saved recordings leave out fields that change every call (`VOLATILE_FIELDS`) and the proxy's `provider_specific_fields`.
-- Where only the reply text matters, build the recording with `chat_reply()`, `tool_call()` or `search_results()` from `modules/classes/recording.py` instead of recording one.
+- Where only the reply text matters, build the recording with `chat_reply()`, `tool_call()` or `search_results()` from `<package root>/classes/recording.py` instead of recording one.
 - Which chat to use: the sidebar (`SmartBar.open_smart_bar()`) when the TestRail case is about the AI Chat Sidebar, otherwise the full-page chat (`SmartBar.open_full_page_chat()`, the Home page). Run both, with a `parametrize`, only where behaviour is known to differ between them; each case then gets its own recording.
 
 ### Smart Window tab management tests
 
-- One TestRail case per scenario, so one test file each (see `test_c4438277_group_related_tabs.py`). Describe the scenario with `TabGroupingScenario` (`modules/classes/tab_grouping_scenario.py`): the instruction, the pages opened as tabs, and the pages expected in the group.
+- One TestRail case per scenario, so one test file each (see `test_c4438277_group_related_tabs.py`). Describe the scenario with `TabGroupingScenario` (`<package root>/classes/tab_grouping_scenario.py`): the instruction, the pages opened as tabs, and the pages expected in the group.
 - Pages are files in `data/smart_window_pages/`. The `tab_pages` fixture serves them and turns file names into URLs; open them with `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`.
 - After `chat.send(scenario.instruction)`:
   - get what the model asked for with `mock_server.tool_calls("manage_tabs")`;

@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_generics import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_generics import GenericPage
 
 EXE_URL = "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=252907_0d06828d282343ea81775b28020a7cd3"
 EXE_NAME_REGEX = r".*\.exe(\s\(\d+\))?$"

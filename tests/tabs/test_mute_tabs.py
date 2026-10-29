@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
-
-from modules.browser_object import TabBar
 
 PLAY_BUTTON_SELECTOR = ".ytp-play-button"
 COOKIE_CONSENT_SELECTOR = (

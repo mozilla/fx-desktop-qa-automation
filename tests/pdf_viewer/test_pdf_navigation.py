@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.page_object import GenericPdf
 
 DOWNWARD = {Keys.DOWN, Keys.RIGHT, Keys.END, "next"}
 

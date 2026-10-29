@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import PanelUi, TabBar
+from auto_fxui.page_object_prefs import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi, TabBar
-from modules.page_object_prefs import AboutPrefs
 
 
 @pytest.fixture()

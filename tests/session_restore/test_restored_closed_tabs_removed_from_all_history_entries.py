@@ -1,11 +1,10 @@
 import platform
 
 import pytest
+from auto_fxui.browser_object import TabBar
+from auto_fxui.browser_object_panel_ui import PanelUi
+from auto_fxui.page_object_firefox_view import FirefoxView
 from selenium.webdriver import Firefox
-
-from modules.browser_object import TabBar
-from modules.browser_object_panel_ui import PanelUi
-from modules.page_object_firefox_view import FirefoxView
 
 
 @pytest.fixture()
@@ -73,7 +72,7 @@ def test_restored_closed_tabs_removed_from_all_history_entries(driver: Firefox):
 
     # Verify Menu Bar (not on macOS)
     if platform.system() != "Darwin":
-        from modules.browser_object_menu_bar import MenuBar
+        from auto_fxui.browser_object_menu_bar import MenuBar
 
         menu_bar = MenuBar(driver)
         assert len(menu_bar.get_recently_closed_urls()) == 0, (
