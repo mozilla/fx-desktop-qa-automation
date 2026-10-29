@@ -2369,6 +2369,14 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3309852_open_smart_window_from_hamburger:
+    result: pass
+    splits:
+    - functional1
+  test_c4062295_smart_window_opens_first_by_default:
+    result: pass
+    splits:
+    - functional1
   test_c3309853_open_private_window_from_smart_window:
     result: pass
     splits:
