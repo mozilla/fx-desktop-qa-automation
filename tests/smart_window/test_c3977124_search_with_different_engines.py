@@ -37,12 +37,13 @@ def test_search_with_different_engines(
     # itself did not change -- that is the part of the case worth asserting.
     other = next(e for e in engines if e != default_engine)
     bar.choose_search_engine(other)
+
+    # The case's own wording: the default is a one-off override, so the CTA
+    # must still name the original engine. Checked before submitting, since
+    # the search navigates away and the bar is not reliably writable after.
+    assert bar.get_default_search_engine() == default_engine, (
+        f"default engine changed from {default_engine!r} after choosing {other!r}"
+    )
+
     bar.submit()
     active_smart_window.expect_selected_tab_url_contains(QUERY)
-
-    bar.open_smart_bar()
-    bar.set_smart_bar_text(QUERY)
-    bar.expect_default_search_engine()
-    assert bar.get_default_search_engine() == default_engine, (
-        f"default engine changed from {default_engine!r} after searching with {other!r}"
-    )
