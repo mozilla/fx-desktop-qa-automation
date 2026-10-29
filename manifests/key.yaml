@@ -2383,11 +2383,6 @@ smart_window:
     splits:
     - smart_window
     - functional3
-  test_c3309859_smart_window_restored_after_restart:
-    result: pass
-    splits:
-    - smart_window
-    - functional3
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
@@ -2403,6 +2398,10 @@ smart_window:
     splits:
     - functional1
   test_c3311329_toggle_ai_chat_from_ask_button:
+    result: pass
+    splits:
+    - functional1
+  test_c3313455_history_from_home_page:
     result: pass
     splits:
     - functional1

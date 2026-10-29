@@ -107,6 +107,38 @@ class SmartBar(BasePage):
         self.expect_smart_bar_ready()
         return self
 
+    def click_footer_button(self, l10n_id: str) -> BasePage:
+        """
+        Click a Home page footer button, e.g. "smartwindow-footer-history".
+
+        Scripted like the rest of this BOM: the footer lives in the chat
+        document, which has no Selenium handle from chrome.
+        """
+        clicked = self._script(
+            """
+            const doc = aiDoc();
+            // Bind before the walk: inside it, `arguments` is walk's own.
+            const wanted = arguments[0];
+            let hit = null;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || hit) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.getAttribute?.("data-l10n-id") === wanted) {
+                        hit = el; return;
+                    }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+                }
+            })(doc, 0);
+            if (!hit) return false;
+            hit.click();
+            return true;
+            """,
+            l10n_id,
+        )
+        if not clicked:
+            raise AssertionError(f"No Home page footer button {l10n_id!r}")
+        return self
+
     def smart_bar_ready(self) -> bool:
         """Report whether the Smart Bar editor exists and has finished loading."""
         return bool(
