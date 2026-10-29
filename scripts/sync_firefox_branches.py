@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 
 SCHEDULE_URL = "https://whattrainisitnow.com/api/release/schedule/?version=release"
 RELEASE_REF = re.compile(r"refs/heads/release([1-9][0-9]*)")
+DEFAULT_RETENTION = 2
 
 
 def git(*args: str) -> str:
@@ -64,6 +65,7 @@ def open_prs_on_main() -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    # Defaults stay strings: argparse converts and validates them with positive_int.
     parser.add_argument(
         "--released-major",
         type=positive_int,
@@ -73,7 +75,7 @@ def main() -> None:
     parser.add_argument(
         "--retention",
         type=positive_int,
-        default=os.environ.get("RETENTION") or "2",
+        default=os.environ.get("RETENTION") or str(DEFAULT_RETENTION),
         help="Number of release branches to keep",
     )
     parser.add_argument(
@@ -119,7 +121,7 @@ def main() -> None:
 
     promote = major not in releases
     # main is always one train ahead of the newest release branch.
-    expected = max(releases) + 1 if releases else args.first_release_version
+    expected = (max(releases) + 1) if releases else args.first_release_version
     if promote and major != expected:
         raise SystemExit(
             f"Expected release{expected}, got release{major}. "
@@ -136,7 +138,10 @@ def main() -> None:
             f"--force-with-lease=refs/heads/release{major}:",
             f"--force-with-lease=refs/heads/main:{main_sha}",
         ]
-    old = sorted(releases.keys() | {major}, reverse=True)[args.retention :]
+    # List all release versions, newest first, including the new one from this run.
+    # Keep the first `retention` of them and delete the others.
+    newest_first = sorted({*releases, major}, reverse=True)
+    kept, old = newest_first[: args.retention], newest_first[args.retention :]
     for version in old:
         refspecs.append(f":refs/heads/release{version}")
         leases.append(
@@ -149,6 +154,7 @@ def main() -> None:
         f"- Release branch: `release{major}`\n"
         f"- Main SHA at start: `{main_sha}`\n"
         f"- Nightly SHA at start: `{nightly_sha}`\n"
+        f"- Release branches to keep: {', '.join(f'`release{v}`' for v in kept)}\n"
         f"- Release branches to delete: {', '.join(f'`release{v}`' for v in old) or 'none'}\n"
         f"- Dry run: `{str(args.dry_run).lower()}`"
     )
