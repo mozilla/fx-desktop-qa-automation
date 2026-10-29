@@ -2383,11 +2383,6 @@ smart_window:
     splits:
     - smart_window
     - functional3
-  test_c3309859_smart_window_restored_after_restart:
-    result: pass
-    splits:
-    - smart_window
-    - functional3
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
@@ -2418,11 +2413,19 @@ smart_window:
     result: pass
     splits:
     - functional1
+  test_c3322038_summarize_active_tab:
+    result: pass
+    splits:
+    - functional1
   test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
     - functional1
   test_c3371305_smart_window_onboarding_new_account:
+    result: pass
+    splits:
+    - functional1
+  test_c3374374_continue_conversation_on_home_page:
     result: pass
     splits:
     - functional1
