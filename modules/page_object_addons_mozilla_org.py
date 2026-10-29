@@ -1,3 +1,5 @@
+from selenium.common.exceptions import StaleElementReferenceException
+
 from modules.page_base import BasePage
 
 # PLEASE add all AMO page models to this file
@@ -70,10 +72,20 @@ class AmoLanguages(AmoBase):
         """
         Finds the row that corresponds with the language_label and clicks into it
         """
-        language_row = self.get_element("language-addons-row", labels=[language_label])
-        self.get_element(
-            "language-addons-row-link", parent_element=language_row
-        ).click()
+
+        def click_row_link(_):
+            language_row = self.get_element(
+                "language-addons-row", labels=[language_label]
+            )
+            self.get_element(
+                "language-addons-row-link", parent_element=language_row
+            ).click()
+            return True
+
+        # The table re-renders after it first appears, so find the row again if it goes stale
+        self.custom_wait(
+            timeout=20, ignored_exceptions=[StaleElementReferenceException]
+        ).until(click_row_link)
 
         # ensuring the subpage of the language is loaded
         self.custom_wait(timeout=20).until(
