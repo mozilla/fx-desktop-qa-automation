@@ -32,12 +32,13 @@ def add_to_prefs_list():
     return [("browser.smartwindow.isDefaultWindow", True)]
 
 
-def test_smart_window_opens_first_by_default(driver: Firefox, restart_browser):
+def test_smart_window_opens_first_by_default(
+    driver: Firefox, active_smart_window: SmartWindow, restart_browser
+):
     """
     C4062295 - A Smart Window opens first even if the last window was Classic
     """
-    smart_window = SmartWindow(driver)
-    smart_window.activate_smart_window()
+    smart_window = active_smart_window
 
     # Leave the profile with a Classic window as the last state, so a restart
     # that simply restored what was open would come back Classic.

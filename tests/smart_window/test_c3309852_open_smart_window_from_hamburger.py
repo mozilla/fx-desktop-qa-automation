@@ -43,4 +43,4 @@ def test_open_smart_window_from_hamburger(
     panel_ui.click_on("panel-ui-new-smart-window")
     smart_window.wait_for_num_windows(existing_count + 1)
     smart_window.switch_to_new_window()
-    SmartWindow(driver).expect_smart_window_active(True)
+    smart_window.expect_smart_window_active(True)
