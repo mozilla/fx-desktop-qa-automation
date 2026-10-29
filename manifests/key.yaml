@@ -291,7 +291,8 @@ address_bar_and_search:
     - functional1
     - nightly
   test_server_not_found_error_on_private_window:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2086955
+    result: unstable
     splits:
     - functional1
   test_suggestions_for_empty_query_not_shown_in_search_mode:
@@ -1594,7 +1595,11 @@ preferences:
     splits:
     - functional1
   test_downloaded_languages_can_be_deleted:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085088
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
     - functional1
   test_edit_installed_engines:
@@ -2186,7 +2191,8 @@ session_restore:
     - functional3
     - nightly
   test_closed_tabs_from_multiple_windows_shown_in_library_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2086967
+    result: unstable
     splits:
     - functional3
     - nightly
@@ -2421,7 +2427,8 @@ smart_window:
     splits:
     - functional1
   test_c3374375_continue_conversation_in_sidebar:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2086957
+    result: unstable
     splits:
     - functional1
   test_c3392590_smart_window_captcha_bypass:
@@ -2532,7 +2539,11 @@ tabs:
     splits:
     - smoke
   test_open_new_bg_tab_via_mouse_and_keyboard:
-    result: pass
+    comment: http://bugzilla.mozilla.org/show_bug.cgi?id=2086962
+    result:
+      linux: unstable
+      mac: unstable
+      win: pass
     splits:
     - functional3
     - nightly
