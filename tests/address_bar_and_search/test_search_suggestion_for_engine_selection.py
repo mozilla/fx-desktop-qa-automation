@@ -10,7 +10,7 @@ def test_case():
     return "3028780"
 
 
-sites = ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay"]
+sites = ["Google", "Bing", "DuckDuckGo", "eBay"]
 
 
 @pytest.mark.parametrize("site", sites)

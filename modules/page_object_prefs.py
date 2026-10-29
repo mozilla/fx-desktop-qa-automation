@@ -7,7 +7,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -23,6 +23,9 @@ from modules.util import Utilities
 
 # Language models are tens of MB each, so the download can be slow.
 DOWNLOAD_LANGUAGE_TIMEOUT = 120
+
+# The Smart Window AI model whose pref only commits once it is configured.
+CUSTOM_MODEL = "smart-window-model-custom"
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
@@ -2208,6 +2211,75 @@ class AboutPrefs(BasePage):
                 == state
             )
         )
+        return self
+
+    def navigate_to_smart_window_settings(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the Personalize Smart Window subpage.
+
+        The model controls also exist on #ai but are hidden there, so callers
+        must assert visibility rather than existence.
+        """
+        self.driver.get("about:preferences#personalizeSmartWindow")
+        if verify:
+            self.element_visible("smart-window-model-group")
+        return self
+
+    def get_smart_window_models(self) -> list[dict]:
+        """Describe every AI model offered, in page order."""
+        return [
+            {
+                "l10n": option.get_attribute("data-l10n-id"),
+                "value": option.get_attribute("value"),
+                "label": option.get_attribute("label"),
+                "description": option.get_attribute("description"),
+                "checked": option.get_property("checked"),
+            }
+            for option in self.get_elements("smart-window-model-options")
+        ]
+
+    def get_smart_window_model(self) -> str | None:
+        """
+        Return the selected model's l10n id, or None if not exactly one is
+        checked. Returns rather than asserts: this runs inside expect()'s
+        wait, which only retries on NoSuchElementException.
+        """
+        selected = [m for m in self.get_smart_window_models() if m["checked"]]
+        return selected[0]["l10n"] if len(selected) == 1 else None
+
+    def expect_smart_window_model(self, l10n_id: str) -> BasePage:
+        """
+        Wait until `l10n_id` is the selected AI model.
+        """
+        self.expect(lambda _: self.get_smart_window_model() == l10n_id)
+        return self
+
+    def set_smart_window_model(self, l10n_id: str) -> BasePage:
+        """
+        Select an AI model, e.g. "smart-window-model-fast-v2".
+
+        Clicks the radio's top-left, not its centre: the centre lands on the
+        description text where a click does nothing.
+        """
+        option = self.get_element("smart-window-model-option", labels=[l10n_id])
+        value = option.get_attribute("value")
+        width, height = option.size["width"], option.size["height"]
+        ActionChains(self.driver).move_to_element_with_offset(
+            option, -(width // 2) + 12, -(height // 2) + 12
+        ).click().perform()
+        self.expect_smart_window_model(l10n_id)
+
+        # Custom leaves the pref on the previous model until one is configured.
+        if l10n_id != CUSTOM_MODEL:
+            self.expect(
+                lambda _: (
+                    self.driver.execute_script(
+                        "return Services.prefs.getStringPref("
+                        "'browser.smartwindow.firstrun.modelChoice', '');"
+                    )
+                    == value
+                )
+            )
         return self
 
     def cancel_ai_killswitch_click(self) -> BasePage:
