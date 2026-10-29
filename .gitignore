@@ -203,4 +203,5 @@ jira_credentials.env
 # Do not ignore
 !data/goomy.png
 !data/visual_baselines/**/*.png
+data/visual_baselines/**/*.failed.png
 !tests/downloads

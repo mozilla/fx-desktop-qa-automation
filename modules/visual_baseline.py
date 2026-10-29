@@ -111,18 +111,21 @@ class VisualBaseline:
                 "intended, refresh with --update-visual-baselines."
             )
 
-        diff = self.difference(baseline, current)
-        if diff["max_delta"] > max_delta and diff["over_8"] > max_pixels_over:
+        # Count against max_delta itself, not a fixed threshold: a caller
+        # passing max_delta=4 must not have pixels at 5-8 quietly forgiven.
+        per_pixel = np.abs(baseline - current).max(axis=2)
+        over = int((per_pixel > max_delta).sum())
+        if over > max_pixels_over:
             failed = self.path_for(f"{name}.failed")
             Image.fromarray(current.astype(np.uint8)).save(failed)
             raise AssertionError(
-                f"{name} no longer matches its baseline: max per-channel delta "
-                f"{diff['max_delta']} (allowed {max_delta}), "
-                f"{diff['over_8']} pixels over 8 (allowed {max_pixels_over}) of "
-                f"{diff['pixels']}. What was captured is at {failed}; if the "
-                "change is intended, refresh with --update-visual-baselines."
+                f"{name} no longer matches its baseline: {over} pixel(s) of "
+                f"{per_pixel.size} differ by more than {max_delta} "
+                f"(allowed {max_pixels_over}); largest difference "
+                f"{int(per_pixel.max())}. What was captured is at {failed}; if "
+                "the change is intended, refresh with --update-visual-baselines."
             )
-        logging.info(f"{name} matches baseline (max delta {diff['max_delta']})")
+        logging.info(f"{name} matches baseline (max delta {int(per_pixel.max())})")
         return self
 
     def expect_differs(
