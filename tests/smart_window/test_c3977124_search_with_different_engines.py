@@ -25,7 +25,11 @@ def test_search_with_different_engines(
     bar.open_smart_bar()
     bar.set_smart_bar_text(QUERY)
 
+    # Both reads race the search service: the CTA reports "" and the submenu
+    # holds only a generic "Search" entry until it initialises.
+    bar.expect_default_search_engine()
     default_engine = bar.get_default_search_engine()
+    bar.expect_search_engines()
     engines = bar.get_search_with_items()
     assert len(engines) > 1, f"Search With offered only {engines}"
 
@@ -38,6 +42,7 @@ def test_search_with_different_engines(
 
     bar.open_smart_bar()
     bar.set_smart_bar_text(QUERY)
+    bar.expect_default_search_engine()
     assert bar.get_default_search_engine() == default_engine, (
         f"default engine changed from {default_engine!r} after searching with {other!r}"
     )
