@@ -2383,11 +2383,6 @@ smart_window:
     splits:
     - smart_window
     - functional3
-  test_c3309859_smart_window_restored_after_restart:
-    result: pass
-    splits:
-    - smart_window
-    - functional3
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
@@ -2427,8 +2422,7 @@ smart_window:
     splits:
     - functional1
   test_c3374375_continue_conversation_in_sidebar:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2086957
-    result: unstable
+    result: pass
     splits:
     - functional1
   test_c3392590_smart_window_captcha_bypass:
