@@ -79,7 +79,7 @@ def test_pdf_save_existing_annotations(
                 viewer.perform_key_combo(Keys.ESCAPE)
                 viewer.element_not_visible("comment-popup-text")
             elif name == "text":
-                # Saved text is drawn on the canvas; its DOM text is transparent.
+                # textContent works for both editor text and transparent saved text.
                 assert annotation.get_attribute("textContent") == ADDED_TEXT, (
                     "The text annotation should stay on the original second page."
                 )
