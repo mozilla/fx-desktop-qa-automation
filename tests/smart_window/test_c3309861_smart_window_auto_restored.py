@@ -8,7 +8,7 @@ from selenium.webdriver import Firefox
 
 from modules.browser_object import SmartWindow, TabBar
 
-URL = "https://www.mozilla.org/"
+URL = "about:robots"
 
 
 @pytest.fixture()
@@ -43,9 +43,13 @@ def test_smart_window_auto_restored(driver: Firefox, restart_browser):
     smart_window = SmartWindow(driver)
     driver.get(URL)
     smart_window.activate_smart_window()
+    # Confirm the precondition, so a silent activate failure cannot look like
+    # a restore failure later.
+    smart_window.expect_smart_window_active(True)
 
     restarted = restart_browser(driver)
 
     # Automatic: nothing asks for the session back, unlike C3309859.
     SmartWindow(restarted).expect_smart_window_active(True)
-    TabBar(restarted).expect_title_contains("Internet for people")
+    TabBar(restarted).expect_title_contains("Gort")
+    assert len(restarted.window_handles) == 1, "session restore duplicated the tab"
