@@ -123,7 +123,7 @@ class SmartBar(BasePage):
             (function walk(node, depth) {
                 if (!node || depth > 12 || hit) return;
                 for (const el of node.querySelectorAll("*")) {
-                    if (el.getAttribute?.("data-l10n-id") === wanted) {
+                    if (el.getAttribute("data-l10n-id") === wanted) {
                         hit = el; return;
                     }
                     if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
