@@ -30,7 +30,7 @@ jobs:
 
       - name: Build
         run: |
-          uv build
+          uv build --package auto_fxui
 
       # Optional, but recommended: run smoke tests on distributions
       - name: Smoke test (wheel)

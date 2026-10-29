@@ -30,7 +30,7 @@ def timeout():
 
 
 @pytest.fixture()
-def prefs_list(add_to_prefs_list: dict):
+def prefs_list(add_to_prefs_list: list):
     """List of prefs to send to main conftest.py driver fixture"""
     prefs = []
     prefs.extend(add_to_prefs_list)
@@ -43,14 +43,13 @@ def add_to_prefs_list():
 
 
 @pytest.fixture(autouse=True)
-def driver(tmp_path, prefs_list, timeout):
+def driver(prefs_list, timeout):
     """
     Return the webdriver object.
 
     """
     options = Options()
     service_args = ["--allow-system-access"]
-    # options.log.level = "trace"
     options.add_argument("--headless")
     options.set_preference("app.update.disabledForTesting", False)
 
