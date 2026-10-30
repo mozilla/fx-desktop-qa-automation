@@ -6,6 +6,7 @@ import pytest
 from auto_fxui.browser_object import SmartWindow, SmartWindowChat
 from auto_fxui.classes.recording import Recording
 from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
+from auto_fxui.visual_baseline import PIXEL_RATIO_PREF, VisualBaseline
 from pytest_httpserver import HTTPServer
 
 from modules.taskcluster import get_tc_secret
@@ -57,6 +58,25 @@ def prefs_list(add_to_prefs_list: dict, mock_server_session: MockServer):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def visual_baseline(
+    driver, sys_platform, opt_update_visual_baselines, prefs_list, opt_ci
+):
+    """Compare chrome elements against the references in data/visual_baselines/."""
+    # A baseline is only portable if it was captured at the same device pixel
+    # ratio, so refuse to compare rather than fail later on a size mismatch.
+    assert PIXEL_RATIO_PREF in prefs_list, (
+        f"visual tests must set {PIXEL_RATIO_PREF[0]}; add PIXEL_RATIO_PREF to "
+        "this test's add_to_prefs_list"
+    )
+    return VisualBaseline(
+        driver,
+        sys_platform,
+        opt_update_visual_baselines,
+        artifacts_dir="artifacts" if opt_ci else None,
+    )
 
 
 @pytest.fixture()

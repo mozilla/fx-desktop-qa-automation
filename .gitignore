@@ -201,4 +201,8 @@ testrail_credentials.env
 
 # Do not ignore
 !data/goomy.png
+# Order matters: un-ignore the baselines, then re-ignore the .failed.png
+# a failing comparison writes next to them.
+!data/visual_baselines/**/*.png
+data/visual_baselines/**/*.failed.png
 !tests/downloads
