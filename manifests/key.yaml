@@ -2156,8 +2156,7 @@ tabs:
   test_open_new_bg_tab_via_mouse_and_keyboard:
     result: pass
     splits:
-      - functional2
-      - nightly
+      - smoke
   test_open_new_tab:
     result: covered-in-tree
     splits: []
