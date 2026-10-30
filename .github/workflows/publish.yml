@@ -89,7 +89,7 @@ jobs:
             python -m pypi_attestations sign dist/*.whl dist/*.tar.gz
 
       - name: Publish
-        run: uv publish --publish-url https://test.pypi.org/legacy/ --trusted-publishing always
+        run: uv publish --publish-url https://test.pypi.org/legacy/
 
   publish:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
