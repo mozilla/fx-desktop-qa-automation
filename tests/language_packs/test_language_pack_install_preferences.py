@@ -1,4 +1,11 @@
+import hashlib
+import io
+import json
+import zipfile
+from urllib.parse import quote
+
 import pytest
+import requests
 from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
 
@@ -9,8 +16,51 @@ def test_case():
 
 
 LANGUAGES = [("it", "Lingua")]
+# Language packs work on any platform, and there's no Windows Nightly folder for them
+NIGHTLY_LANGPACK_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/linux-x86_64/xpi/firefox-{version}.{locale}.langpack.xpi"
 
 
+@pytest.fixture()
+def nightly_langpacks(driver: Firefox, browser_name: str):
+    """On Nightly, point Firefox at its own language packs, since AMO only has Beta and Release ones."""
+    if browser_name != "Nightly":
+        return
+    fx_version = driver.capabilities["browserVersion"]
+    results = []
+    for locale, _ in LANGUAGES:
+        url = NIGHTLY_LANGPACK_URL.format(version=fx_version, locale=locale)
+        response = requests.get(url, timeout=60)
+        # The archive only keeps the newest Nightly's language packs
+        if response.status_code == 404:
+            pytest.skip(f"No Nightly language pack for {fx_version}: {url}")
+        response.raise_for_status()
+        sha256 = hashlib.sha256(response.content).hexdigest()
+        # Firefox won't install a language pack listed without its ID and version
+        with zipfile.ZipFile(io.BytesIO(response.content)) as xpi:
+            manifest = json.loads(xpi.read("manifest.json"))
+        results.append(
+            {
+                "guid": manifest["browser_specific_settings"]["gecko"]["id"],
+                "target_locale": locale,
+                "current_compatible_version": {
+                    "version": manifest["version"],
+                    "files": [
+                        {"platform": "all", "url": url, "hash": f"sha256:{sha256}"}
+                    ],
+                },
+            }
+        )
+    listing = quote(json.dumps({"results": results}))
+    with driver.context(driver.CONTEXT_CHROME):
+        # Replace AMO's language pack listing with the one built above, as a
+        # data: URL, so about:preferences offers and installs Nightly's packs
+        driver.execute_script(
+            "Services.prefs.setStringPref('extensions.getAddons.langpacks.url', arguments[0]);",
+            f"data:application/json,{listing}",
+        )
+
+
+@pytest.mark.usefixtures("nightly_langpacks")
 @pytest.mark.parametrize("shortform, localized_text", LANGUAGES)
 def test_language_pack_install_about_preferences(
     driver: Firefox, shortform: str, localized_text: str

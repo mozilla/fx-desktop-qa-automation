@@ -755,7 +755,6 @@ language_packs:
     splits:
       - smoke
       - ci-extended
-      - exclude_nightly
 menus:
   test_copy_paste_actions:
     result: covered-in-tree
