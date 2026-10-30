@@ -2024,6 +2024,14 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3310316_ai_model_type_displayed_in_settings:
+    result: pass
+    splits:
+      - functional2
+  test_c3310318_change_ai_model_from_settings:
+    result: pass
+    splits:
+      - functional2
   test_c3310319_block_smart_window_from_ai_controls:
     result: pass
     splits:

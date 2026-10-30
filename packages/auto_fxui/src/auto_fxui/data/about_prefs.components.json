@@ -1206,7 +1206,7 @@
       "doNotCache"
     ],
     "comment": {
-      "description": "Firefox Updates > \"Checking for updates…\" message",
+      "description": "Firefox Updates > \"Checking for updates\u2026\" message",
       "location": "about:preferences#about"
     }
   },
@@ -2639,6 +2639,87 @@
     "comment": {
       "description": "\"Email the download link to your phone\" link under the QR code",
       "location": "about:preferences#moreFromMozilla - Firefox for mobile card"
+    }
+  },
+  "smart-window-personalize-header": {
+    "selectorData": "[data-l10n-id='ai-window-personalize-header']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Personalize Smart Window subpage header",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-model-section": {
+    "selectorData": "[data-l10n-id='smart-window-model-section']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "AI model fieldset on the personalize subpage",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-model-group": {
+    "selectorData": "modelSelection",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "moz-radio-group holding the AI model choices",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-model-options": {
+    "selectorData": "#modelSelection moz-radio",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Every AI model radio; use get_elements",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-model-option": {
+    "selectorData": "#modelSelection moz-radio[data-l10n-id='{model}']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "One AI model radio by l10n id, e.g. smart-window-model-fast-v2",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-is-default-checkbox": {
+    "selectorData": "smartWindowIsDefaultWindow",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Make Smart Window the default window checkbox",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-custom-model-fields": {
+    "selectorData": "[id^='customModel']",
+    "strategy": "css",
+    "groups": [],
+    "comment": {
+      "description": "Custom AI model inputs, revealed by picking Custom",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-custom-model-name": {
+    "selectorData": "customModelName",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Custom AI model name input",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-custom-model-token": {
+    "selectorData": "customModelAuthToken",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Custom AI model API key / auth token input",
+      "location": "about:preferences#personalizeSmartWindow"
     }
   }
 }
