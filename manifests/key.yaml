@@ -2031,6 +2031,10 @@ smart_window:
     result: pass
     splits:
       - functional2
+  test_c3313455_history_from_home_page:
+    result: pass
+    splits:
+      - functional2
   test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
