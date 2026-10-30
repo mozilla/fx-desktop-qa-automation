@@ -29,6 +29,14 @@ jobs:
         run: |
           python -m pip install "uv==0.13.6"
 
+      - name: Set package version from tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#test-}"
+          version="${version#v}"
+          uv version --package auto_fxui --frozen "$version"
+
       - name: Build
         run: |
           uv build --package auto_fxui
@@ -58,7 +66,7 @@ jobs:
 
 
   publish-test:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && startsWith(github.ref, "refs/tags/test")
     needs:
       - build
     runs-on: ubuntu-latest
