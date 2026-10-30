@@ -1471,8 +1471,7 @@ preferences:
     splits:
       - functional2
   test_preferred_language_localisation_works:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085106
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_private_default_search_engine_dropdown:
