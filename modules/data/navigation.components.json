@@ -1200,6 +1200,28 @@
       "location": "Searchbar"
     }
   },
+  "searchbar-contextual-search-button": {
+    "selectorData": "#searchbar-results .urlbarView-action-btn[data-action='matched-contextual-search'][data-engine='{engine}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "'Search with <engine>' button shown after typing an engine name",
+      "location": "Searchbar results"
+    }
+  },
+  "searchbar-contextual-search-button-selected": {
+    "selectorData": "#searchbar-results .urlbarView-action-btn[data-action='matched-contextual-search'][data-engine='{engine}'][selected]",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "'Search with <engine>' button when selected with Tab",
+      "location": "Searchbar results"
+    }
+  },
   "search-mode-chicklet": {
     "selectorData": "span.searchmode-switcher-title",
     "strategy": "css",
