@@ -1106,7 +1106,7 @@ password_manager:
     result: pass
     splits:
       - functional1
-      - no_xvfb
+      - exclude_xvfb
   test_update_login_via_doorhanger:
     result: covered-in-tree
     splits: []
@@ -1951,7 +1951,7 @@ sidebar:
       win: unstable
     splits:
       - functional2
-      - no_xvfb
+      - exclude_xvfb
   test_summarize_page_via_ai_chat_panel:
     result: covered-in-tree
     splits: []
@@ -2147,7 +2147,7 @@ tabs:
     splits:
       - functional2
       - nightly
-      - no_xvfb
+      - exclude_xvfb
   test_navigation_multiple_tabs:
     result: pass
     splits:
@@ -2185,7 +2185,7 @@ tabs:
       win: unstable
     splits:
       - functional2
-      - no_xvfb
+      - exclude_xvfb
   test_reload_multiselected_tabs:
     result: pass
     splits:
@@ -2253,7 +2253,7 @@ theme_and_toolbar:
     result: pass
     splits:
       - smoke
-      - no_xvfb
+      - exclude_xvfb
       - ci
   test_installed_theme_enabled:
     result: covered-in-tree
