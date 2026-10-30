@@ -461,8 +461,8 @@ class Utilities:
         Compare two CSS color strings and determine if they are close enough to be considered equal.
 
         Args:
-            a (str): First CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
-            b (str): Second CSS color string in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format.
+            a (str): First CSS color string in 'rgb(r,g,b)', 'rgba(r,g,b,a)' or 'color(srgb r g b)' format.
+            b (str): Second CSS color string in 'rgb(r,g,b)', 'rgba(r,g,b,a)' or 'color(srgb r g b)' format.
             tolerance (float, optional): Allowed relative difference between each color channel.
                 Defaults to 0.14. A higher value means colors can differ more and still match.
 
@@ -476,14 +476,12 @@ class Utilities:
             if a_vals[0].isnumeric():
                 a_nums = [float(n.strip()) for n in a_vals.split(",")]
             else:
-                # String contains (srgb n n n) or the like
-                tokens = a_vals.split()[1:]
-                a_nums = [float(n) for n in tokens]
+                # color(srgb r g b) channels run 0-1, so scale them to rgb()'s 0-255
+                a_nums = [float(n) * 255 for n in a_vals.split()[1:]]
             if b_vals[0].isnumeric():
                 b_nums = [float(n.strip()) for n in b_vals.split(",")]
             else:
-                tokens = b_vals.split()[1:]
-                b_nums = [float(n) for n in tokens]
+                b_nums = [float(n) * 255 for n in b_vals.split()[1:]]
         except (IndexError, ValueError) as e:
             # Raised if string doesn't contain expected format or non-numeric parts
             logging.warning(str(e))
