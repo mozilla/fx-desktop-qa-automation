@@ -9,5 +9,6 @@ def apply_config(config, tasks):
         task["description"] = "Runs smoke test suite"
 
         env = task.setdefault("worker", {}).setdefault("env", {})
+        env["BASE_REF"] = config.params.get("base_ref", "nightly")
 
         yield task
