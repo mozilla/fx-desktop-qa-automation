@@ -2064,6 +2064,22 @@ smart_window:
     result: pass
     splits:
       - functional2
+  test_c4028091_switcher_button_nova_styling:
+    result: pass
+    splits:
+      - functional2
+  test_c4028095_nova_colour_palette:
+    result: pass
+    splits:
+      - functional2
+  test_c4028098_smart_bar_ambient_glow:
+    result: pass
+    splits:
+      - functional2
+  test_c4028102_active_tab_gradient_border:
+    result: pass
+    splits:
+      - functional2
   test_c4438277_group_related_tabs:
     result: pass
     splits:
