@@ -1466,6 +1466,7 @@ preferences:
     result: pass
     splits:
       - smoke
+      - exclude_nightly
   test_preferred_language_can_be_deleted:
     result: pass
     splits:
@@ -2155,8 +2156,7 @@ tabs:
   test_open_new_bg_tab_via_mouse_and_keyboard:
     result: pass
     splits:
-      - functional2
-      - nightly
+      - smoke
   test_open_new_tab:
     result: covered-in-tree
     splits: []
@@ -2250,7 +2250,7 @@ theme_and_toolbar:
     result: pass
     splits:
       - smoke
-      - no_xvfb
+      - exclude_xvfb
       - ci
   test_installed_theme_enabled:
     result: covered-in-tree
