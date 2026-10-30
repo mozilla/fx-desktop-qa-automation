@@ -1417,13 +1417,10 @@ preferences:
     result: covered-in-tree
     splits: []
   test_language_packs_can_be_downloaded_from_about_addons:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085085
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
       - functional2
+      - exclude_nightly
   test_languages_can_be_downloaded:
     result: pass
     splits:
@@ -1469,6 +1466,7 @@ preferences:
     result: pass
     splits:
       - smoke
+      - exclude_nightly
   test_preferred_language_can_be_deleted:
     result: pass
     splits:
@@ -2158,8 +2156,7 @@ tabs:
   test_open_new_bg_tab_via_mouse_and_keyboard:
     result: pass
     splits:
-      - functional2
-      - nightly
+      - smoke
   test_open_new_tab:
     result: covered-in-tree
     splits: []
