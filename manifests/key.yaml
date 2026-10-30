@@ -1238,6 +1238,10 @@ pdf_viewer:
     result: pass
     splits:
       - functional2
+  test_pdf_save_existing_annotations:
+    result: pass
+    splits:
+      - functional1
   test_pdf_save_reordered_selected_pages:
     result: pass
     splits:
