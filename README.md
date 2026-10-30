@@ -256,6 +256,12 @@ If you are outside of Mozilla and would like to contribute to this project:
   - Address any review comments
 - Once approved your test code will be landed in this repo.
 
+### Firefox build in PR checks
+- GitHub PR checks test the newest Beta (PRs into `main`) or Nightly build (PRs into `nightly`) that
+  was published when the PR was opened, so every push and re-run uses the same build.
+- To move a PR to the newest build, add the `fx-latest` label, then push. Re-running a check keeps
+  the labels it first ran with.
+
 ### CI Dry-Run
 In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:
 (downloads, installs, test execution, artifact uploads, publishing/deploying, etc.) one could do so by running
