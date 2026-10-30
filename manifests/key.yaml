@@ -183,7 +183,6 @@ address_bar_and_search:
     result: flaky
     splits:
       - smoke
-      - exclude_nightly
   test_search_code_google_us:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081889
     result:
@@ -193,7 +192,6 @@ address_bar_and_search:
     splits:
       - smoke
       - ci-extended
-      - exclude_nightly
   test_search_engine_result_page_load_on_reload:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2054122
     result:
