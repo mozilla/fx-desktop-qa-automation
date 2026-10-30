@@ -2253,7 +2253,7 @@ theme_and_toolbar:
     result: pass
     splits:
       - smoke
-      - exclude_xvfb
+      - exclude_nightly
       - ci
   test_installed_theme_enabled:
     result: covered-in-tree
