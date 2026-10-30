@@ -83,32 +83,28 @@ Only tests that use the mock server read the flag. Every other test ignores it.
 
 ## Record a test
 
-**Get a token.** Recording needs a prod Firefox Account token. Sign in to Smart Window in a
-normal Firefox, open the Browser Console (Cmd/Ctrl+Shift+J) and run:
+**Sign in once.** Recording needs your prod Mozilla account (stage MLPA only accepts prod
+accounts). Run this once; it asks for your email, password and the code FxA emails you:
 
-```js
-await (async () => {
-  const { getFxAccountsSingleton } = ChromeUtils.importESModule("resource://gre/modules/FxAccounts.sys.mjs");
-  const { OAUTH_CLIENT_ID, SCOPE_SMART_WINDOW, SCOPE_PROFILE_UID } = ChromeUtils.importESModule("resource://gre/modules/FxAccountsCommon.sys.mjs");
-  const fxa = getFxAccountsSingleton();
-  const options = { scope: [SCOPE_SMART_WINDOW, SCOPE_PROFILE_UID], client_id: OAUTH_CLIENT_ID };
-  await fxa.removeCachedOAuthToken({ token: await fxa.getOAuthToken(options) });
-  return fxa.getOAuthToken(options);
-})();
+```bash
+uv run python -m scripts.fxa_login
 ```
 
-The token lasts a few hours. Never commit it or paste it into shared places. It is not the
-same as `CI_WAF_TOKEN`, which the FxA sign-in tests use.
+It saves a refresh token, limited to Smart Window, in your OS keychain (Keychain, Windows
+Credential Manager or Secret Service). Your password is never saved. Each record or live run
+then gets its own token. Set `CI_WAF_TOKEN_PROD` (the prod `fxa-ci` token, not the stage
+`CI_WAF_TOKEN`) first, or FxA may block the sign-in.
+
+- Signing in again replaces the saved token and revokes the old one.
+- `uv run python -m scripts.fxa_login --logout` revokes it and removes it from the keychain.
+- `MOZ_FXA_BEARER_TOKEN`, if set, is used instead (an access token you got some other way).
+- `MOZ_FXA_REFRESH_TOKEN`, if set, is used instead of the keychain (for CI).
 
 **Record:**
 
 ```bash
-MOZ_FXA_BEARER_TOKEN='<token>' pytest tests/smart_window/test_c<ID>_<description>.py --mock-mode=record
+pytest tests/smart_window/test_c<ID>_<description>.py --mock-mode=record
 ```
-
-To keep the token out of your shell history, put `MOZ_FXA_BEARER_TOKEN=<token>` in a file
-outside the repo (for example `~/.starfox-record.env`) and load it, or point a VS Code launch
-configuration at it with `"envFile"`.
 
 **Review the diff before committing.** Look at the `request` entries, any `tool_calls`, and
 the reply `content`. Fields that change on every call (ids, timestamps, token counts) and the
@@ -123,7 +119,7 @@ you commit in replay, and a chat test with no matching recording fails with the 
 
 ```
 This test has no recording yet (data/recordings/smart_window/test_x.json doesn't exist).
-Record it with a prod FxA token in MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md):
+Record it, after signing in once with uv run python -m scripts.fxa_login (see SMART_WINDOW_MOCK_SERVER.md):
   pytest "tests/smart_window/test_x.py::test_…" --mock-mode=record
 ```
 
@@ -203,8 +199,9 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | Symptom | Cause |
 |---|---|
 | "No recording … Record it with …" | The recording is missing an entry. Run the command it prints. |
-| "MLPA returned errors: [(401, …)]" | The token has expired or isn't a prod token. Get a new one. |
-| "needs a prod FxA token in MOZ_FXA_BEARER_TOKEN" | `record` or `live` without a token. |
+| "MLPA returned errors: [(401, …)]" | MLPA rejected the token. Sign in again, and check `MOZ_FXA_BEARER_TOKEN` isn't set to an old token. |
+| "needs a prod Mozilla account" | `record` or `live` without signing in. Run `uv run python -m scripts.fxa_login`. |
+| "FxA refused the saved refresh token" | The sign-in was revoked or expired. Run `uv run python -m scripts.fxa_login` again. |
 | "No chat reply was served for '…'" | The chat request had no recording; the "No recording" error for the same test has the fix. |
 | "The assistant never finished turn N" | No reply arrived in time; usually a failed request. Check the log above it. |
 | "Mock server is not answering … title-generation" (INFO) | A background request has no recording. Expected and harmless. |
