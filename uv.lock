@@ -133,6 +133,10 @@ name = "auto-fxui"
 version = "0.1.0"
 source = { editable = "packages/auto_fxui" }
 dependencies = [
+    { name = "faker" },
+    { name = "jsonpath-ng" },
+    { name = "pillow" },
+    { name = "pyfxa" },
     { name = "pypom" },
     { name = "selenium" },
 ]
@@ -144,6 +148,10 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "faker", marker = "python_full_version >= '3.8'", specifier = "==26.3.0" },
+    { name = "jsonpath-ng", specifier = "==1.6.1" },
+    { name = "pillow", marker = "python_full_version >= '3.8'", specifier = "==13.0.0" },
+    { name = "pyfxa", marker = "python_full_version >= '3.8'", specifier = "==0.8.2" },
     { name = "pypom", specifier = "==2.2.4" },
     { name = "selenium", specifier = "==4.23.1" },
 ]

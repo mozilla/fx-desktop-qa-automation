@@ -7,14 +7,22 @@ requires-python = ">=3.11"
 license = "MPL-2.0"
 license-files = ["LICENSE"]
 dependencies = [
-    "selenium==4.23.1",
+    "faker==26.3.0 ; python_full_version >= '3.8'",
+    "jsonpath-ng==1.6.1",
+    "pillow==13.0.0 ; python_full_version >= '3.8'",
+    "pyfxa==0.8.2 ; python_full_version >= '3.8'",
     "pypom==2.2.4",
+    "selenium==4.23.1",
 ]
 
 [dependency-groups]
 dev = [
     "pytest==9.0.3",
 ]
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "warn"
 
 [tool.setuptools.packages.find]
 where = ["src"]
