@@ -6,6 +6,7 @@ import pytest
 from auto_fxui.browser_object import SmartWindow, SmartWindowChat
 from auto_fxui.classes.recording import Recording
 from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
+from auto_fxui.visual_baseline import VisualBaseline
 from pytest_httpserver import HTTPServer
 
 from modules.taskcluster import get_tc_secret
@@ -57,6 +58,17 @@ def prefs_list(add_to_prefs_list: dict, mock_server_session: MockServer):
 @pytest.fixture()
 def add_to_prefs_list():
     return []
+
+
+@pytest.fixture()
+def visual_baseline(driver, sys_platform, opt_update_visual_baselines):
+    """
+    Compare chrome elements against the references in data/visual_baselines/.
+
+    Only macOS baselines exist so far, so the tests that use this are gated to
+    Darwin; see auto_fxui/visual_baseline.py for the tolerance and how to refresh.
+    """
+    return VisualBaseline(driver, sys_platform, opt_update_visual_baselines)
 
 
 @pytest.fixture()
