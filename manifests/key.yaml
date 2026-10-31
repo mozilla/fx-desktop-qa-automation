@@ -2251,7 +2251,6 @@ theme_and_toolbar:
     splits:
       - smoke
       - exclude_nightly
-      - ci
   test_installed_theme_enabled:
     result: covered-in-tree
     splits: []
