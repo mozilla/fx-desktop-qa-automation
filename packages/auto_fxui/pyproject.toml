@@ -1,20 +1,29 @@
 [project]
 name = "auto-fxui"
-version = "0.1.0"
+version = "0.1.0.dev1"
 description = "Reusable Firefox UI page / browser component objects"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MPL-2.0"
 license-files = ["LICENSE"]
 dependencies = [
-    "selenium==4.23.1",
+    "faker==26.3.0",
+    "jsonpath-ng==1.6.1",
+    "pillow==13.0.0",
+    "pyfxa==0.8.2",
     "pypom==2.2.4",
+    "selenium==4.23.1",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["auto_fxui*"]
-namespaces = false
+[dependency-groups]
+dev = [
+    "pytest==9.0.3",
+]
 
-[tool.setuptools.package-data]
-auto_fxui = ["data/*.components.json"]
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "warn"
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14.0"]
+build-backend = "uv_build"

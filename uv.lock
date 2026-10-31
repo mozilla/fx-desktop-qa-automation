@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -130,18 +130,34 @@ wheels = [
 
 [[package]]
 name = "auto-fxui"
-version = "0.1.0"
+version = "0.1.0.dev1"
 source = { editable = "packages/auto_fxui" }
 dependencies = [
+    { name = "faker" },
+    { name = "jsonpath-ng" },
+    { name = "pillow" },
+    { name = "pyfxa" },
     { name = "pypom" },
     { name = "selenium" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
+    { name = "faker", specifier = "==26.3.0" },
+    { name = "jsonpath-ng", specifier = "==1.6.1" },
+    { name = "pillow", specifier = "==13.0.0" },
+    { name = "pyfxa", specifier = "==0.8.2" },
     { name = "pypom", specifier = "==2.2.4" },
     { name = "selenium", specifier = "==4.23.1" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = "==9.0.3" }]
 
 [[package]]
 name = "autoflake"
