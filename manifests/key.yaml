@@ -113,6 +113,10 @@ address_bar_and_search:
     splits:
     - functional1
     - nightly
+  test_new_search_box_contextual_search:
+    result: pass
+    splits:
+    - functional1
   test_new_search_box_keyboard_navigation:
     result: pass
     splits:
