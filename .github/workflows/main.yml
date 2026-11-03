@@ -271,12 +271,31 @@ jobs:
           }}
         shell: pwsh
         run: |
-          uv run pytest --fx-channel=Custom tests/glean --geckodriver=geckodriver.exe
+          $selection = @()
+          if ($env:IS_PULL_REQUEST -eq "true") {
+            uv run python -m scripts.choose_glean_tests
+            if ($LASTEXITCODE -ne 0) {
+              throw "Glean test selection failed."
+            }
+            $glean = (Get-Content "selected_glean" -Raw).Trim()
+            if ($glean -eq "none") {
+              Write-Host "No glean cases affected by this PR."
+              # Use-Artifacts needs this artifact, and an empty folder isn't uploaded
+              New-Item -ItemType Directory -Force artifacts-win | Out-Null
+              Set-Content -Path artifacts-win/no_glean_cases.txt -Value "No glean cases affected by this PR."
+              exit 0
+            }
+            if ($glean -ne "all") {
+              $selection = @("-k", $glean)
+            }
+          }
+          uv run pytest --fx-channel=Custom tests/glean @selection --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
         env:
           REPORTABLE: ${{ !inputs.is_pull_request }}
+          IS_PULL_REQUEST: ${{ inputs.is_pull_request }}
 
       - name: Run Tests in Win (Headed)
         if: |-
@@ -480,9 +499,25 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: ${{ !inputs.is_pull_request }}
+          IS_PULL_REQUEST: ${{ inputs.is_pull_request }}
         run: |
           "$FX_EXECUTABLE" --version
-          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          GLEAN_SELECTION=all
+          if [[ "$IS_PULL_REQUEST" == "true" ]]; then
+            uv run python -m scripts.choose_glean_tests
+            GLEAN_SELECTION="$(cat selected_glean)"
+          fi
+          if [[ "$GLEAN_SELECTION" == "none" ]]; then
+            echo "No glean cases affected by this PR."
+            # Use-Artifacts needs this artifact, and an empty folder isn't uploaded
+            mkdir -p artifacts-mac
+            echo "No glean cases affected by this PR." > artifacts-mac/no_glean_cases.txt
+            exit 0
+          fi
+          if [[ "$GLEAN_SELECTION" == "all" ]]; then
+            GLEAN_SELECTION=""
+          fi
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean -k "$GLEAN_SELECTION" || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
