@@ -164,8 +164,28 @@ Instead of recording, a test can write the model's replies in code with the buil
   no-match errors, a long reply, fixed search results. A real model won't produce those on
   demand.
 
-Built replies can't be checked in `live` mode, since live uses the real model. So far only
-`chat_reply()` has been tried in Firefox.
+To build, take the `built_replies` fixture and `.add()` the replies before sending. A test
+that uses it replays only what it builds, in every `--mock-mode`, and needs no recording file.
+A request it didn't build fails the test. See
+`tests/smart_window/test_c4433196_unsupported_tab_action_is_rejected.py`:
+
+```python
+built_replies.add(tool_call(PROMPT, "get_open_tabs", {}))
+built_replies.add(
+    tool_call(PROMPT, "manage_tabs", {"action": "explode_tabs", ...}, tool_results=1)
+)
+```
+
+- Set `tool_results` to the number of tool results Firefox has already sent back that turn.
+- To name a tab in a tool call, use its URL token as the model writes it
+  (`§url_token: LOCALHOST_LASAGNA_HTML_1§`). Build a `get_open_tabs` call first, so Firefox
+  knows the token.
+- `manage_tabs` ends the turn: Firefox doesn't ask the model for a reply afterwards, so don't
+  build one.
+- `SmartWindowChat.get_tool_results(name)` returns what Firefox sent back to the model for a
+  tool.
+
+`chat_reply()` and `tool_call()` have been tried in Firefox; `search_results()` hasn't yet.
 
 ## How it works
 
@@ -199,6 +219,7 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | Symptom | Cause |
 |---|---|
 | "No recording … Record it with …" | The recording is missing an entry. Run the command it prints. |
+| "built_replies has no reply for: […]" | Firefox sent a request the test didn't build, often a `tool_results` count that's off by one. |
 | "MLPA returned errors: [(401, …)]" | MLPA rejected the token. Sign in again, and check `MOZ_FXA_BEARER_TOKEN` isn't set to an old token. |
 | "needs a prod Mozilla account" | `record` or `live` without signing in. Run `uv run python -m scripts.fxa_login`. |
 | "FxA refused the saved refresh token" | The sign-in was revoked or expired. Run `uv run python -m scripts.fxa_login` again. |
@@ -224,6 +245,6 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |
 | `modules/classes/tab_grouping_scenario.py` | `TabGroupingScenario` |
-| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `smart_window_chat`, `tab_pages` |
+| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `built_replies`, `smart_window_chat`, `tab_pages` |
 | `data/recordings/smart_window/` | Recordings, one per test |
 | `data/smart_window_pages/` | Pages opened as tabs |

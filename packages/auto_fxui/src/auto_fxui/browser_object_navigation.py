@@ -401,6 +401,30 @@ class Navigation(BasePage):
         self.actions.key_down(Keys.SHIFT).click(suggestion).key_up(Keys.SHIFT).perform()
         return self
 
+    def _middle_click(self, element: WebElement) -> BasePage:
+        """Middle-click an element (pointer button 1 is the middle button)."""
+        self.actions.move_to_element(element).perform()
+        self.actions.w3c_actions.pointer_action.pointer_down(1)
+        self.actions.w3c_actions.pointer_action.pointer_up(1)
+        self.actions.perform()
+        return self
+
+    @BasePage.context_chrome
+    def middle_click_search_bar_suggestion(self) -> BasePage:
+        """Middle-click the first search suggestion in the search bar."""
+        self.search_bar_has_suggestions()
+        self._middle_click(self.get_element("searchbar-external-suggestion-row"))
+        return self
+
+    @BasePage.context_chrome
+    def search_bar_middle_click_engine(self, engine: str) -> BasePage:
+        """Open the search bar engine list (USB) and middle-click an engine."""
+        self.click_on("legacy-searchmode-switcher")
+        self.element_visible("search-mode-switcher-option", labels=[engine])
+        option = self.get_element("search-mode-switcher-option", labels=[engine])
+        self._middle_click(option)
+        return self
+
     @BasePage.context_chrome
     def type_in_search_bar(self, term: str) -> BasePage:
         """
