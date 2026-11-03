@@ -563,6 +563,13 @@ class TabBar(BasePage):
             "}));"
         )
 
+    @BasePage.context_chrome
+    def get_tab_urls(self) -> list[str]:
+        """Return the URL of each of the window's tabs, in tab strip order."""
+        return self.driver.execute_script(
+            "return Array.from(gBrowser.tabs, tab => tab.linkedBrowser.currentURI.spec);"
+        )
+
     def expect_tabs_grouped(self, urls: list[str]) -> BasePage:
         """Wait until the tabs showing `urls` are all in tab groups."""
 
