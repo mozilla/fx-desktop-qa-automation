@@ -580,6 +580,14 @@ class TabBar(BasePage):
         self.wait.until(_grouped, message=f"Not all of {urls} were grouped")
         return self
 
+    def expect_tabs_closed(self, urls: list[str]) -> BasePage:
+        """Wait until no tab shows any of `urls`."""
+        self.wait.until(
+            lambda _: not set(urls) & set(self.get_tab_urls()),
+            message=f"Not all of {urls} were closed",
+        )
+        return self
+
     @BasePage.context_chrome
     def edit_tab_group(
         self, new_name: str = None, new_color: str = None, add_new_tab: bool = False

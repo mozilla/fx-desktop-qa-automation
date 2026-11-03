@@ -8,10 +8,12 @@ from .page_base import BasePage
 USER_ROLE = 0
 TOOL_ROLE = 3
 
-# uiTypes of the card the assistant shows when it asks before grouping tabs,
-# and of the card that shows an action's result (it replaces the first once
-# the user confirms).
+# uiTypes of the cards the assistant shows when it asks before grouping or
+# closing tabs, and of the card that shows an action's result (it replaces
+# the first once the user confirms).
 TAB_GROUP_CONFIRMATION = "tab-group-confirmation"
+TAB_CLOSE_CONFIRMATION = "website-confirmation"
+TAB_ACTION_CONFIRMATIONS = (TAB_GROUP_CONFIRMATION, TAB_CLOSE_CONFIRMATION)
 ACTION_RESULT = "ai-action-result"
 
 # How the model names a tab in tool calls: §url_token: LOCALHOST_LASAGNA_HTML_1§
@@ -241,19 +243,20 @@ class SmartWindowChat(BasePage):
             return true;
         """)
 
-    def confirm_tab_grouping_if_asked(self) -> BasePage:
+    def confirm_tab_action_if_asked(self) -> BasePage:
         """
-        Confirm the tab grouping if the assistant asked first. Asking is the
-        model's choice (manage_tabs' ask_confirmation), so a recording can
-        take either path.
+        Confirm the tab grouping or closing if the assistant asked first.
+        Asking is the model's choice (manage_tabs' ask_confirmation), so a
+        recording can take either path.
         """
         # The card can arrive just after the turn ends, so wait for it first.
         self.expect(
             lambda _: (
-                self.get_last_tool_ui_type() in (TAB_GROUP_CONFIRMATION, ACTION_RESULT)
+                self.get_last_tool_ui_type()
+                in (*TAB_ACTION_CONFIRMATIONS, ACTION_RESULT)
             )
         )
-        if self.get_last_tool_ui_type() == TAB_GROUP_CONFIRMATION:
+        if self.get_last_tool_ui_type() in TAB_ACTION_CONFIRMATIONS:
             self.confirm_action()
         return self
 

@@ -208,7 +208,7 @@ from auto_fxui.browser_object import TabBar, Navigation, ContextMenu
 - Pages are files in `data/smart_window_pages/`. The `tab_pages` fixture serves them and turns file names into URLs; open them with `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`.
 - After `chat.send(scenario.instruction)`:
   - get what the model asked for with `mock_server.tool_calls("manage_tabs")`;
-  - call `SmartWindowChat.confirm_tab_grouping_if_asked()`, since the model chooses whether to ask first;
+  - call `SmartWindowChat.confirm_tab_action_if_asked()`, since the model chooses whether to ask first;
   - wait with `TabBar.expect_tabs_grouped(chat.resolve_url_tokens(...))` until Firefox has grouped the tabs the model asked for;
   - assert the model's choice with `scenario.check_grouping(TabBar.get_tab_groups())`.
 
