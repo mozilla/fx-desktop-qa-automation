@@ -115,7 +115,6 @@ address_bar_and_search:
     result: pass
     splits:
       - functional1
-
   test_new_search_box_no_url_navigation:
     result: pass
     splits:
