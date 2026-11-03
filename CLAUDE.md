@@ -124,8 +124,9 @@ def test_something_descriptive(driver: Firefox):
 
 ### Comments and Docstrings
 
+- **A comment is at most two short sentences.** If it needs more, rename something, restructure the code, or put the explanation in the commit message.
 - Docstrings: one line on what the function does or returns. Add a numpy `Parameters`/`Returns` section only when names and types don't make the meaning clear.
-- Keep any comment or docstring well under half the length of the code it describes.
+- Within that cap, still keep a comment well under half the length of the code it describes.
 - Explain why only where a reader would otherwise get it wrong, in one sentence. Do explain hard-to-read code: a regex, injected JS, a wait or retry that looks unnecessary.
 - Leave out history (what was tried, failure rates) and lists of every case handled; put history in the commit message or PR description.
 - `# Instantiate objects` (or a variant such as `# Instantiate object`) above a test's POM/BOM setup is a repo convention, not a comment to remove.

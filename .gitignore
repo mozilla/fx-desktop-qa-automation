@@ -198,6 +198,7 @@ selected_l10n_mappings
 # Credentials
 credentials.json
 testrail_credentials.env
+jira_credentials.env
 
 # Do not ignore
 !data/goomy.png
