@@ -178,6 +178,7 @@ per suite) collapses back to one link per OS instead of accumulating one per job
 
 Adjacent one-shots that use the same `testrail_init()` session — useful for maintenance:
 
+- [`modules/testrail_scripts/set_automation_status.py`](modules/testrail_scripts/set_automation_status.py) — marks the given cases Completed with Full or Partial coverage, only if a test returns the case id and `key.yaml` marks it `pass`. Dry run unless `--apply`.
 - [`modules/testrail_scripts/set_empty_automation_status_to_untriaged.py`](modules/testrail_scripts/set_empty_automation_status_to_untriaged.py)
 - [`modules/testrail_scripts/set_coverage_none_for_untriaged_suitable_unsuitable_disabled_automation.py`](modules/testrail_scripts/set_coverage_none_for_untriaged_suitable_unsuitable_disabled_automation.py)
 - [`modules/testrail_scripts/testrail_script_set_all_subs_to_functional.py`](modules/testrail_scripts/testrail_script_set_all_subs_to_functional.py)
