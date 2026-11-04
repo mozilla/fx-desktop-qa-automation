@@ -5,6 +5,7 @@
 .testrail_credential*
 .DS_Store
 selected_tests
+selected_glean
 test*.txt
 fx_location
 test*txt
