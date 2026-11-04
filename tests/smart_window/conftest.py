@@ -107,15 +107,22 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
     if Firefox sent a chat or search request that isn't recorded. Record and
     live forward to stage MLPA with the prod FxA token in
     MOZ_FXA_BEARER_TOKEN; record then saves the recording.
+
+    A test using built_replies replays only what it builds, in every mode,
+    since a real model won't send those replies.
     """
     path = recording_path(request.node)
-    if opt_mock_mode == "replay":
+    built = "built_replies" in request.fixturenames
+    mode = "replay" if built else opt_mock_mode
+    if built:
+        mock_server_session.reset(Recording())
+    elif mode == "replay":
         mock_server_session.reset(Recording.load(path))
     else:
         token = environ.get("MOZ_FXA_BEARER_TOKEN")
         if not token:
             pytest.fail(
-                f"--mock-mode={opt_mock_mode} needs a prod FxA token in "
+                f"--mock-mode={mode} needs a prod FxA token in "
                 "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md)"
             )
         recording = Recording(
@@ -125,20 +132,22 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
                 "recorded_at": datetime.date.today().isoformat(),
             }
         )
-        mock_server_session.reset(recording, opt_mock_mode, MLPA_STAGE_URL, token)
+        mock_server_session.reset(recording, mode, MLPA_STAGE_URL, token)
 
     yield mock_server_session
 
     server = mock_server_session
     server.wait_until_idle()
     unmatched, upstream_errors = server.unmatched, server.upstream_errors
-    if opt_mock_mode == "record" and not upstream_errors:
+    if mode == "record" and not upstream_errors:
         server.recording.save(path)
     server.reset()
     if unmatched:
         missing = sorted(
             {u.get("last_user_message") or u.get("query") for u in unmatched}
         )
+        if built:
+            pytest.fail(f"built_replies has no reply for: {missing}")
         problem = (
             f"{path} has no recording for: {missing}"
             if path.exists()
@@ -167,6 +176,16 @@ def smart_window_chat(
     """
     active_smart_window.stub_fxa_token()
     return SmartWindowChat(driver)
+
+
+@pytest.fixture()
+def built_replies(mock_server: MockServer) -> Recording:
+    """
+    Return the recording a test fills with the builders in
+    auto_fxui.classes.recording (chat_reply, tool_call, search_results) before
+    it sends anything. It starts empty and is replayed in every --mock-mode.
+    """
+    return mock_server.recording
 
 
 def recording_path(node: pytest.Item) -> Path:

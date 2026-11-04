@@ -366,6 +366,15 @@ jobs:
 
           $exitCode = $LASTEXITCODE
 
+          # Exit 5 with an empty report means no headed tests were selected
+          if ($exitCode -eq 5 -and (Test-Path "artifacts\report_headed.json")) {
+            $report = Get-Content "artifacts\report_headed.json" -Raw | ConvertFrom-Json
+            if ($report.exitcode -eq 5 -and $report.summary.total -eq 0) {
+              Write-Host "No headed tests in this selection."
+              $exitCode = 0
+            }
+          }
+
           New-Item -ItemType Directory -Path "test-artifacts\headed" -Force |
             Out-Null
 
@@ -569,6 +578,12 @@ jobs:
           uv run pytest \
             --fx-executable="$FX_EXECUTABLE" \
             "${tests[@]}" || exit_code=$?
+
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$exit_code" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            exit_code=0
+          fi
 
           mkdir -p test-artifacts/headed
 
@@ -774,6 +789,12 @@ jobs:
               --fx-executable="$FX_EXECUTABLE" \
               --geckodriver=geckodriver \
               "${tests[@]}" || exit_code=$?
+
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$exit_code" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            exit_code=0
+          fi
 
           mkdir -p test-artifacts/headed
 
