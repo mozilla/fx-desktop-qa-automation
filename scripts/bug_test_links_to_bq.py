@@ -29,6 +29,7 @@ TREEHERDER_URL = "https://treeherder.mozilla.org/api/failuresbybug/"
 HEADERS = {"User-Agent": "starfox-bug-test-links"}
 BUGS_TABLE = "bugzilla_bugs"
 LINKS_TABLE = "bug_test_links"
+EXECUTIONS_TABLE = "testrail_executions"
 VIEW = "desktop_bugs_with_tests"
 
 # Each query is one way a bug can be in scope; Unspecified bugs are kept only
@@ -63,6 +64,8 @@ BUG_FIELDS = [
     *(f"cf_status_firefox{version}" for version in range(140, 200)),
 ]
 
+# A result with any other status is a run that gave a verdict.
+NOT_EXECUTED_STATUSES = {"untested", "blocked", "retest", "skipped"}
 TESTRAIL_PAGE = 250
 BUGZILLA_PAGE = 500
 
@@ -343,17 +346,15 @@ def runs_since(reader: TestRailReader, milestones: dict[int, dict]) -> Iterator:
         )
 
 
-def testrail_links(reader: TestRailReader) -> list[dict]:
-    """One link per bug in a result's Defects, with its run's release context."""
+def testrail_links(reader: TestRailReader) -> tuple[list[dict], Counter]:
+    """Return one link per bug in a result's Defects, with its run's release
+    context, and the number of valid executions per (case, day)."""
     milestones = reader.milestones()
     statuses = reader.statuses()
     links = []
+    executions = Counter()
     for run, context in runs_since(reader, milestones):
-        results = [
-            result
-            for result in reader.paged(f"get_results_for_run/{run['id']}", "results")
-            if bug_ids(result.get("defects"))
-        ]
+        results = list(reader.paged(f"get_results_for_run/{run['id']}", "results"))
         if not results:
             continue
 
@@ -363,7 +364,14 @@ def testrail_links(reader: TestRailReader) -> list[dict]:
         fx_version = FX_VERSION_RE.search(run["name"] or "")
         for result in results:
             test = tests.get(result["test_id"], {})
-            for bug_id in bug_ids(result["defects"]):
+            status = statuses.get(result.get("status_id"))
+            if (
+                test.get("case_id")
+                and (status or "").lower() not in NOT_EXECUTED_STATUSES
+            ):
+                executed_on = epoch_to_iso(result.get("created_on"))[:10]
+                executions[(test["case_id"], executed_on)] += 1
+            for bug_id in bug_ids(result.get("defects")):
                 links.append(
                     context
                     | {
@@ -382,12 +390,16 @@ def testrail_links(reader: TestRailReader) -> list[dict]:
                         or (fx_version.group(0) if fx_version else None),
                         "testrail_test_id": result["test_id"],
                         "result_id": result["id"],
-                        "result_status": statuses.get(result.get("status_id")),
+                        "result_status": status,
                         "result_created_at": epoch_to_iso(result.get("created_on")),
                     }
                 )
-    logging.info("Found %d TestRail result links", len(links))
-    return links
+    logging.info(
+        "Found %d TestRail result links and %d executed cases",
+        len(links),
+        len({case_id for case_id, _ in executions}),
+    )
+    return links, executions
 
 
 # BigQuery
@@ -482,7 +494,13 @@ def schemas():
         field("result_created_at", "TIMESTAMP"),
         field("ingested_at", "TIMESTAMP", "REQUIRED"),
     ]
-    return bugs, links
+    executions = [
+        field("case_id", "INT64", "REQUIRED"),
+        field("executed_on", "DATE", "REQUIRED"),
+        field("executions", "INT64", "REQUIRED"),
+        field("ingested_at", "TIMESTAMP", "REQUIRED"),
+    ]
+    return bugs, links, executions
 
 
 def replace_table(client, table_id: str, rows: list[dict], schema, clustering):
@@ -500,8 +518,9 @@ def replace_table(client, table_id: str, rows: list[dict], schema, clustering):
     logging.info("Loaded %d rows into %s", len(rows), table_id)
 
 
-def collect() -> tuple[list[dict], list[dict]]:
-    """Return the in-scope bugs that link to a test, and those links."""
+def collect() -> tuple[list[dict], list[dict], Counter]:
+    """Return the in-scope bugs that link to a test, those links, and TestRail
+    executions per (case, day)."""
     bugs = add_treeherder_failures(search_bugs())
 
     tests = starfox_tests()
@@ -509,9 +528,8 @@ def collect() -> tuple[list[dict], list[dict]]:
     links = [
         link for bug in bugs.values() for link in summary_links(bug, tests, name_re)
     ]
-    links += [
-        link for link in testrail_links(TestRailReader()) if link["bug_id"] in bugs
-    ]
+    testrail, executions = testrail_links(TestRailReader())
+    links += [link for link in testrail if link["bug_id"] in bugs]
 
     linked = {link["bug_id"] for link in links}
     logging.info(
@@ -519,7 +537,7 @@ def collect() -> tuple[list[dict], list[dict]]:
         len(linked),
         dict(Counter(link["source"] for link in links)),
     )
-    return [bugs[bug_id] for bug_id in sorted(linked)], links
+    return [bugs[bug_id] for bug_id in sorted(linked)], links, executions
 
 
 def main() -> int:
@@ -527,9 +545,9 @@ def main() -> int:
 
     project, dataset = os.environ["BQ_PROJECT"], os.environ["BQ_DATASET"]
     ingested_at = datetime.now(timezone.utc).isoformat()
-    bugs, links = collect()
+    bugs, links, executions = collect()
 
-    bugs_schema, links_schema = schemas()
+    bugs_schema, links_schema, executions_schema = schemas()
     client = bigquery.Client(project=project)
     replace_table(
         client,
@@ -544,6 +562,21 @@ def main() -> int:
         [link | {"ingested_at": ingested_at} for link in links],
         links_schema,
         ["source", "test_key"],
+    )
+    replace_table(
+        client,
+        f"{project}.{dataset}.{EXECUTIONS_TABLE}",
+        [
+            {
+                "case_id": case_id,
+                "executed_on": executed_on,
+                "executions": count,
+                "ingested_at": ingested_at,
+            }
+            for (case_id, executed_on), count in executions.items()
+        ],
+        executions_schema,
+        ["case_id"],
     )
     client.query(
         f"""

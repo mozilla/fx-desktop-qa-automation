@@ -45,3 +45,10 @@ jobs:
           BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
           BQ_DATASET: fx_qa_ci
         run: uv run python -m scripts.bug_test_links_to_bq
+
+      - name: Score test yield
+        env:
+          SINCE_DATE: ${{ inputs.since_date }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+        run: uv run python -m scripts.test_yield_to_bq
