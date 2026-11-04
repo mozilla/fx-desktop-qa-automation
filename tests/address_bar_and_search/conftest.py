@@ -3,9 +3,8 @@ import logging
 from time import sleep, time
 
 import pytest
+from auto_fxui.util import Utilities
 from selenium.common.exceptions import WebDriverException
-
-from modules.util import Utilities
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ def add_to_prefs_list():
 @pytest.fixture()
 def search_modes():
     return {
-        "site": ["Google", "Amazon", "Bing", "DuckDuckGo", "eBay", "Wikipedia"],
+        "site": ["Google", "Bing", "DuckDuckGo", "eBay", "Wikipedia"],
         "browser": [
             ("*", "Bookmarks"),
             ("%", "Tabs"),

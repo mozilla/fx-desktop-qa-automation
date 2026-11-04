@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import PanelUi
+from auto_fxui.page_object import AboutCache
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi
-from modules.page_object import AboutCache
 
 
 @pytest.fixture()

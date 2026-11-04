@@ -1,10 +1,9 @@
 import pytest
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object import AboutLogins, GenericPage
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object import AutofillPopup
-from modules.page_object import AboutLogins, GenericPage
 
 LOGIN_URL = (
     "https://login.taobao.com/havanaone/login/login.htm"

@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.browser_object_tabbar import TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object_navigation import Navigation
-from modules.browser_object_tabbar import TabBar
 
 # Wikipedia redirects exact article matches to /wiki/<Title>; the capitalized
 # term keeps the URL check valid there as well.

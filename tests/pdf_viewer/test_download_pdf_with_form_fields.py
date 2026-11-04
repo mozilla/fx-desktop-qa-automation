@@ -1,9 +1,8 @@
 import os
 
 import pytest
+from auto_fxui.page_object_generics import GenericPdf
 from selenium.webdriver import Firefox
-
-from modules.page_object_generics import GenericPdf
 
 # The saved copy gets a unique name to avoid colliding with other i-9 downloads.
 PDF_FILE_NAME = "i-9.pdf"

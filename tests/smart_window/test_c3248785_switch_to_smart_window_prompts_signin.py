@@ -7,8 +7,7 @@ the FxA sign-in flow rather than switching the window.
 from urllib.parse import urlparse
 
 import pytest
-
-from modules.browser_object import SmartWindow
+from auto_fxui.browser_object import SmartWindow
 
 # Firefox's own FxA host, used when the suite sets no FxA environment.
 DEFAULT_FXA_HOST = "accounts.firefox.com"

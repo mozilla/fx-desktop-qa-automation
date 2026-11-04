@@ -1,9 +1,8 @@
 import math
 
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver.support.color import Color
-
-from modules.page_object import GenericPdf
 
 
 @pytest.fixture()
@@ -76,9 +75,11 @@ def test_pdf_sidebar_resize_maximized(pdf_viewer: GenericPdf):
         finally:
             pdf_viewer.actions.release().perform()
         pdf_viewer.wait.until(
-            lambda _: sidebar.rect["width"] > previous_width + 10
-            if direction == "right"
-            else sidebar.rect["width"] < previous_width - 10,
+            lambda _: (
+                sidebar.rect["width"] > previous_width + 10
+                if direction == "right"
+                else sidebar.rect["width"] < previous_width - 10
+            ),
             message=f"Dragging {direction} should change the sidebar width.",
         )
         width = container.rect["width"]
@@ -92,10 +93,10 @@ def test_pdf_sidebar_resize_maximized(pdf_viewer: GenericPdf):
             len(pages), math.floor((width - padding + gap) / (thumbnail_width + gap))
         )
         pdf_viewer.wait.until(
-            lambda _: sum(
-                abs(page.rect["y"] - pages[0].rect["y"]) < 2 for page in pages
-            )
-            == expected_columns,
+            lambda _: (
+                sum(abs(page.rect["y"] - pages[0].rect["y"]) < 2 for page in pages)
+                == expected_columns
+            ),
             message=f"After resizing {direction}, thumbnails should fill all available columns.",
         )
         column_counts.append(expected_columns)

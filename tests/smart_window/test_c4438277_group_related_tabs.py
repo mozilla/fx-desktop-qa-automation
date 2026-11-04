@@ -5,10 +5,9 @@ holding exactly the recipe tabs.
 """
 
 import pytest
-
-from modules.browser_object import SmartBar, SmartWindowChat, TabBar
-from modules.classes.tab_grouping_scenario import TabGroupingScenario
-from modules.mock_server import MockServer
+from auto_fxui.browser_object import SmartBar, SmartWindowChat, TabBar
+from auto_fxui.classes.tab_grouping_scenario import TabGroupingScenario
+from auto_fxui.mock_server import MockServer
 
 SCENARIO = TabGroupingScenario(
     instruction="Group my recipe tabs",

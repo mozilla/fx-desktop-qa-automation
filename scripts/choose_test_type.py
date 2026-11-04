@@ -20,8 +20,12 @@ file_subsets = {
 # Checked before file_subsets, so glean files never also select starfox
 glean_subset = [
     os.path.join("tests", "glean") + SLASH,
-    os.path.join("modules", "browser_object_glean.py"),
-    os.path.join("modules", "data", "glean.components.json"),
+    os.path.join(
+        "packages", "auto_fxui", "src", "auto_fxui", "browser_object_glean.py"
+    ),
+    os.path.join(
+        "packages", "auto_fxui", "src", "auto_fxui", "data", "glean.components.json"
+    ),
 ]
 
 l10n_module_patterns = [

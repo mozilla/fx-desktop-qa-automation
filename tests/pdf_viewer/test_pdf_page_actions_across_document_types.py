@@ -1,9 +1,8 @@
 import re
 
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver.support.color import Color
-
-from modules.page_object import GenericPdf
 
 
 @pytest.fixture()
@@ -62,8 +61,10 @@ def test_pdf_page_actions_across_document_types(
     pdf_viewer.click_on("manage-copy-option")
     pdf_viewer.click_on("paste-after-page-button", labels=[str(selection_size)])
     pdf_viewer.wait.until(
-        lambda _: len(pdf_viewer.get_elements("page-thumbnails"))
-        == len(original_pages) + selection_size,
+        lambda _: (
+            len(pdf_viewer.get_elements("page-thumbnails"))
+            == len(original_pages) + selection_size
+        ),
         message="Copy/paste should add exactly the selected number of pages.",
     )
     pages_after_copy = pdf_viewer.get_elements("page-thumbnails")

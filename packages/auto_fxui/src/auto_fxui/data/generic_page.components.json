@@ -424,5 +424,14 @@
       "description": "The 'allow all cookies' / 'accept all cookies' button within the Facebook cookie consent dialog; fallback dismissal action used only when a decline option is not present.",
       "location": "facebook.com (cookie consent overlay)"
     }
+  },
+  "link-by-text": {
+    "selectorData": "{text}",
+    "strategy": "link_text",
+    "groups": [],
+    "comment": {
+      "description": "A link, by its exact visible text",
+      "location": "Generic html page"
+    }
   }
 }

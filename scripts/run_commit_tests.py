@@ -23,11 +23,11 @@ def uses_mock_server(test: str) -> bool:
 
 
 def has_recording(test: str) -> bool:
-    """Tests that build their replies with modules.classes.recording need none."""
+    """Tests that build their replies (the built_replies fixture) need none."""
     path = Path(test)
     folder = Path("data", "recordings", path.parent.name)
     return (
-        "modules.classes.recording" in path.read_text(encoding="utf-8")
+        re.search(r"\bbuilt_replies\b", path.read_text(encoding="utf-8"))
         or (folder / f"{path.stem}.json").exists()
         or (folder / path.stem).is_dir()
     )

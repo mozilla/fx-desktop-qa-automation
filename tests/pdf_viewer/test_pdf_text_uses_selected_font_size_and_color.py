@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver.support.color import Color
-
-from modules.page_object import GenericPdf
 
 PDF_FILE_NAME = "i-9.pdf"
 TEXT_TO_ADD = "PDF editor text"

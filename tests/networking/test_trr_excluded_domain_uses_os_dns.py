@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.page_object import AboutNetworking
 from selenium.webdriver import Firefox
-
-from modules.page_object import AboutNetworking
 
 TEST_URL = "https://www.wikipedia.org/"
 TEST_HOST = "www.wikipedia.org"

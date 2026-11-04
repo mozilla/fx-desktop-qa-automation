@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation, TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object import Navigation, TabBar
 
 DEFAULT_TERMS = ["mozilla", "firefox"]
 OTHER_ENGINES = [("Bing", "bing.com"), ("DuckDuckGo", "duckduckgo.com")]

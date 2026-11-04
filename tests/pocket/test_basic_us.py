@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TabBar
+from auto_fxui.page_object import AboutNewtab
 from selenium.webdriver import Firefox
-
-from modules.browser_object import TabBar
-from modules.page_object import AboutNewtab
 
 
 @pytest.fixture()

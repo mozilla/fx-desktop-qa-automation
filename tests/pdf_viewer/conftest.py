@@ -3,8 +3,7 @@ import time
 from shutil import copyfile
 
 import pytest
-
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 DOWNLOAD_TIMEOUT_SEC = 5.0
 POLL_INTERVAL_SEC = 1.0

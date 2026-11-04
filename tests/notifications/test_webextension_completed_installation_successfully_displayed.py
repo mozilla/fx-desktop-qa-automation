@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
 
 
 @pytest.fixture()

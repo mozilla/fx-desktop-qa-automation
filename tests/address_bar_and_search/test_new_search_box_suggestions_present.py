@@ -1,10 +1,9 @@
 from urllib.parse import quote_plus
 
 import pytest
+from auto_fxui.browser_object import Navigation, TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
-
-from modules.browser_object import Navigation, TabBar
 
 SEARCH_TERM = "mozilla"
 

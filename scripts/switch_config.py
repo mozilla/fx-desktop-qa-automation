@@ -3,17 +3,34 @@ import sys
 
 import toml
 
+
+def dictmerge(a: dict, b: dict) -> dict:
+    if a == b:
+        return a
+
+    merged = {}
+    for key in set(list(a.keys()) + list(b.keys())):
+        if isinstance(a.get(key), dict) and isinstance(b.get(key), dict):
+            merged[key] = dictmerge(a[key], b[key])
+        elif key not in b:
+            merged[key] = a[key]
+        else:
+            merged[key] = b[key]
+
+    return merged
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2 or sys.argv[1] == "help" or sys.argv[1] == "-h":
         print(
-            "Change the pyproject in the repo root. Overwrites pyproject.toml\n"
+            "Change the pyproject in the repo root. Overwrite pyproject.toml\n"
             "Usage: python scripts/switch_config.py <config_name>"
         )
         sys.exit(1)
     if not os.path.isfile("pyproject.toml"):
         sys.exit(
-            "pyproject.toml not found in the current directory. Run this script "
-            "from the repo root; it merges the chosen config onto the existing "
+            "pyproject.toml not found in the current dir. Run this script "
+            "from the repo root; it merges the chosen config onto existing "
             "pyproject.toml, so that file must be present."
         )
     with open("pyproject.toml") as f:
@@ -27,8 +44,8 @@ if __name__ == "__main__":
     with open(config_path) as f:
         config = toml.loads(f.read())
 
-    pyproject |= config
-    toml_text = toml.dumps(pyproject)
+    new_pyproject = dictmerge(pyproject, config)
+    toml_text = toml.dumps(new_pyproject)
 
     # prettify the toml output
     toml_out = ""

@@ -20,7 +20,7 @@
       "tabSelector"
     ],
     "comment": {
-      "description": "Finds a tab given the index (tab position)",
+      "description": "Finds a tab by its linkedpanel number; use TabBar.get_tab(index) to map a tab index to it",
       "location": "In the tabbed browser."
     }
   },

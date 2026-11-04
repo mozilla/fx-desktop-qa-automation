@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, Navigation
-from modules.page_object import GenericPage
 
 WIKIPEDIA_URL = "https://www.wikipedia.org/"
 IN_SCOPE_URL_PART = "en.wikipedia.org"

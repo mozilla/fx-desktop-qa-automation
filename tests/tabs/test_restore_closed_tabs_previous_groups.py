@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, PanelUi, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, PanelUi, TabBar
 
 urls = [
     "https://example.com",

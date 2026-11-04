@@ -1,9 +1,8 @@
 import pytest
+from auto_fxui.browser_object_navigation import Navigation
+from auto_fxui.page_object_about_pages import AboutTelemetry
+from auto_fxui.util import Utilities
 from selenium.webdriver import Firefox
-
-from modules.browser_object_navigation import Navigation
-from modules.page_object_about_pages import AboutTelemetry
-from modules.util import Utilities
 
 TEXT = "Firefox"
 SEARCHBAR_PATH = (

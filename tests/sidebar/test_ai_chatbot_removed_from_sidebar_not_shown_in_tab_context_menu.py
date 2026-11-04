@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation, Sidebar, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, Navigation, Sidebar, TabBar
 
 WEBSITE = "https://en.wikipedia.org/wiki/Firefox"
 

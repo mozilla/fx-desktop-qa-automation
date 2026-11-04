@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TrustPanel
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import TrustPanel
-from modules.page_object import GenericPage
 
 EXTENDED_CERTIFICATE_URL = "https://extended-validation.badssl.com/"
 
