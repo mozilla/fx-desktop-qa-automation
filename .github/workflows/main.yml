@@ -315,7 +315,15 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           uv run pytest --fx-channel=Custom $(Get-Content selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets -r -Force
+          # Exit 5 with an empty report means no headed tests were selected
+          if ($env:TEST_EXIT_CODE -eq "5" -and (Test-Path "artifacts/report_headed.json")) {
+            $report = Get-Content "artifacts/report_headed.json" -Raw | ConvertFrom-Json
+            if ($report.exitcode -eq 5 -and $report.summary.total -eq 0) {
+              Write-Host "No headed tests in this selection."
+              $env:TEST_EXIT_CODE = "0"
+            }
+          }
+          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
           Get-ChildItem -Path "artifacts" | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
@@ -537,6 +545,11 @@ jobs:
           uv run python scripts/switch_config.py ci_headed
           uv sync;
           uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$TEST_EXIT_CODE" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            TEST_EXIT_CODE=0
+          fi
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
@@ -671,6 +684,11 @@ jobs:
           XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$TEST_EXIT_CODE" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            TEST_EXIT_CODE=0
+          fi
           mkdir -p artifacts-linux
           mv -n artifacts/* artifacts-linux/ || true
           exit $TEST_EXIT_CODE
