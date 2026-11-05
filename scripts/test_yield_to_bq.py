@@ -2,13 +2,12 @@
 Score each test's yield from the bug_test_links and bugzilla_bugs tables and
 write it to the test_yield table:
 
-    Yield = 100 * (wU*U + wF*F + wS*S + wC*C + wR*R)
+    Yield = 100 * (wU*U + wF*F + wS*S + wR*R) / (wU + wF + wS + wR)
 
-Components are defined in TEST_YIELD_DATA_COLLECTION.md. Run with
+Coverage (C) is left out until its inputs exist. Run with
 `uv run python -m scripts.test_yield_to_bq` after `scripts.bug_test_links_to_bq`.
 """
 
-import json
 import logging
 import math
 import os
@@ -31,26 +30,19 @@ RELEASES_URL = (
 )
 VERSIONS_URL = "https://product-details.mozilla.org/1.0/firefox_versions.json"
 
-DEFAULT_WEIGHTS = {"U": 0.25, "F": 0.20, "S": 0.30, "C": 0.10, "R": 0.15}
+DEFAULT_WEIGHTS = {"U": 0.25, "F": 0.20, "S": 0.30, "R": 0.15}
 SEVERITY_WEIGHT = float(os.environ.get("YIELD_SEVERITY_WEIGHT") or 0.6)
-# S1 (critical), S4 (minor), P2 and P4 are from the yield proposal; the rest are
-# placeholders until it gives them.
-SEVERITY = {"S1": 1.0, "S2": 0.75, "S3": 0.5, "S4": 0.2}
+# Unset severity or priority ("--") counts as 0.
+SEVERITY = {"S1": 1.0, "S2": 0.7, "S3": 0.4, "S4": 0.2, "N/A": 0.1}
 PRIORITY = {"P1": 1.0, "P2": 0.8, "P3": 0.5, "P4": 0.25, "P5": 0.1}
 # Resolutions meaning the report wasn't a new, real bug.
 NOT_A_BUG = {"INVALID", "WORKSFORME", "INCOMPLETE", "DUPLICATE"}
-# Optional JSON file of {"Product::Component": weight}; unlisted components weigh 1.
-RISK_WEIGHTS = (
-    json.loads(open(os.environ["YIELD_RISK_WEIGHTS"], encoding="utf-8").read())
-    if os.environ.get("YIELD_RISK_WEIGHTS")
-    else {}
-)
 # STARfox CI outcomes where the test ran to a verdict; rerun is fail-then-pass.
 STARFOX_EXECUTED = ("passed", "failed", "rerun")
 
 
 def weights() -> dict[str, float]:
-    """Read weights from YIELD_WEIGHTS, e.g. "U=0.25,F=0.2,S=0.3,C=0.1,R=0.15"."""
+    """Read weights from YIELD_WEIGHTS, e.g. "U=0.25,F=0.2,S=0.3,R=0.15"."""
     raw = os.environ.get("YIELD_WEIGHTS")
     if not raw:
         return DEFAULT_WEIGHTS
@@ -58,10 +50,8 @@ def weights() -> dict[str, float]:
         key.strip(): float(value)
         for key, value in (part.split("=") for part in raw.split(","))
     }
-    if set(parsed) != set(DEFAULT_WEIGHTS) or not math.isclose(
-        sum(parsed.values()), 1.0
-    ):
-        raise SystemExit("YIELD_WEIGHTS needs U, F, S, C and R, summing to 1")
+    if set(parsed) != set(DEFAULT_WEIGHTS) or min(parsed.values()) <= 0:
+        raise SystemExit("YIELD_WEIGHTS needs positive weights for U, F, S and R")
     return parsed
 
 
@@ -104,8 +94,8 @@ def normalized(values: dict, scale=lambda value: value) -> dict:
 
 
 def yield_score(parts: dict[str, float | None], weights: dict[str, float]) -> float:
-    """100 * the weighted sum of the components; missing ones (None) are left
-    out and the remaining weights scaled up to sum to 1."""
+    """100 * the weighted sum of the components, with the weights scaled to sum
+    to 1; missing components (None) are left out before scaling."""
     available = [name for name, part in parts.items() if part is not None]
     total = sum(weights[name] for name in available)
     return 100 * sum(weights[name] * parts[name] for name in available) / total
@@ -147,7 +137,6 @@ def score(
     raw = {}
     for key, test in tests.items():
         found = [counted[bug_id] for bug_id in test["bugs"]]
-        components = {f"{bug['product']}::{bug['component']}" for bug in found}
         regression_cycles = {bug["cycle"] for bug in found if is_regression(bug)}
         executed = executions.get(key) or {}
         executed_cycles = executed.get("cycles") or (
@@ -160,10 +149,6 @@ def score(
             "executions": executed.get("count"),
             "executed_cycles": len(executed_cycles),
             "impact": sum(map(bug_impact, found)),
-            "components": len(components),
-            "risk_coverage": sum(
-                RISK_WEIGHTS.get(component, 1.0) for component in components
-            ),
             "regression_cycles": len(regression_cycles),
         }
 
@@ -178,7 +163,6 @@ def score(
             for k, v in raw.items()
         },
         "S": normalized({k: v["impact"] for k, v in raw.items()}),
-        "C": normalized({k: v["risk_coverage"] for k, v in raw.items()}),
         "R": {
             k: min(1.0, v["regression_cycles"] / v["executed_cycles"])
             if v["executed_cycles"]
@@ -228,14 +212,11 @@ def schema():
         field("detections", "INT64"),
         field("executions", "INT64"),
         field("impact", "FLOAT64"),
-        field("components", "INT64"),
-        field("risk_coverage", "FLOAT64"),
         field("regression_cycles", "INT64"),
         field("executed_cycles", "INT64"),
         field("u_score", "FLOAT64"),
         field("f_score", "FLOAT64"),
         field("s_score", "FLOAT64"),
-        field("c_score", "FLOAT64"),
         field("r_score", "FLOAT64"),
         field("yield_score", "FLOAT64", "REQUIRED"),
         field("missing_components", "STRING"),
@@ -277,7 +258,13 @@ def main() -> int:
 
     daily = [
         ("testrail", f"C{row['case_id']}", row["executed_on"], row["executions"])
-        for row in read(f"SELECT * FROM `{{dataset}}.{EXECUTIONS_TABLE}`")
+        for row in read(
+            f"""
+            SELECT case_id, executed_on, COUNT(*) AS executions
+            FROM `{{dataset}}.{EXECUTIONS_TABLE}`
+            GROUP BY case_id, executed_on
+            """
+        )
     ] + [
         ("starfox", row["test_key"], row["executed_on"], row["executions"])
         for row in read(
