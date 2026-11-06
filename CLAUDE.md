@@ -30,6 +30,9 @@ pdoc --docformat "numpy" modules
 # Add a new test to the manifest (also runs on commit via git hook)
 python scripts/addtests.py
 
+# Mark TestRail cases Completed once their tests pass in key.yaml (dry run without --apply)
+uv run python -m modules.testrail_scripts.set_automation_status --full C123 --partial C456
+
 # Create a new POM or BOM
 python scripts/new_model.py [ModelName|model_name] [pom|bom]
 
