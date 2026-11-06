@@ -23,7 +23,7 @@ on:
         default: "2026-10-13"
         type: string
       weights:
-        description: "Component weights, e.g. U=0.25,F=0.2,S=0.3,R=0.15 (empty uses the defaults)"
+        description: "Component weights summing to 1, e.g. U=0.275,F=0.225,S=0.325,R=0.175 (empty uses the defaults)"
         required: false
         default: ""
         type: string

@@ -2,10 +2,9 @@
 Score each test's yield from the bug_test_links and bugzilla_bugs tables and
 write it to the test_yield table:
 
-    Yield = 100 * (wU*U + wF*F + wS*S + wR*R) / (wU + wF + wS + wR)
+    Yield = 100 * (wU*U + wF*F + wS*S + wR*R)
 
-Coverage (C) is left out until its inputs exist. Run with
-`uv run python -m scripts.test_yield_to_bq` after `scripts.bug_test_links_to_bq`.
+Coverage (C) is left out until its inputs exist, and its weight shared equally.
 """
 
 import logging
@@ -30,7 +29,8 @@ RELEASES_URL = (
 )
 VERSIONS_URL = "https://product-details.mozilla.org/1.0/firefox_versions.json"
 
-DEFAULT_WEIGHTS = {"U": 0.25, "F": 0.20, "S": 0.30, "R": 0.15}
+# The proposal's weights, plus 0.025 each from C's 0.10.
+DEFAULT_WEIGHTS = {"U": 0.275, "F": 0.225, "S": 0.325, "R": 0.175}
 SEVERITY_WEIGHT = float(os.environ.get("YIELD_SEVERITY_WEIGHT") or 0.6)
 # Unset severity or priority ("--") counts as 0.
 SEVERITY = {"S1": 1.0, "S2": 0.7, "S3": 0.4, "S4": 0.2, "N/A": 0.1}
@@ -42,7 +42,7 @@ STARFOX_EXECUTED = ("passed", "failed", "rerun")
 
 
 def weights() -> dict[str, float]:
-    """Read weights from YIELD_WEIGHTS, e.g. "U=0.25,F=0.2,S=0.3,R=0.15"."""
+    """Read weights from YIELD_WEIGHTS, e.g. "U=0.275,F=0.225,S=0.325,R=0.175"."""
     raw = os.environ.get("YIELD_WEIGHTS")
     if not raw:
         return DEFAULT_WEIGHTS
@@ -50,8 +50,12 @@ def weights() -> dict[str, float]:
         key.strip(): float(value)
         for key, value in (part.split("=") for part in raw.split(","))
     }
-    if set(parsed) != set(DEFAULT_WEIGHTS) or min(parsed.values()) <= 0:
-        raise SystemExit("YIELD_WEIGHTS needs positive weights for U, F, S and R")
+    if (
+        set(parsed) != set(DEFAULT_WEIGHTS)
+        or min(parsed.values()) <= 0
+        or not math.isclose(sum(parsed.values()), 1.0)
+    ):
+        raise SystemExit("YIELD_WEIGHTS needs positive U, F, S and R summing to 1")
     return parsed
 
 
@@ -94,8 +98,8 @@ def normalized(values: dict, scale=lambda value: value) -> dict:
 
 
 def yield_score(parts: dict[str, float | None], weights: dict[str, float]) -> float:
-    """100 * the weighted sum of the components, with the weights scaled to sum
-    to 1; missing components (None) are left out before scaling."""
+    """100 * the weighted sum of the components. A test missing a component
+    (None) has its other weights scaled up to sum to 1."""
     available = [name for name, part in parts.items() if part is not None]
     total = sum(weights[name] for name in available)
     return 100 * sum(weights[name] * parts[name] for name in available) / total

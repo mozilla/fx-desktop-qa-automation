@@ -52,27 +52,35 @@ def collect(cutoff: datetime | None = None, stored: dict | None = None) -> dict:
         TestRailReader(), int(cutoff.timestamp()) if cutoff else None
     )
     fetched = search_bugs(cutoff.strftime("%Y-%m-%dT%H:%M:%SZ") if cutoff else None)
+
     # A new TestRail result can point at an unchanged bug that was never loaded.
-    unseen = {link["bug_id"] for link in testrail} - fetched.keys() - stored["bugs"]
-    if cutoff and unseen:
-        fetched |= fetch_bugs(unseen)
-    candidates = add_treeherder_failures(
-        {bug_id: bug for bug_id, bug in fetched.items() if in_scope(bug)}
-    )
+    if cutoff:
+        testrail_bug_ids = {link["bug_id"] for link in testrail}
+        unseen = testrail_bug_ids - fetched.keys() - stored["bugs"]
+        if unseen:
+            fetched.update(fetch_bugs(unseen))
+
+    scoped_bugs = {
+        bug_id: bug for bug_id, bug in fetched.items() if in_scope(bug)
+    }
+    candidates = add_treeherder_failures(scoped_bugs)
 
     tests = starfox_tests()
+
+    # collect the links from every candidate bug into one list.
     name_re = starfox_name_re(tests)
     links = [
-        link
-        for bug in candidates.values()
+        link for bug in candidates.values()
         for link in summary_links(bug, tests, name_re)
     ]
+
     # Bugs loaded before and not fetched again keep their earlier scope decision.
     allowed = candidates.keys() | (stored["bugs"] - fetched.keys())
-    links += [link for link in testrail if link["bug_id"] in allowed]
+    links.extend(link for link in testrail if link["bug_id"] in allowed)
 
     linked = {link["bug_id"] for link in links} | stored["testrail"]
     bugs = [candidates[bug_id] for bug_id in sorted(candidates.keys() & linked)]
+
     logging.info(
         "%d bugs to load, %d links: %s",
         len(bugs),
