@@ -2122,6 +2122,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4120777_ai_model_can_close_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4220532_ai_model_can_create_tab_group:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
     result: pass
     splits:

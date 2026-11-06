@@ -145,7 +145,7 @@ Tab actions (group, close and so on) are chat tests whose replies are tool calls
   `data/pages/` because some tests copy every file in that folder.
 - After `chat.send(...)`:
   - `mock_server.tool_calls("manage_tabs")` is what the model asked Firefox to do;
-  - `chat.confirm_tab_grouping_if_asked()` clicks Confirm if the model asked first;
+  - `chat.confirm_tab_action_if_asked()` clicks Confirm if the model asked first;
   - `TabBar.expect_tabs_grouped(...)` waits until Firefox has grouped the tabs the model asked
     for, and fails if it doesn't;
   - `scenario.check_grouping(...)` then checks the model chose the right tabs.
