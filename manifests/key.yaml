@@ -2096,6 +2096,10 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3371299_onboarding_from_hamburger_menu:
+    result: pass
+    splits:
+      - functional2
   test_c3371305_smart_window_onboarding_new_account:
     result: pass
     splits:
@@ -2110,6 +2114,10 @@ smart_window:
       - smart_window
       - functional2
   test_c3392590_smart_window_captcha_bypass:
+    result: pass
+    splits:
+      - functional2
+  test_c3392591_sign_in_flow:
     result: pass
     splits:
       - functional2
