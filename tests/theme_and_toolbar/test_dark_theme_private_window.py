@@ -1,15 +1,19 @@
 import pytest
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import Firefox
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import Navigation, PanelUi
-from modules.page_object import AboutAddons
-from modules.theme_constants import (
+from auto_fxui.browser_object import Navigation, PanelUi
+from auto_fxui.page_object import AboutAddons
+from auto_fxui.theme_constants import (
     COMPACT_DARK,
     COMPACT_DARK_TITLE,
     PRIVATE_WINDOW_DARK,
 )
-from modules.util import Utilities
+from auto_fxui.util import Utilities
 
 
 @pytest.fixture()
@@ -42,9 +46,13 @@ def _assert_theme_enabled(
     before reading its title.
     """
 
-    def _read_title(_driver) -> str:
-        element = about_addons.get_element("enabled-theme-title")
-        return element.get_attribute("innerText")
+    def _read_title(_driver) -> str | bool:
+        try:
+            element = about_addons.get_element("enabled-theme-title")
+            return element.get_attribute("innerText") or False
+        except (NoSuchElementException, StaleElementReferenceException):
+            # The element might briefly disappear during the DOM re-render.
+            return False
 
     enabled = WebDriverWait(driver, 15).until(_read_title)
     assert expected_title.lower() in enabled.lower(), (
@@ -71,10 +79,11 @@ def test_dark_theme_in_private_window(driver: Firefox, util: Utilities) -> None:
     original_handle = driver.current_window_handle
 
     # --- Step 1: Open Private Window and verify dark theme is applied ---
-    existing_count = len(driver.window_handles)
+    existing_handles = set(driver.window_handles)
     panel_ui.open_private_window()
-    panel_ui.wait_for_num_windows(existing_count + 1)
-    panel_ui.switch_to_new_window()
+    panel_ui.wait_for_num_windows(len(existing_handles) + 1)
+    new_handles = set(driver.window_handles) - existing_handles
+    driver.switch_to.window(new_handles.pop())
     panel_ui.is_private()
 
     nav.clear_cache()
@@ -98,10 +107,11 @@ def test_dark_theme_in_private_window(driver: Firefox, util: Utilities) -> None:
     _assert_theme_enabled(driver, about_addons, COMPACT_DARK_TITLE)
 
     # --- Step 3: Open a new Private Window and verify Dark theme is still enabled ---
-    existing_count = len(driver.window_handles)
+    existing_handles = set(driver.window_handles)
     panel_ui.open_private_window()
-    panel_ui.wait_for_num_windows(existing_count + 1)
-    panel_ui.switch_to_new_window()
+    panel_ui.wait_for_num_windows(len(existing_handles) + 1)
+    new_handles = set(driver.window_handles) - existing_handles
+    driver.switch_to.window(new_handles.pop())
     panel_ui.is_private()
 
     # The private-browsing nav-bar keeps its own tint regardless of the

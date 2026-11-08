@@ -1,8 +1,14 @@
 import pytest
+from selenium.webdriver import Firefox
+
 from auto_fxui.browser_object import Navigation, PanelUi
 from auto_fxui.page_object import AboutAddons
+from auto_fxui.theme_constants import (
+    ALPENGLOW,
+    ALPENGLOW_MAP,
+    THEMES,
+)
 from auto_fxui.util import Utilities
-from selenium.webdriver import Firefox
 
 
 @pytest.fixture()
