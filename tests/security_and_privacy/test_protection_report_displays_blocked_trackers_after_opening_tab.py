@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import TabBar, TrustPanel
+from auto_fxui.page_object import AboutPrefs, AboutProtections
 from selenium.webdriver import Firefox
-
-from modules.browser_object import TabBar, TrustPanel
-from modules.page_object import AboutPrefs, AboutProtections
 
 TEST_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/tracking_protection.html"
 
@@ -10,6 +9,14 @@ TEST_WEBSITE = "https://senglehardt.com/test/trackingprotection/test_pages/track
 @pytest.fixture()
 def test_case():
     return "448309"
+
+
+@pytest.fixture()
+def add_to_prefs_list():
+    # Tracker lists come from Remote Settings, which WebDriver points at a dummy server
+    return [
+        ("services.settings.server", "https://firefox.settings.services.mozilla.com/v2")
+    ]
 
 
 def test_protection_report_displays_blocked_trackers_after_opening_tab(driver: Firefox):

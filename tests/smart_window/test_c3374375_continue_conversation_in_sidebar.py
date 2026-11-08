@@ -5,9 +5,8 @@ conversation, below the first exchange.
 """
 
 import pytest
-
-from modules.browser_object import SmartBar, SmartWindowChat
-from modules.mock_server import MockServer
+from auto_fxui.browser_object import SmartBar, SmartWindowChat
+from auto_fxui.mock_server import MockServer
 
 PROMPT = "In one plain sentence with no formatting, what is a group of otters called?"
 FOLLOW_UP = (

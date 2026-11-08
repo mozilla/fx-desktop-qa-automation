@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-
-from modules.page_object import GenericPdf
 
 PDF_FILE_NAME = "i-9.pdf"
 DOWNLOADED_PDF_REGEX = r"i-9.*\.pdf"

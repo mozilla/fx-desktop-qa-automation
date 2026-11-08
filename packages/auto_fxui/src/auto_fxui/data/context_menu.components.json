@@ -199,6 +199,15 @@
     "strategy": "id",
     "groups": []
   },
+  "context-menu-open-link-in-split-view": {
+    "selectorData": "context-openlinkinsplitview",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Open Link in Split View, opens the link in a new tab shown in a Split View next to the current tab. Hidden when the current tab is already in a Split View",
+      "location": "Content area context menu, on a link"
+    }
+  },
   "context-menu-open-link-in-new_container_tab": {
     "selectorData": "context-openlinkinusercontext-menu",
     "strategy": "id",

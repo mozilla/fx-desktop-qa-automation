@@ -1,10 +1,8 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.browser_object_panel_ui import PanelUi
+from auto_fxui.page_object_error_page import ErrorPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation
-from modules.browser_object_panel_ui import PanelUi
-from modules.browser_object_tabbar import TabBar
-from modules.page_object_error_page import ErrorPage
 
 
 @pytest.fixture()
@@ -15,7 +13,7 @@ def test_case():
 CHECK_SITE = "http://example"
 SHORT_SITE = CHECK_SITE.split("/")[-1]
 REDIRECT_URL = "https://www.example.com/"
-ERROR_TITLES = ["Server Not Found"]
+ERROR_TITLES = ["Server Not Found", "This site can’t be reached"]
 
 
 def test_server_not_found_error_on_private_window(driver: Firefox):
@@ -27,7 +25,6 @@ def test_server_not_found_error_on_private_window(driver: Firefox):
 
     # Instantiate objects
     nav = Navigation(driver)
-    tabs = TabBar(driver)
     error_page = ErrorPage(driver)
     panel = PanelUi(driver)
 
@@ -35,8 +32,8 @@ def test_server_not_found_error_on_private_window(driver: Firefox):
     panel.open_and_switch_to_new_window("private")
     nav.search(CHECK_SITE)
 
-    # Wait until the tab title updates to "Problem loading page"
-    tabs.wait_for_tab_title("Problem loading page")
+    # Wait until the page title updates to "Problem loading page"
+    error_page.title_is("Problem loading page")
 
     # Verify title and short description on the error page
     error_page.verify_error_header(ERROR_TITLES, SHORT_SITE)

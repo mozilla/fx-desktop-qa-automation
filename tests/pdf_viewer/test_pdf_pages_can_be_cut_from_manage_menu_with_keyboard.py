@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.page_object import GenericPdf
 from selenium.webdriver.common.keys import Keys
-
-from modules.page_object import GenericPdf
 
 # Cutting pages 1 and 2 renumbers the remaining pages in the sidebar, so the
 # original page 4 becomes page 2. Pasting after it puts the cut pages at 3 and 4.

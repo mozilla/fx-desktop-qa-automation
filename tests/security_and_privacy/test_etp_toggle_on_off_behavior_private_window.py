@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import PanelUi, TrustPanel
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi, TrustPanel
-from modules.page_object import GenericPage
 
 TEST_URL = "https://youtube.com/"
 

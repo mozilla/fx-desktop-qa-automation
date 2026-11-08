@@ -1,10 +1,9 @@
 from shutil import copyfile
 
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
-
-from modules.browser_object import Navigation
-from modules.page_object import GenericPage
 
 TEST_PHRASE = "Aloha"
 NOTI_TEST_PAGE = "notification_test.html"

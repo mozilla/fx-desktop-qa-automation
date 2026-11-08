@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import Navigation
+from auto_fxui.page_object import AboutPrefs
 from pytest_httpserver import HTTPServer
-
-from modules.browser_object import Navigation
-from modules.page_object import AboutPrefs
 
 SEARCH_ENGINE = "Starfox Search"
 ENGINE_KEYWORD = "@starfox"

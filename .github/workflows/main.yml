@@ -271,12 +271,31 @@ jobs:
           }}
         shell: pwsh
         run: |
-          uv run pytest --fx-channel=Custom tests/glean --geckodriver=geckodriver.exe
+          $selection = @()
+          if ($env:IS_PULL_REQUEST -eq "true") {
+            uv run python -m scripts.choose_glean_tests
+            if ($LASTEXITCODE -ne 0) {
+              throw "Glean test selection failed."
+            }
+            $glean = (Get-Content "selected_glean" -Raw).Trim()
+            if ($glean -eq "none") {
+              Write-Host "No glean cases affected by this PR."
+              # Use-Artifacts needs this artifact, and an empty folder isn't uploaded
+              New-Item -ItemType Directory -Force artifacts-win | Out-Null
+              Set-Content -Path artifacts-win/no_glean_cases.txt -Value "No glean cases affected by this PR."
+              exit 0
+            }
+            if ($glean -ne "all") {
+              $selection = @("-k", $glean)
+            }
+          }
+          uv run pytest --fx-channel=Custom tests/glean @selection --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
           mv artifacts artifacts-win || true
           exit $env:TEST_EXIT_CODE
         env:
           REPORTABLE: ${{ !inputs.is_pull_request }}
+          IS_PULL_REQUEST: ${{ inputs.is_pull_request }}
 
       - name: Run Tests in Win (Headed)
         if: |-
@@ -296,7 +315,15 @@ jobs:
           $env:FX_EXECUTABLE = "C:\Program Files\Custom Firefox\firefox.exe"
           uv run pytest --fx-channel=Custom $(Get-Content selected_tests) --geckodriver=geckodriver.exe
           $env:TEST_EXIT_CODE = $LASTEXITCODE
-          rm artifacts/assets -r -Force
+          # Exit 5 with an empty report means no headed tests were selected
+          if ($env:TEST_EXIT_CODE -eq "5" -and (Test-Path "artifacts/report_headed.json")) {
+            $report = Get-Content "artifacts/report_headed.json" -Raw | ConvertFrom-Json
+            if ($report.exitcode -eq 5 -and $report.summary.total -eq 0) {
+              Write-Host "No headed tests in this selection."
+              $env:TEST_EXIT_CODE = "0"
+            }
+          }
+          rm artifacts/assets -r -Force -ErrorAction SilentlyContinue
           Get-ChildItem -Path "artifacts" | ForEach-Object {
               $destPath = "artifacts-win\" + $_.Name
               if (-not (Test-Path -Path $destPath)) {
@@ -480,9 +507,25 @@ jobs:
         env:
           FX_EXECUTABLE: /Volumes/${{ steps.install-fx.outputs.app_name }}/${{ steps.install-fx.outputs.app_name }}.app/Contents/MacOS/firefox
           REPORTABLE: ${{ !inputs.is_pull_request }}
+          IS_PULL_REQUEST: ${{ inputs.is_pull_request }}
         run: |
           "$FX_EXECUTABLE" --version
-          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean || TEST_EXIT_CODE=$?
+          GLEAN_SELECTION=all
+          if [[ "$IS_PULL_REQUEST" == "true" ]]; then
+            uv run python -m scripts.choose_glean_tests
+            GLEAN_SELECTION="$(cat selected_glean)"
+          fi
+          if [[ "$GLEAN_SELECTION" == "none" ]]; then
+            echo "No glean cases affected by this PR."
+            # Use-Artifacts needs this artifact, and an empty folder isn't uploaded
+            mkdir -p artifacts-mac
+            echo "No glean cases affected by this PR." > artifacts-mac/no_glean_cases.txt
+            exit 0
+          fi
+          if [[ "$GLEAN_SELECTION" == "all" ]]; then
+            GLEAN_SELECTION=""
+          fi
+          uv run pytest --fx-executable="$FX_EXECUTABLE" tests/glean -k "$GLEAN_SELECTION" || TEST_EXIT_CODE=$?
           mv artifacts artifacts-mac || true
           exit $TEST_EXIT_CODE
 
@@ -502,6 +545,11 @@ jobs:
           uv run python scripts/switch_config.py ci_headed
           uv sync;
           uv run pytest --fx-executable="$FX_EXECUTABLE" $(cat selected_tests) || TEST_EXIT_CODE=$?
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$TEST_EXIT_CODE" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            TEST_EXIT_CODE=0
+          fi
           mv -n artifacts/* artifacts-mac/ || true
           exit $TEST_EXIT_CODE
 
@@ -636,6 +684,11 @@ jobs:
           XVFB_PID=$(ps -e | grep vfb | head -1 | awk '{print $1}')
           if [[ -n "$XVFB_PID" ]]; then kill -9 "$XVFB_PID"; fi;
           xvfb-run -f "$HOME/.Xauthority" -s "-screen 0 1600x1200x24" uv run pytest --fx-executable="$FX_EXECUTABLE" --geckodriver=geckodriver $(cat selected_tests) || TEST_EXIT_CODE=$?;
+          # Exit 5 with an empty report means no headed tests were selected
+          if [[ "$TEST_EXIT_CODE" -eq 5 ]] && python3 -c 'import json, sys; r = json.load(open("artifacts/report_headed.json")); sys.exit(not (r["exitcode"] == 5 and r["summary"]["total"] == 0))' 2>/dev/null; then
+            echo "No headed tests in this selection."
+            TEST_EXIT_CODE=0
+          fi
           mkdir -p artifacts-linux
           mv -n artifacts/* artifacts-linux/ || true
           exit $TEST_EXIT_CODE

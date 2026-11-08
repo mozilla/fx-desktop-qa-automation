@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, Navigation, TabBar
 
 VIDEO_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
 

@@ -83,32 +83,28 @@ Only tests that use the mock server read the flag. Every other test ignores it.
 
 ## Record a test
 
-**Get a token.** Recording needs a prod Firefox Account token. Sign in to Smart Window in a
-normal Firefox, open the Browser Console (Cmd/Ctrl+Shift+J) and run:
+**Sign in once.** Recording needs your prod Mozilla account (stage MLPA only accepts prod
+accounts). Run this once; it asks for your email, password and the code FxA emails you:
 
-```js
-await (async () => {
-  const { getFxAccountsSingleton } = ChromeUtils.importESModule("resource://gre/modules/FxAccounts.sys.mjs");
-  const { OAUTH_CLIENT_ID, SCOPE_SMART_WINDOW, SCOPE_PROFILE_UID } = ChromeUtils.importESModule("resource://gre/modules/FxAccountsCommon.sys.mjs");
-  const fxa = getFxAccountsSingleton();
-  const options = { scope: [SCOPE_SMART_WINDOW, SCOPE_PROFILE_UID], client_id: OAUTH_CLIENT_ID };
-  await fxa.removeCachedOAuthToken({ token: await fxa.getOAuthToken(options) });
-  return fxa.getOAuthToken(options);
-})();
+```bash
+uv run python -m scripts.fxa_login
 ```
 
-The token lasts a few hours. Never commit it or paste it into shared places. It is not the
-same as `CI_WAF_TOKEN`, which the FxA sign-in tests use.
+It saves a refresh token, limited to Smart Window, in your OS keychain (Keychain, Windows
+Credential Manager or Secret Service). Your password is never saved. Each record or live run
+then gets its own token. Set `CI_WAF_TOKEN_PROD` (the prod `fxa-ci` token, not the stage
+`CI_WAF_TOKEN`) first, or FxA may block the sign-in.
+
+- Signing in again replaces the saved token and revokes the old one.
+- `uv run python -m scripts.fxa_login --logout` revokes it and removes it from the keychain.
+- `MOZ_FXA_BEARER_TOKEN`, if set, is used instead (an access token you got some other way).
+- `MOZ_FXA_REFRESH_TOKEN`, if set, is used instead of the keychain (for CI).
 
 **Record:**
 
 ```bash
-MOZ_FXA_BEARER_TOKEN='<token>' pytest tests/smart_window/test_c<ID>_<description>.py --mock-mode=record
+pytest tests/smart_window/test_c<ID>_<description>.py --mock-mode=record
 ```
-
-To keep the token out of your shell history, put `MOZ_FXA_BEARER_TOKEN=<token>` in a file
-outside the repo (for example `~/.starfox-record.env`) and load it, or point a VS Code launch
-configuration at it with `"envFile"`.
 
 **Review the diff before committing.** Look at the `request` entries, any `tool_calls`, and
 the reply `content`. Fields that change on every call (ids, timestamps, token counts) and the
@@ -123,7 +119,7 @@ you commit in replay, and a chat test with no matching recording fails with the 
 
 ```
 This test has no recording yet (data/recordings/smart_window/test_x.json doesn't exist).
-Record it with a prod FxA token in MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md):
+Record it, after signing in once with uv run python -m scripts.fxa_login (see SMART_WINDOW_MOCK_SERVER.md):
   pytest "tests/smart_window/test_x.py::test_…" --mock-mode=record
 ```
 
@@ -168,8 +164,28 @@ Instead of recording, a test can write the model's replies in code with the buil
   no-match errors, a long reply, fixed search results. A real model won't produce those on
   demand.
 
-Built replies can't be checked in `live` mode, since live uses the real model. So far only
-`chat_reply()` has been tried in Firefox.
+To build, take the `built_replies` fixture and `.add()` the replies before sending. A test
+that uses it replays only what it builds, in every `--mock-mode`, and needs no recording file.
+A request it didn't build fails the test. See
+`tests/smart_window/test_c4433196_unsupported_tab_action_is_rejected.py`:
+
+```python
+built_replies.add(tool_call(PROMPT, "get_open_tabs", {}))
+built_replies.add(
+    tool_call(PROMPT, "manage_tabs", {"action": "explode_tabs", ...}, tool_results=1)
+)
+```
+
+- Set `tool_results` to the number of tool results Firefox has already sent back that turn.
+- To name a tab in a tool call, use its URL token as the model writes it
+  (`§url_token: LOCALHOST_LASAGNA_HTML_1§`). Build a `get_open_tabs` call first, so Firefox
+  knows the token.
+- `manage_tabs` ends the turn: Firefox doesn't ask the model for a reply afterwards, so don't
+  build one.
+- `SmartWindowChat.get_tool_results(name)` returns what Firefox sent back to the model for a
+  tool.
+
+`chat_reply()` and `tool_call()` have been tried in Firefox; `search_results()` hasn't yet.
 
 ## How it works
 
@@ -203,8 +219,10 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | Symptom | Cause |
 |---|---|
 | "No recording … Record it with …" | The recording is missing an entry. Run the command it prints. |
-| "MLPA returned errors: [(401, …)]" | The token has expired or isn't a prod token. Get a new one. |
-| "needs a prod FxA token in MOZ_FXA_BEARER_TOKEN" | `record` or `live` without a token. |
+| "built_replies has no reply for: […]" | Firefox sent a request the test didn't build, often a `tool_results` count that's off by one. |
+| "MLPA returned errors: [(401, …)]" | MLPA rejected the token. Sign in again, and check `MOZ_FXA_BEARER_TOKEN` isn't set to an old token. |
+| "needs a prod Mozilla account" | `record` or `live` without signing in. Run `uv run python -m scripts.fxa_login`. |
+| "FxA refused the saved refresh token" | The sign-in was revoked or expired. Run `uv run python -m scripts.fxa_login` again. |
 | "No chat reply was served for '…'" | The chat request had no recording; the "No recording" error for the same test has the fix. |
 | "The assistant never finished turn N" | No reply arrived in time; usually a failed request. Check the log above it. |
 | "Mock server is not answering … title-generation" (INFO) | A background request has no recording. Expected and harmless. |
@@ -227,6 +245,6 @@ Built replies can't be checked in `live` mode, since live uses the real model. S
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |
 | `modules/classes/tab_grouping_scenario.py` | `TabGroupingScenario` |
-| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `smart_window_chat`, `tab_pages` |
+| `tests/smart_window/conftest.py` | Prefs, `mock_server`, `built_replies`, `smart_window_chat`, `tab_pages` |
 | `data/recordings/smart_window/` | Recordings, one per test |
 | `data/smart_window_pages/` | Pages opened as tabs |

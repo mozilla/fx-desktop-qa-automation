@@ -1,8 +1,7 @@
 import pytest
+from auto_fxui.browser_object import AutofillPopup
+from auto_fxui.page_object_autofill import CreditCardFill
 from selenium.webdriver import Firefox
-
-from modules.browser_object import AutofillPopup
-from modules.page_object_autofill import CreditCardFill
 
 
 @pytest.fixture()

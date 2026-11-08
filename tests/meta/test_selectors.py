@@ -1,9 +1,8 @@
 import logging
 
 import pytest
+from auto_fxui.browser_object import PanelUi
 from selenium.webdriver import Firefox
-
-from modules.browser_object import PanelUi
 
 
 @pytest.mark.skip(reason="This is a metatest.")

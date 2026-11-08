@@ -20,6 +20,7 @@ BACKSTOP = "146.0b9"
 # driver against the latest release on GitHub, so a stale pin fails CI.
 GECKO_FALLBACK_VERSION = "0.37.1"
 CANDIDATES_URL = "https://archive.mozilla.org/pub/firefox/candidates"
+NIGHTLY_URL = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central"
 REQUEST_TIMEOUT = 10
 
 
@@ -130,6 +131,22 @@ def previous_beta(version: str) -> str:
         previous = next_beta
 
 
+def nightly_versions(platform: str, ext: str) -> list[str]:
+    """Return the Nightly versions with an installer for `platform`, newest first."""
+    response = requests.get(f"{NIGHTLY_URL}/", timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    suffix = f".en-US.{platform}.{ext}"
+    versions = [
+        name.removeprefix("firefox-").removesuffix(suffix)
+        for name in (
+            a.getText()
+            for a in BeautifulSoup(response.text, "html.parser").find_all("a")
+        )
+        if name.startswith("firefox-") and name.endswith(suffix)
+    ]
+    return sorted(versions, key=lambda v: int(v.split(".")[0]), reverse=True)
+
+
 def main(args):
     number_only = False
     output = ""
@@ -211,15 +228,33 @@ def main(args):
             train_json = train_resp.json()
             current_nightly = train_json.get("version")
             alpha = f"{current_nightly}a1"
-            if number_only:
-                return alpha
             pfm = get_fx_platform()
             ext = get_fx_executable_extension()
             if "linux" in pfm:
                 ext = "tar.xz"
             elif "win" in pfm:
                 ext = "installer.exe"
-            return f"https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/firefox-{alpha}.en-US.{pfm}.{ext}"
+
+            # On merge day the new version is announced before its first Nightly
+            # is built, so PR runs use the newest Nightly that has an installer
+            if is_pull_request_run():
+                available = nightly_versions(pfm, ext)
+                if alpha not in available:
+                    older = [
+                        v
+                        for v in available
+                        if int(v.split(".")[0]) < int(alpha.split(".")[0])
+                    ]
+                    if older:
+                        logging.warning(
+                            f"No {pfm} installer for {alpha} yet, "
+                            f"so this pull request run uses {older[0]}"
+                        )
+                        alpha = older[0]
+
+            if number_only:
+                return alpha
+            return f"{NIGHTLY_URL}/firefox-{alpha}.en-US.{pfm}.{ext}"
 
         if channel == "-devedition":
             # Devedition has special requirements as it's testing a release

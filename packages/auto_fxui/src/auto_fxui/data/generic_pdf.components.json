@@ -414,6 +414,28 @@
       "doNotCache"
     ]
   },
+  "saved-highlight": {
+    "selectorData": ".annotationLayer .highlightAnnotation",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A highlight loaded from the PDF file rather than added in this session",
+      "location": "The annotation layer of a page in a reopened pdf document"
+    }
+  },
+  "saved-text": {
+    "selectorData": ".annotationLayer .freeTextAnnotation",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "A text annotation loaded from the PDF file rather than added in this session",
+      "location": "The annotation layer of a page in a reopened pdf document"
+    }
+  },
   "required-field": {
     "selectorData": "input[name='required']",
     "strategy": "css",

@@ -1,11 +1,10 @@
 import logging
 
 import pytest
+from auto_fxui.browser_object import FindToolbar
+from auto_fxui.util import BrowserActions
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-
-from modules.browser_object import FindToolbar
-from modules.util import BrowserActions
 
 
 @pytest.fixture()

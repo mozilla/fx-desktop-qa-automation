@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.page_object import AboutPrefs
 
 EXPECTED_PROVIDERS = ["CIRA Canadian Shield", "Cloudflare", "NextDNS"]
 

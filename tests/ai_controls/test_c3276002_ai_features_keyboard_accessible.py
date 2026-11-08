@@ -6,9 +6,8 @@ Verify that each Option from the AI Settings page is Keyboard accessible
 import logging
 
 import pytest
+from auto_fxui.page_object_prefs import AboutPrefs
 from selenium.webdriver.common.keys import Keys
-
-from modules.page_object_prefs import AboutPrefs
 
 MAX_TAB_STOPS = 20
 

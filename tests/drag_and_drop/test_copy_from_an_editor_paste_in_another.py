@@ -1,9 +1,8 @@
 from time import sleep
 
 import pytest
+from auto_fxui.page_object_google import GoogleSheets
 from selenium.webdriver import Firefox, Keys
-
-from modules.page_object_google import GoogleSheets
 
 
 @pytest.fixture()

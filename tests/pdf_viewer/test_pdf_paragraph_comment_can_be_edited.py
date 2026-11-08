@@ -1,6 +1,5 @@
 import pytest
-
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 ORIGINAL_COMMENT = "Original paragraph comment"
 EDITED_COMMENT = "Updated paragraph comment"

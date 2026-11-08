@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, Navigation, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, Navigation, TabBar
 
 TEST_URL = "https://youtube.com"
 EXPECTED_ENGINE = "YouTube"

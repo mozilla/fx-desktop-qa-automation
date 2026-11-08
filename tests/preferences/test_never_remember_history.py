@@ -1,9 +1,8 @@
 from pathlib import Path
 
 import pytest
+from auto_fxui.page_object import AboutPrefs
 from selenium.webdriver import Firefox
-
-from modules.page_object import AboutPrefs
 
 PREFERENCE_STRING = 'user_pref("browser.privatebrowsing.autostart", true);'
 

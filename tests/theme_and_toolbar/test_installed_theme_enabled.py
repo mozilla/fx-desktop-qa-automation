@@ -1,11 +1,10 @@
 from urllib.parse import urlsplit
 
 import pytest
+from auto_fxui.page_object import AboutAddons, AmoThemes
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-from modules.page_object import AboutAddons, AmoThemes
 
 
 @pytest.fixture()

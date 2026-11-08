@@ -1,7 +1,6 @@
 import pytest
+from auto_fxui.browser_object import ContextMenu, TabBar
 from selenium.webdriver import Firefox
-
-from modules.browser_object import ContextMenu, TabBar
 
 # Title Constants
 EXPECTED_ROBOT_TITLE = "Gort!"

@@ -1,6 +1,5 @@
 import pytest
-
-from modules.page_object import GenericPdf
+from auto_fxui.page_object import GenericPdf
 
 COMMENT = "Comment added from the text selection"
 
