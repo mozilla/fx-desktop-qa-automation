@@ -2375,7 +2375,11 @@ class AboutAddons(BasePage):
         intended_color: str
             The RGB string that is the intended color of the element
         """
-        self.get_element("theme-card", labels=[theme_name]).click()
+        theme_card = self.get_element("theme-card", labels=[theme_name])
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", theme_card
+        )
+        theme_card.click()
         self.get_element("enable-theme").click()
 
         self.expect(

@@ -1,11 +1,4 @@
 import pytest
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    StaleElementReferenceException,
-)
-from selenium.webdriver import Firefox
-from selenium.webdriver.support.ui import WebDriverWait
-
 from auto_fxui.browser_object import Navigation, PanelUi
 from auto_fxui.page_object import AboutAddons
 from auto_fxui.theme_constants import (
@@ -14,6 +7,12 @@ from auto_fxui.theme_constants import (
     PRIVATE_WINDOW_DARK,
 )
 from auto_fxui.util import Utilities
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
+from selenium.webdriver import Firefox
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 @pytest.fixture()

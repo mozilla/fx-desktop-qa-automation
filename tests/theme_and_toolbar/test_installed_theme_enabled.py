@@ -1,12 +1,11 @@
 from urllib.parse import urlsplit
 
 import pytest
+from auto_fxui.page_object import AboutAddons, AmoThemes
+from auto_fxui.theme_constants import AMO_HOST, AMO_THEMES_PATH
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-from auto_fxui.page_object import AboutAddons, AmoThemes
-from auto_fxui.theme_constants import AMO_HOST, AMO_THEMES_PATH
 
 
 @pytest.fixture()
