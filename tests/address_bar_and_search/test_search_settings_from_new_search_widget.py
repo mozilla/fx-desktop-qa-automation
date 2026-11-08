@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 
-from modules.browser_object import Navigation, TabBar
+from auto_fxui.browser_object import Navigation, TabBar
 
 SEARCH_SETTINGS_URL = "about:preferences#search"
 
@@ -62,12 +62,14 @@ def test_search_settings_focuses_existing_tab(driver: Firefox):
 
     # First settings tab: open via the widget (matches the user flow)
     tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(2)
     tabs.switch_to_new_tab()
     nav.click_on_legacy_search_settings_button()
     nav.url_contains(SEARCH_SETTINGS_URL)
 
     # Another fresh tab so the settings tab goes to the background
     tabs.new_tab_by_button()
+    tabs.wait_for_num_tabs(3)
     tabs.switch_to_new_tab()
     num_tabs_before = len(driver.window_handles)
 
