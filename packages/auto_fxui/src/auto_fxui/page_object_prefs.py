@@ -2379,8 +2379,13 @@ class AboutAddons(BasePage):
         self.driver.execute_script(
             "arguments[0].scrollIntoView({block: 'center'});", theme_card
         )
-        theme_card.click()
-        self.get_element("enable-theme").click()
+        # Force JS click to bypass Marionette's strict interactability check,
+        # which frequently fails on moz-card elements in about:addons.
+        self.driver.execute_script("arguments[0].click();", theme_card)
+
+        enable_btn = self.get_element("enable-theme")
+        # Force JS click here as well to prevent the next step from failing.
+        self.driver.execute_script("arguments[0].click();", enable_btn)
 
         self.expect(
             EC.text_to_be_present_in_element_attribute(
