@@ -1,8 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
-from selenium.webdriver.support.ui import WebDriverWait
-
 from auto_fxui.browser_object import Navigation, TabBar
+from selenium.webdriver import Firefox
 
 SEARCH_SETTINGS_URL = "about:preferences#search"
 
@@ -79,14 +77,8 @@ def test_search_settings_focuses_existing_tab(driver: Firefox):
 
     # geckodriver does not follow Firefox-internal tab switches, so ask
     # the browser itself which tab is currently selected.
-    nav.set_chrome_context()
-    try:
-        WebDriverWait(driver, 5).until(
-            lambda d: SEARCH_SETTINGS_URL
-            in d.execute_script("return gBrowser.selectedBrowser.currentURI.spec")
-        )
-    finally:
-        nav.set_content_context()
+    # Encapsulated in TabBar to handle the chrome context cleanly.
+    tabs.wait_for_active_tab_url(SEARCH_SETTINGS_URL)
 
     # No new tab was created; the existing settings tab got focus
     assert len(driver.window_handles) == num_tabs_before, (
