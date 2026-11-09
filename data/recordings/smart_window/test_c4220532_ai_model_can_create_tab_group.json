@@ -1,0 +1,160 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "last_user_message": "Create a tab group with my lasagna and flights tabs",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 0
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "role": "assistant",
+                  "tool_calls": [
+                    {
+                      "function": {
+                        "arguments": "{}",
+                        "name": "get_open_tabs"
+                      },
+                      "id": "call_173698__thought__AY89a18KEp0YvFvkL0cyhE0X8aIr+zYI3EqcjZYoT7FgSPPkc6WB8HyGe8Fn/XgOuDbG46BhpwBhKp2i4J2nM+p6NWw7PDFGGISdEVQLPT9pRhCN032c2PJcPrs=",
+                      "index": 0,
+                      "type": "function"
+                    }
+                  ]
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "tool_calls",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "last_user_message": "Create a tab group with my lasagna and flights tabs",
+        "model": "gemini-3.1-flash-lite",
+        "path": "/v1/chat/completions",
+        "purpose": "chat",
+        "stream": true,
+        "tool_results": 1
+      },
+      "response": {
+        "events": [
+          {
+            "choices": [
+              {
+                "delta": {
+                  "role": "assistant",
+                  "tool_calls": [
+                    {
+                      "function": {
+                        "arguments": "{\"label\": \"Lasagna and Flights\", \"url_tokens\": [\"\u00a7url_token: LOCALHOST_LASAGNA_HTML_1\u00a7\", \"\u00a7url_token: LOCALHOST_FLIGHTS_HTML_1\u00a7\"], \"ask_confirmation\": true, \"action\": \"group_tabs\"}",
+                        "name": "manage_tabs"
+                      },
+                      "id": "call_347502__thought__AY89a1/Fp9nKwlFK4JnvUBBf4ymUfVllgCXgfomSlpBDu40I1xzzPQAbrA0LFa47OkAavLqk5l96bHeplGxl9JvQ8KoRFZJAKQfHLoN9eY51UM4xZEQUpIDyXDQ=",
+                      "index": 0,
+                      "type": "function"
+                    }
+                  ]
+                },
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk",
+            "vertex_ai_citation_metadata": [],
+            "vertex_ai_grounding_metadata": [],
+            "vertex_ai_safety_ratings": [],
+            "vertex_ai_url_context_metadata": []
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "finish_reason": "tool_calls",
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          },
+          {
+            "choices": [
+              {
+                "delta": {},
+                "index": 0
+              }
+            ],
+            "model": "gemini-3.1-flash-lite",
+            "object": "chat.completion.chunk"
+          }
+        ],
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "model": "qwen3-235b-a22b-instruct-2507-maas",
+        "path": "/v1/chat/completions",
+        "purpose": "title-generation",
+        "stream": false
+      },
+      "response": {
+        "body": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Group Lasagna and Flights Tabs",
+                "role": "assistant"
+              }
+            }
+          ],
+          "model": "qwen3-235b-a22b-instruct-2507-maas",
+          "object": "chat.completion"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "meta": {
+    "firefox_version": "Mozilla Firefox 161.0a1",
+    "recorded_at": "2026-11-03",
+    "upstream": "https://mlpa-nonprod-stage-mozilla.freetls.fastly.net/v1"
+  }
+}

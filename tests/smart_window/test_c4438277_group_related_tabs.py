@@ -37,7 +37,7 @@ def test_group_related_tabs(
     manage_tabs = mock_server.tool_calls("manage_tabs")
     assert manage_tabs, "The model never called manage_tabs"
 
-    chat.confirm_tab_grouping_if_asked()
+    chat.confirm_tab_action_if_asked()
 
     # The model can call manage_tabs more than once in a turn (to retry, or
     # group then rename); the last call is the one whose result is on screen.
