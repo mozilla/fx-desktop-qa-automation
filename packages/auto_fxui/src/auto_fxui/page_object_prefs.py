@@ -2352,6 +2352,14 @@ class AboutAddons(BasePage):
         self.element_does_not_exist("addon-card-more-options-button", labels=[addon_id])
         return self
 
+    def get_theme_background_color(self, nav: Navigation) -> str:
+        """
+        Return the current background color of the main window's theme area.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            navigation_component = nav.get_element("navigation-background-component")
+            return navigation_component.value_of_css_property("background-color")
+
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
     ):
@@ -2367,8 +2375,17 @@ class AboutAddons(BasePage):
         intended_color: str
             The RGB string that is the intended color of the element
         """
-        self.get_element("theme-card", labels=[theme_name]).click()
-        self.get_element("enable-theme").click()
+        theme_card = self.get_element("theme-card", labels=[theme_name])
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", theme_card
+        )
+        # Force JS click to bypass Marionette's strict interactability check,
+        # which frequently fails on moz-card elements in about:addons.
+        self.driver.execute_script("arguments[0].click();", theme_card)
+
+        enable_btn = self.get_element("enable-theme")
+        # Force JS click here as well to prevent the next step from failing.
+        self.driver.execute_script("arguments[0].click();", enable_btn)
 
         self.expect(
             EC.text_to_be_present_in_element_attribute(
@@ -2376,15 +2393,11 @@ class AboutAddons(BasePage):
             )
         )
 
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            navigation_component = nav.get_element("navigation-background-component")
-            background_color = navigation_component.value_of_css_property(
-                "background-color"
-            )
-            if perform_assert:
-                assert background_color == intended_color
-            else:
-                return background_color
+        background_color = self.get_theme_background_color(nav)
+        if perform_assert:
+            assert background_color == intended_color
+        else:
+            return background_color
 
     def click_find_more_themes(self) -> BasePage:
         """Clicks the control that opens the AMO themes page in a new tab.

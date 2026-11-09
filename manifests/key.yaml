@@ -2332,6 +2332,10 @@ theme_and_toolbar:
     splits:
       - smoke
       - exclude_nightly
+  test_dark_theme_private_window:
+    result: pass
+    splits:
+      - functional3
   test_installed_theme_enabled:
     result: covered-in-tree
     splits: []
