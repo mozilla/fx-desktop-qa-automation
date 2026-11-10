@@ -24,7 +24,6 @@ def test_open_link_in_classic_window(
     """
     C3309858 - Verify that the user can Open a link from a Smart Window to a Classic Window
     """
-    # Instantiate objects
     page = GenericPage(driver, url=tab_pages(["recipe_links.html"])[0])
     context_menu = ContextMenu(driver)
     smart_window = active_smart_window
