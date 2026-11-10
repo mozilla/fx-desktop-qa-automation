@@ -38,14 +38,18 @@ class _Services:
     def stop(self):
         _stop_service(self.attached)
         # geckodriver leaves a Firefox it attached to running when the session ends.
-        if self.firefox.poll() is None:
-            self.firefox.terminate()
-            try:
-                self.firefox.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                self.firefox.kill()
+        _end_process(self.firefox)
         # Last: the original geckodriver deletes the profile when it stops.
         _stop_service(self.original)
+
+
+def _end_process(process: subprocess.Popen) -> None:
+    if process.poll() is None:
+        process.terminate()
+        try:
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            process.kill()
 
 
 def _stop_service(service: Service) -> None:
@@ -106,7 +110,12 @@ def restart_firefox(
     if system_access:
         service_args.append(SYSTEM_ACCESS_ARG)
     service = Service(executable_path=original.path, service_args=service_args)
-    attached = Firefox(service=service, options=Options())
+    try:
+        attached = Firefox(service=service, options=Options())
+    except Exception:
+        _stop_service(service)
+        _end_process(firefox)
+        raise
 
     # Point the caller's driver at the new session.
     driver.session_id = attached.session_id
