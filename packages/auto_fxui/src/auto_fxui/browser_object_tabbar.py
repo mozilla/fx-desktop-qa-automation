@@ -599,6 +599,14 @@ class TabBar(BasePage):
         )
         return self
 
+    def expect_tabs_open(self, urls: list[str]) -> BasePage:
+        """Wait until a tab shows each of `urls`."""
+        self.wait.until(
+            lambda _: set(urls) <= set(self.get_tab_urls()),
+            message=f"Not all of {urls} are open",
+        )
+        return self
+
     @BasePage.context_chrome
     def edit_tab_group(
         self, new_name: str = None, new_color: str = None, add_new_tab: bool = False

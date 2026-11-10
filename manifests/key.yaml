@@ -2144,6 +2144,11 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4120778_ai_model_can_undo_closed_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4220532_ai_model_can_create_tab_group:
     result: pass
     splits:

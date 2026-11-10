@@ -243,6 +243,35 @@ class SmartWindowChat(BasePage):
             return true;
         """)
 
+    def undo_last_action(self) -> BasePage:
+        """Click Undo on the newest action result card."""
+        # Retried, because a click before the card is ready is dropped.
+        self.wait.until(
+            lambda _: self._click_undo(),
+            message="The action result card never showed an Undo button",
+        )
+        return self
+
+    def _click_undo(self) -> bool:
+        """Click the newest Undo button on an action's result, if it's there yet."""
+        # Undo can be on either card: after closing tabs it is on the confirmation card.
+        return self._chat_script("""
+            const hits = [];
+            (function walk(node, depth) {
+              if (!node || depth > 12) return;
+              for (const el of node.querySelectorAll("*")) {
+                if (el.matches("moz-button.action-confirmation-undo, moz-button.action-result-undo")) {
+                  hits.push(el);
+                }
+                if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
+              }
+            })(content.document, 0);
+            const button = hits[hits.length - 1];
+            if (!button) return false;
+            button.click();
+            return true;
+        """)
+
     def confirm_tab_action_if_asked(self) -> BasePage:
         """
         Confirm the tab grouping or closing if the assistant asked first.
