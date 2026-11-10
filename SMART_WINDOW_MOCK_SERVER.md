@@ -76,6 +76,7 @@ Only tests that use the mock server read the flag. Every other test ignores it.
      answering, tool calls included. Call it again for a follow-up.
    - `get_last_reply()` and `get_messages()` read what the chat shows;
      `mock_server.chat_reply_text(prompt)` is what the server sent.
+   - `mock_server.chat_models(prompt)` is the model each request for `prompt` went to.
    - Ask for plain sentences when you compare reply text, since the chat renders markdown.
 3. **Record it** (see below). Without a recording, replay fails and tells you the command.
 4. **Review the recording's diff**, then add the test to `manifests/key.yaml` and commit the
@@ -240,7 +241,7 @@ built_replies.add(
 
 | Path | What |
 |---|---|
-| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `tool_calls` |
+| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `chat_models`, `tool_calls` |
 | `modules/classes/recording.py` | `Recording`, matching, builders |
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |
