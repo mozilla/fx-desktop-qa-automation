@@ -2054,6 +2054,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3309857_open_link_in_smart_window:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3309858_open_link_in_classic_window:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
