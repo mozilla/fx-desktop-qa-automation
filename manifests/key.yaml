@@ -2139,6 +2139,21 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4062295_smart_window_opens_first_by_default:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120453_smart_window_restored_after_restart:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120454_smart_window_auto_restored:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4120777_ai_model_can_close_tabs:
     result: pass
     splits:
