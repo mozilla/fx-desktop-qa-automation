@@ -62,16 +62,7 @@ function menuItemIds(list) {
 }
 // The autocomplete rows live in the Smart Bar's urlbar view, not the CTA.
 function resultsView() {
-  const d = aiDoc();
-  let hit = null;
-  (function walk(node, depth) {
-    if (!node || depth > 12 || hit) return;
-    for (const el of node.querySelectorAll("*")) {
-      if (el.matches && el.matches(".urlbarView-results")) { hit = el; return; }
-      if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
-    }
-  })(d, 0);
-  return hit;
+  return deepAll(".urlbarView-results")[0] || null;
 }
 // Every element in the chat document matching `sel`, through all shadow roots.
 function deepAll(sel) {
@@ -651,9 +642,10 @@ class SmartBar(BasePage):
         """Click the model picker and wait for its menu."""
         clicked = self._script(
             "const m = modelSelect();"
-            "const b = m && m.shadowRoot.querySelector('.input-model-select-button');"
-            "if (!b) return false;"
-            "if (!modelMenu().open) b.click();"
+            "const b = m && m.shadowRoot && m.shadowRoot.querySelector('.input-model-select-button');"
+            "const l = modelMenu();"
+            "if (!b || !l) return false;"
+            "if (!l.open) b.click();"
             "return true;"
         )
         if not clicked:
@@ -688,7 +680,10 @@ class SmartBar(BasePage):
         )
         if not clicked:
             raise AssertionError(f"{brand_name} is not in the model menu")
-        self.expect(lambda _: self.get_selected_model() == model_id)
+        self.expect(
+            lambda _: self.get_selected_model() == model_id
+            and not self.is_model_menu_open()
+        )
         return self
 
     # ── Keyboard ─────────────────────────────────────────────────────────
@@ -707,7 +702,16 @@ class SmartBar(BasePage):
 
     def is_editor_focused(self) -> bool:
         """Report whether the Smart Bar's text field has keyboard focus."""
-        return bool(self._script("return focusChain().some(e => e === prosemirror());"))
+        # A document keeps its activeElement while the window's focus is elsewhere.
+        return bool(
+            self._script(
+                "const doc = aiDoc();"
+                "const host = doc && doc.defaultView && doc.defaultView.docShell"
+                "  && doc.defaultView.docShell.chromeEventHandler;"
+                "return document.activeElement === host"
+                "  && focusChain().some(e => e === prosemirror());"
+            )
+        )
 
     def press(self, *keys: str) -> BasePage:
         """Send `keys` to whatever has focus."""
@@ -719,14 +723,10 @@ class SmartBar(BasePage):
         return self
 
     def tab_to_button(self, name: str, max_stops: int = 15) -> BasePage:
-        """
-        Press Tab from the text field until button `name` has focus.
-
-        While suggestions are showing, Tab first steps through them, so this
-        allows for more stops than the bar has buttons.
-        """
+        """Press Tab from the text field until button `name` has focus."""
         if not self._focus_editor():
             raise AssertionError("Smart Bar editor is not available to focus")
+        # More stops than buttons: with suggestions showing, Tab steps through them first.
         for _ in range(max_stops):
             before = self.get_focused_button()
             self.press(Keys.TAB)
@@ -762,15 +762,13 @@ class SmartBar(BasePage):
                 l10n_id,
             )
 
-        # Arrow down until the item has focus; where focus starts isn't fixed,
-        # and it moves a moment after each key.
+        # Where focus starts isn't fixed, and it moves a moment after each key.
         for _ in range(len(items) + 1):
-            self.press(Keys.ARROW_DOWN)
             try:
                 self.custom_wait(timeout=1).until(_focused)
                 break
             except TimeoutException:
-                continue
+                self.press(Keys.ARROW_DOWN)
         else:
             raise AssertionError(f"The arrow keys never reached {l10n_id}")
         self.press(Keys.ENTER)

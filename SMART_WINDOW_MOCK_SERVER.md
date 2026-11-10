@@ -74,6 +74,7 @@ Only tests that use the mock server read the flag. Every other test ignores it.
      stand-in FxA token, and the mock server loaded with this test's recording.
    - `chat.send(text)` sends from the Smart Bar and returns once the assistant has finished
      answering, tool calls included. Call it again for a follow-up.
+   - `chat.send_typed()` sends what's already in the Smart Bar instead, such as an @ mention.
    - `get_last_reply()` and `get_messages()` read what the chat shows;
      `mock_server.chat_reply_text(prompt)` is what the server sent.
    - `mock_server.chat_models(prompt)` is the model each request for `prompt` went to.

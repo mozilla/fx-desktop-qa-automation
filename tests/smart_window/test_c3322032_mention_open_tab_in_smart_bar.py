@@ -47,7 +47,5 @@ def test_mention_open_tab_in_smart_bar(
     smart_bar.choose_mention(tab_url)
     assert smart_bar.get_inline_mentions() == [TAB_TITLE]
 
-    turn = chat.get_sent_count() + 1
-    smart_bar.submit()
-    chat.expect_turn_complete(turn)
+    chat.send_typed()
     assert chat.get_last_reply() == SUMMARY
