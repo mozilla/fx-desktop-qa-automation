@@ -2082,6 +2082,11 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3321894_smart_bar_suggests_chat:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
