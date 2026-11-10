@@ -30,7 +30,6 @@ def test_change_ai_model_from_smart_bar(
     """
     built_replies.add(chat_reply(PROMPT, REPLY))
 
-    # Instantiate objects
     smart_bar = SmartBar(driver)
     chat = smart_window_chat
 

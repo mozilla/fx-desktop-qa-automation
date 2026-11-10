@@ -34,7 +34,6 @@ def test_smart_bar_keyboard_accessible(
     """
     C3349918 - Verify that the Smart bar is keyboard accessible
     """
-    # Instantiate objects
     tabs = TabBar(driver)
     smart_bar = SmartBar(driver)
 

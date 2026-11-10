@@ -31,7 +31,6 @@ def test_mention_open_tab_in_smart_bar(
     """
     built_replies.add(chat_reply(PROMPT, SUMMARY))
 
-    # Instantiate objects
     tabs = TabBar(driver)
     smart_bar = SmartBar(driver)
     chat = smart_window_chat
@@ -40,7 +39,6 @@ def test_mention_open_tab_in_smart_bar(
     tabs.open_urls_in_tabs([tab_url], open_first_in_current_tab=True)
     smart_bar.open_full_page_chat()
 
-    # "Summarize" goes in first, so the prompt reads as the case's does.
     smart_bar.set_smart_bar_text("Summarize ")
     smart_bar.type_mention_trigger()
     suggestions = [s["title"] for s in smart_bar.get_mention_suggestions()]
