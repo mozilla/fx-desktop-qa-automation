@@ -114,6 +114,8 @@ class SmartWindowChat(BasePage):
             )
         turn = self.get_sent_count() + 1
         smart_bar.submit()
+        # Firefox clears the Smart Bar once the message is sent; this fails fast if Enter was lost.
+        smart_bar.expect_smart_bar_text("")
         self.expect_turn_complete(turn)
         return self
 
