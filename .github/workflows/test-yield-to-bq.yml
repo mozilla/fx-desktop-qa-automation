@@ -28,7 +28,7 @@ on:
         default: ""
         type: string
       severity_weight:
-        description: "Severity share of bug impact, 0-1; priority gets the rest (empty uses 0.6)"
+        description: "Severity share of bug impact, 0-1; priority gets the rest (empty uses 0.5)"
         required: false
         default: ""
         type: string

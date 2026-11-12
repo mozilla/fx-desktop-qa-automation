@@ -16,6 +16,8 @@ from datetime import date, datetime, timezone
 
 import requests
 
+from scripts.bug_test_links.summary import starfox_tests
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 SINCE_DATE = os.environ.get("SINCE_DATE") or "2026-10-13"
@@ -31,7 +33,7 @@ VERSIONS_URL = "https://product-details.mozilla.org/1.0/firefox_versions.json"
 
 # The proposal's weights, plus 0.025 each from C's 0.10.
 DEFAULT_WEIGHTS = {"U": 0.275, "F": 0.225, "S": 0.325, "R": 0.175}
-SEVERITY_WEIGHT = float(os.environ.get("YIELD_SEVERITY_WEIGHT") or 0.6)
+SEVERITY_WEIGHT = float(os.environ.get("YIELD_SEVERITY_WEIGHT") or 0.5)
 # Unset severity or priority ("--") counts as 0.
 SEVERITY = {"S1": 1.0, "S2": 0.7, "S3": 0.4, "S4": 0.2, "N/A": 0.1}
 PRIORITY = {"P1": 1.0, "P2": 0.8, "P3": 0.5, "P4": 0.25, "P5": 0.1}
@@ -87,6 +89,34 @@ def bug_impact(bug: dict) -> float:
     ) * PRIORITY.get(bug.get("priority"), 0.0)
 
 
+def automated_cases() -> dict[int, str]:
+    """Map each TestRail case that a STARfox test automates to that test's file."""
+    return {
+        test["case_id"]: test["path"]
+        for test in starfox_tests().values()
+        if test["case_id"]
+    }
+
+
+def merge_automated_executions(
+    executions: dict[tuple[str, str], dict], automated: dict[int, str]
+) -> None:
+    """Count an automated case's executions once, under its STARfox test.
+
+    STARfox CI reports its runs to TestRail, so TestRail's results for the case
+    are the same runs; they're used only when CI has none.
+    """
+    for case_id, path in automated.items():
+        reported = executions.pop(("testrail", f"C{case_id}"), None)
+        if not reported:
+            continue
+        ci = executions.get(("starfox", path))
+        if ci:
+            ci["cycles"] |= reported["cycles"]
+        else:
+            executions[("starfox", path)] = reported
+
+
 def is_regression(bug: dict) -> bool:
     return "regression" in (bug.get("keywords") or []) or bool(bug.get("regressed_by"))
 
@@ -111,8 +141,12 @@ def score(
     executions: dict[tuple[str, str], dict],
     cycles: list[int],
     weights: dict,
+    automated: dict[int, str] | None = None,
 ) -> list[dict]:
     """Return one yield row per test, ranked overall and within its source.
+
+    automated maps TestRail case IDs to the STARfox test that automates them;
+    such a case and its STARfox test are scored as one test.
 
     executions maps (source, test_key) to {"count", "cycles"}: valid executions
     and the release cycles they ran in. Without them F and R are missing and the
@@ -130,12 +164,23 @@ def score(
         if link["test_key_type"] != "label" and link["bug_id"] in counted
     ]
 
-    tests = defaultdict(lambda: {"bugs": set(), "results": set(), "case_id": None})
+    # A bug linked to several tests counts in full for each of them.
+    automated = automated or {}
+    tests = defaultdict(
+        lambda: {"bugs": set(), "results": set(), "result_bugs": set(), "case_id": None}
+    )
     for link in links:
-        test = tests[(link["source"], link["test_key"])]
+        case_id = link.get("case_id")
+        key = (
+            ("starfox", automated[case_id])
+            if case_id in automated
+            else (link["source"], link["test_key"])
+        )
+        test = tests[key]
         test["bugs"].add(link["bug_id"])
         if link.get("result_id"):
             test["results"].add(link["result_id"])
+            test["result_bugs"].add(link["bug_id"])
         test["case_id"] = test["case_id"] or link.get("case_id")
 
     raw = {}
@@ -147,9 +192,10 @@ def score(
             set(cycles) if key[0] == "in_tree" else set()
         )
         raw[key] = {
-            # TestRail: results listing a bug. Summary links: the first failure
-            # found the bug, so one per bug.
-            "detections": len(test["results"]) or len(found),
+            # TestRail results that list a bug, plus one per bug named only in a
+            # summary, whose first failure found it.
+            "detections": len(test["results"])
+            + len(test["bugs"] - test["result_bugs"]),
             "executions": executed.get("count"),
             "executed_cycles": len(executed_cycles),
             "impact": sum(map(bug_impact, found)),
@@ -292,7 +338,9 @@ def main() -> int:
 
     used = weights()
     links = read(f"SELECT * FROM `{{dataset}}.{LINKS_TABLE}`")
-    rows = score(links, bugs, executions, cycles, used)
+    automated = automated_cases()
+    merge_automated_executions(executions, automated)
+    rows = score(links, bugs, executions, cycles, used, automated)
     common = {
         "weights": ",".join(f"{name}={value}" for name, value in used.items())
         + f",severity={SEVERITY_WEIGHT}",
