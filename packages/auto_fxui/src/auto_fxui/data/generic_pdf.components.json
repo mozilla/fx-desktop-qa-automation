@@ -653,5 +653,27 @@
       "description": "Pastes the cut or copied pages after the numbered page, as numbered after the cut",
       "location": "The PDF viewer Pages sidebar"
     }
+  },
+  "views-manager-deselect-button": {
+    "selectorData": "viewsManagerStatusActionDeselectButton",
+    "strategy": "id",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Mass deselect button/checkbox in the views manager status bar",
+      "location": "The PDF viewer Pages sidebar"
+    }
+  },
+  "views-manager-new-badge": {
+    "selectorData": "#viewsManager .newBadge, span[data-l10n-id='pdfjs-new-badge-content']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "The green NEW badge in the views manager Pages sidebar",
+      "location": "The PDF viewer Pages sidebar"
+    }
   }
 }
