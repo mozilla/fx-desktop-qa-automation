@@ -478,10 +478,6 @@ class Utilities:
             else:
                 # color(srgb r g b) channels run 0-1, so scale them to rgb()'s 0-255
                 a_nums = [float(n) * 255 for n in a_vals.split()[1:]]
-                # String contains (srgb n n n) or the like, with 0-1 channels;
-                # scale to 0-255 so it compares against rgb() values
-                tokens = a_vals.split()[1:]
-                a_nums = [float(n) * 255 for n in tokens]
             if b_vals[0].isnumeric():
                 b_nums = [float(n.strip()) for n in b_vals.split(",")]
             else:
