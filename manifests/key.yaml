@@ -2358,7 +2358,7 @@ theme_and_toolbar:
   test_dark_theme_private_window:
     result: pass
     splits:
-      - functional3
+      - functional2
   test_installed_theme_enabled:
     result: covered-in-tree
     splits: []
