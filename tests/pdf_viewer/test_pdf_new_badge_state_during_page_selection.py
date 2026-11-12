@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 from auto_fxui.page_object import GenericPdf
 
