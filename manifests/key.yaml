@@ -250,6 +250,10 @@ address_bar_and_search:
     result: deprecated
     splits:
       - functional1
+  test_search_settings_from_new_search_widget:
+    result: pass
+    splits:
+      - functional1
   test_search_string_displayed_when_addressbar_unfocused:
     result: covered-in-tree
     splits: []
@@ -1488,8 +1492,7 @@ preferences:
     splits:
       - functional2
   test_preferred_language_localisation_works:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2085106
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_private_default_search_engine_dropdown:
@@ -2050,6 +2053,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3309857_open_link_in_smart_window:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3309858_open_link_in_classic_window:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3310316_ai_model_type_displayed_in_settings:
     result: pass
     splits:
@@ -2082,6 +2095,11 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3321894_smart_bar_suggests_chat:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3321908_smart_bar_autocompletes_domains:
     result: pass
     splits:
@@ -2095,6 +2113,10 @@ smart_window:
     result: pass
     splits:
       - smart_window
+      - functional2
+  test_c3371299_onboarding_from_hamburger_menu:
+    result: pass
+    splits:
       - functional2
   test_c3371305_smart_window_onboarding_new_account:
     result: pass
@@ -2113,11 +2135,30 @@ smart_window:
     result: pass
     splits:
       - functional2
+  test_c3392591_sign_in_flow:
+    result: pass
+    splits:
+      - functional2
   test_c3977124_search_with_different_engines:
     result: pass
     splits:
       - functional2
   test_c3978359_close_sidebar_from_x_button:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120777_ai_model_can_close_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120778_ai_model_can_undo_closed_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4220532_ai_model_can_create_tab_group:
     result: pass
     splits:
       - smart_window
@@ -2314,6 +2355,10 @@ theme_and_toolbar:
     splits:
       - smoke
       - exclude_nightly
+  test_dark_theme_private_window:
+    result: pass
+    splits:
+      - functional2
   test_installed_theme_enabled:
     result: covered-in-tree
     splits: []

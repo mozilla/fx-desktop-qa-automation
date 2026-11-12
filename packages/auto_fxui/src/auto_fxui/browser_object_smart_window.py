@@ -149,6 +149,18 @@ class SmartWindow(BasePage):
         self.element_attribute_is("main-window", "fxastatus", "signedin")
         return self
 
+    @BasePage.context_chrome
+    def get_signed_in_email(self) -> str | None:
+        """Return the email of the FxA account Firefox is signed in to, if any."""
+        return self.driver.execute_script(
+            """
+            const { UIState } = ChromeUtils.importESModule(
+              "resource://services-sync/UIState.sys.mjs"
+            );
+            return UIState.get().email ?? null;
+            """
+        )
+
     # ── Switch Windows button ────────────────────────────────────────────
 
     def open_window_switcher(self) -> BasePage:

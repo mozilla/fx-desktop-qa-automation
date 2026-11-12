@@ -9,6 +9,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from .browser_object_context_menu import ContextMenu
 from .page_base import BasePage
@@ -90,6 +91,16 @@ class TabBar(BasePage):
         if num_tabs:
             self.wait_for_num_tabs(num_tabs)
         self.switch_to_new_tab()
+
+    @BasePage.context_chrome
+    def wait_for_active_tab_url(self, expected_url_part: str, timeout: int = 5) -> None:
+        """
+        Wait until the currently active tab's URL contains the expected string.
+        """
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: expected_url_part
+            in d.execute_script("return gBrowser.selectedBrowser.currentURI.spec")
+        )
 
     @BasePage.context_chrome
     def close_first_tab_by_icon(self) -> None:
@@ -578,6 +589,22 @@ class TabBar(BasePage):
             return all(url in grouped for url in urls)
 
         self.wait.until(_grouped, message=f"Not all of {urls} were grouped")
+        return self
+
+    def expect_tabs_closed(self, urls: list[str]) -> BasePage:
+        """Wait until no tab shows any of `urls`."""
+        self.wait.until(
+            lambda _: not set(urls) & set(self.get_tab_urls()),
+            message=f"Not all of {urls} were closed",
+        )
+        return self
+
+    def expect_tabs_open(self, urls: list[str]) -> BasePage:
+        """Wait until a tab shows each of `urls`."""
+        self.wait.until(
+            lambda _: set(urls) <= set(self.get_tab_urls()),
+            message=f"Not all of {urls} are open",
+        )
         return self
 
     @BasePage.context_chrome
