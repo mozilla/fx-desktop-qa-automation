@@ -482,8 +482,6 @@ class Utilities:
                 b_nums = [float(n.strip()) for n in b_vals.split(",")]
             else:
                 b_nums = [float(n) * 255 for n in b_vals.split()[1:]]
-                tokens = b_vals.split()[1:]
-                b_nums = [float(n) * 255 for n in tokens]
         except (IndexError, ValueError) as e:
             # Raised if string doesn't contain expected format or non-numeric parts
             logging.warning(str(e))
