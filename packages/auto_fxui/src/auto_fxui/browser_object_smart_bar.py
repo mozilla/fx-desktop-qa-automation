@@ -605,13 +605,29 @@ class SmartBar(BasePage):
 
     def get_models(self) -> dict[str, str]:
         """
-        Return the models the picker offers, by brand name.
+        Return the models the picker offers, by brand name, once they have loaded.
 
         Returns
         -------
         dict[str, str]
             Brand name (e.g. "Qwen") to the model id Firefox sends in requests.
         """
+        self.expect_models_loaded()
+        return self._read_models()
+
+    def expect_models_loaded(self) -> BasePage:
+        """Wait until the picker has its model list and a selected model."""
+        # Firefox loads the list in the background after the Smart Bar is ready.
+        try:
+            self.expect(lambda _: self._read_models() and self.get_selected_model())
+        except TimeoutException:
+            raise AssertionError(
+                f"The model picker never loaded: models {self._read_models()}, "
+                f"selected {self.get_selected_model()!r}"
+            ) from None
+        return self
+
+    def _read_models(self) -> dict[str, str]:
         return self._script(
             "const m = modelSelect();"
             "if (!m || !m.availableModels) return {};"

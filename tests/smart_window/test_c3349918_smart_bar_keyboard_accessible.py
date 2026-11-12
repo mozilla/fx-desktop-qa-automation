@@ -5,11 +5,13 @@ every Smart Bar button, and each Go/Ask action can be chosen with the keyboard.
 """
 
 import pytest
-from auto_fxui.browser_object import SmartBar, SmartWindow, TabBar
-from auto_fxui.browser_object_smart_bar import (
+from auto_fxui.browser_object import (
     ACTION_MENU_CHAT,
     ACTION_MENU_GO_TO_SITE,
     ACTION_MENU_SEARCH_WITH_DEFAULT,
+    SmartBar,
+    SmartWindow,
+    TabBar,
 )
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys

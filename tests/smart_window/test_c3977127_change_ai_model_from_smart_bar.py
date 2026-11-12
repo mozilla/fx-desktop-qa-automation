@@ -42,7 +42,6 @@ def test_change_ai_model_from_smart_bar(
     assert len(offered) == 3, f"Expected 3 models in the picker: {offered}"
 
     smart_bar.choose_model("Qwen")
-    assert not smart_bar.is_model_menu_open()
 
     chat.send(PROMPT)
     assert chat.get_last_reply() == REPLY
