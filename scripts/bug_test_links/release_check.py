@@ -40,7 +40,7 @@ def major_release_dates() -> list[date]:
 def should_run(event: str, today: date) -> bool:
     if event != "schedule":
         return True
-    # GitHub cron can't say "every two weeks", so skip alternate Wednesdays.
+    # skip alternate Wednesdays.
     if not is_run_day(today):
         print(f"{today}: not a fortnightly run day")
         return False
