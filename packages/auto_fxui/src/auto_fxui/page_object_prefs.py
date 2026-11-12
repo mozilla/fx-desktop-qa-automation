@@ -7,7 +7,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     WebDriverException,
 )
-from selenium.webdriver import Firefox
+from selenium.webdriver import ActionChains, Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -26,6 +26,10 @@ DOWNLOAD_LANGUAGE_TIMEOUT = 120
 
 HttpsOnlyMode = Literal["all", "private", "disabled"]
 DohMode = Literal["default", "custom"]
+
+
+# The Smart Window AI model whose pref only commits once it is configured.
+CUSTOM_MODEL = "smart-window-model-custom"
 
 
 class AboutPrefs(BasePage):
@@ -2212,6 +2216,73 @@ class AboutPrefs(BasePage):
         )
         return self
 
+    def navigate_to_smart_window_settings(self, verify: bool = True) -> BasePage:
+        """
+        Navigate to the Personalize Smart Window subpage.
+
+        The model controls also exist on #ai but are hidden there, so callers
+        must assert visibility rather than existence.
+        """
+        self.driver.get("about:preferences#personalizeSmartWindow")
+        if verify:
+            self.element_visible("smart-window-model-group")
+        return self
+
+    def get_smart_window_models(self) -> list[dict]:
+        """Describe every AI model offered, in page order."""
+        return [
+            {
+                "l10n": option.get_attribute("data-l10n-id"),
+                "value": option.get_attribute("value"),
+                "label": option.get_attribute("label"),
+                "description": option.get_attribute("description"),
+                "checked": option.get_property("checked"),
+            }
+            for option in self.get_elements("smart-window-model-options")
+        ]
+
+    def get_smart_window_model(self) -> str | None:
+        """
+        Return the selected model's l10n id, or None if not exactly one is
+        checked. Returns rather than asserts: this runs inside expect()'s
+        wait, which only retries on NoSuchElementException.
+        """
+        selected = [m for m in self.get_smart_window_models() if m["checked"]]
+        return selected[0]["l10n"] if len(selected) == 1 else None
+
+    def expect_smart_window_model(self, l10n_id: str) -> BasePage:
+        """Wait until `l10n_id` is the selected AI model."""
+        self.expect(lambda _: self.get_smart_window_model() == l10n_id)
+        return self
+
+    def set_smart_window_model(self, l10n_id: str) -> BasePage:
+        """
+        Select an AI model, e.g. "smart-window-model-fast-v2".
+
+        Clicks the radio's top-left, not its centre: the centre lands on the
+        description text where a click does nothing.
+        """
+        option = self.get_element("smart-window-model-option", labels=[l10n_id])
+        value = option.get_attribute("value")
+        width, height = option.size["width"], option.size["height"]
+        ActionChains(self.driver).move_to_element_with_offset(
+            option, -(width // 2) + 12, -(height // 2) + 12
+        ).click().perform()
+        self.expect_smart_window_model(l10n_id)
+
+        # Custom leaves the pref on the previous model until one is configured.
+        if l10n_id != CUSTOM_MODEL:
+            self.expect(
+                lambda _: (
+                    self.driver.execute_script(
+                        "return Services.prefs.getStringPref("
+                        "'browser.smartwindow.firstrun.modelChoice', '');"
+                    )
+                    == value
+                )
+            )
+        return self
+
     def cancel_ai_killswitch_click(self) -> BasePage:
         """
         Click the AI killswitch toggle and dismiss the confirmation dialog with
@@ -2281,6 +2352,14 @@ class AboutAddons(BasePage):
         self.element_does_not_exist("addon-card-more-options-button", labels=[addon_id])
         return self
 
+    def get_theme_background_color(self, nav: Navigation) -> str:
+        """
+        Return the current background color of the main window's theme area.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            navigation_component = nav.get_element("navigation-background-component")
+            return navigation_component.value_of_css_property("background-color")
+
     def activate_theme(
         self, nav: Navigation, theme_name: str, intended_color: str, perform_assert=True
     ):
@@ -2296,8 +2375,17 @@ class AboutAddons(BasePage):
         intended_color: str
             The RGB string that is the intended color of the element
         """
-        self.get_element("theme-card", labels=[theme_name]).click()
-        self.get_element("enable-theme").click()
+        theme_card = self.get_element("theme-card", labels=[theme_name])
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", theme_card
+        )
+        # Force JS click to bypass Marionette's strict interactability check,
+        # which frequently fails on moz-card elements in about:addons.
+        self.driver.execute_script("arguments[0].click();", theme_card)
+
+        enable_btn = self.get_element("enable-theme")
+        # Force JS click here as well to prevent the next step from failing.
+        self.driver.execute_script("arguments[0].click();", enable_btn)
 
         self.expect(
             EC.text_to_be_present_in_element_attribute(
@@ -2305,15 +2393,11 @@ class AboutAddons(BasePage):
             )
         )
 
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            navigation_component = nav.get_element("navigation-background-component")
-            background_color = navigation_component.value_of_css_property(
-                "background-color"
-            )
-            if perform_assert:
-                assert background_color == intended_color
-            else:
-                return background_color
+        background_color = self.get_theme_background_color(nav)
+        if perform_assert:
+            assert background_color == intended_color
+        else:
+            return background_color
 
     def click_find_more_themes(self) -> BasePage:
         """Clicks the control that opens the AMO themes page in a new tab.

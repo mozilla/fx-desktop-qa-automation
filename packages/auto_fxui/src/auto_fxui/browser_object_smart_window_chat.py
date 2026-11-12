@@ -4,13 +4,16 @@ from .browser_object_smart_bar import SmartBar
 from .browser_object_smart_window import CHAT_DOCUMENT_JS
 from .page_base import BasePage
 
-# MESSAGE_ROLE.USER in the conversation model.
+# MESSAGE_ROLE.USER and MESSAGE_ROLE.TOOL in the conversation model.
 USER_ROLE = 0
+TOOL_ROLE = 3
 
-# uiTypes of the card the assistant shows when it asks before grouping tabs,
-# and of the card that shows an action's result (it replaces the first once
-# the user confirms).
+# uiTypes of the cards the assistant shows when it asks before grouping or
+# closing tabs, and of the card that shows an action's result (it replaces
+# the first once the user confirms).
 TAB_GROUP_CONFIRMATION = "tab-group-confirmation"
+TAB_CLOSE_CONFIRMATION = "website-confirmation"
+TAB_ACTION_CONFIRMATIONS = (TAB_GROUP_CONFIRMATION, TAB_CLOSE_CONFIRMATION)
 ACTION_RESULT = "ai-action-result"
 
 # How the model names a tab in tool calls: §url_token: LOCALHOST_LASAGNA_HTML_1§
@@ -186,6 +189,21 @@ class SmartWindowChat(BasePage):
             "  .map(m => m.toolUIData.uiType) : [];"
         )
 
+    def get_tool_results(self, name: str) -> list:
+        """
+        Return what Firefox sent back to the model for each call to tool
+        `name`, oldest first.
+        """
+        return self._ai_window_script(
+            "const aw = aiWindow();"
+            "const c = aw && aw.conversation;"
+            "return c ? c.messages"
+            "  .filter(m => m.role === arguments[0] && m.content?.name === arguments[1])"
+            "  .map(m => m.content.body) : [];",
+            TOOL_ROLE,
+            name,
+        )
+
     def get_last_tool_ui_type(self) -> str | None:
         """Return the newest tool result's uiType, or None if there is none."""
         ui_types = self.get_tool_ui_types()
@@ -225,19 +243,49 @@ class SmartWindowChat(BasePage):
             return true;
         """)
 
-    def confirm_tab_grouping_if_asked(self) -> BasePage:
+    def undo_last_action(self) -> BasePage:
+        """Click Undo on the newest action result card."""
+        # Retried, because a click before the card is ready is dropped.
+        self.wait.until(
+            lambda _: self._click_undo(),
+            message="The action result card never showed an Undo button",
+        )
+        return self
+
+    def _click_undo(self) -> bool:
+        """Click the newest Undo button on an action's result, if it's there yet."""
+        # Undo can be on either card: after closing tabs it is on the confirmation card.
+        return self._chat_script("""
+            const hits = [];
+            (function walk(node, depth) {
+              if (!node || depth > 12) return;
+              for (const el of node.querySelectorAll("*")) {
+                if (el.matches("moz-button.action-confirmation-undo, moz-button.action-result-undo")) {
+                  hits.push(el);
+                }
+                if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
+              }
+            })(content.document, 0);
+            const button = hits[hits.length - 1];
+            if (!button) return false;
+            button.click();
+            return true;
+        """)
+
+    def confirm_tab_action_if_asked(self) -> BasePage:
         """
-        Confirm the tab grouping if the assistant asked first. Asking is the
-        model's choice (manage_tabs' ask_confirmation), so a recording can
-        take either path.
+        Confirm the tab grouping or closing if the assistant asked first.
+        Asking is the model's choice (manage_tabs' ask_confirmation), so a
+        recording can take either path.
         """
         # The card can arrive just after the turn ends, so wait for it first.
         self.expect(
             lambda _: (
-                self.get_last_tool_ui_type() in (TAB_GROUP_CONFIRMATION, ACTION_RESULT)
+                self.get_last_tool_ui_type()
+                in (*TAB_ACTION_CONFIRMATIONS, ACTION_RESULT)
             )
         )
-        if self.get_last_tool_ui_type() == TAB_GROUP_CONFIRMATION:
+        if self.get_last_tool_ui_type() in TAB_ACTION_CONFIRMATIONS:
             self.confirm_action()
         return self
 

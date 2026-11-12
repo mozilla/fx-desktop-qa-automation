@@ -4,6 +4,7 @@ from pathlib import Path
 from subprocess import CalledProcessError, check_output
 
 from manifests.testkey import TestKey
+from modules.fxa_token import LOGIN_COMMAND
 
 TEST_RE = re.compile(r"tests/.*test\w+\.py")
 MOCK_SERVER_CODE_RE = re.compile(
@@ -23,11 +24,11 @@ def uses_mock_server(test: str) -> bool:
 
 
 def has_recording(test: str) -> bool:
-    """Tests that build their replies with modules.classes.recording need none."""
+    """Tests that build their replies (the built_replies fixture) need none."""
     path = Path(test)
     folder = Path("data", "recordings", path.parent.name)
     return (
-        "modules.classes.recording" in path.read_text(encoding="utf-8")
+        re.search(r"\bbuilt_replies\b", path.read_text(encoding="utf-8"))
         or (folder / f"{path.stem}.json").exists()
         or (folder / path.stem).is_dir()
     )
@@ -54,8 +55,8 @@ if __name__ == "__main__":
     missing = [t for t in tests if uses_mock_server(t) and not has_recording(t)]
     if missing:
         print(
-            "No recording yet. Record it with a prod FxA token in "
-            "MOZ_FXA_BEARER_TOKEN (see SMART_WINDOW_MOCK_SERVER.md):"
+            "No recording yet. Record it, after signing in once with "
+            f"{LOGIN_COMMAND} (see SMART_WINDOW_MOCK_SERVER.md):"
         )
         for test in missing:
             print(f'  pytest "{test}" --mock-mode=record')

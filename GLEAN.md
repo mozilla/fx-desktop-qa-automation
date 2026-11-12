@@ -142,6 +142,17 @@ Glean runs as its own `glean` test set, separate from the regular functional spl
 When the `glean` test set is selected, CI runs the `tests/glean` folder directly rather than
 selecting individual files through the normal split logic.
 
+On pull requests, `scripts/choose_glean_tests.py` narrows the run to the cases the PR affects:
+
+| PR changes | Cases run |
+|---|---|
+| Cases in a `cases.json` | Only the added or modified cases |
+| Only `@_entry` / `@_action` / `@_abandonment` flows in `flows.py` | Cases whose `entry` or `action` uses them |
+| A `test_<metric>.py` | That metric folder |
+| Anything else glean: `conftest.py`, `utils.py`, other `flows.py` code, the Glean BOM | Every case |
+
+Beta and RC always run every case.
+
 Glean runs on Windows, macOS and Linux for pull requests, Beta and RC. Windows and macOS come
 from GitHub Actions, all through `main.yml`: `ci-dispatch.yml` for pull requests,
 `glean-test-beta.yml` and `glean-test-rc.yml` for Beta and RC. Linux comes from Taskcluster:

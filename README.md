@@ -106,8 +106,8 @@ Launch the build manually one time to navigate through any system permission dia
 - Smart Window chat tests never talk to the real LLM service. Firefox sends its chat and web
   search requests to a local mock server, which replays recordings from `data/recordings/`.
 - Runs need no setup or token: `pytest tests/smart_window` replays, and CI does the same.
-- Recording new responses (`--mock-mode=record`) needs a prod Firefox Account token in
-  `MOZ_FXA_BEARER_TOKEN`; never commit it.
+- Recording new responses (`--mock-mode=record`) needs your prod Mozilla account: sign in once
+  with `uv run python -m scripts.fxa_login`.
 - How to write, record and maintain these tests: [SMART_WINDOW_MOCK_SERVER.md](SMART_WINDOW_MOCK_SERVER.md).
 
 ### Documentation
@@ -255,6 +255,12 @@ If you are outside of Mozilla and would like to contribute to this project:
 - A Mozilla DTE will review your PR
   - Address any review comments
 - Once approved your test code will be landed in this repo.
+
+### Firefox build in PR checks
+- GitHub PR checks test the newest Beta (PRs into `main`) or Nightly build (PRs into `nightly`) that
+  was published when the PR was opened, so every push and re-run uses the same build.
+- To move a PR to the newest build, add the `fx-latest` label, then push. Re-running a check keeps
+  the labels it first ran with.
 
 ### CI Dry-Run
 In order to validate CI behavior for workflow / code changes while avoiding costly or side effecting actions:

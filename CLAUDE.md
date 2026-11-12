@@ -124,8 +124,9 @@ def test_something_descriptive(driver: Firefox):
 
 ### Comments and Docstrings
 
+- **A comment is at most two short sentences.** If it needs more, rename something, restructure the code, or put the explanation in the commit message.
 - Docstrings: one line on what the function does or returns. Add a numpy `Parameters`/`Returns` section only when names and types don't make the meaning clear.
-- Keep any comment or docstring well under half the length of the code it describes.
+- Within that cap, still keep a comment well under half the length of the code it describes.
 - Explain why only where a reader would otherwise get it wrong, in one sentence. Do explain hard-to-read code: a regex, injected JS, a wait or retry that looks unnecessary.
 - Leave out history (what was tried, failure rates) and lists of every case handled; put history in the commit message or PR description.
 - `# Instantiate objects` (or a variant such as `# Instantiate object`) above a test's POM/BOM setup is a repo convention, not a comment to remove.
@@ -198,8 +199,8 @@ from auto_fxui.browser_object import TabBar, Navigation, ContextMenu
 - Chat tests use the `smart_window_chat` fixture, which returns the `SmartWindowChat` BOM with Smart Window active, a stand-in FxA token and `mock_server` loaded. Open the chat, then `chat.send(prompt)` sends and returns once the assistant has answered, tool calls included; read `get_last_reply()` / `get_messages()`. Only a test that acts while the assistant is still answering uses `SmartBar.submit_chat()` and `expect_turn_complete(turn)` directly. Compare with what was served using `mock_server.chat_reply_text(prompt)`.
 - The chat renders in a remote page Selenium can't reach. New chat actions go through `SmartWindowChat._chat_script(body, *args)`, which runs `body` in that page.
 - Each test's responses live in `data/recordings/<suite>/<test file name>.json`, or `<test file name>/<parameter id>.json` per case of a parametrized test (`Recording`, `<package root>/classes/recording.py`). Replay matches chat messages (streamed, purpose `chat`) by prompt and tool round, and background requests (anything else: title generation, conversation starters) by purpose. A missing chat or search recording fails the test; missing background ones are answered with a 503.
-- Record with `--mock-mode=record` and a prod FxA token in `MOZ_FXA_BEARER_TOKEN` (see `SMART_WINDOW_MOCK_SERVER.md`). Never write the token anywhere else. Replay's failure message gives the exact record command; saved recordings leave out fields that change every call (`VOLATILE_FIELDS`) and the proxy's `provider_specific_fields`.
-- Where only the reply text matters, build the recording with `chat_reply()`, `tool_call()` or `search_results()` from `<package root>/classes/recording.py` instead of recording one.
+- Record with `--mock-mode=record` after signing in once with `uv run python -m scripts.fxa_login`, which keeps a refresh token in the OS keychain (`modules/fxa_token.py`; see `SMART_WINDOW_MOCK_SERVER.md`). `MOZ_FXA_BEARER_TOKEN` or `MOZ_FXA_REFRESH_TOKEN` override it. Never write a token anywhere else. Replay's failure message gives the exact record command; saved recordings leave out fields that change every call (`VOLATILE_FIELDS`) and the proxy's `provider_specific_fields`.
+- Where only the reply text matters, or the case needs a reply a real model won't give on demand (an invalid tool call), build the replies with `chat_reply()`, `tool_call()` or `search_results()` from `<package root>/classes/recording.py` instead of recording them. Add them to the `built_replies` fixture before sending; a test using it always replays and has no recording file. `manage_tabs` ends the turn, so build no reply after it.
 - Which chat to use: the sidebar (`SmartBar.open_smart_bar()`) when the TestRail case is about the AI Chat Sidebar, otherwise the full-page chat (`SmartBar.open_full_page_chat()`, the Home page). Run both, with a `parametrize`, only where behaviour is known to differ between them; each case then gets its own recording.
 
 ### Smart Window tab management tests
@@ -208,7 +209,7 @@ from auto_fxui.browser_object import TabBar, Navigation, ContextMenu
 - Pages are files in `data/smart_window_pages/`. The `tab_pages` fixture serves them and turns file names into URLs; open them with `TabBar.open_urls_in_tabs(..., open_first_in_current_tab=True)`.
 - After `chat.send(scenario.instruction)`:
   - get what the model asked for with `mock_server.tool_calls("manage_tabs")`;
-  - call `SmartWindowChat.confirm_tab_grouping_if_asked()`, since the model chooses whether to ask first;
+  - call `SmartWindowChat.confirm_tab_action_if_asked()`, since the model chooses whether to ask first;
   - wait with `TabBar.expect_tabs_grouped(chat.resolve_url_tokens(...))` until Firefox has grouped the tabs the model asked for;
   - assert the model's choice with `scenario.check_grouping(TabBar.get_tab_groups())`.
 

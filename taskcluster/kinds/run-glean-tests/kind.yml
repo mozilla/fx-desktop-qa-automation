@@ -42,11 +42,15 @@ tasks:
         export PATH=$PATH:$HOME/.cargo/bin
         . "$HOME/.cargo/env"
         uv sync;
+        uv run python -m scripts.choose_glean_tests;
+        GLEAN_SELECTION="$(cat selected_glean)";
+        if [[ "$GLEAN_SELECTION" == "none" ]]; then exit 0; fi;
+        if [[ "$GLEAN_SELECTION" == "all" ]]; then GLEAN_SELECTION=""; fi;
         . ./scripts/setup-xauthority.sh
         ./scripts/collect_executables.sh;
         ./firefox/firefox --version;
         . ./scripts/keyring-unlock.sh
-        uv run pytest --fx-executable ./firefox/firefox tests/glean;
+        uv run pytest --fx-executable ./firefox/firefox tests/glean -k "$GLEAN_SELECTION";
         exit ${?}
     notify:
       recipients:

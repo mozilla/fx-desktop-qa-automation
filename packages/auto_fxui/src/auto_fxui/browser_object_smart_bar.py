@@ -60,8 +60,25 @@ function menuItemIds(list) {
         .filter(Boolean)
     : [];
 }
+// The autocomplete rows live in the Smart Bar's urlbar view, not the CTA.
+function resultsView() {
+  const d = aiDoc();
+  let hit = null;
+  (function walk(node, depth) {
+    if (!node || depth > 12 || hit) return;
+    for (const el of node.querySelectorAll("*")) {
+      if (el.matches && el.matches(".urlbarView-results")) { hit = el; return; }
+      if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+    }
+  })(d, 0);
+  return hit;
+}
 """
 )
+
+# UrlbarResult providers behind the Smart Bar's rows.
+PROVIDER_AI_CHAT = "UrlbarProviderAiChat"
+PROVIDER_SEARCH_SUGGESTIONS = "UrlbarProviderSearchSuggestions"
 
 # panel-item data-l10n-ids in the CTA's actions menu. Matching on l10n id
 # rather than visible text keeps these locale-independent.
@@ -105,6 +122,38 @@ class SmartBar(BasePage):
         """
         TabBar(self.driver).new_tab_by_button()
         self.expect_smart_bar_ready()
+        return self
+
+    def click_footer_button(self, l10n_id: str) -> BasePage:
+        """
+        Click a Home page footer button, e.g. "smartwindow-footer-history".
+
+        Scripted like the rest of this BOM: the footer lives in the chat
+        document, which has no Selenium handle from chrome.
+        """
+        clicked = self._script(
+            """
+            const doc = aiDoc();
+            // Bind before the walk: inside it, `arguments` is walk's own.
+            const wanted = arguments[0];
+            let hit = null;
+            (function walk(node, depth) {
+                if (!node || depth > 12 || hit) return;
+                for (const el of node.querySelectorAll("*")) {
+                    if (el.getAttribute("data-l10n-id") === wanted) {
+                        hit = el; return;
+                    }
+                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+                }
+            })(doc, 0);
+            if (!hit) return false;
+            hit.click();
+            return true;
+            """,
+            l10n_id,
+        )
+        if not clicked:
+            raise AssertionError(f"No Home page footer button {l10n_id!r}")
         return self
 
     def smart_bar_ready(self) -> bool:
@@ -287,32 +336,46 @@ class SmartBar(BasePage):
         return self
 
     def get_result_count(self) -> int:
-        """
-        Return how many autocomplete rows the Smart Bar is showing.
+        """Return how many autocomplete rows the Smart Bar is showing."""
+        return self._script("""
+            const view = resultsView();
+            return view ? view.querySelectorAll(".urlbarView-row").length : 0;
+        """)
 
-        The results live in the Smart Bar's urlbar view rather than the CTA,
-        so this walks for `.urlbarView-results` instead of reusing ctaLists().
+    def get_results(self) -> list[dict]:
+        """
+        Return the Smart Bar's autocomplete rows, top first.
+
+        Returns
+        -------
+        list[dict]
+            Each with provider, heuristic, text (the suggestion or title) and
+            label (the row's visible action, e.g. "Ask").
         """
         return self._script("""
-            const doc = aiDoc();
-            if (!doc) return 0;
-            let rows = 0;
-            // Separate from the count: an empty container is a valid result,
-            // so the exit cannot key on `rows`.
-            let found = false;
-            (function walk(node, depth) {
-                if (!node || depth > 12 || found) return;
-                for (const el of node.querySelectorAll("*")) {
-                    if (el.matches && el.matches(".urlbarView-results")) {
-                        rows = el.querySelectorAll(".urlbarView-row").length;
-                        found = true;
-                        return;
-                    }
-                    if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (found) return; }
-                }
-            })(doc, 0);
-            return rows;
+            const view = resultsView();
+            if (!view) return [];
+            return Array.from(view.querySelectorAll(".urlbarView-row"), row => ({
+              provider: row.result?.providerName ?? null,
+              heuristic: !!row.result?.heuristic,
+              text: row.result?.payload.suggestion ?? row.result?.payload.title ?? "",
+              label: row.querySelector(".urlbarView-action")?.textContent.trim() ?? "",
+            }));
         """)
+
+    def expect_results_from(self, *providers: str) -> BasePage:
+        """Wait until every one of `providers` has a row in the Smart Bar."""
+
+        def _shown() -> set[str]:
+            return {r["provider"] for r in self.get_results()}
+
+        try:
+            self.expect(lambda _: set(providers) <= _shown())
+        except TimeoutException:
+            raise AssertionError(
+                f"Expected rows from {providers}; rows were {self.get_results()}"
+            ) from None
+        return self
 
     def expect_no_results(self) -> BasePage:
         """

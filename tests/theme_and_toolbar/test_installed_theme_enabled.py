@@ -2,6 +2,7 @@ from urllib.parse import urlsplit
 
 import pytest
 from auto_fxui.page_object import AboutAddons, AmoThemes
+from auto_fxui.theme_constants import AMO_HOST, AMO_THEMES_PATH
 from selenium.webdriver import Firefox
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,11 +13,10 @@ def test_case():
     return "118174"
 
 
-AMO_HOST = "addons.mozilla.org"
-AMO_THEMES_PATH = "/firefox/themes"
 WAIT_TIMEOUT = 30
 
 
+# Test is unstable in MacOS GHA for now
 def test_find_more_themes(driver: Firefox) -> None:
     """
     From about:addons > Themes, 'Find more themes' opens AMO in a new tab.
@@ -46,7 +46,7 @@ def test_find_more_themes(driver: Firefox) -> None:
         def amo_themes_loaded(browser: Firefox) -> bool:
             url = urlsplit(browser.current_url)
             return url.hostname == AMO_HOST and url.path.rstrip("/").endswith(
-                "/firefox/themes"
+                AMO_THEMES_PATH
             )
 
         wait.until(

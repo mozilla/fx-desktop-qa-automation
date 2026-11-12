@@ -2,7 +2,7 @@ name: Promote Firefox train branches
 
 on:
   schedule:
-    - cron: "17 23 * * 2"
+    - cron: "0 23 * * 5"
   workflow_dispatch:
     inputs:
       released_major:
@@ -54,6 +54,7 @@ jobs:
     steps:
       - name: Validate promotion source
         if: >-
+          github.event_name == 'workflow_dispatch' &&
           github.ref != 'refs/heads/main' &&
           inputs.dry_run != true
         shell: bash
