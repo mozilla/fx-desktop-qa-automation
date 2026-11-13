@@ -42,7 +42,7 @@ jobs:
         run: |
           TAG="v$(uv version --bump patch | grep -oE '[^ ]+$')"
           git tag $TAG
-          git push
+          git push origin $TAG
           echo "TAG=$TAG" >> "$GITHUB_ENV"
 
       - name: Print whether tagging happened
