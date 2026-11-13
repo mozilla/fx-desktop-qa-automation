@@ -5,13 +5,13 @@ from subprocess import check_output
 
 def main():
     check_output("git fetch origin nightly".split(" "))
-    tags = check_output("git ls-remote --tags origin".split(" "))
+    tags = check_output("git ls-remote --tags origin".split(" ")).decode()
     now = datetime.now(UTC)
     for tag in tags:
         sha = tag.split(" ")[0]
         commit_date_string = check_output(
             ["git", "--no-pager", "log", "-1", "--format=%cI", sha]
-        )
+        ).decode()
         commit_dt = datetime.fromisoformat(commit_date_string)
         if now - commit_dt < timedelta(days=14.0):
             print(True)
