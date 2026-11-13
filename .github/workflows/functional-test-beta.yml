@@ -46,7 +46,7 @@ jobs:
 
   Build-Reportable-Matrix:
     needs: Get-Functional-Splits
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
 

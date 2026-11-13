@@ -17,7 +17,7 @@ env:
 
 jobs:
   Check-DevEdition-Version:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
