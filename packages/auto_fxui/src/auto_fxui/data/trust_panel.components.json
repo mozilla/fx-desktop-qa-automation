@@ -140,6 +140,17 @@
       "location": "Address bar"
     }
   },
+  "shield-icon-insecure": {
+    "selectorData": "#trust-icon-container.insecure",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Address bar shield icon crossed out, shown when the connection is not secure",
+      "location": "Address bar"
+    }
+  },
   "see-all-trackers-parent": {
     "selectorData": "trustpanel-blocker-see-all",
     "strategy": "id",
