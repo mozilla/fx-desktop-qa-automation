@@ -22,6 +22,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
@@ -51,4 +53,4 @@ jobs:
         env:
           TAGGED: ${{ steps.confirm.conclusion }}
         run: |
-          if $TAGGED then; echo "Current nightly tagged as $TAG"; else echo "Recent tag found. No new tag created."; fi
+          if [ "$TAGGED" = "success" ]; then echo "Current nightly tagged as $TAG"; else echo "Recent tag found. No new tag created."; fi
