@@ -1760,6 +1760,10 @@ security_and_privacy:
     result: Firefox bug
     splits:
       - functional2
+  test_http_fallback_for_unsupported_https:
+    result: pass
+    splits:
+      - functional2
   test_http_lock_icon_connection_state:
     result: covered-in-tree
     splits: []
