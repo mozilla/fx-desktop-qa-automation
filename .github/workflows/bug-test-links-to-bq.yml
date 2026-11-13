@@ -1,0 +1,94 @@
+name: Add Bug to Test Links to BigQuery
+
+on:
+  # Every Wednesday; loads only every second one from 2026-11-25, and only after a
+  # major Firefox release in the past 14 days. Then scores test yield.
+  schedule:
+    - cron: "0 8 * * 3"
+  workflow_dispatch:
+    inputs:
+      since_date:
+        description: "Only bugs created on or after this date (YYYY-MM-DD)"
+        required: true
+        default: "2026-10-13"
+        type: string
+      load_mode:
+        description: "incremental loads only what changed since the last run; full rebuilds every table"
+        required: true
+        default: incremental
+        type: choice
+        options:
+          - incremental
+          - full
+      score_yield:
+        description: "Score test yield after loading"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.release.outputs.run }}
+      since_date: ${{ inputs.since_date || '2026-10-13' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/bug_test_links/release_check.py
+          sparse-checkout-cone-mode: false
+
+      - name: Check for a fortnightly run after a Firefox release
+        id: release
+        env:
+          EVENT: ${{ github.event_name }}
+        run: python3 scripts/bug_test_links/release_check.py
+
+  ingest:
+    needs: check
+    if: needs.check.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'uv==0.11.18';
+          uv sync;
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Load bug to test links into BigQuery
+        env:
+          SINCE_DATE: ${{ needs.check.outputs.since_date }}
+          LOAD_MODE: ${{ inputs.load_mode || 'incremental' }}
+          TESTRAIL_BASE_URL: ${{ secrets.TESTRAIL_BASE_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+        run: uv run python -m scripts.bug_test_links_to_bq
+
+  score:
+    needs: [check, ingest]
+    if: (github.event_name == 'schedule' || inputs.score_yield) && needs.ingest.result == 'success'
+    uses: ./.github/workflows/test-yield-to-bq.yml
+    with:
+      since_date: ${{ needs.check.outputs.since_date }}
+    secrets: inherit

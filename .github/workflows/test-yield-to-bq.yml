@@ -1,0 +1,70 @@
+name: Score Test Yield in BigQuery
+
+on:
+  # Also called by the data load after each Firefox release.
+  workflow_call:
+    inputs:
+      since_date:
+        required: true
+        type: string
+      weights:
+        required: false
+        default: ""
+        type: string
+      severity_weight:
+        required: false
+        default: ""
+        type: string
+  workflow_dispatch:
+    inputs:
+      since_date:
+        description: "Start of the analysis period (YYYY-MM-DD); match the data load"
+        required: true
+        default: "2026-10-13"
+        type: string
+      weights:
+        description: "Component weights summing to 1, e.g. U=0.275,F=0.225,S=0.325,R=0.175 (empty uses the defaults)"
+        required: false
+        default: ""
+        type: string
+      severity_weight:
+        description: "Severity share of bug impact, 0-1; priority gets the rest (empty uses 0.5)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip3 install 'uv==0.11.18';
+          uv sync;
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # 3.0.0
+        with:
+          credentials_json: ${{ secrets.GC_CREDENTIAL_STABILITY }}
+
+      - name: Score test yield
+        env:
+          SINCE_DATE: ${{ inputs.since_date }}
+          YIELD_WEIGHTS: ${{ inputs.weights }}
+          YIELD_SEVERITY_WEIGHT: ${{ inputs.severity_weight }}
+          BQ_PROJECT: ${{ secrets.BQ_PROJECT }}
+          BQ_DATASET: fx_qa_ci
+        run: uv run python -m scripts.test_yield_to_bq
