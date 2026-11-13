@@ -1229,7 +1229,6 @@ pdf_viewer:
     result: covered-in-tree
     splits:
       - functional2
-      - nightly
   test_pdf_page_actions_across_document_types:
     result: pass
     splits:
