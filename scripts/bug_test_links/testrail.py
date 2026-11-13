@@ -164,7 +164,7 @@ def testrail_links(
                     {
                         "result_id": result["id"],
                         "case_id": test["case_id"],
-                        "executed_on": epoch_to_iso(result.get("created_on"))[:10],
+                        "executed_on": (epoch_to_iso(result.get("created_on")) or "")[:10],
                     }
                 )
             if (status or "").lower() not in FAILED_STATUSES:
