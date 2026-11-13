@@ -72,6 +72,6 @@ def test_downloaded_languages_can_be_deleted(driver: Firefox, about_prefs: About
     about_prefs.click_on(
         "download-language-delete-confirm-button", labels=[DOWNLOAD_LANGUAGE]
     )
-    about_prefs.element_does_not_exist(
+    about_prefs.element_not_visible(
         "download-language-item", labels=[DOWNLOAD_LANGUAGE]
     )
