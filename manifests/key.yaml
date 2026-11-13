@@ -2105,11 +2105,21 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3322032_mention_open_tab_in_smart_bar:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3322038_summarize_active_tab:
     result: pass
     splits:
       - functional2
   test_c3349915_settings_page_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3349918_smart_bar_keyboard_accessible:
     result: pass
     splits:
       - smart_window
@@ -2142,6 +2152,11 @@ smart_window:
   test_c3977124_search_with_different_engines:
     result: pass
     splits:
+      - functional2
+  test_c3977127_change_ai_model_from_smart_bar:
+    result: pass
+    splits:
+      - smart_window
       - functional2
   test_c3978359_close_sidebar_from_x_button:
     result: pass

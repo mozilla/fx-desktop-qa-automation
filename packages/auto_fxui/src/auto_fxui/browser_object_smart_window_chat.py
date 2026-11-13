@@ -105,6 +105,20 @@ class SmartWindowChat(BasePage):
         self.expect_turn_complete(turn)
         return self
 
+    def send_typed(self) -> BasePage:
+        """Send what's already in the Smart Bar, mentions included, and wait for the answer."""
+        smart_bar = SmartBar(self.driver)
+        if smart_bar.get_action() != "chat":
+            raise AssertionError(
+                f"The Smart Bar would {smart_bar.get_action()!r}, not send to chat"
+            )
+        turn = self.get_sent_count() + 1
+        smart_bar.submit()
+        # Firefox clears the Smart Bar once the message is sent; this fails fast if Enter was lost.
+        smart_bar.expect_smart_bar_text("")
+        self.expect_turn_complete(turn)
+        return self
+
     def get_sent_count(self) -> int:
         """Return how many messages the user has sent in this conversation."""
         return self._ai_window_script(

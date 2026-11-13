@@ -5,10 +5,11 @@ the default search engine's suggestions for the same text.
 """
 
 import pytest
-from auto_fxui.browser_object import SmartBar, SmartWindow
-from auto_fxui.browser_object_smart_bar import (
+from auto_fxui.browser_object import (
     PROVIDER_AI_CHAT,
     PROVIDER_SEARCH_SUGGESTIONS,
+    SmartBar,
+    SmartWindow,
 )
 from selenium.webdriver import Firefox
 

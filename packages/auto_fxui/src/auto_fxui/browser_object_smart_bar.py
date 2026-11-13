@@ -62,19 +62,56 @@ function menuItemIds(list) {
 }
 // The autocomplete rows live in the Smart Bar's urlbar view, not the CTA.
 function resultsView() {
-  const d = aiDoc();
-  let hit = null;
+  return deepAll(".urlbarView-results")[0] || null;
+}
+// Every element in the chat document matching `sel`, through all shadow roots.
+function deepAll(sel) {
+  const hits = [];
   (function walk(node, depth) {
-    if (!node || depth > 12 || hit) return;
+    if (!node || depth > 14) return;
     for (const el of node.querySelectorAll("*")) {
-      if (el.matches && el.matches(".urlbarView-results")) { hit = el; return; }
-      if (el.shadowRoot) { walk(el.shadowRoot, depth + 1); if (hit) return; }
+      if (el.matches && el.matches(sel)) hits.push(el);
+      if (el.shadowRoot) walk(el.shadowRoot, depth + 1);
     }
-  })(d, 0);
-  return hit;
+  })(aiDoc(), 0);
+  return hits;
+}
+function modelSelect() {
+  return deepAll("input-model-select")[0] || null;
+}
+function modelMenu() {
+  const m = modelSelect();
+  return m && m.shadowRoot ? m.shadowRoot.querySelector("panel-list") : null;
+}
+// The open "@" mentions panel; the same component also lists "/" commands.
+function mentionsPanel() {
+  return deepAll("smartwindow-panel-list").find(p => {
+    const l = p.shadowRoot && p.shadowRoot.querySelector("panel-list");
+    return l && l.open;
+  }) || null;
+}
+// The focused element, followed into shadow roots: [host, ..., innermost].
+function focusChain() {
+  const chain = [];
+  let el = aiDoc() && aiDoc().activeElement;
+  while (el) {
+    chain.push(el);
+    el = el.shadowRoot && el.shadowRoot.activeElement;
+  }
+  return chain;
 }
 """
 )
+
+# The Smart Bar's buttons in Tab order, each as (host class, inner button id).
+# The inner id tells the Ask/Go button from the arrow that opens its menu.
+SMART_BAR_BUTTONS = {
+    "context": ("context-icon-button", "main-button"),
+    "memories": ("memories-icon-button", "main-button"),
+    "model": ("input-model-select-button", "main-button"),
+    "cta": ("input-cta", "main-button"),
+    "cta-menu": ("input-cta", "chevron-button"),
+}
 
 # UrlbarResult providers behind the Smart Bar's rows.
 PROVIDER_AI_CHAT = "UrlbarProviderAiChat"
@@ -514,4 +551,233 @@ class SmartBar(BasePage):
             raise AssertionError("Smart Bar CTA button not found")
         # Firefox clears the Smart Bar once the message is sent.
         self.expect_smart_bar_text("")
+        return self
+
+    # ── @ mentions ───────────────────────────────────────────────────────
+
+    def type_mention_trigger(self) -> BasePage:
+        """Type "@" at the end of the Smart Bar's text, which opens the mentions panel."""
+        if not self._focus_editor():
+            raise AssertionError("Smart Bar editor is not available to write to")
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys(Keys.END).send_keys("@").perform()
+        self.expect(lambda _: self._script("return !!mentionsPanel();"))
+        return self
+
+    def get_mention_suggestions(self) -> list[dict]:
+        """Return the open mentions panel's items, each with id (the tab URL) and title."""
+        return self._script("""
+            const p = mentionsPanel();
+            if (!p) return [];
+            return (p.groups || []).flatMap(g => (g.items || []).map(i => ({
+              id: i.id, title: i.label || i.title || "",
+            })));
+        """)
+
+    def choose_mention(self, tab_url: str) -> BasePage:
+        """Click the mentions panel's item for the tab showing `tab_url`."""
+        clicked = self._script(
+            "const p = mentionsPanel();"
+            "if (!p) return false;"
+            "const item = Array.from(p.shadowRoot.querySelectorAll('panel-item'))"
+            "  .find(i => i.itemId === arguments[0]);"
+            "if (!item) return false;"
+            "item.click();"
+            "return true;",
+            tab_url,
+        )
+        if not clicked:
+            raise AssertionError(
+                f"{tab_url} not in the mentions panel: {self.get_mention_suggestions()}"
+            )
+        self.expect(lambda _: not self._script("return !!mentionsPanel();"))
+        return self
+
+    def get_inline_mentions(self) -> list[str]:
+        """Return the labels of the mention chips inside the Smart Bar's text."""
+        return self._script(
+            "const p = prosemirror();"
+            "return p ? Array.from(p.querySelectorAll('smartwindow-chip.mention'),"
+            "  c => c.label || '') : [];"
+        )
+
+    # ── AI model picker ──────────────────────────────────────────────────
+
+    def get_models(self) -> dict[str, str]:
+        """
+        Return the models the picker offers, by brand name, once they have loaded.
+
+        Returns
+        -------
+        dict[str, str]
+            Brand name (e.g. "Qwen") to the model id Firefox sends in requests.
+        """
+        self.expect_models_loaded()
+        return self._read_models()
+
+    def expect_models_loaded(self) -> BasePage:
+        """Wait until the picker has its model list and a selected model."""
+        # Firefox loads the list in the background after the Smart Bar is ready.
+        try:
+            self.expect(lambda _: self._read_models() and self.get_selected_model())
+        except TimeoutException:
+            raise AssertionError(
+                f"The model picker never loaded: models {self._read_models()}, "
+                f"selected {self.get_selected_model()!r}"
+            ) from None
+        return self
+
+    def _read_models(self) -> dict[str, str]:
+        return self._script(
+            "const m = modelSelect();"
+            "if (!m || !m.availableModels) return {};"
+            "return Object.fromEntries(Object.values(m.availableModels)"
+            "  .map(v => [v.brandName, v.model]));"
+        )
+
+    def get_selected_model(self) -> str:
+        """Return the model id the picker shows as selected."""
+        return self._script(
+            "const m = modelSelect(); return m ? m.selectedModelId : '';"
+        )
+
+    def is_model_menu_open(self) -> bool:
+        """Report whether the model picker's menu is open."""
+        return bool(self._script("const l = modelMenu(); return !!(l && l.open);"))
+
+    def model_menu_has_focus(self) -> bool:
+        """Report whether keyboard focus is on an item in the open model menu."""
+        return bool(
+            self._script(
+                "return focusChain().some(e => e.classList &&"
+                "  e.classList.contains('model-item'));"
+            )
+        )
+
+    def open_model_menu(self) -> BasePage:
+        """Click the model picker and wait for its menu."""
+        clicked = self._script(
+            "const m = modelSelect();"
+            "const b = m && m.shadowRoot && m.shadowRoot.querySelector('.input-model-select-button');"
+            "const l = modelMenu();"
+            "if (!b || !l) return false;"
+            "if (!l.open) b.click();"
+            "return true;"
+        )
+        if not clicked:
+            raise AssertionError("Smart Bar model picker not found")
+        self.expect(lambda _: self.is_model_menu_open())
+        return self
+
+    def get_model_menu_items(self) -> list[str]:
+        """Return the labels of the models listed in the open model menu."""
+        return self._script(
+            "const l = modelMenu();"
+            "return l ? Array.from(l.querySelectorAll('.model-item'),"
+            "  b => b.querySelector('.model-item-label').textContent.trim()) : [];"
+        )
+
+    def choose_model(self, brand_name: str) -> BasePage:
+        """Pick the `brand_name` model from the model menu."""
+        model_id = self.get_models().get(brand_name)
+        if not model_id:
+            raise AssertionError(f"No {brand_name} model offered: {self.get_models()}")
+        self.open_model_menu()
+        # The menu doesn't keep availableModels' order, so match the label.
+        clicked = self._script(
+            "const m = modelSelect();"
+            "const info = Object.values(m.availableModels).find(v => v.model === arguments[0]);"
+            "const item = Array.from(modelMenu().querySelectorAll('.model-item')).find(b =>"
+            "  b.querySelector('.model-item-label').textContent.trim() === info.shortName);"
+            "if (!item) return false;"
+            "item.click();"
+            "return true;",
+            model_id,
+        )
+        if not clicked:
+            raise AssertionError(f"{brand_name} is not in the model menu")
+        self.expect(
+            lambda _: self.get_selected_model() == model_id
+            and not self.is_model_menu_open()
+        )
+        return self
+
+    # ── Keyboard ─────────────────────────────────────────────────────────
+
+    def get_focused_button(self) -> str | None:
+        """Return which of SMART_BAR_BUTTONS has keyboard focus, or None."""
+        return self._script(
+            "const chain = focusChain();"
+            "for (const [name, [hostClass, innerId]] of Object.entries(arguments[0])) {"
+            "  if (chain.some(e => e.classList && e.classList.contains(hostClass))"
+            "      && chain.some(e => e.id === innerId)) return name;"
+            "}"
+            "return null;",
+            SMART_BAR_BUTTONS,
+        )
+
+    def is_editor_focused(self) -> bool:
+        """Report whether the Smart Bar's text field has keyboard focus."""
+        # A document keeps its activeElement while the window's focus is elsewhere.
+        return bool(
+            self._script(
+                "const doc = aiDoc();"
+                "const host = doc && doc.defaultView && doc.defaultView.docShell"
+                "  && doc.defaultView.docShell.chromeEventHandler;"
+                "return document.activeElement === host"
+                "  && focusChain().some(e => e === prosemirror());"
+            )
+        )
+
+    def tab_to_button(self, name: str, max_stops: int = 15) -> BasePage:
+        """Press Tab from the text field until button `name` has focus."""
+        if not self._focus_editor():
+            raise AssertionError("Smart Bar editor is not available to focus")
+        # More stops than buttons: with suggestions showing, Tab steps through them first.
+        for _ in range(max_stops):
+            before = self.get_focused_button()
+            self.perform_key_combo_chrome(Keys.TAB)
+            # Focus moves a moment after the key, so wait briefly for it to
+            # change; inside the suggestions it stays on the text field.
+            try:
+                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                    lambda _: self.get_focused_button() != before
+                )
+            except TimeoutException:
+                pass
+            if self.get_focused_button() == name:
+                return self
+        raise AssertionError(
+            f"Tab never reached the {name} button in {max_stops} stops"
+        )
+
+    def choose_action_with_keyboard(self, l10n_id: str) -> BasePage:
+        """
+        Open the Go/Ask menu with Enter and pick item `l10n_id` with the arrow keys.
+        """
+        self.tab_to_button("cta-menu")
+        self.perform_key_combo_chrome(Keys.ENTER)
+        self.expect_action_menu_open(True)
+        items = self.get_action_menu_items()
+        if l10n_id not in items:
+            raise AssertionError(f"{l10n_id} not in the action menu: {items}")
+
+        def _focused(_) -> bool:
+            return self._script(
+                "return focusChain().some(e => e.getAttribute &&"
+                "  e.getAttribute('data-l10n-id') === arguments[0]);",
+                l10n_id,
+            )
+
+        # Where focus starts isn't fixed, and it moves a moment after each key.
+        for _ in range(len(items) + 1):
+            try:
+                self.custom_wait(timeout=1).until(_focused)
+                break
+            except TimeoutException:
+                self.perform_key_combo_chrome(Keys.ARROW_DOWN)
+        else:
+            raise AssertionError(f"The arrow keys never reached {l10n_id}")
+        self.perform_key_combo_chrome(Keys.ENTER)
+        self.expect_action_menu_open(False)
         return self
