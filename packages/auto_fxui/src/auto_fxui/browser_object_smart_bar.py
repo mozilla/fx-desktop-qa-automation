@@ -729,15 +729,6 @@ class SmartBar(BasePage):
             )
         )
 
-    def press(self, *keys: str) -> BasePage:
-        """Send `keys` to whatever has focus."""
-        with self.driver.context(self.driver.CONTEXT_CHROME):
-            actions = self.actions
-            for key in keys:
-                actions = actions.send_keys(key)
-            actions.perform()
-        return self
-
     def tab_to_button(self, name: str, max_stops: int = 15) -> BasePage:
         """Press Tab from the text field until button `name` has focus."""
         if not self._focus_editor():
@@ -745,7 +736,7 @@ class SmartBar(BasePage):
         # More stops than buttons: with suggestions showing, Tab steps through them first.
         for _ in range(max_stops):
             before = self.get_focused_button()
-            self.press(Keys.TAB)
+            self.perform_key_combo_chrome(Keys.TAB)
             # Focus moves a moment after the key, so wait briefly for it to
             # change; inside the suggestions it stays on the text field.
             try:
@@ -765,7 +756,7 @@ class SmartBar(BasePage):
         Open the Go/Ask menu with Enter and pick item `l10n_id` with the arrow keys.
         """
         self.tab_to_button("cta-menu")
-        self.press(Keys.ENTER)
+        self.perform_key_combo_chrome(Keys.ENTER)
         self.expect_action_menu_open(True)
         items = self.get_action_menu_items()
         if l10n_id not in items:
@@ -784,9 +775,9 @@ class SmartBar(BasePage):
                 self.custom_wait(timeout=1).until(_focused)
                 break
             except TimeoutException:
-                self.press(Keys.ARROW_DOWN)
+                self.perform_key_combo_chrome(Keys.ARROW_DOWN)
         else:
             raise AssertionError(f"The arrow keys never reached {l10n_id}")
-        self.press(Keys.ENTER)
+        self.perform_key_combo_chrome(Keys.ENTER)
         self.expect_action_menu_open(False)
         return self

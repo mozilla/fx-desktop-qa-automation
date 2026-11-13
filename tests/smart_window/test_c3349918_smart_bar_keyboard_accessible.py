@@ -47,10 +47,10 @@ def test_smart_bar_keyboard_accessible(
     # Before typing, so Tab doesn't first step through suggestions.
     for name in ("context", "memories", "model"):
         smart_bar.tab_to_button(name)
-    smart_bar.press(Keys.ENTER)
+    smart_bar.perform_key_combo_chrome(Keys.ENTER)
     # The menu takes focus once it has opened; Escape before that is lost.
     smart_bar.expect(lambda _: smart_bar.model_menu_has_focus())
-    smart_bar.press(Keys.ESCAPE)
+    smart_bar.perform_key_combo_chrome(Keys.ESCAPE)
     smart_bar.expect(lambda _: not smart_bar.is_model_menu_open())
 
     smart_bar.set_smart_bar_text(QUERY)
