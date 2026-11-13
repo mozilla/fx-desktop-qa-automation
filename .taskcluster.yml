@@ -86,8 +86,9 @@ tasks:
           in:
               $if: >
                   tasks_for in ["action", "cron"]
-                  || (tasks_for == "github-push" && head_branch == "refs/heads/main")
+                  || (tasks_for == "github-push" && head_branch == "refs/heads/nightly")
                   || (isPullRequest && pullRequestAction in ["opened", "reopened", "synchronize"])
+                  && "bot" not in ownerEmail
               then:
                   taskId: {$if: 'tasks_for != "action"', then: '${ownTaskId}'}
                   taskGroupId:

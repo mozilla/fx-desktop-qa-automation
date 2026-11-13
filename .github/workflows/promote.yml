@@ -116,3 +116,5 @@ jobs:
 
           gh pr comment "$PR_NUMBER" --body \
             "Beta promote PR opened: ${promote_url}"
+
+          gh pr edit "$PR_NUMBER" --add-label "skip-claude-review"
