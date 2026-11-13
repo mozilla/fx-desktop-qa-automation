@@ -22,7 +22,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          mkdir -p artifacts;
           pip3 install 'uv==0.11.18';
           uv sync;
 

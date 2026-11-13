@@ -1,0 +1,53 @@
+---
+name: "Kick off a publish workflow at least every 2 weeks"
+
+on:
+  schedule:
+    - cron: "20 0 */14 * *"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Create app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.BOT_CLIENT_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        run: |
+          python -m pip install "uv==0.13.6"
+
+      - name: Check on package tags
+        id: confirm
+        run: |
+          uv run python -m scripts.confirm_autopublish
+
+      - name: Tag if no recent tag exists
+        if: ${{ steps.confirm.conclusion == 'success' }}
+        run: |
+          TAG="v$(uv version --bump patch | grep -oE '[^ ]+$')"
+          git tag $TAG
+          git push
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: Print whether tagging happened
+        if: ${{ always() }}
+        env:
+          TAGGED: ${{ steps.confirm.conclusion }}
+        run: |
+          if $TAGGED then; echo "Current nightly tagged as $TAG"; else echo "Recent tag found. No new tag created."; fi
