@@ -1765,6 +1765,10 @@ security_and_privacy:
   test_https_first_mode_enabled_in_private_browsing_without_protocol:
     result: covered-in-tree
     splits: []
+  test_https_first_mode_message_display:
+    result: pass
+    splits:
+      - functional2
   test_mixed_content_warning_displayed_in_panel:
     result: covered-in-tree
     splits: []
