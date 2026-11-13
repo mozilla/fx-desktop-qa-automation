@@ -1291,7 +1291,11 @@ pdf_viewer:
     splits:
       - functional2
   test_pdf_unchecked_page_drag:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092639
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
       - functional2
   test_pdf_zoom_checkboxes:
@@ -2168,7 +2172,11 @@ smart_window:
       - smart_window
       - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092624
+    result:
+      linux: unstable
+      mac: pass
+      win: pass
     splits:
       - functional2
   test_c4438277_group_related_tabs:
@@ -2355,7 +2363,11 @@ tabs:
       - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092637
+    result:
+      linux: pass
+      mac: pass
+      win: unstable
     splits:
       - smoke
       - exclude_nightly
