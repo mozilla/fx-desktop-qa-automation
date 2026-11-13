@@ -87,7 +87,7 @@ jobs:
 
   score:
     needs: [check, ingest]
-    if: github.event_name == 'schedule' || inputs.score_yield
+    if: (github.event_name == 'schedule' || inputs.score_yield) && needs.ingest.result == 'success'
     uses: ./.github/workflows/test-yield-to-bq.yml
     with:
       since_date: ${{ needs.check.outputs.since_date }}
