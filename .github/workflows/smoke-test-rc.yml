@@ -38,7 +38,9 @@ jobs:
           python-version: "3.13"
 
       - name: Setup dependencies
-        run: bash ./scripts/setup_python.sh
+        run: |
+          pip3 install 'uv==0.11.18'
+          uv sync
 
       - name: Check if the run is reportable
         id: reportable
