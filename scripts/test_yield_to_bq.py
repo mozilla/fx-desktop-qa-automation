@@ -12,6 +12,7 @@ import math
 import os
 from bisect import bisect_right
 from collections import Counter, defaultdict
+from collections.abc import Callable
 from datetime import date, datetime, timezone
 
 import requests
@@ -105,6 +106,14 @@ def merge_automated_executions(
 
     STARfox CI reports its runs to TestRail, so TestRail's results for the case
     are the same runs; they're used only when CI has none.
+
+    Parameters
+    ----------
+    executions
+        (source, test_key) -> {"count": valid executions, "cycles": release
+        cycles run in}; changed in place.
+    automated
+        TestRail case ID -> path of the STARfox test that automates it.
     """
     for case_id, path in automated.items():
         reported = executions.pop(("testrail", f"C{case_id}"), None)
@@ -121,15 +130,33 @@ def is_regression(bug: dict) -> bool:
     return "regression" in (bug.get("keywords") or []) or bool(bug.get("regressed_by"))
 
 
-def normalized(values: dict, scale=lambda value: value) -> dict:
-    """Divide each value by the largest one, after scale; all zeros stay zero."""
+def normalized(
+    values: dict, scale: Callable[[float], float] = lambda value: value
+) -> dict:
+    """Divide each value by the largest one; all zeros stay zero.
+
+    Parameters
+    ----------
+    values
+        Test key -> raw value.
+    scale
+        Applied to every value before dividing, e.g. math.log1p for U.
+    """
     top = max((scale(value) for value in values.values()), default=0)
     return {key: scale(value) / top if top else 0.0 for key, value in values.items()}
 
 
 def yield_score(parts: dict[str, float | None], weights: dict[str, float]) -> float:
-    """100 * the weighted sum of the components. A test missing a component
-    (None) has its other weights scaled up to sum to 1."""
+    """Return 100 * the weighted sum of a test's components.
+
+    Parameters
+    ----------
+    parts
+        Component name ("U", "F", "S", "R") -> score from 0 to 1, or None if the
+        test has no data for it; the other weights are then scaled up to sum to 1.
+    weights
+        Component name -> weight; the weights sum to 1.
+    """
     available = [name for name, part in parts.items() if part is not None]
     total = sum(weights[name] for name in available)
     return 100 * sum(weights[name] * parts[name] for name in available) / total
@@ -145,13 +172,24 @@ def score(
 ) -> list[dict]:
     """Return one yield row per test, ranked overall and within its source.
 
-    automated maps TestRail case IDs to the STARfox test that automates them;
-    such a case and its STARfox test are scored as one test.
-
-    executions maps (source, test_key) to {"count", "cycles"}: valid executions
-    and the release cycles they ran in. Without them F and R are missing and the
-    other weights are scaled up to sum to 1, except in-tree tests, which run on
-    every push and so are taken to have run in every cycle.
+    Parameters
+    ----------
+    links
+        Rows of the bug_test_links table.
+    bugs
+        Rows of the bugzilla_bugs table, each with the release "cycle" it was
+        filed in.
+    executions
+        (source, test_key) -> {"count": valid executions, "cycles": release
+        cycles run in}. A test without an entry has no F or R, except in-tree
+        tests, which run on every push and so count as run in every cycle.
+    cycles
+        Release cycles in the analysis period, e.g. [159, 160].
+    weights
+        Component name ("U", "F", "S", "R") -> weight; the weights sum to 1.
+    automated
+        TestRail case ID -> path of the STARfox test that automates it; the
+        case and that test are scored as one test.
     """
     counted = {
         bug["bug_id"]: bug

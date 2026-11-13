@@ -60,17 +60,14 @@ def collect(cutoff: datetime | None = None, stored: dict | None = None) -> dict:
         if unseen:
             fetched.update(fetch_bugs(unseen))
 
-    scoped_bugs = {
-        bug_id: bug for bug_id, bug in fetched.items() if in_scope(bug)
-    }
+    scoped_bugs = {bug_id: bug for bug_id, bug in fetched.items() if in_scope(bug)}
     candidates = add_treeherder_failures(scoped_bugs)
 
     tests = starfox_tests()
-
-    # collect the links from every candidate bug into one list.
     name_re = starfox_name_re(tests)
     links = [
-        link for bug in candidates.values()
+        link
+        for bug in candidates.values()
         for link in summary_links(bug, tests, name_re)
     ]
 
