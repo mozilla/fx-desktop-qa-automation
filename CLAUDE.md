@@ -191,6 +191,7 @@ from auto_fxui.browser_object import TabBar, Navigation, ContextMenu
 - Onboarding: `SmartWindowFirstRun.complete_onboarding()` picks the first offered model; pass a brand name (e.g. `"Mistral"`) only when the test is about that model. The choice id is read from the page, since names and ids come from the server. Check it with `expect_model_choice_saved()`.
 - When sign-in isn't under test, use the `active_smart_window` fixture (bypasses FxA).
 - Read runtime prefs with `SmartWindowFirstRun.get_pref(name)`.
+- To restart Firefox mid-test (session restore, what opens at startup), call `restart_firefox(driver)` from `auto_fxui.restart`. It reattaches the same `driver`, keeps the profile, and needs no fixture changes; pass `resume_session=True` to restore the session once, as Firefox's own Restart does. Override `fxa_env` to `None` in those tests.
 
 ### Smart Window mock server
 
