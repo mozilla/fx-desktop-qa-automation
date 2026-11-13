@@ -3,7 +3,7 @@
 if [ "${DRY_RUN}" = "true" ]; then
   echo "Dry run enabled: generating preview plan - using preview_reportable() (no TestRail calls)"
 
-  PREVIEW_JSON=$(pipenv run python - <<'PY'
+  PREVIEW_JSON=$(uv run python - <<'PY'
 import json
 from modules import testrail_integration as tri
 
@@ -27,13 +27,13 @@ PY
 else
   echo "Normal run: using reportable() checking reportability against TestRail."
 
-  WIN_STDOUT=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))' 2>/tmp/win_stderr)
+  WIN_STDOUT=$(uv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Windows"))' 2>/tmp/win_stderr)
   WIN_EXIT=$?
 
   echo "win=${WIN_STDOUT}"
   echo "win=${WIN_STDOUT}" >> "$GITHUB_OUTPUT"
 
-  MAC_STDOUT=$(pipenv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))' 2>/tmp/mac_stderr)
+  MAC_STDOUT=$(uv run python -c 'from modules import testrail_integration as tri; print(tri.reportable("Darwin"))' 2>/tmp/mac_stderr)
   MAC_EXIT=$?
 
   echo "mac=${MAC_STDOUT}"
