@@ -5,7 +5,7 @@ from subprocess import check_output
 
 def main():
     check_output("git fetch origin nightly".split(" "))
-    tags = check_output("git ls-remote --tags origin".split(" ")).decode().split()
+    tags = check_output("git ls-remote --tags origin".split(" ")).decode().splitlines()
     now = datetime.now(UTC)
     for tag in tags:
         sha = tag.split()[0]
