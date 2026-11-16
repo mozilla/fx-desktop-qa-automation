@@ -21,7 +21,7 @@ env:
 
 jobs:
   Check-RC-Version:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       win_reportable: ${{ steps.reportable.outputs.win }}
       mac_reportable: ${{ steps.reportable.outputs.mac }}
@@ -32,8 +32,15 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Python 3.13
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
+        with:
+          python-version: "3.13"
+
       - name: Setup dependencies
-        run: bash ./scripts/setup_python.sh
+        run: |
+          pip3 install 'uv==0.11.18'
+          uv sync
 
       - name: Check if the run is reportable
         id: reportable
