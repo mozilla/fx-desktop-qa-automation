@@ -2384,8 +2384,10 @@ class AboutAddons(BasePage):
         self.driver.execute_script("arguments[0].click();", theme_card)
 
         enable_btn = self.get_element("enable-theme")
-        # Force JS click here as well to prevent the next step from failing.
-        self.driver.execute_script("arguments[0].click();", enable_btn)
+        # The button reads "Disable" when the theme is already active, as Dark is on DevEdition
+        if enable_btn.get_attribute("innerText") != "Disable":
+            # Force JS click here as well to prevent the next step from failing.
+            self.driver.execute_script("arguments[0].click();", enable_btn)
 
         self.expect(
             EC.text_to_be_present_in_element_attribute(
