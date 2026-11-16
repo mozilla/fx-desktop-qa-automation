@@ -66,7 +66,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip3 install 'uv==0.11.18';
+          pip3 install "uv==0.13.6";
           uv sync;
 
       - name: Auth to Google Cloud
