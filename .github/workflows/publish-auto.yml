@@ -43,7 +43,14 @@ jobs:
       - name: Tag if no recent tag exists
         if: ${{ steps.confirm.conclusion == 'success' }}
         run: |
+          git config user.name "DTE-Pushbot[bot]"
+          git config user.email \
+            "186870616+DTE-Pushbot[bot]@users.noreply.github.com"
+          cd packages/auto_fxui
           TAG="v$(uv version --bump patch | grep -oE '[^ ]+$')"
+          cd -
+          git commit -am "Bump auto-fxui ver to ${TAG}"
+          git push origin HEAD:nightly
           git tag $TAG
           git push origin $TAG
           echo "TAG=$TAG" >> "$GITHUB_ENV"
