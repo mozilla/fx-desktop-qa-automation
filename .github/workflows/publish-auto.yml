@@ -42,7 +42,7 @@ jobs:
           uv run python -m scripts.confirm_autopublish
 
       - name: Tag if no recent tag exists
-        if: ${{ steps.confirm.conclusion == 'success' }}
+        if: ${{ steps.confirm.outcome == 'success' }}
         run: |
           git config user.name "DTE-Pushbot[bot]"
           git config user.email \
