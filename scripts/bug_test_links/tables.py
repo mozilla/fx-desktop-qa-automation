@@ -9,6 +9,8 @@ BUGS_TABLE = "bugzilla_bugs"
 LINKS_TABLE = "bug_test_links"
 EXECUTIONS_TABLE = "testrail_executions"
 STATE_TABLE = "bug_test_links_state"
+# Staging only: IDs of the bugs fetched again, whose old rows the merge replaces.
+CHECKED_TABLE = "checked_bugs"
 STAGING_PREFIX = "staging_"
 VIEW = "desktop_bugs_with_tests"
 
@@ -118,7 +120,7 @@ def schemas():
         BUGS_TABLE: (bugs, ["product", "component"]),
         LINKS_TABLE: (links, ["source", "test_key"]),
         EXECUTIONS_TABLE: (executions, ["case_id"]),
-        "checked_bugs": (checked, None),
+        CHECKED_TABLE: (checked, None),
         STATE_TABLE: (state, None),
     }
 
@@ -143,9 +145,26 @@ def replace_table(client, table_id: str, rows: list[dict], schema, clustering):
     logging.info("Loaded %d rows into %s", len(rows), table_id)
 
 
-def merge_sql(tables: dict[str, str], bug_columns: list[str]) -> str:
-    """One transaction that applies the staging tables to the loaded ones."""
-    t = tables
+def merge_sql(dataset: str, bug_columns: list[str]) -> str:
+    """Return one transaction that applies the staging tables to the loaded ones.
+
+    Parameters
+    ----------
+    dataset
+        "project.dataset" holding both the loaded and the staging tables.
+    bug_columns
+        Column names of the bugs table, all updated when a bug is loaded again.
+    """
+    t = {
+        "bugs": f"{dataset}.{BUGS_TABLE}",
+        "links": f"{dataset}.{LINKS_TABLE}",
+        "executions": f"{dataset}.{EXECUTIONS_TABLE}",
+        "state": f"{dataset}.{STATE_TABLE}",
+        "new_bugs": f"{dataset}.{STAGING_PREFIX}{BUGS_TABLE}",
+        "new_links": f"{dataset}.{STAGING_PREFIX}{LINKS_TABLE}",
+        "new_executions": f"{dataset}.{STAGING_PREFIX}{EXECUTIONS_TABLE}",
+        "checked": f"{dataset}.{STAGING_PREFIX}{CHECKED_TABLE}",
+    }
     updates = ", ".join(
         f"{name} = S.{name}" for name in bug_columns if name != "bug_id"
     )
@@ -178,7 +197,7 @@ def merge_sql(tables: dict[str, str], bug_columns: list[str]) -> str:
 
     DELETE FROM `{t["state"]}` WHERE TRUE;
     INSERT INTO `{t["state"]}` (since_date, loaded_at, mode)
-    VALUES (@since, @loaded_at, 'incremental');
+    VALUES (@since, @loaded_at, @mode);
 
     COMMIT TRANSACTION;
     """

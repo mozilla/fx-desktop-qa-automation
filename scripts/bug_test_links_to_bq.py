@@ -22,6 +22,7 @@ from scripts.bug_test_links.common import SINCE_DATE
 from scripts.bug_test_links.summary import starfox_name_re, starfox_tests, summary_links
 from scripts.bug_test_links.tables import (
     BUGS_TABLE,
+    CHECKED_TABLE,
     EXECUTIONS_TABLE,
     LINKS_TABLE,
     STAGING_PREFIX,
@@ -136,47 +137,33 @@ def main() -> int:
         EXECUTIONS_TABLE: [
             row | {"ingested_at": ingested_at} for row in data["executions"]
         ],
-        "checked_bugs": [{"bug_id": bug_id} for bug_id in data["checked"]],
+        CHECKED_TABLE: [{"bug_id": bug_id} for bug_id in data["checked"]],
     }
     schema = schemas()
+    mode = "full" if full else "incremental"
 
     if full:
-        for name in (BUGS_TABLE, LINKS_TABLE, EXECUTIONS_TABLE):
-            replace_table(client, table[name], rows[name], *schema[name])
-        replace_table(
-            client,
-            table[STATE_TABLE],
-            [{"since_date": SINCE_DATE, "loaded_at": ingested_at, "mode": "full"}],
-            *schema[STATE_TABLE],
-        )
-    else:
-        staging = {name: f"{project}.{dataset}.{STAGING_PREFIX}{name}" for name in rows}
-        for name, staged in rows.items():
-            replace_table(client, staging[name], staged, *schema[name])
-        client.query(
-            merge_sql(
-                {
-                    "bugs": table[BUGS_TABLE],
-                    "links": table[LINKS_TABLE],
-                    "executions": table[EXECUTIONS_TABLE],
-                    "state": table[STATE_TABLE],
-                    "new_bugs": staging[BUGS_TABLE],
-                    "new_links": staging[LINKS_TABLE],
-                    "new_executions": staging[EXECUTIONS_TABLE],
-                    "checked": staging["checked_bugs"],
-                },
-                [field.name for field in schema[BUGS_TABLE][0]],
-            ),
-            job_config=bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ScalarQueryParameter("since", "DATE", SINCE_DATE),
-                    bigquery.ScalarQueryParameter("loaded_at", "TIMESTAMP", started),
-                ]
-            ),
-        ).result()
-        for staged in staging.values():
-            client.delete_table(staged, not_found_ok=True)
-        logging.info("Merged the changes in one transaction")
+        # Merging into empty tables inserts everything, so both modes share a path.
+        for name in (BUGS_TABLE, LINKS_TABLE, EXECUTIONS_TABLE, STATE_TABLE):
+            replace_table(client, table[name], [], *schema[name])
+    staging = {name: f"{project}.{dataset}.{STAGING_PREFIX}{name}" for name in rows}
+    for name, staged in rows.items():
+        replace_table(client, staging[name], staged, *schema[name])
+    client.query(
+        merge_sql(
+            f"{project}.{dataset}", [field.name for field in schema[BUGS_TABLE][0]]
+        ),
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("since", "DATE", SINCE_DATE),
+                bigquery.ScalarQueryParameter("loaded_at", "TIMESTAMP", started),
+                bigquery.ScalarQueryParameter("mode", "STRING", mode),
+            ]
+        ),
+    ).result()
+    for staged in staging.values():
+        client.delete_table(staged, not_found_ok=True)
+    logging.info("Merged the %s load in one transaction", mode)
 
     client.query(
         f"""

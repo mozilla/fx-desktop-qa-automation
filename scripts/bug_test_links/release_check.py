@@ -32,9 +32,14 @@ def released_recently(today: date, release_dates: list[date]) -> bool:
     return bool(earlier) and (today - max(earlier)).days <= RELEASE_WINDOW_DAYS
 
 
-def major_release_dates() -> list[date]:
+def major_releases() -> list[tuple[date, int]]:
+    """Return (release date, major version) for every major release, oldest first."""
     with urllib.request.urlopen(RELEASES_URL, timeout=60) as response:
-        return [date.fromisoformat(day) for day in json.load(response).values()]
+        history = json.load(response)
+    return sorted(
+        (date.fromisoformat(day), int(version.split(".")[0]))
+        for version, day in history.items()
+    )
 
 
 def should_run(event: str, today: date) -> bool:
@@ -44,7 +49,7 @@ def should_run(event: str, today: date) -> bool:
     if not is_run_day(today):
         print(f"{today}: not a fortnightly run day")
         return False
-    run = released_recently(today, major_release_dates())
+    run = released_recently(today, [day for day, _ in major_releases()])
     print(f"{today}: {'a' if run else 'no'} major release in the past 14 days")
     return run
 

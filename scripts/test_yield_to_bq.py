@@ -17,19 +17,15 @@ from datetime import date, datetime, timezone
 
 import requests
 
+from scripts.bug_test_links.common import SINCE_DATE
+from scripts.bug_test_links.release_check import major_releases
 from scripts.bug_test_links.summary import starfox_tests
+from scripts.bug_test_links.tables import BUGS_TABLE, EXECUTIONS_TABLE, LINKS_TABLE
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-SINCE_DATE = os.environ.get("SINCE_DATE") or "2026-10-13"
-LINKS_TABLE = "bug_test_links"
-BUGS_TABLE = "bugzilla_bugs"
-EXECUTIONS_TABLE = "testrail_executions"
 STARFOX_RESULTS_TABLE = "test_results"
 YIELD_TABLE = "test_yield"
-RELEASES_URL = (
-    "https://product-details.mozilla.org/1.0/firefox_history_major_releases.json"
-)
 VERSIONS_URL = "https://product-details.mozilla.org/1.0/firefox_versions.json"
 
 # The proposal's weights, plus 0.025 each from C's 0.10.
@@ -64,15 +60,10 @@ def weights() -> dict[str, float]:
 
 def release_dates() -> list[tuple[date, int]]:
     """Return (release date, major version) for every release, next one included."""
-    history = requests.get(RELEASES_URL, timeout=60).json()
-    versions = requests.get(VERSIONS_URL, timeout=60).json()
-    releases = [
-        (date.fromisoformat(day), int(version.split(".")[0]))
-        for version, day in history.items()
-    ]
+    releases = major_releases()
+    upcoming = requests.get(VERSIONS_URL, timeout=60).json()["NEXT_RELEASE_DATE"]
     latest = max(version for _, version in releases)
-    releases.append((date.fromisoformat(versions["NEXT_RELEASE_DATE"]), latest + 1))
-    return sorted(releases)
+    return releases + [(date.fromisoformat(upcoming), latest + 1)]
 
 
 def cycle_of(day: date, releases: list[tuple[date, int]]) -> int:
@@ -335,13 +326,9 @@ def main() -> int:
         return [dict(row) for row in job.result()]
 
     releases = release_dates()
-    cycles = sorted(
-        {
-            cycle_of(date.fromisoformat(SINCE_DATE), releases),
-            cycle_of(date.today(), releases),
-        }
-    )
-    cycles = list(range(cycles[0], cycles[-1] + 1))
+    first = cycle_of(date.fromisoformat(SINCE_DATE), releases)
+    last = cycle_of(date.today(), releases)
+    cycles = list(range(first, last + 1))
     bugs = read(f"SELECT * FROM `{{dataset}}.{BUGS_TABLE}`")
 
     daily = [
