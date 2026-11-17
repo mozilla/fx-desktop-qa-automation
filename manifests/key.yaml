@@ -387,8 +387,8 @@ bookmarks_and_history:
     splits:
       - functional1
   test_add_new_other_bookmark:
-    result: unstable
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094241
+    result: unstable
     splits:
       - smoke
   test_bookmark_via_bookmark_menu:
