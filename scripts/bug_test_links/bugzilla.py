@@ -20,6 +20,9 @@ SCOPE_QUERIES = [
 EXCLUDED_PRODUCTS = {"Mozilla QA"}
 DESKTOP_OS = {"macOS", "Linux", "Unspecified", "All"}
 DESKTOP_TREEHERDER_PLATFORMS = ("linux", "windows", "macosx")
+# Trees that only carry landed Firefox code, plus any mozilla-esr* tree. A failure
+# on try or a project branch may come from the unreviewed patch being tested.
+FIREFOX_TREES = {"autoland", "mozilla-central", "mozilla-beta", "mozilla-release"}
 BUG_FIELDS = [
     "id",
     "summary",
@@ -113,8 +116,12 @@ def is_intermittent(bug: dict) -> bool:
     )
 
 
+def is_firefox_tree(tree: str) -> bool:
+    return tree in FIREFOX_TREES or tree.startswith("mozilla-esr")
+
+
 def desktop_failures(bug_id: int) -> Counter:
-    """Count Treeherder failures per desktop platform, on Firefox (not comm-*) trees."""
+    """Count Treeherder failures per desktop platform, on Firefox trees only."""
     failures = get_json(
         TREEHERDER_URL,
         {
@@ -128,7 +135,7 @@ def desktop_failures(bug_id: int) -> Counter:
         failure["platform"]
         for failure in failures
         if failure["platform"].startswith(DESKTOP_TREEHERDER_PLATFORMS)
-        and not failure["tree"].startswith("comm")
+        and is_firefox_tree(failure["tree"])
     )
 
 
