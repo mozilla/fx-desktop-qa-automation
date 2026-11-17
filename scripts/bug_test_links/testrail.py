@@ -158,6 +158,7 @@ def testrail_links(
             status = statuses.get(result.get("status_id"))
             if (
                 test.get("case_id")
+                and result.get("created_on")
                 and (status or "").lower() not in NOT_EXECUTED_STATUSES
             ):
                 executions.append(
