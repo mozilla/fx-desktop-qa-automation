@@ -16,7 +16,8 @@ instantiate TabBar from `browser_object_tabbar.py`, selectors from
 
 ### Restarting Firefox
 
-`restart_firefox(driver)` in `restart.py` quits Firefox cleanly and starts it
+Call `restart()` on any page object (`BasePage.restart()`, which wraps
+`restart_firefox(driver)` in `restart.py`) to quit Firefox cleanly and start it
 again on the same profile, so prefs and the session carry over. The same
 `driver` object is reattached to the new Firefox, and its usual `quit()` closes
 everything. The driver's geckodriver must be started with

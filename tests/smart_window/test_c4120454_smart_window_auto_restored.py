@@ -6,7 +6,6 @@ back both the Classic and the Smart window with their tabs.
 
 import pytest
 from auto_fxui.browser_object import SmartWindow
-from auto_fxui.restart import restart_firefox
 from selenium.webdriver import Firefox
 
 
@@ -17,7 +16,7 @@ def test_case():
 
 @pytest.fixture()
 def fxa_env():
-    """No FxA: the WAF bypass is installed in the Firefox that restart_firefox quits."""
+    """No FxA: the WAF bypass is installed in the Firefox that restart() quits."""
     return None
 
 
@@ -40,7 +39,7 @@ def test_smart_window_auto_restored(
     smart_window.activate_smart_window()
     smart_window.expect_smart_window_active(True)
 
-    restart_firefox(driver)
+    smart_window.restart()
 
     smart_window.expect(lambda _: len(smart_window.get_windows()) == 2)
     windows = {(w["smart"], tuple(w["urls"])) for w in smart_window.get_windows()}

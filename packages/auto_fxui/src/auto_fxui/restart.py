@@ -163,7 +163,7 @@ def _launch(
                 return process, port
             time.sleep(0.25)
         if process.poll() is None:
-            process.kill()
+            _end_process(process)
             break
         logging.info("restart_firefox: Firefox exited at start (try %d)", attempt + 1)
         time.sleep(2)

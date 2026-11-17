@@ -1,5 +1,5 @@
 import pytest
-from auto_fxui.restart import restart_firefox
+from auto_fxui.page_object import GenericPage
 from selenium.webdriver import Firefox
 
 
@@ -9,21 +9,21 @@ def add_to_prefs_list():
     return [("browser.startup.page", 3)]
 
 
-def test_restart_firefox_keeps_driver_and_session(driver: Firefox):
-    driver.get("about:robots")
+def test_restart_keeps_driver_and_session(driver: Firefox):
+    page = GenericPage(driver, url="about:robots").open()
     old_session = driver.session_id
 
-    restarted = restart_firefox(driver)
+    page.restart()
 
-    assert restarted is driver
+    assert page.driver is driver
     assert driver.session_id != old_session
     assert "Gort" in driver.title
 
 
-def test_restart_firefox_twice(driver: Firefox):
-    driver.get("about:robots")
+def test_restart_twice(driver: Firefox):
+    page = GenericPage(driver, url="about:robots").open()
 
-    restart_firefox(driver)
-    restart_firefox(driver)
+    page.restart()
+    page.restart()
 
     assert "Gort" in driver.title
