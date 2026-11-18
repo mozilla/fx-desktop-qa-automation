@@ -1066,7 +1066,7 @@ class Navigation(BasePage):
         Argument:
         bookmark_name: The display name of the bookmark to delete
         """
-        self.click_on("other-bookmarks-toolbar")
+        self._open_other_bookmarks_popup()
         self.panel_ui.context_click("other-bookmarks-by-title", labels=[bookmark_name])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
         return self
@@ -1126,7 +1126,7 @@ class Navigation(BasePage):
         Argument:
         bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
         """
-        self.click_on("other-bookmarks-toolbar")
+        self._open_other_bookmarks_popup()
         self.panel_ui.element_not_visible(
             "other-bookmarks-by-title", labels=[bookmark_name]
         )
