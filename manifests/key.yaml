@@ -158,7 +158,7 @@ address_bar_and_search:
     splits:
       - functional1
   test_new_search_box_suggestions_present:
-    comment:
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094802
     result: flaky
     splits:
       - functional1
