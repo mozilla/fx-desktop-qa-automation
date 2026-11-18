@@ -92,7 +92,11 @@ address_bar_and_search:
     splits:
       - functional1
   test_new_search_box_added_engine_default:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094810
+    result:
+      linux: pass
+      mac: pass
+      win: flaky
     splits:
       - functional1
   test_new_search_box_contextual_search:
@@ -121,7 +125,8 @@ address_bar_and_search:
     splits:
       - functional1
   test_new_search_box_no_url_navigation:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094799
+    result: flaky
     splits:
       - functional1
   test_new_search_box_opens_results_in_new_tab:
@@ -153,7 +158,8 @@ address_bar_and_search:
     splits:
       - functional1
   test_new_search_box_suggestions_present:
-    result: pass
+    comment:
+    result: flaky
     splits:
       - functional1
   test_new_search_box_with_vertical_tabs:
@@ -844,7 +850,11 @@ networking:
     splits:
       - functional1
   test_doh_providers_global_regions:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094806
+    result:
+      linux: pass
+      mac: pass
+      win: flaky
     splits:
       - functional1
   test_doh_providers_ru_region:
@@ -1396,7 +1406,8 @@ preferences:
     splits:
       - functional2
   test_dictionaries_can_be_downloaded:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094780
+    result: unstable
     splits:
       - functional2
   test_downloaded_languages_can_be_deleted:
@@ -1441,7 +1452,11 @@ preferences:
     result: covered-in-tree
     splits: []
   test_language_packs_can_be_downloaded_from_about_addons:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094793
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
       - functional2
       - exclude_nightly
@@ -1516,7 +1531,11 @@ preferences:
     splits:
       - functional2
   test_spell_check_recognises_existing_dictionaries:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094795
+    result:
+      linux: pass
+      mac: unstable
+      win: pass
     splits:
       - functional2
   test_support_get_help:
@@ -2108,7 +2127,8 @@ smart_window:
       - smart_window
       - functional2
   test_c3321894_smart_bar_suggests_chat:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094777
+    result: unstable
     splits:
       - smart_window
       - functional2
@@ -2177,10 +2197,7 @@ smart_window:
       - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092624
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: unstable
     splits:
       - functional2
   test_c4438277_group_related_tabs:
@@ -2335,7 +2352,11 @@ tabs:
     result: covered-in-tree
     splits: []
   test_split_view_context_menu_search_single_tab:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094805
+    result:
+      linux: pass
+      mac: flaky
+      win: pass
     splits:
       - functional2
       - nightly
@@ -2356,7 +2377,11 @@ tabs:
     splits:
       - functional2
   test_tab_hover_different_content_type:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094771
+    result:
+      linux: pass
+      mac: pass
+      win: flaky
     splits:
       - functional2
       - nightly
