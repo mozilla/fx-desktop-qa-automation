@@ -1097,7 +1097,7 @@ password_manager:
     result:
       linux: unstable
       mac: pass
-      win: unstable
+      win: pass
     splits:
       - functional1
   test_primary_password_triggered_on_about_logins_access:
