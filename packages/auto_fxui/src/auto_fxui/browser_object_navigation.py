@@ -946,7 +946,7 @@ class Navigation(BasePage):
         Bookmark a site via star button and click save on the bookmark panel
         """
         self.click_on("star-button")
-        self.panel_ui.click_on("save-bookmark-button")
+        self.panel_ui.js_click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -965,7 +965,7 @@ class Navigation(BasePage):
         self.click_on("star-button")
         self.panel_ui.click_on("bookmarks-type-dropdown")
         self.panel_ui.click_on("bookmarks-type-dropdown-other")
-        self.panel_ui.click_on("save-bookmark-button")
+        self.panel_ui.js_click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -1030,11 +1030,26 @@ class Navigation(BasePage):
         return self
 
     @BasePage.context_chrome
+    def _open_other_bookmarks_popup(self) -> BasePage:
+        """
+        Open the Other Bookmarks folder popup from the toolbar.
+        """
+
+        # The folder button ignores clicks for a moment after it first appears
+        def _popup_opened(_):
+            if self.fetch("other-bookmarks-popup").get_property("state") == "closed":
+                self.click_on("other-bookmarks-toolbar")
+            return self.fetch("other-bookmarks-popup").get_property("state") == "open"
+
+        self.expect(_popup_opened)
+        return self
+
+    @BasePage.context_chrome
     def open_add_bookmark_via_toolbar_other_bookmarks_context_menu(self) -> BasePage:
         """
         Open the context menu for Other Bookmarks in the toolbar and select Add Bookmark option.
         """
-        self.click_on("other-bookmarks-toolbar")
+        self._open_other_bookmarks_popup()
         self.context_click("other-bookmarks-popup")
         self.context_menu.click_on("context-menu-add-bookmark")
         self.context_menu.hide_popup_by_child_node("context-menu-add-bookmark")
@@ -1051,7 +1066,7 @@ class Navigation(BasePage):
         Argument:
         bookmark_name: The display name of the bookmark to delete
         """
-        self.click_on("other-bookmarks-toolbar")
+        self._open_other_bookmarks_popup()
         self.panel_ui.context_click("other-bookmarks-by-title", labels=[bookmark_name])
         self.context_menu.click_and_hide_menu("context-menu-delete-page")
         return self
@@ -1083,7 +1098,7 @@ class Navigation(BasePage):
         Argument:
         bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
         """
-        self.click_on("other-bookmarks-toolbar")  # Navigation selector
+        self._open_other_bookmarks_popup()
         self.panel_ui.element_visible(
             "other-bookmarks-by-title", labels=[bookmark_name]
         )
@@ -1111,7 +1126,7 @@ class Navigation(BasePage):
         Argument:
         bookmark_name : The exact name/title of the bookmark to search for in the Other Bookmarks folder.
         """
-        self.click_on("other-bookmarks-toolbar")
+        self._open_other_bookmarks_popup()
         self.panel_ui.element_not_visible(
             "other-bookmarks-by-title", labels=[bookmark_name]
         )
@@ -1155,7 +1170,7 @@ class Navigation(BasePage):
         if not save_bookmark:
             return self
         else:
-            self.panel_ui.click_on("save-bookmark-button")
+            self.panel_ui.js_click_on("save-bookmark-button")
             return self
 
     @BasePage.context_chrome
@@ -1165,7 +1180,7 @@ class Navigation(BasePage):
         """
         self.click_on("star-button")
         self.panel_ui.click_on("show-editor-when-saving-checkbox")
-        self.panel_ui.click_on("save-bookmark-button")
+        self.panel_ui.js_click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome

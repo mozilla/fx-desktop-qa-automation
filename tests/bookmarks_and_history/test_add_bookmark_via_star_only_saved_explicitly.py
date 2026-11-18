@@ -39,5 +39,5 @@ def test_add_bookmark_via_star_save_button_explicitly(driver: Firefox):
     nav.verify_bookmark_does_not_exist_in_bookmarks_toolbar(BOOKMARK_NAME)
 
     # Finally, save the edited bookmark and verify it exist
-    nav.panel_ui.click_on("save-bookmark-button")
+    nav.panel_ui.js_click_on("save-bookmark-button")
     nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)
