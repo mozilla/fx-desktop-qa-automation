@@ -2368,11 +2368,7 @@ tabs:
       - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092637
-    result:
-      linux: pass
-      mac: pass
-      win: unstable
+    result: pass
     splits:
       - smoke
       - exclude_nightly
