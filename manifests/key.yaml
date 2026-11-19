@@ -1102,11 +1102,7 @@ password_manager:
     splits:
       - functional1
   test_primary_password_allows_csv_export:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983843
-    result:
-      linux: unstable
-      mac: pass
-      win: unstable
+    result: pass
     splits:
       - functional1
   test_primary_password_triggered_on_about_logins_access:

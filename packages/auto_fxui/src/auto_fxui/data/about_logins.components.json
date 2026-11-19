@@ -236,7 +236,9 @@
   "primary-password-dialog-input-field": {
     "selectorData": "password1Textbox",
     "strategy": "id",
-    "groups": [],
+    "groups": [
+      "doNotCache"
+    ],
     "comment": {
       "description": "Input field inside Primary password prompt",
       "location": "Alert on the about:logins page"

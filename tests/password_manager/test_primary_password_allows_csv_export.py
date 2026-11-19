@@ -24,8 +24,6 @@ def add_to_prefs_list():
     return [("signon.management.page.os-auth.locked.enabled", False)]
 
 
-@pytest.mark.headed
-@pytest.mark.noxvfb
 def test_primary_password_allows_csv_export(driver: Firefox, downloads_folder):
     """
     C2241527 - Verify that entering the Primary Password allows successful export of passwords to a CSV file
