@@ -1,9 +1,10 @@
 """
-Write Firefox-tree versions of STARfox suite conftests, with a per-suite report.
+Write Firefox-tree versions of STARfox suite conftests, with a report.
 
-Run from the STARfox root with the same arguments as the inventory, e.g.
+Run from the STARfox root, e.g.
 
-    python -m scripts.fixture_inventory.convert --repo . --out /tmp/conftests \\
+    python -m scripts.fixture_inventory --repo . --out /tmp/conftests \\
+        --firefox-root ~/firefox \\
         --firefox-conftest ~/firefox/testing/dte-ui-test/tests/conftest.py \\
         --firefox-site ~/firefox/python/sites/dte-ui-test.txt \\
         --firefox-site ~/firefox/python/sites/mach.txt \\
@@ -11,9 +12,10 @@ Run from the STARfox root with the same arguments as the inventory, e.g.
 
 The repo is only read. Output: <out>/<path under the tests dir>/conftest.py and
 conversion-report.{json,md}. --out must be outside --repo and empty, unless
---overwrite is given.
+--overwrite is given. Results come from static analysis; nothing is run.
 """
 
+import argparse
 import ast
 import builtins
 import json
@@ -22,12 +24,17 @@ import warnings
 from pathlib import Path, PurePosixPath
 
 from . import migration_rules
-from .cli import build_parser, options_from_args
-from .inventory import Inventory
+from .analysis import Analysis, Options
+from .models import FixtureDef
 
 LINE_LENGTH = 88
 BUILTINS = frozenset(dir(builtins))
 DEFS = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+STATIC_NOTE = (
+    "Static analysis only: 'ready' means the converted conftest parses and, by "
+    "source analysis, everything it requests resolves in the Firefox tree. It has "
+    "not been run under Firefox's harness, so runtime behaviour is unchecked."
+)
 
 
 def _span(node: ast.AST, lines: list[str]) -> tuple[int, int]:
@@ -210,86 +217,70 @@ def check_out_dir(out: Path, repo: Path, overwrite: bool = False):
 
 
 class Converter:
-    def __init__(self, inventory: Inventory, data: dict, rules=migration_rules):
-        if not data["meta"]["inputs"]["firefox_conftests"]:
+    def __init__(self, analysis: Analysis, rules=migration_rules):
+        if not analysis.ff_modules:
             raise ValueError(
                 "no Firefox conftest given: the converter needs it to know what "
                 "the Firefox tree already provides"
             )
-        self.inv = inventory
-        self.data = data
+        self.an = analysis
         self.rules = rules
-        self.repo = inventory.layout.repo
-        self.shims = shim_modules(self.repo, inventory.layout.repo_packages)
-        self.unavailable = {
-            i["module"] for i in data["imports"] if i["available_in_firefox"] is False
-        }
-        self.by_file: dict[str, list[dict]] = {}
-        self.root_fixtures: dict[str, dict] = {}
-        for f in data["fixtures"]:
-            if f["level"] == "suite":
-                self.by_file.setdefault(f["file"], []).append(f)
-            elif f["level"] == "root":
-                self.root_fixtures.setdefault(f["name"], f)
+        self.repo = analysis.repo
+        self.shims = shim_modules(self.repo, analysis.layout.repo_packages)
 
-    def _drop_reason(self, f: dict) -> str | None:
-        if f["name"] in self.rules.DROP:
-            return self.rules.DROP[f["name"]]
-        eq = f.get("firefox_equivalent") or {}
-        if eq.get("status") == "code_identical" and not eq["file"].startswith(
-            self.inv.tests_rel + "/"
-        ):
-            return f"code-identical to {eq['file']}:{eq['line']}"
+    def _drop_reason(self, f: FixtureDef) -> str | None:
+        if f.name in self.rules.DROP:
+            return self.rules.DROP[f.name]
+        if twin := self.an.firefox_twin(f):
+            return f"code-identical to {twin.file}:{twin.line}"
         return None
 
-    def _still_needed(self, f: dict, kept: list[dict]) -> list[str]:
+    def _still_needed(self, f: FixtureDef, kept: list[FixtureDef]) -> list[str]:
         """Why a fixture removed by a DROP rule is still needed, if it is."""
         why = []
-        if f["tests_using_after_migration"]:
-            why.append(f"{f['tests_using_after_migration']} test(s) still use it")
-        why += [k["name"] for k in kept if f["name"] in k["args"]]
+        if n := self.an.tests_using_after_migration(f):
+            why.append(f"{n} test(s) still use it")
+        why += [k.name for k in kept if f.name in k.args]
         return why
 
     def _move_in(self, name: str, target: str) -> tuple[str | None, str | None]:
         """Return (source to append, None) or (None, reason it cannot move)."""
-        f = self.root_fixtures.get(name)
+        f = self.an.root_fixture(name)
         if f is None:
             return None, f"cannot move {name}: no STARfox root fixture has that name"
-        source = (self.repo / f["file"]).read_text(encoding="utf-8")
+        source = (self.repo / f.file).read_text(encoding="utf-8")
         lines = source.splitlines()
         node = next(
             (
                 n
                 for n in ast.parse(source).body
                 if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
-                and n.lineno == f["line"]
+                and n.lineno == f.line
             ),
             None,
         )
         if node is None:
-            return None, f"cannot move {name}: not found at {f['file']}:{f['line']}"
+            return None, f"cannot move {name}: not found at {f.file}:{f.line}"
         missing = sorted(_free_names(node) - _top_level_names(target) - {"pytest"})
         if missing:
             return None, (
-                f"cannot move {name}: it needs {missing} from {f['file']}, which the "
+                f"cannot move {name}: it needs {missing} from {f.file}, which the "
                 "suite conftest does not define"
             )
         start, end = _span(node, lines)
         return "\n".join(lines[start - 1 : end]), None
 
     def convert(self, rel: str) -> dict:
-        path_in_tests = PurePosixPath(rel).relative_to(self.inv.tests_rel)
+        path_in_tests = PurePosixPath(rel).relative_to(self.an.tests_rel)
         suite = path_in_tests.parts[0]
         source = (self.repo / rel).read_text(encoding="utf-8")
         lines = source.splitlines()
-        fixtures = {(f["name"], f["line"]): f for f in self.by_file.get(rel, [])}
+        fixtures = {f.line: f for f in self.an.fixtures_in(rel) if not f.container}
         planned, kept = [], []
         for node in ast.parse(source).body:
             if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
-            f = fixtures.get((node.name, node.lineno)) or next(
-                (x for x in fixtures.values() if x["func_name"] == node.name), None
-            )
+            f = fixtures.get(node.lineno)
             if f is None:
                 continue
             if reason := self._drop_reason(f):
@@ -298,19 +289,19 @@ class Converter:
                 kept.append(f)
         removed, spans, blockers = [], [], []
         for f, node, reason in planned:
-            why = self._still_needed(f, kept) if f["name"] in self.rules.DROP else []
+            why = self._still_needed(f, kept) if f.name in self.rules.DROP else []
             if why:
                 kept.append(f)
                 blockers.append(
-                    f"{f['name']}: DROP rule not applied, still needed ({'; '.join(why)})"
+                    f"{f.name}: DROP rule not applied, still needed ({'; '.join(why)})"
                 )
             else:
-                removed.append({"fixture": f["name"], "reason": reason})
+                removed.append({"fixture": f.name, "reason": reason})
                 spans.append(_span(node, lines))
         out = _remove_spans(source, spans)
         moved = []
         for name, suites in self.rules.MOVE_TO_SUITE.items():
-            if suite in suites and name not in {f["name"] for f in kept}:
+            if suite in suites and name not in {f.name for f in kept}:
                 text, problem = self._move_in(name, out)
                 if problem:
                     blockers.append(problem)
@@ -324,45 +315,42 @@ class Converter:
         out = _tidy_blank_lines(out)
         more_blockers, notes = self._blockers(rel, kept, out)
         blockers = sorted(set(blockers + more_blockers))
-        suite_info = self.data["suites"].get(suite, {})
         return {
             "suite": suite,
             "source": rel,
             "output": str(path_in_tests),
             "status": "blocked" if blockers else "ready",
             # What the suite's tests (not this conftest) still need after migration.
-            "tests_still_need": dict(
-                sorted(suite_info.get("missing_after_migration", {}).items())
-            ),
-            "tests_repo_local_imports": suite_info.get("repo_local_imports", []),
+            "tests_still_need": self.an.suite_tests_need(suite),
+            "tests_repo_local_imports": self.an.suite_repo_imports(suite),
             "removed": removed,
             "moved_in": moved,
             "import_changes": import_changes,
             "blockers": blockers,
             "notes": notes,
-            "kept": [f["name"] for f in kept],
+            "kept": [f.name for f in kept],
             "text": out,
         }
 
-    def _blockers(self, rel: str, kept: list[dict], text: str):
+    def _blockers(self, rel: str, kept: list[FixtureDef], text: str):
         blockers, notes = [], []
-        kept_ids = {f["id"] for f in kept}
         for f in kept:
-            for reason in f["starfox_specific_reasons"]:
+            for reason in self.an.starfox_specific_reasons(f):
                 # Imports from re-export shims were rewritten to auto_fxui above.
                 if not any(f" {shim}." in reason for shim in self.shims):
-                    blockers.append(f"{f['name']}: {reason}")
-            for name in f["blocked_after_migration_by"]:
+                    blockers.append(f"{f.name}: {reason}")
+            for name in self.an.missing_requests(f):
                 blockers.append(
-                    f"{f['name']}: requests '{name}', which the Firefox tree does not provide"
+                    f"{f.name}: requests '{name}', which the Firefox tree does not provide"
                 )
-            if f["category"] == "potentially_redundant":
-                notes.append(f"{f['name']}: {f['reasons'][0]} (cleanup candidate)")
-        for fact in self.data["facts"].get("asset", []):
-            owned = fact.get("owner") == rel or fact.get("owner") in kept_ids
-            if fact["file"] == rel and owned and fact["kind"] == "repo_path":
+            if note := self.an.cleanup_note(f):
+                notes.append(f"{f.name}: {note} (cleanup candidate)")
+        # Module-level code always stays; a fixture's files only matter if it stays.
+        facts = self.an.module_facts(rel) + [x for f in kept for x in f.facts]
+        for fact in facts:
+            if fact.category == "asset" and fact.kind == "repo_path":
                 blockers.append(
-                    f"reads repo file '{fact['value']}' at line {fact['line']} (DTE-5558)"
+                    f"reads repo file '{fact.value}' at line {fact.line} (DTE-5558)"
                 )
         for node in ast.walk(ast.parse(text)):
             if isinstance(node, ast.Import):
@@ -372,18 +360,23 @@ class Converter:
             else:
                 continue
             for module in modules:
-                if module.split(".")[0] in self.unavailable:
+                if self.an.firefox_lacks_module(module.split(".")[0]):
                     blockers.append(
                         f"imports {module}, which the Firefox tree does not install"
                     )
         return sorted(set(blockers)), sorted(set(notes))
 
     def run(self) -> list[dict]:
-        return [self.convert(rel) for rel in self.data["files"]["suite_conftests"]]
+        return [self.convert(rel) for rel in self.an.suite_conftests]
 
 
 def write_outputs(
-    results: list[dict], out: Path, repo: Path, overwrite: bool = False
+    results: list[dict],
+    out: Path,
+    repo: Path,
+    overwrite: bool = False,
+    root_gaps: list[dict] = (),
+    notes: list[str] = (),
 ) -> list[Path]:
     check_out_dir(out, repo, overwrite)
     out.mkdir(parents=True, exist_ok=True)
@@ -393,10 +386,34 @@ def write_outputs(
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(r["text"], encoding="utf-8")
         paths.append(path)
-    report = [{k: v for k, v in r.items() if k != "text"} for r in results]
+    conftests = [{k: v for k, v in r.items() if k != "text"} for r in results]
+    report = {
+        "note": STATIC_NOTE,
+        "analysis_notes": list(notes),
+        "root_fixtures_firefox_lacks": list(root_gaps),
+        "conftests": conftests,
+    }
     (out / "conversion-report.json").write_text(json.dumps(report, indent=2) + "\n")
-    md = [
-        "# Suite conftest conversion",
+    md = ["# Suite conftest conversion", "", STATIC_NOTE, ""]
+    md += [f"- Note: {n}" for n in notes] + ([""] if notes else [])
+    md += [
+        "## Root fixtures suite conftests need that Firefox lacks",
+        "",
+        "Candidates for the Firefox root conftest (or blockers until decided).",
+        "",
+    ]
+    if root_gaps:
+        md += ["| Fixture | Requested by | STARfox definition |", "|---|---|---|"]
+        md += [
+            f"| {g['name']} | {', '.join(g['requested_by'])} "
+            f"| {', '.join(g['starfox_provides'])} |"
+            for g in root_gaps
+        ]
+    else:
+        md.append("None.")
+    md += [
+        "",
+        "## Per conftest",
         "",
         "Status is for the conftest only. The last two columns are what the suite's",
         "tests still need; a suite is not migration-ready until those are clear too.",
@@ -405,7 +422,7 @@ def write_outputs(
         "| Tests still need (tests) | Tests' STARfox-only imports |",
         "|---|---|---|---|---|---|---|",
     ]
-    for r in report:
+    for r in conftests:
         need = ", ".join(f"{k} ({v})" for k, v in r["tests_still_need"].items())
         md.append(
             f"| {r['output']} | {r['status']} "
@@ -418,35 +435,89 @@ def write_outputs(
     return paths + [out / "conversion-report.json", out / "conversion-report.md"]
 
 
-def main(argv=None) -> int:
-    parser = build_parser(
-        prog="fixture_inventory.convert",
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="fixture_inventory",
         description="Write Firefox-tree versions of STARfox suite conftests.",
     )
-    parser.add_argument(
+    p.add_argument("--repo", type=Path, required=True, help="STARfox checkout")
+    p.add_argument("--tests-dir", default="tests", help="Tests dir, relative to --repo")
+    p.add_argument("--out", type=Path, required=True, help="Directory to write to")
+    p.add_argument(
         "--overwrite", action="store_true", help="Allow writing into a non-empty --out"
     )
-    args = parser.parse_args(argv)
-    opts = options_from_args(args)
-    if opts is None:
-        return 2
-    if not opts.firefox_conftests:
+    p.add_argument(
+        "--exclude-suite", action="append", default=[], help="Suite to leave out"
+    )
+    p.add_argument("--firefox-root", type=Path, help="Firefox tree, to shorten paths")
+    p.add_argument(
+        "--firefox-conftest",
+        type=Path,
+        action="append",
+        default=[],
+        help="Firefox conftest that replaces the STARfox root conftest (required)",
+    )
+    p.add_argument(
+        "--firefox-site",
+        type=Path,
+        action="append",
+        default=[],
+        help="Firefox python/sites/*.txt file describing the mach virtualenv",
+    )
+    p.add_argument(
+        "--site-packages",
+        type=Path,
+        action="append",
+        help="site-packages dir to read package metadata and plugin source from "
+        "(default: this Python's)",
+    )
+    return p
+
+
+def main(argv=None) -> int:
+    args = build_parser().parse_args(argv)
+    if not args.firefox_conftest:
         print("error: --firefox-conftest is required", file=sys.stderr)
         return 2
+    for path in args.firefox_conftest + args.firefox_site:
+        if not path.is_file():
+            print(f"error: not a file: {path}", file=sys.stderr)
+            return 2
+    repo = args.repo.resolve()
     try:
-        check_out_dir(args.out, opts.repo, args.overwrite)
+        check_out_dir(args.out, repo, args.overwrite)
     except (ValueError, FileExistsError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
-    inventory = Inventory(opts)
+    opts = Options(
+        repo=repo,
+        tests_dir=args.tests_dir,
+        exclude_suites=tuple(args.exclude_suite),
+        firefox_conftests=args.firefox_conftest,
+        firefox_root=args.firefox_root,
+        firefox_sites=args.firefox_site,
+        site_packages=args.site_packages,
+    )
     # STARfox sources with invalid escapes in strings warn when parsed.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", SyntaxWarning)
-        results = Converter(inventory, inventory.build()).run()
-    write_outputs(results, args.out.resolve(), opts.repo, args.overwrite)
+        analysis = Analysis(opts).build()
+        results = Converter(analysis).run()
+    notes = analysis.notes + [f"parse error: {e}" for e in analysis.parse_errors]
+    write_outputs(
+        results,
+        args.out.resolve(),
+        repo,
+        args.overwrite,
+        root_gaps=analysis.root_gaps(),
+        notes=notes,
+    )
+    for note in notes:
+        print(f"note: {note}", file=sys.stderr)
     ready = sum(r["status"] == "ready" for r in results)
     print(
-        f"{len(results)} suite conftests converted: {ready} ready, {len(results) - ready} blocked"
+        f"{len(results)} suite conftests converted: {ready} ready, "
+        f"{len(results) - ready} blocked (static analysis; not run)"
     )
     print(args.out.resolve())
     return 0

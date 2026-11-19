@@ -2,7 +2,7 @@
 
 import pytest
 
-from .helpers import by_id
+from .helpers import fixture
 
 STARFOX_ROOT = """
 import pytest
@@ -122,104 +122,65 @@ TESTS = {
 
 
 @pytest.fixture()
-def inv(make_repo, run_inventory):
+def an(make_repo, analyse):
     repo = make_repo({"conftest.py": STARFOX_ROOT, **TESTS})
-    return run_inventory(repo, firefox=FIREFOX)
+    return analyse(repo, firefox=FIREFOX)
 
 
-def missing(inv):
-    return {m["name"]: m for m in inv["missing_after_migration"]}
+def requesters(an, name):
+    return an.ff_res.missing[name]["requesters"]
 
 
-def categories(inv):
-    return {f["name"]: f["category"] for f in inv["fixtures"] if f["level"] == "root"}
-
-
-def index_tests(inv):
-    return {t["id"]: t for t in inv["tests"]}
-
-
-def test_missing_fixture_with_nested_dependencies(inv):
-    m = missing(inv)
-    assert {"top", "middle", "leaf"} <= set(m)
-    assert m["top"]["requested_directly_by_tests"] == 1
-    assert not m["top"]["only_needed_through_other_missing_fixtures"]
-    assert m["leaf"]["requested_by_fixtures"] == ["conftest.py::middle"]
-    assert m["leaf"]["only_needed_through_other_missing_fixtures"]
-    assert {categories(inv)[n] for n in ("top", "middle", "leaf")} == {
-        "missing_required"
-    }
-    carried = index_tests(inv)["tests/a/test_nested.py::test_nested"]
-    assert carried["carried_over_after_migration"] == [
+def test_missing_fixture_with_nested_dependencies(an):
+    assert {"top", "middle", "leaf"} <= set(an.ff_res.missing)
+    assert requesters(an, "top") == {"tests/a/test_nested.py::test_nested"}
+    assert requesters(an, "leaf") == {"conftest.py::middle"}
+    carried = an.ff_res.per_test["tests/a/test_nested.py::test_nested"]
+    assert carried["carried_over"] == [
         "conftest.py::leaf",
         "conftest.py::middle",
         "conftest.py::top",
     ]
 
 
-def test_missing_fixture_depending_on_another_missing_fixture(inv):
-    fixtures = by_id(inv)
-    start_time = fixtures["conftest.py::start_time"]
-    assert start_time["category"] == "missing_required"
-    assert start_time["reasons"] == [
-        "needed by 1 test(s) after migration",
-        "declared as an argument by carried-over fixture(s) ['conftest.py::get_code']",
-    ]
-    assert missing(inv)["start_time"]["requested_by_fixtures"] == [
-        "conftest.py::get_code"
-    ]
-    assert categories(inv)["get_code"] == "missing_required"
+def test_missing_fixture_depending_on_another_missing_fixture(an):
+    assert requesters(an, "start_time") == {"conftest.py::get_code"}
+    assert an.ff_res.carried_over["get_code"] == {"conftest.py::get_code"}
 
 
-def test_fixture_in_starfox_but_not_firefox(inv):
-    m = missing(inv)
-    assert m["browser_name"]["starfox_providers"] == ["conftest.py::browser_name"]
-    assert categories(inv)["browser_name"] == "missing_required"
+def test_fixture_in_starfox_but_not_firefox(an):
+    assert an.ff_res.carried_over["browser_name"] == {"conftest.py::browser_name"}
     # Its dependency is Firefox's own driver, so driver is not reported missing.
-    assert "driver" not in m
-    assert categories(inv)["driver"] == "available_in_firefox"
-    browser = index_tests(inv)["tests/a/test_browser.py::test_browser"]
-    assert "testing/ui/tests/conftest.py::driver" in browser["fixtures_after_migration"]
+    assert "driver" not in an.ff_res.missing
+    browser = an.ff_res.per_test["tests/a/test_browser.py::test_browser"]
+    assert "testing/ui/tests/conftest.py::driver" in browser["fixtures"]
 
 
-def test_genuinely_redundant_vs_consumer_removed(inv):
-    fixtures = by_id(inv)
-    never_used = fixtures["conftest.py::never_used"]
-    assert never_used["category"] == "potentially_redundant"
-    assert never_used["reasons"] == ["not used by any analysed test"]
-    window_size = fixtures["conftest.py::window_size"]
-    assert window_size["category"] == "consumer_removed"
-    assert "conftest.py::driver" in window_size["reasons"][0]
+def test_consumer_replaced_by_firefox_drops_its_dependency(an):
+    # STARfox's driver requested window_size; Firefox's driver does not.
+    assert an.sf_res.used_by_tests["conftest.py::window_size"]
+    assert not an.ff_res.used_by_tests.get("conftest.py::window_size")
+    assert "window_size" not in an.ff_res.missing
 
 
-def test_dependency_shared_by_multiple_consumers(inv):
-    shared = missing(inv)["shared"]
-    assert shared["tests"] == 2
-    assert shared["requested_by_fixtures"] == [
-        "conftest.py::first",
-        "conftest.py::second",
-    ]
-    assert shared["starfox_providers"] == ["conftest.py::shared"]
-    assert categories(inv)["shared"] == "missing_required"
+def test_dependency_shared_by_multiple_consumers(an):
+    shared = an.ff_res.missing["shared"]
+    assert len(shared["tests"]) == 2
+    assert shared["requesters"] == {"conftest.py::first", "conftest.py::second"}
+    assert an.ff_res.carried_over["shared"] == {"conftest.py::shared"}
 
 
-def test_dependency_every_test_overrides_is_still_required(inv):
-    fixtures = by_id(inv)
-    root = fixtures["conftest.py::pattern"]
-    assert root["category"] == "missing_required"
-    assert root["reasons"] == [
-        "declared as an argument by carried-over fixture(s) ['conftest.py::cleanup']"
-    ]
-    override = fixtures["tests/a/test_cleanup.py::pattern"]
-    assert override["category"] == "suite_local"
-    assert override["tests_using_after_migration"] == 1
+def test_dependency_every_test_overrides_is_still_required(an):
+    # cleanup is carried over from the root and asks for pattern; the test
+    # module's own pattern wins, so the root one is not carried.
+    assert requesters(an, "cleanup") == {"tests/a/test_cleanup.py::test_cleanup"}
+    assert "pattern" not in an.ff_res.missing
+    override = fixture(an, "tests/a/test_cleanup.py::pattern")
+    assert an.tests_using_after_migration(override) == 1
 
 
-def test_optional_requests_and_autouse_are_not_carried_over(inv):
-    assert "extra" not in missing(inv)
-    assert inv["optional_requests_missing_after_migration"]["extra"] == [
-        "tests/a/test_optional.py::maybe"
-    ]
-    assert categories(inv)["side_effect"] == "unresolved"
-    for t in inv["tests"]:
-        assert "conftest.py::side_effect" not in t["carried_over_after_migration"]
+def test_optional_requests_and_autouse_are_not_carried_over(an):
+    assert "extra" not in an.ff_res.missing
+    assert an.ff_res.optional_missing["extra"] == {"tests/a/test_optional.py::maybe"}
+    for t in an.ff_res.per_test.values():
+        assert "conftest.py::side_effect" not in t["carried_over"]

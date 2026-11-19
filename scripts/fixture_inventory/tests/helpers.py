@@ -10,5 +10,6 @@ def write_files(root: Path, files: dict[str, str]) -> Path:
     return root
 
 
-def by_id(inv: dict) -> dict[str, dict]:
-    return {f["id"]: f for f in inv["fixtures"]}
+def fixture(an, fixture_id: str):
+    """The analysed fixture definition with this id, e.g. 'conftest.py::driver'."""
+    return next(f for m in an.modules for f in m.fixtures if f.id == fixture_id)

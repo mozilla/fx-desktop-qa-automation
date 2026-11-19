@@ -1,14 +1,11 @@
 from ..environment import Environment, parse_firefox_sites
-from .helpers import by_id, write_files
+from .helpers import write_files
 
 PLUGIN = """
 import pytest
 
 def pytest_addoption(parser):
     parser.addoption("--plug-flag")
-
-def pytest_configure(config):
-    config.addinivalue_line("markers", "plugmark: from the plugin")
 
 @pytest.fixture()
 def plugfix():
@@ -61,27 +58,23 @@ def test_site_files_with_pth_and_includes(tmp_path):
 
 
 def test_plugin_fixture_available_only_when_firefox_installs_it(
-    tmp_path, make_repo, run_inventory
+    tmp_path, make_repo, analyse
 ):
     site = fake_site(tmp_path / "site")
     repo = make_repo(
         {
             "tests/a/test_a.py": """
-                import pytest
-
-                @pytest.mark.plugmark
                 def test_a(plugfix):
                     pass
             """,
         }
     )
-    with_plugin = run_inventory(
+    with_plugin = analyse(
         repo,
         firefox={"python/sites/ui.txt": "pypi:fakeplug==1.0\n"},
         site_packages=site,
     )
-    assert with_plugin["missing_after_migration"] == []
-    assert with_plugin["config"]["markers"][0]["registered_in_firefox"]
+    assert not with_plugin.ff_res.missing
 
     repo2 = make_repo(
         {"tests/a/test_a.py": "def test_a(plugfix):\n    pass\n"}, name="repo2"
@@ -89,8 +82,6 @@ def test_plugin_fixture_available_only_when_firefox_installs_it(
     (tmp_path / "firefox" / "python" / "sites" / "ui.txt").write_text(
         "pypi:other==1.0\n"
     )
-    without = run_inventory(repo2, site_packages=site)
-    (missing,) = without["missing_after_migration"]
-    assert missing["name"] == "plugfix"
-    assert missing["starfox_provider_origins"] == ["plugin:fakeplug"]
-    assert by_id(without) == {}
+    without = analyse(repo2, site_packages=site)
+    assert set(without.ff_res.missing) == {"plugfix"}
+    assert without.ff_res.carried_over["plugfix"] == {"fakeplug:fakeplug_mod::plugfix"}

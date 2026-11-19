@@ -1,11 +1,12 @@
 import ast
 import hashlib
+import json
 from types import SimpleNamespace
 
 import pytest
 
+from ..analysis import Analysis, Options
 from ..convert import Converter, _tidy_blank_lines, main, write_outputs
-from ..inventory import Inventory, Options
 from .helpers import write_files
 
 FIREFOX_CONFTEST = """
@@ -105,11 +106,18 @@ def convert_all(tmp_path, files, rules=None, firefox=True, name="repo"):
         firefox_conftests=[ff / "testing/ui/tests/conftest.py"] if firefox else [],
         site_packages=[site],
     )
-    inventory = Inventory(opts)
     rules = rules or SimpleNamespace(
         DROP={"hard_quit": "replaced by the driver default"}, MOVE_TO_SUITE={}
     )
-    return repo, Converter(inventory, inventory.build(), rules).run()
+    return repo, Converter(Analysis(opts).build(), rules).run()
+
+
+def snapshot(repo):
+    return {
+        p: hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted(repo.rglob("*"))
+        if p.is_file()
+    }
 
 
 def build(tmp_path, files, rules=None):
@@ -253,17 +261,10 @@ def test_write_outputs_leaves_the_repo_untouched(tmp_path):
         },
     )
 
-    def snapshot():
-        return {
-            p: hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(repo.rglob("*"))
-            if p.is_file()
-        }
-
-    before = snapshot()
+    before = snapshot(repo)
     out = tmp_path / "out"
     paths = write_outputs(list(results.values()), out, repo)
-    assert snapshot() == before
+    assert snapshot(repo) == before
     assert (out / "a" / "conftest.py").read_text() == results["a"]["text"]
     assert {p.name for p in paths} >= {"conversion-report.json", "conversion-report.md"}
     compile(results["a"]["text"], "conftest.py", "exec")
@@ -503,3 +504,50 @@ def test_conversion_is_idempotent(tmp_path):
     assert second["a"]["text"] == first["a"]["text"]
     assert second["a"]["removed"] == []
     assert second["a"]["import_changes"] == []
+
+
+# Command line: writes conftests and a report, and never touches the repo.
+
+
+def test_cli_writes_conftests_and_report(tmp_path, capsys):
+    repo, _ = build(
+        tmp_path,
+        {
+            "conftest.py": STARFOX_ROOT,
+            "tests/a/conftest.py": (
+                "import pytest\n\n\n@pytest.fixture()\n"
+                "def uses_root(needed_root):\n    return needed_root\n"
+            ),
+            "tests/a/test_a.py": "def test_a(uses_root):\n    pass\n",
+        },
+    )
+    ff = tmp_path / "firefox" / "testing/ui/tests/conftest.py"
+    site = tmp_path / "site"
+    before = snapshot(repo)
+    out = tmp_path / "out"
+    args = ["--repo", str(repo), "--out", str(out), "--firefox-conftest", str(ff)]
+    assert main([*args, "--site-packages", str(site)]) == 0
+    assert snapshot(repo) == before
+    assert "0 ready, 1 blocked (static analysis; not run)" in capsys.readouterr().out
+    assert (out / "a" / "conftest.py").is_file()
+    report = json.loads((out / "conversion-report.json").read_text())
+    assert report["note"].startswith("Static analysis only")
+    assert report["root_fixtures_firefox_lacks"] == [
+        {
+            "name": "needed_root",
+            "requested_by": ["uses_root"],
+            "starfox_provides": ["conftest.py::needed_root"],
+        }
+    ]
+    assert [c["status"] for c in report["conftests"]] == ["blocked"]
+    md = (out / "conversion-report.md").read_text()
+    assert "Static analysis only" in md
+    assert "| needed_root | uses_root | conftest.py::needed_root |" in md
+
+
+def test_cli_rejects_missing_firefox_files(tmp_path, capsys):
+    repo, _ = _suite_repo(tmp_path)
+    args = ["--repo", str(repo), "--out", str(tmp_path / "o")]
+    assert main([*args, "--firefox-conftest", str(tmp_path / "nope.py")]) == 2
+    assert "not a file" in capsys.readouterr().err
+    assert not (tmp_path / "o").exists()

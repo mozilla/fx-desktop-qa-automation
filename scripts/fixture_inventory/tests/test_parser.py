@@ -39,7 +39,6 @@ def test_fixture_definition_fields():
         True,
     )
     assert f.args == ["dep", "kw"]
-    assert f.is_generator
 
 
 def test_fixture_decorator_forms_and_scopes():
@@ -100,9 +99,7 @@ def test_tests_parametrize_usefixtures_and_classes():
     assert a.args == ["driver", "via_fixture"]
     assert a.params == ["other", "value"]
     assert a.usefixtures == ["setup"]
-    assert {m.value for m in a.markers} >= {"slow", "usefixtures", "parametrize"}
     assert (b.container, b.args) == ("TestGroup", ["shared"])
-    assert {m.value for m in b.markers} == {"slow", "headed"}
     (shared,) = info.fixtures
     assert (shared.scope, shared.level, shared.container, shared.args) == (
         "class",
@@ -112,12 +109,9 @@ def test_tests_parametrize_usefixtures_and_classes():
     )
 
 
-def test_facts_env_options_assets_prefs_commands():
+def test_facts_options_requests_and_repo_paths():
     info = parse(
         """
-        import os
-        import subprocess
-        from os import environ
         from pathlib import Path
 
         import pytest
@@ -125,51 +119,37 @@ def test_facts_env_options_assets_prefs_commands():
         PAGE = "data/pages/page.html"
 
         def helper():
-            return os.getenv("HELPER_VAR")
+            return "data/from_helper.json"
 
         @pytest.fixture()
-        def everything(request, options):
-            environ["WRITTEN"] = "1"
-            if "CHECKED" in os.environ:
-                pass
+        def everything(request):
             request.config.getoption("--my-flag")
             request.getfixturevalue("dynamic_one")
-            options.set_preference("browser.pref", True)
-            subprocess.run(["osascript", "-e", "x"])
-            prefs = [("some.pref.name", False)]
             return Path("data", "file.pdf"), PAGE, helper(), "https://example.com/x"
         """
     )
     (f,) = info.fixtures
-    assert kinds(f.facts, "env_var") == {
-        ("write", "WRITTEN"),
-        ("read", "CHECKED"),
-        ("read", "HELPER_VAR"),
-    }
     assert kinds(f.facts, "cli_option") == {("read", "--my-flag")}
-    assert kinds(f.facts, "fixture_request") == {("getfixturevalue", "dynamic_one")}
-    assert kinds(f.facts, "webdriver") >= {
-        ("pref", "browser.pref"),
-        ("pref", "some.pref.name"),
+    assert f.dynamic_requests() == ["dynamic_one"]
+    assert kinds(f.facts, "asset") == {
+        ("repo_path", "data/file.pdf"),
+        ("repo_path", "data/pages/page.html"),
+        ("repo_path", "data/from_helper.json"),
     }
-    assert kinds(f.facts, "command") == {("subprocess.run", "osascript")}
-    assets = kinds(f.facts, "asset")
-    assert ("repo_path", "data/file.pdf") in assets
-    assert ("repo_path", "data/pages/page.html") in assets
-    assert ("url", "https://example.com/x") in assets
-    via = {x.detail for x in f.facts if x.value == "HELPER_VAR"}
+    via = {x.detail for x in f.facts if x.value == "data/from_helper.json"}
     assert via == {"via helper()"}
+    # Module-level code is recorded too: it stays in a converted conftest.
+    assert kinds(info.facts, "asset") == {("repo_path", "data/pages/page.html")}
 
 
 def test_parameter_shadowing_a_module_function_is_not_followed():
     info = parse(
         """
-        import os
         import pytest
 
         @pytest.fixture()
         def driver():
-            return os.environ.get("ONLY_IN_DRIVER")
+            return "data/only_in_driver.html"
 
         @pytest.fixture()
         def uses_driver(driver):
@@ -177,31 +157,19 @@ def test_parameter_shadowing_a_module_function_is_not_followed():
         """
     )
     facts = {f.name: f.facts for f in info.fixtures}
-    assert not kinds(facts["uses_driver"], "env_var")
+    assert kinds(facts["driver"], "asset")
+    assert not kinds(facts["uses_driver"], "asset")
 
 
-def test_hooks_options_markers_and_funcargs():
+def test_cli_options_defined():
     info = parse(
         """
         def pytest_addoption(parser):
             parser.addoption("--ci", action="store_true", dest="ci_mode")
             parser.getgroup("x")._addoption("-q2")
-
-        def pytest_configure(config):
-            config.addinivalue_line("markers", "headed: needs a display")
-
-        def pytest_exception_interact(node, call, report):
-            node.funcargs.get("driver")
         """
     )
-    assert [h.name for h in info.hooks] == [
-        "pytest_addoption",
-        "pytest_configure",
-        "pytest_exception_interact",
-    ]
     assert {f.value for f in info.options_defined} == {"--ci", "ci_mode", "-q2"}
-    assert [f.value for f in info.markers_registered] == ["headed"]
-    assert kinds(info.hooks[2].facts, "fixture_request") == {("funcargs", "driver")}
 
 
 def test_fingerprint_covers_same_module_constants():
@@ -219,23 +187,6 @@ def test_fingerprint_covers_same_module_constants():
     c = parse(template.format(value=10)).fixtures[0]
     assert a.fingerprint == b.fingerprint
     assert a.fingerprint != c.fingerprint
-
-
-def test_arg_usage_hints():
-    info = parse(
-        """
-        import pytest
-
-        @pytest.fixture()
-        def consumer(flag, case, meta):
-            if flag:
-                pass
-            meta["case"] = case
-        """
-    )
-    usage = info.fixtures[0].arg_usage
-    assert usage["flag"] == ["condition"]
-    assert usage["case"] == ["stored in meta[...]"]
 
 
 def test_syntax_error_is_recorded_not_raised():

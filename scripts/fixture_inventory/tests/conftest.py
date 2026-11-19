@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from ..inventory import Inventory, Options
+from ..analysis import Analysis, Options
 from .helpers import write_files
 
 
@@ -31,12 +31,10 @@ def empty_site(tmp_path) -> Path:
 
 
 @pytest.fixture()
-def run_inventory(tmp_path, empty_site):
-    """Return a function that builds the inventory for a repo, with an optional Firefox side."""
+def analyse(tmp_path, empty_site):
+    """Return a function that analyses a repo, with an optional Firefox side."""
 
-    def _run(
-        repo: Path, firefox: dict[str, str] | None = None, site_packages=None, **kwargs
-    ):
+    def _run(repo: Path, firefox: dict[str, str] | None = None, site_packages=None):
         ff_root = write_files(tmp_path / "firefox", firefox or {})
         opts = Options(
             repo=repo,
@@ -44,8 +42,7 @@ def run_inventory(tmp_path, empty_site):
             firefox_conftests=sorted(ff_root.rglob("conftest.py")),
             firefox_sites=sorted((ff_root / "python" / "sites").glob("*.txt")),
             site_packages=[site_packages or empty_site],
-            **kwargs,
         )
-        return Inventory(opts).build()
+        return Analysis(opts).build()
 
     return _run

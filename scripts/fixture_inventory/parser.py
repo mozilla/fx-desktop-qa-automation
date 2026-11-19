@@ -1,39 +1,12 @@
-"""Static extraction of fixtures, tests, hooks and facts from one Python module."""
+"""Static extraction of fixtures, tests and the facts conversion needs from one module."""
 
 import ast
 import fnmatch
 import hashlib
 import re
-from urllib.parse import urlparse
 
-from .models import Finding, FixtureDef, Hook, ModuleInfo, TestItem
+from .models import Finding, FixtureDef, ModuleInfo, TestItem
 
-URL_RE = re.compile(r"^(https?|wss?|ftp|file)://", re.IGNORECASE)
-FILE_EXT_RE = re.compile(
-    r"^[\w\-. {}/\\]*[\w\-{}]\.(html?|xhtml|pdf|zip|png|jpe?g|gif|svg|webp|ico|json"
-    r"|txt|csv|xml|mp4|webm|ogg|ogv|mp3|wav|xpi|crx|ics|vcf|dmg|exe|ya?ml|toml)$",
-    re.IGNORECASE,
-)
-PREF_RE = re.compile(r"^[a-z][\w-]*(\.[\w-]+)+$")
-WIN_DRIVE_RE = re.compile(r"^[A-Za-z]:[\\/]")
-SYSTEM_ROOTS = {
-    "Applications",
-    "Library",
-    "System",
-    "Users",
-    "Volumes",
-    "bin",
-    "dev",
-    "etc",
-    "home",
-    "opt",
-    "private",
-    "proc",
-    "sbin",
-    "tmp",
-    "usr",
-    "var",
-}
 PATH_FUNCS = {
     "pathlib.Path",
     "pathlib.PurePath",
@@ -41,26 +14,7 @@ PATH_FUNCS = {
     "pathlib.PureWindowsPath",
     "os.path.join",
 }
-COMMAND_FUNCS = {
-    "subprocess.run",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.Popen",
-    "os.system",
-    "os.popen",
-}
-ENV_READ = {"os.environ.get", "os.getenv"}
-ENV_WRITE = {"os.environ.pop", "os.environ.setdefault", "os.putenv", "os.unsetenv"}
 FIXTURE_DECORATORS = {"fixture", "yield_fixture"}
-
-
-def url_host(url: str) -> str:
-    """Return the URL's host, or the URL itself if it can't be parsed."""
-    try:
-        return urlparse(url).hostname or url
-    except ValueError:
-        return url
 
 
 def dotted(node: ast.AST) -> str | None:
@@ -116,8 +70,8 @@ def _first_use_only(findings: list[Finding]) -> list[Finding]:
     """Keep the first use of each imported name; keep every other finding."""
     seen, out = set(), []
     for f in findings:
-        if f.kind in ("used", "selenium_api"):
-            key = (f.category, f.kind, f.value, f.detail)
+        if f.kind == "used":
+            key = (f.value, f.detail)
             if key in seen:
                 continue
             seen.add(key)
@@ -169,14 +123,16 @@ class ModuleParser:
 
     def _index_module(self):
         for node in ast.walk(self.tree):
-            if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef)):
+            if isinstance(
+                node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+            ):
                 body = node.body
-            elif isinstance(node, ast.ClassDef):
-                body = node.body
-            else:
-                continue
-            if body and isinstance(body[0], ast.Expr) and literal_str(body[0].value):
-                self.docstrings.add(id(body[0].value))
+                if (
+                    body
+                    and isinstance(body[0], ast.Expr)
+                    and literal_str(body[0].value)
+                ):
+                    self.docstrings.add(id(body[0].value))
         for node in self.tree.body:
             if isinstance(node, ast.Import):
                 for a in node.names:
@@ -208,33 +164,18 @@ class ModuleParser:
             return f"{base}.{rest}" if rest else base
         return name
 
-    # Fact collection
+    # Fact collection: imports, CLI options read, getfixturevalue and repo paths.
 
     def _finding(self, category, kind, value, node, detail=""):
         return Finding(category, kind, str(value), self.rel, node.lineno, detail)
 
-    def classify_string(self, s: str, node: ast.AST, detail="") -> Finding | None:
-        if not s or "\n" in s or len(s) > 400:
+    def _repo_path(self, s: str, node: ast.AST, detail="") -> Finding | None:
+        """A relative path into the repo, such as 'data/page.html'."""
+        if not s or "\n" in s or s.startswith(("/", ".")):
             return None
-        if URL_RE.match(s):
-            kind = "file_url" if s.lower().startswith("file:") else "url"
-            return self._finding("asset", kind, s, node, detail)
         parts = [p for p in re.split(r"[\\/]", s) if p]
-        if WIN_DRIVE_RE.match(s) or (
-            s.startswith("/")
-            and not s.startswith("//")
-            and parts
-            and parts[0] in SYSTEM_ROOTS
-        ):
-            return self._finding("asset", "system_path", s, node, detail)
-        if (
-            not s.startswith(("/", "."))
-            and len(parts) > 1
-            and parts[0] in self.repo_entries
-        ):
+        if len(parts) > 1 and parts[0] in self.repo_entries:
             return self._finding("asset", "repo_path", s, node, detail)
-        if FILE_EXT_RE.match(s):
-            return self._finding("asset", "file_ref", s, node, detail)
         return None
 
     def collect_facts(self, root: ast.AST, visited: set[str] | None = None, via=""):
@@ -257,45 +198,16 @@ class ModuleParser:
                     out.extend(self._name_facts(node, visited, via))
             elif isinstance(node, ast.Call):
                 out.extend(self._call_facts(node, skip, via))
-            elif isinstance(node, ast.Subscript):
-                key = literal_str(node.slice)
-                if key and self.resolve(node.value) == "os.environ":
-                    kind = "read" if isinstance(node.ctx, ast.Load) else "write"
-                    out.append(self._finding("env_var", kind, key, node, via))
-                elif (
-                    key
-                    and isinstance(node.value, ast.Attribute)
-                    and node.value.attr == "funcargs"
-                ):
-                    out.append(self._finding("fixture_request", "funcargs", key, node))
-            elif isinstance(node, ast.Compare):
-                key = literal_str(node.left)
-                if (
-                    key
-                    and isinstance(node.ops[0], (ast.In, ast.NotIn))
-                    and self.resolve(node.comparators[0]) == "os.environ"
-                ):
-                    out.append(self._finding("env_var", "read", key, node, via))
             elif isinstance(node, ast.JoinedStr):
                 text = "".join(
                     v.value if isinstance(v, ast.Constant) else "{}"
                     for v in node.values
                 )
                 skip.update(id(v) for v in ast.walk(node) if v is not node)
-                if f := self.classify_string(text, node, via):
+                if f := self._repo_path(text, node, via):
                     out.append(f)
-            elif isinstance(node, ast.Tuple) and len(node.elts) == 2:
-                key = literal_str(node.elts[0])
-                if (
-                    key
-                    and PREF_RE.match(key)
-                    and isinstance(
-                        node.elts[1], (ast.Constant, ast.Attribute, ast.Name)
-                    )
-                ):
-                    out.append(self._finding("webdriver", "pref", key, node, via))
             elif isinstance(node, ast.Constant) and isinstance(node.value, str):
-                if f := self.classify_string(node.value, node, via):
+                if f := self._repo_path(node.value, node, via):
                     out.append(f)
         return _first_use_only(out)
 
@@ -304,9 +216,6 @@ class ModuleParser:
         if node.id in self.imports:
             mod, sym = self.imports[node.id]
             out.append(self._finding("import", "used", mod, node, sym))
-            qualified = f"{mod}.{sym}" if sym else mod
-            if qualified.startswith("selenium"):
-                out.append(self._finding("webdriver", "selenium_api", qualified, node))
         elif (
             node.id in self.functions
             and node.id not in visited
@@ -329,17 +238,7 @@ class ModuleParser:
         attr = node.func.attr if isinstance(node.func, ast.Attribute) else ""
         first = node.args[0] if node.args else None
         first_str = literal_str(first) if first is not None else None
-        holder = node.func.value if isinstance(node.func, ast.Attribute) else None
-        if (
-            attr == "get"
-            and isinstance(holder, ast.Attribute)
-            and holder.attr == "funcargs"
-        ):
-            if first_str:
-                out.append(
-                    self._finding("fixture_request", "funcargs", first_str, node)
-                )
-        elif attr == "getfixturevalue":
+        if attr == "getfixturevalue":
             if first_str:
                 out.append(
                     self._finding("fixture_request", "getfixturevalue", first_str, node)
@@ -348,37 +247,15 @@ class ModuleParser:
                 out.append(self._finding("dynamic", "getfixturevalue", "<expr>", node))
         elif attr in ("getoption", "getvalue") and first_str:
             out.append(self._finding("cli_option", "read", first_str, node, via))
-        elif q in ENV_READ | ENV_WRITE and first_str:
-            kind = "read" if q in ENV_READ else "write"
-            out.append(self._finding("env_var", kind, first_str, node, via))
-        elif attr in ("setenv", "delenv") and first_str:
-            out.append(self._finding("env_var", "write", first_str, node, via))
-        elif attr == "set_preference" and first_str:
-            out.append(self._finding("webdriver", "pref", first_str, node, via))
-        elif attr == "add_argument" and first_str:
-            out.append(self._finding("webdriver", "browser_arg", first_str, node, via))
-        elif attr in ("execute_script", "execute_async_script"):
-            out.append(self._finding("webdriver", "script", attr, node, via))
-        elif q in COMMAND_FUNCS and first is not None:
-            cmd = literal_strs(first)
-            if cmd is None and isinstance(first, (ast.List, ast.Tuple)) and first.elts:
-                cmd = [literal_str(first.elts[0]) or "<expr>"]
-            value = (
-                (cmd[0].split()[0] if cmd and cmd[0] else "<expr>") if cmd else "<expr>"
-            )
-            out.append(self._finding("command", q, value, node, via))
         elif q in PATH_FUNCS and first_str is not None:
             literal_parts = []
             for a in node.args:
                 s = literal_str(a)
                 literal_parts.append(s if s is not None else "{}")
                 skip.update(id(n) for n in ast.walk(a))
-            head = re.split(r"[\\/]", first_str)[0]
-            if head in self.repo_entries:
+            if re.split(r"[\\/]", first_str)[0] in self.repo_entries:
                 path = "/".join(literal_parts)
                 out.append(self._finding("asset", "repo_path", path, node, via))
-            elif f := self.classify_string("/".join(literal_parts), node, via):
-                out.append(f)
         return out
 
     # Structure extraction
@@ -400,7 +277,7 @@ class ModuleParser:
         )
         if dec is None:
             return None
-        name, scope, autouse, has_params = fn.name, "function", False, False
+        name, scope, autouse = fn.name, "function", False
         if isinstance(dec, ast.Call):
             for kw in dec.keywords:
                 if kw.arg == "name" and (s := literal_str(kw.value)):
@@ -413,8 +290,6 @@ class ModuleParser:
                         if isinstance(kw.value, ast.Constant)
                         else True
                     )
-                elif kw.arg == "params":
-                    has_params = True
             if dec.args and literal_str(dec.args[0]):
                 scope = literal_str(dec.args[0])
         is_static = any(dotted(d) == "staticmethod" for d in fn.decorator_list)
@@ -425,10 +300,6 @@ class ModuleParser:
             line=fn.lineno,
             scope=scope,
             autouse=autouse,
-            has_params=has_params,
-            is_generator=any(
-                isinstance(n, (ast.Yield, ast.YieldFrom)) for n in ast.walk(fn)
-            ),
             args=self._requested_args(fn, method=bool(container) and not is_static),
             origin=self.origin,
             level=level or self.level,
@@ -437,49 +308,7 @@ class ModuleParser:
         )
         fixture.facts = self.collect_facts(fn)
         fixture.fingerprint = self.fingerprint(fn)
-        fixture.arg_usage = self.arg_usage(fn, fixture.args)
         return fixture
-
-    @staticmethod
-    def arg_usage(fn, args: list[str]) -> dict[str, list[str]]:
-        """Describe how the function uses each requested fixture value."""
-        parents = {
-            id(child): parent
-            for parent in ast.walk(fn)
-            for child in ast.iter_child_nodes(parent)
-        }
-        usage: dict[str, list[str]] = {a: [] for a in args}
-        for node in ast.walk(fn):
-            if not (isinstance(node, ast.Name) and node.id in usage):
-                continue
-            parent = parents.get(id(node))
-            if (
-                isinstance(parent, (ast.If, ast.While, ast.IfExp))
-                and parent.test is node
-            ):
-                how = "condition"
-            elif isinstance(parent, (ast.BoolOp, ast.UnaryOp, ast.Compare)):
-                how = "condition"
-            elif isinstance(parent, ast.Assign) and any(
-                isinstance(t, ast.Subscript) for t in parent.targets
-            ):
-                target = next(t for t in parent.targets if isinstance(t, ast.Subscript))
-                how = f"stored in {dotted(target.value) or 'a container'}[...]"
-            elif isinstance(parent, ast.Call) and node is not parent.func:
-                how = f"passed to {dotted(parent.func) or 'a call'}()"
-            elif isinstance(parent, ast.Attribute):
-                how = f"attribute .{parent.attr}"
-            elif isinstance(parent, (ast.For, ast.comprehension)):
-                how = "iterated"
-            elif isinstance(parent, (ast.Return, ast.Yield)):
-                how = "returned"
-            elif isinstance(parent, ast.FormattedValue):
-                how = "formatted into a string"
-            else:
-                how = type(parent).__name__.lower() if parent else "unknown"
-            if how not in usage[node.id]:
-                usage[node.id].append(how)
-        return usage
 
     @staticmethod
     def _requested_args(fn, method=False) -> list[str]:
@@ -525,17 +354,14 @@ class ModuleParser:
         return hashlib.sha1("\n".join(parts).encode()).hexdigest()[:12]
 
     def _mark_info(self, decorators):
-        """Return (markers, usefixtures, direct_params, indirect_params)."""
-        markers, usefix, direct, indirect = [], [], set(), set()
+        """Return (usefixtures, directly parametrized names)."""
+        usefix, direct = [], set()
         for dec in decorators:
             target = dec.func if isinstance(dec, ast.Call) else dec
             name = dotted(target) or ""
-            if ".mark." not in f".{name}":
+            if ".mark." not in f".{name}" or not isinstance(dec, ast.Call):
                 continue
             mark = name.split("mark.", 1)[1]
-            markers.append(self._finding("marker", "used", mark, dec))
-            if not isinstance(dec, ast.Call):
-                continue
             if mark == "usefixtures":
                 for a in dec.args:
                     usefix.extend(literal_strs(a) or [])
@@ -545,13 +371,12 @@ class ModuleParser:
                     names = [n.strip() for n in names[0].split(",")]
                 ind = next((k.value for k in dec.keywords if k.arg == "indirect"), None)
                 if isinstance(ind, ast.Constant) and ind.value is True:
-                    indirect.update(names)
-                elif ind is not None and (ind_names := literal_strs(ind)):
-                    indirect.update(ind_names)
+                    continue
+                if ind is not None and (ind_names := literal_strs(ind)):
                     direct.update(n for n in names if n not in ind_names)
                 else:
                     direct.update(names)
-        return markers, usefix, direct, indirect
+        return usefix, direct
 
     def _pytestmark_decorators(self):
         for node in self.tree.body:
@@ -563,9 +388,7 @@ class ModuleParser:
         return []
 
     def _test_item(self, fn, container, inherited_decorators) -> TestItem:
-        markers, usefix, direct, _ = self._mark_info(
-            inherited_decorators + fn.decorator_list
-        )
+        usefix, direct = self._mark_info(inherited_decorators + fn.decorator_list)
         args = [
             a
             for a in self._requested_args(fn, method=bool(container))
@@ -580,8 +403,6 @@ class ModuleParser:
             usefixtures=usefix,
             container=container,
             params=sorted(direct),
-            markers=markers,
-            facts=self.collect_facts(fn),
         )
 
     def parse(self, collect_tests: bool) -> ModuleInfo:
@@ -595,38 +416,17 @@ class ModuleParser:
                     f for f in self.collect_facts(node) if f.category == "import"
                 )
             elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-                self._module_call(node, info)
-        defs = (ast.FunctionDef, ast.AsyncFunctionDef)
+                self._options_defined(node, info)
         for node in self.tree.body:
-            if isinstance(node, defs):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 fixture = self._fixture_def(node)
                 if fixture:
                     info.fixtures.append(fixture)
-                elif node.name.startswith("pytest_"):
-                    info.hooks.append(
-                        Hook(
-                            node.name,
-                            self.rel,
-                            node.lineno,
-                            self.origin,
-                            self.collect_facts(node),
-                        )
-                    )
-                    info.generates_tests |= node.name == "pytest_generate_tests"
                 elif collect_tests and _matches(node.name, self.python_functions):
                     info.tests.append(self._test_item(node, None, module_marks))
             elif isinstance(node, ast.ClassDef):
                 self._parse_class(node, info, collect_tests, module_marks)
             elif isinstance(node, (ast.Assign, ast.AnnAssign, ast.Expr, ast.If)):
-                if isinstance(node, ast.Assign) and any(
-                    isinstance(t, ast.Name) and t.id == "pytest_plugins"
-                    for t in node.targets
-                ):
-                    values = literal_strs(node.value)
-                    for v in values or ["<expr>"]:
-                        info.pytest_plugins.append(
-                            self._finding("plugin", "pytest_plugins", v, node)
-                        )
                 info.facts.extend(
                     f
                     for f in self.collect_facts(node, visited=set(self.constants))
@@ -650,27 +450,20 @@ class ModuleParser:
                     self._test_item(item, node.name, module_marks + node.decorator_list)
                 )
 
-    def _module_call(self, node: ast.Call, info: ModuleInfo):
-        attr = node.func.attr
-        if attr in ("addoption", "_addoption"):
-            for a in node.args:
-                s = literal_str(a)
-                if s and s.startswith("-"):
-                    info.options_defined.append(
-                        self._finding("cli_option", "defined", s, node)
-                    )
-            for kw in node.keywords:
-                if kw.arg == "dest" and (s := literal_str(kw.value)):
-                    info.options_defined.append(
-                        self._finding("cli_option", "dest", s, node)
-                    )
-        elif attr == "addinivalue_line" and len(node.args) >= 2:
-            if literal_str(node.args[0]) == "markers" and (
-                s := literal_str(node.args[1])
-            ):
-                name = re.split(r"[:(]", s, maxsplit=1)[0].strip()
-                info.markers_registered.append(
-                    self._finding("marker", "registered", name, node)
+    def _options_defined(self, node: ast.Call, info: ModuleInfo):
+        """CLI options a module adds, so options read elsewhere can be checked."""
+        if node.func.attr not in ("addoption", "_addoption"):
+            return
+        for a in node.args:
+            s = literal_str(a)
+            if s and s.startswith("-"):
+                info.options_defined.append(
+                    self._finding("cli_option", "defined", s, node)
+                )
+        for kw in node.keywords:
+            if kw.arg == "dest" and (s := literal_str(kw.value)):
+                info.options_defined.append(
+                    self._finding("cli_option", "dest", s, node)
                 )
 
 
