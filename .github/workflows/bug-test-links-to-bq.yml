@@ -29,6 +29,11 @@ on:
 permissions:
   contents: read
 
+# One run at a time; a new run waits.
+concurrency:
+  group: bug-test-links-to-bq
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest

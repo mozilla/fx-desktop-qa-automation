@@ -45,10 +45,10 @@ def collect(cutoff: datetime | None = None, stored: dict | None = None) -> dict:
     """Gather in-scope bugs that link to a test, their links and TestRail
     executions: all of them, or with a cutoff only what changed after it.
 
-    stored holds the IDs of bugs already loaded ("bugs") and of those with a
-    TestRail link ("testrail"); an incremental run needs them to decide what to keep.
+    stored holds the IDs of bugs already loaded ("bugs"), of those with a TestRail
+    link ("testrail"), and loaded failure counts ("failures": ID -> (count, platforms)).
     """
-    stored = stored or {"bugs": set(), "testrail": set()}
+    stored = stored or {"bugs": set(), "testrail": set(), "failures": {}}
     testrail, executions = testrail_links(
         TestRailReader(), int(cutoff.timestamp()) if cutoff else None
     )
@@ -62,7 +62,7 @@ def collect(cutoff: datetime | None = None, stored: dict | None = None) -> dict:
             fetched.update(fetch_bugs(unseen))
 
     scoped_bugs = {bug_id: bug for bug_id, bug in fetched.items() if in_scope(bug)}
-    candidates = add_treeherder_failures(scoped_bugs)
+    candidates = add_treeherder_failures(scoped_bugs, stored["failures"])
 
     tests = starfox_tests()
     name_re = starfox_name_re(tests)
@@ -106,8 +106,13 @@ def main() -> int:
 
     state = last_load(client, table[STATE_TABLE])
     full = LOAD_MODE == "full"
-    if not full and (not state or state["since_date"].isoformat() != SINCE_DATE):
-        logging.info("No earlier load for since_date %s: loading in full", SINCE_DATE)
+    if not full and state and state["since_date"].isoformat() != SINCE_DATE:
+        raise SystemExit(
+            f"since_date {SINCE_DATE} differs from the loaded"
+            f" {state['since_date'].isoformat()}: run with LOAD_MODE=full to rebuild"
+        )
+    if not full and not state:
+        logging.info("No earlier load: loading in full")
         full = True
 
     if full:
@@ -116,10 +121,21 @@ def main() -> int:
         data = collect()
     else:
         logging.info("Loading changes since %s", state["loaded_at"].isoformat())
+        loaded = list(
+            client.query(
+                "SELECT bug_id, desktop_failure_count, desktop_failure_platforms"
+                f" FROM `{table[BUGS_TABLE]}`"
+            ).result()
+        )
         stored = {
-            "bugs": {
-                row["bug_id"]
-                for row in client.query(f"SELECT bug_id FROM `{table[BUGS_TABLE]}`")
+            "bugs": {row["bug_id"] for row in loaded},
+            "failures": {
+                row["bug_id"]: (
+                    row["desktop_failure_count"],
+                    list(row["desktop_failure_platforms"]),
+                )
+                for row in loaded
+                if row["desktop_failure_count"]
             },
             "testrail": {
                 row["bug_id"]

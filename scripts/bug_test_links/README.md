@@ -41,7 +41,12 @@ Collects the data, then scores it.
 | `load_mode` | `incremental` | `incremental` fetches only what changed since the last load; `full` rebuilds every table |
 | `score_yield` | on | Run the scoring workflow after the load |
 
-Scheduled runs use the defaults.
+Scheduled runs use the defaults. Runs never overlap: a new one waits for the one in
+progress (`concurrency` group `bug-test-links-to-bq`).
+
+A full load rebuilds from the sources. Treeherder failures older than about 120 days
+can't be fetched again, so after a full load, older intermittent bugs can have lower
+counts, or be gone.
 
 **Jobs, in order:**
 
@@ -112,12 +117,14 @@ It returns:
 **`main()`** runs one load:
 
 1. Checks `LOAD_MODE`, and records the start time, which becomes the next cutoff.
-2. Reads the saved state with `last_load()`. If there's none, or its `since_date`
-   differs from this run's, it switches to a full load and logs why.
+2. Reads the saved state with `last_load()`. If there's none, it switches to a full
+   load and logs why. If its `since_date` differs from this run's, an incremental run
+   stops with an error, so a mistyped date can't rebuild every table. To change the
+   period, run with `load_mode` `full`.
 3. **Full load:** deletes the state row first, so a run that fails part way is
    followed by another full one, then calls `collect()`.
-   **Incremental load:** reads the IDs of the bugs already loaded, and of those with a
-   TestRail link, then calls `collect(cutoff, stored)`.
+   **Incremental load:** reads the IDs and failure counts of the bugs already loaded,
+   and the IDs of those with a TestRail link, then calls `collect(cutoff, stored)`.
 4. Turns the result into rows. Bugs go through `bug_row()`. Links and executions get
    an `ingested_at` time.
 5. **Full load only:** recreates the four main tables empty.
@@ -159,7 +166,7 @@ It returns:
 | `is_intermittent(bug)` | The `intermittent-failure` keyword, or a summary starting with "Intermittent" or "Perma" |
 | `is_firefox_tree(tree)` | True for a tree in `FIREFOX_TREES` or starting with `mozilla-esr` |
 | `desktop_failures(bug_id)` | Asks Treeherder's `failuresbybug` API for the bug's failures since `SINCE_DATE`, and counts them per platform. Only failures on a desktop platform **and** a Firefox tree count. |
-| `add_treeherder_failures(bugs)` | Calls `desktop_failures()` for every intermittent bug and stores the counts, then drops platform-Unspecified bugs with no desktop failure |
+| `add_treeherder_failures(bugs, earlier)` | Calls `desktop_failures()` for every intermittent bug and stores the counts, then drops platform-Unspecified bugs with no desktop failure. Treeherder keeps only about 120 days of failures. So when a loaded bug's stored count (`earlier`) is higher than today's, it keeps the stored count and adds the stored platforms. That stops old failures ageing out from lowering a count, or from dropping a bug along with its TestRail links. |
 
 ### `summary.py`: test names in bug summaries
 

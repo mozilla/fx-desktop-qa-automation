@@ -139,14 +139,33 @@ def desktop_failures(bug_id: int) -> Counter:
     )
 
 
-def add_treeherder_failures(bugs: dict[int, dict]) -> dict[int, dict]:
-    """Add desktop failure counts to intermittents; drop Unspecified ones with none."""
+def add_treeherder_failures(
+    bugs: dict[int, dict], earlier: dict[int, tuple[int, list[str]]] | None = None
+) -> dict[int, dict]:
+    """Add desktop failure counts to intermittents; drop Unspecified ones with none.
+
+    Parameters
+    ----------
+    bugs
+        Bugs by ID.
+    earlier
+        Stored (count, platforms) of bugs loaded before. Treeherder keeps only
+        about 120 days, so a stored count higher than today's is kept.
+    """
+    earlier = earlier or {}
     intermittents = [bug for bug in bugs.values() if is_intermittent(bug)]
     logging.info("Checking %d intermittent bugs on Treeherder", len(intermittents))
     for bug in intermittents:
-        bug["desktop_failures"] = desktop_failures(bug["id"])
+        failures = desktop_failures(bug["id"])
+        count, platforms = sum(failures.values()), set(failures)
+        stored_count, stored_platforms = earlier.get(bug["id"], (0, []))
+        if stored_count > count:
+            count = stored_count
+            platforms |= set(stored_platforms)
+        bug["desktop_failure_count"] = count or None
+        bug["desktop_failure_platforms"] = sorted(platforms)
     return {
         bug_id: bug
         for bug_id, bug in bugs.items()
-        if bug["platform"] != "Unspecified" or bug.get("desktop_failures")
+        if bug["platform"] != "Unspecified" or bug.get("desktop_failure_count")
     }

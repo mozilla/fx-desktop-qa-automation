@@ -1,7 +1,6 @@
 """BigQuery tables of the loader: rows, schemas, full replace and incremental merge."""
 
 import logging
-from collections import Counter
 
 from scripts.bug_test_links.bugzilla import BUGZILLA_URL, is_intermittent
 
@@ -16,7 +15,6 @@ VIEW = "desktop_bugs_with_tests"
 
 
 def bug_row(bug: dict, ingested_at: str) -> dict:
-    failures = bug.get("desktop_failures") or Counter()
     return {
         "bug_id": bug["id"],
         "summary": bug["summary"],
@@ -37,8 +35,8 @@ def bug_row(bug: dict, ingested_at: str) -> dict:
             if key.startswith("cf_status_firefox") and value not in (None, "---")
         ],
         "is_intermittent": is_intermittent(bug),
-        "desktop_failure_count": sum(failures.values()) if failures else None,
-        "desktop_failure_platforms": sorted(failures),
+        "desktop_failure_count": bug.get("desktop_failure_count"),
+        "desktop_failure_platforms": bug.get("desktop_failure_platforms", []),
         "creation_time": bug["creation_time"],
         "last_change_time": bug.get("last_change_time"),
         "url": f"{BUGZILLA_URL}/show_bug.cgi?id={bug['id']}",
