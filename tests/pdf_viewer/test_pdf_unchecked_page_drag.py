@@ -2,6 +2,7 @@ import re
 
 import pytest
 from auto_fxui.page_object import GenericPdf
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.color import Color
 
 
@@ -18,6 +19,16 @@ def file_name():
 @pytest.fixture()
 def add_to_prefs_list():
     return [("pdfjs.enableSplitMerge", True), ("dom.disable_beforeunload", True)]
+
+
+def _offset_from(element: WebElement, reference: WebElement) -> tuple[float, float]:
+    """
+    Return the element's (x, y) position relative to the reference element.
+    """
+    return (
+        element.rect["x"] - reference.rect["x"],
+        element.rect["y"] - reference.rect["y"],
+    )
 
 
 def test_pdf_unchecked_page_drag(pdf_viewer: GenericPdf):
@@ -37,7 +48,9 @@ def test_pdf_unchecked_page_drag(pdf_viewer: GenericPdf):
     )
 
     # Step 3: Drag the unchecked first page below page two and verify drop feedback.
-    source_rect = source.rect
+    # Measure from page two, so a horizontal shift of the whole list doesn't count
+    source_size = source.size
+    source_offset = _offset_from(source, target)
     try:
         # Move beyond the viewer's drag threshold before approaching the drop target.
         pdf_viewer.actions.move_to_element(source).click_and_hold().move_by_offset(
@@ -48,9 +61,12 @@ def test_pdf_unchecked_page_drag(pdf_viewer: GenericPdf):
         ).perform()
         pdf_viewer.element_visible("page-drag-placeholder")
         placeholder = pdf_viewer.get_element("page-drag-placeholder")
-        assert placeholder.rect == pytest.approx(source_rect, abs=2), (
-            "A placeholder should remain at the original page position."
+        assert placeholder.size == pytest.approx(source_size, abs=2), (
+            "The placeholder should match the dragged page size."
         )
+        assert _offset_from(placeholder, target) == pytest.approx(
+            source_offset, abs=2
+        ), "A placeholder should remain at the original page position."
         pdf_viewer.element_visible("page-drop-guide")
         guide = pdf_viewer.get_element("page-drop-guide")
         guide_color = Color.from_string(guide.value_of_css_property("border-top-color"))
