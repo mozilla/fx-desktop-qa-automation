@@ -25,9 +25,10 @@ def _offset_from(element: WebElement, reference: WebElement) -> tuple[float, flo
     """
     Return the element's (x, y) position relative to the reference element.
     """
+    element_rect, reference_rect = element.rect, reference.rect
     return (
-        element.rect["x"] - reference.rect["x"],
-        element.rect["y"] - reference.rect["y"],
+        element_rect["x"] - reference_rect["x"],
+        element_rect["y"] - reference_rect["y"],
     )
 
 
