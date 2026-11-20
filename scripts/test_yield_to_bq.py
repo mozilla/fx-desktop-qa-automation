@@ -10,10 +10,12 @@ Coverage (C) is left out until its inputs exist, and its weight shared equally.
 import logging
 import math
 import os
+import tomllib
 from bisect import bisect_right
 from collections import Counter, defaultdict
 from collections.abc import Callable
 from datetime import date, datetime, timezone
+from pathlib import Path
 
 import requests
 
@@ -28,34 +30,63 @@ STARFOX_RESULTS_TABLE = "test_results"
 YIELD_TABLE = "test_yield"
 VERSIONS_URL = "https://product-details.mozilla.org/1.0/firefox_versions.json"
 
-# The proposal's weights, plus 0.025 each from C's 0.10.
-DEFAULT_WEIGHTS = {"U": 0.275, "F": 0.225, "S": 0.325, "R": 0.175}
-SEVERITY_WEIGHT = float(os.environ.get("YIELD_SEVERITY_WEIGHT") or 0.5)
-# Unset severity or priority ("--") counts as 0.
-SEVERITY = {"S1": 1.0, "S2": 0.7, "S3": 0.4, "S4": 0.2, "N/A": 0.1}
-PRIORITY = {"P1": 1.0, "P2": 0.8, "P3": 0.5, "P4": 0.25, "P5": 0.1}
+CONFIG_FILE = Path(__file__).parent / "bug_test_links" / "yield_config.toml"
+COMPONENTS = ("U", "F", "S", "R")
 # Resolutions meaning the report wasn't a new, real bug.
 NOT_A_BUG = {"INVALID", "WORKSFORME", "INCOMPLETE", "DUPLICATE"}
 # STARfox CI outcomes where the test ran to a verdict; rerun is fail-then-pass.
 STARFOX_EXECUTED = ("passed", "failed", "rerun")
 
 
-def weights() -> dict[str, float]:
-    """Read weights from YIELD_WEIGHTS, e.g. "U=0.275,F=0.225,S=0.325,R=0.175"."""
-    raw = os.environ.get("YIELD_WEIGHTS")
-    if not raw:
-        return DEFAULT_WEIGHTS
-    parsed = {
-        key.strip(): float(value)
-        for key, value in (part.split("=") for part in raw.split(","))
-    }
+def checked_weights(parsed: dict[str, float], source: str) -> dict[str, float]:
+    """Return parsed if it has positive U, F, S and R summing to 1, else exit."""
     if (
-        set(parsed) != set(DEFAULT_WEIGHTS)
+        set(parsed) != set(COMPONENTS)
         or min(parsed.values()) <= 0
         or not math.isclose(sum(parsed.values()), 1.0)
     ):
-        raise SystemExit("YIELD_WEIGHTS needs positive U, F, S and R summing to 1")
+        raise SystemExit(f"{source} needs positive U, F, S and R summing to 1")
     return parsed
+
+
+def checked_share(value: float, source: str) -> float:
+    """Return value if it is between 0 and 1, else exit."""
+    if not 0 <= value <= 1:
+        raise SystemExit(f"{source} must be between 0 and 1, not {value}")
+    return value
+
+
+def load_config(path: Path = CONFIG_FILE) -> dict:
+    """Read the weights and impact scales, applying the YIELD_* overrides."""
+    config = tomllib.loads(path.read_text(encoding="utf-8"))
+    impact = config["impact"]
+    raw_weights = os.environ.get("YIELD_WEIGHTS")
+    if raw_weights:
+        weights = {
+            key.strip(): float(value)
+            for key, value in (part.split("=") for part in raw_weights.split(","))
+        }
+        weights = checked_weights(weights, "YIELD_WEIGHTS")
+    else:
+        weights = checked_weights(config["weights"], path.name)
+    raw_share = os.environ.get("YIELD_SEVERITY_WEIGHT")
+    severity_weight = (
+        checked_share(float(raw_share), "YIELD_SEVERITY_WEIGHT")
+        if raw_share
+        else checked_share(impact["severity_weight"], path.name)
+    )
+    for scale in ("severity", "priority"):
+        for level, value in impact[scale].items():
+            checked_share(value, f"{path.name} {scale} {level}")
+    return {
+        "weights": weights,
+        "severity_weight": severity_weight,
+        "severity": impact["severity"],
+        "priority": impact["priority"],
+    }
+
+
+CONFIG = load_config()
 
 
 def release_dates() -> list[tuple[date, int]]:
@@ -76,9 +107,10 @@ def cycle_of(day: date, releases: list[tuple[date, int]]) -> int:
 
 def bug_impact(bug: dict) -> float:
     """Weighted severity and priority on a 0-1 scale; unset counts as 0."""
-    return SEVERITY_WEIGHT * SEVERITY.get(bug.get("severity"), 0.0) + (
-        1 - SEVERITY_WEIGHT
-    ) * PRIORITY.get(bug.get("priority"), 0.0)
+    share = CONFIG["severity_weight"]
+    return share * CONFIG["severity"].get(bug.get("severity"), 0.0) + (
+        1 - share
+    ) * CONFIG["priority"].get(bug.get("priority"), 0.0)
 
 
 def automated_cases() -> dict[int, str]:
@@ -251,7 +283,7 @@ def score(
     }
     rows = []
     for key, values in raw.items():
-        parts = {name: components[name][key] for name in DEFAULT_WEIGHTS}
+        parts = {name: components[name][key] for name in COMPONENTS}
         rows.append(
             {
                 "source": key[0],
@@ -361,14 +393,14 @@ def main() -> int:
     for bug in bugs:
         bug["cycle"] = cycle_of(bug["creation_time"].date(), releases)
 
-    used = weights()
+    used = CONFIG["weights"]
     links = read(f"SELECT * FROM `{{dataset}}.{LINKS_TABLE}`")
     automated = automated_cases()
     merge_automated_executions(executions, automated)
     rows = score(links, bugs, executions, cycles, used, automated)
     common = {
         "weights": ",".join(f"{name}={value}" for name, value in used.items())
-        + f",severity={SEVERITY_WEIGHT}",
+        + f",severity={CONFIG['severity_weight']}",
         "window_start": SINCE_DATE,
         "cycles": ",".join(map(str, cycles)),
         "computed_at": datetime.now(timezone.utc).isoformat(),

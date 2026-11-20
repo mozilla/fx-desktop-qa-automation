@@ -23,12 +23,12 @@ on:
         default: "2026-10-13"
         type: string
       weights:
-        description: "Component weights summing to 1, e.g. U=0.275,F=0.225,S=0.325,R=0.175 (empty uses the defaults)"
+        description: "Component weights summing to 1, e.g. U=0.275,F=0.225,S=0.325,R=0.175 (empty uses scripts/bug_test_links/yield_config.toml)"
         required: false
         default: ""
         type: string
       severity_weight:
-        description: "Severity share of bug impact, 0-1; priority gets the rest (empty uses 0.5)"
+        description: "Severity share of bug impact, 0-1; priority gets the rest (empty uses yield_config.toml)"
         required: false
         default: ""
         type: string

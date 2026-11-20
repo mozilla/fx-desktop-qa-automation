@@ -76,8 +76,13 @@ be run by hand, for example to try other weights.
 | Input | Default | Meaning |
 |---|---|---|
 | `since_date` | `2026-10-13` (required when called) | Start of the analysis period; use the same date as the load |
-| `weights` | empty: `U=0.275,F=0.225,S=0.325,R=0.175` | Component weights, positive and summing to 1 |
-| `severity_weight` | empty: `0.5` | Severity's share of a bug's impact; priority gets the rest |
+| `weights` | empty: the values in `yield_config.toml` | Component weights for this run, e.g. `U=0.3,F=0.2,S=0.3,R=0.2`; positive and summing to 1 |
+| `severity_weight` | empty: the value in `yield_config.toml` | Severity's share of a bug's impact for this run, 0–1; priority gets the rest |
+
+To change the defaults, edit [`yield_config.toml`](yield_config.toml). It holds the
+component weights, severity's share, and the severity and priority scales. The inputs
+above override the first two for a single run. The scales can only be changed in the
+file.
 
 It has one job, which installs dependencies, signs in to Google Cloud and runs
 `uv run python -m scripts.test_yield_to_bq`. It needs only `GC_CREDENTIAL_STABILITY` and
@@ -261,7 +266,7 @@ library, so that job needs no install. The score stage imports its
 
 | Name | What it does |
 |---|---|
-| `weights()` | The component weights: `DEFAULT_WEIGHTS`, or `YIELD_WEIGHTS` if set (checked to be positive and to sum to 1) |
+| `load_config()` | Reads `yield_config.toml` into `CONFIG`, when the module loads. `YIELD_WEIGHTS` and `YIELD_SEVERITY_WEIGHT`, if set, replace the file's weights and severity share. The weights must be positive and sum to 1, and every share and scale value must be 0–1. Otherwise it exits with the name of the bad value. |
 | `release_dates()` | Every major release from `major_releases()`, plus the next one from product-details |
 | `cycle_of(day, releases)` | The release cycle a date falls in, named after the version that ships at its end |
 | `bug_impact(bug)` | A bug's severity and priority combined on a 0–1 scale |
