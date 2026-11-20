@@ -230,6 +230,22 @@ class SmartWindow(BasePage):
         self.click_on("switch-to-smart")
         return self
 
+    @BasePage.context_chrome
+    def get_windows(self) -> list[dict]:
+        """Return each browser window, newest first, with whether it's Smart and its tab URLs."""
+        return self.driver.execute_script(
+            f"""
+            const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+            const {{ BrowserWindowTracker }} = ChromeUtils.importESModule(
+              "resource:///modules/BrowserWindowTracker.sys.mjs"
+            );
+            return BrowserWindowTracker.orderedWindows.map(w => ({{
+              smart: AIWindow.isAIWindowActive(w),
+              urls: Array.from(w.gBrowser.tabs, t => t.linkedBrowser.currentURI.spec),
+            }}));
+            """
+        )
+
     # ── Tabs ─────────────────────────────────────────────────────────────
 
     @BasePage.context_chrome

@@ -25,6 +25,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+from .restart import restart_firefox
 from .util import PomUtils
 
 # Convert "strategy" from the components json to Selenium By vals
@@ -178,6 +179,12 @@ class BasePage(Page):
         for name in self.elements:
             if "seleniumObject" in self.elements[name]:
                 del self.elements[name]["seleniumObject"]
+        return self
+
+    def restart(self, resume_session: bool = False) -> Page:
+        """Restart Firefox on the same profile, reattaching the driver in place."""
+        restart_firefox(self.driver, resume_session=resume_session)
+        self.clear_cache()
         return self
 
     @staticmethod
