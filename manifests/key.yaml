@@ -1301,11 +1301,7 @@ pdf_viewer:
     splits:
       - functional2
   test_pdf_unchecked_page_drag:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092639
-    result:
-      linux: unstable
-      mac: pass
-      win: pass
+    result: pass
     splits:
       - functional2
   test_pdf_zoom_checkboxes:
