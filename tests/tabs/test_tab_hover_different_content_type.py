@@ -46,7 +46,7 @@ def test_tab_hover_different_content_type(driver: Firefox):
     about_prefs.open()
     about_prefs.find_in_settings("show an image preview")
     # The search re-renders the page, so the checkbox is briefly hidden
-    about_prefs.element_visible("tab-hover-preview-checkbox")
+    about_prefs.element_clickable("tab-hover-preview-checkbox")
     about_prefs.click_on("tab-hover-preview-checkbox")
 
     # Verify preview shows Name and URL only (no Thumbnail)
