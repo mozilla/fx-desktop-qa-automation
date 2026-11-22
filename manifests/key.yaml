@@ -2399,11 +2399,7 @@ tabs:
     splits:
       - functional2
   test_tab_hover_different_content_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094771
-    result:
-      linux: pass
-      mac: pass
-      win: flaky
+    result: pass
     splits:
       - functional2
       - nightly
