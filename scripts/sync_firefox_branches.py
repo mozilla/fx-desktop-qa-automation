@@ -108,13 +108,21 @@ def main() -> None:
     else:
         major, released = beta_schedule()
         days = days_until(released, datetime.now(timezone.utc))
-        if days is None or days > PROMOTION_WINDOW_DAYS:
+
+        if days is None:
+            summarize(
+                f"Skipped: the Firefox {major} release ({released:%Y-%m-%d %H:%M %Z}) "
+                "already passed. No branches were changed."
+            )
+            return
+        if days > PROMOTION_WINDOW_DAYS:
             summarize(
                 f"Skipped: the Firefox {major} release ({released:%Y-%m-%d %H:%M %Z}) "
                 f"isn't within the next {PROMOTION_WINDOW_DAYS} days. "
                 "No branches were changed."
             )
             return
+
         summarize(
             f"Firefox {major} ships in {days} day{'' if days == 1 else 's'}"
             f" ({released:%Y-%m-%d})."
