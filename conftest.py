@@ -2,13 +2,13 @@ import datetime
 import logging
 import os
 import platform
-import psutil
 import re
 from pathlib import Path
 from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
+import psutil
 import pytest
 import requests
 from auto_fxui.classes.fxa_session import FxaSession
@@ -400,7 +400,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
