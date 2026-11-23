@@ -5,12 +5,14 @@ import json
 import os
 import re
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-SCHEDULE_URL = "https://whattrainisitnow.com/api/release/schedule/?version=release"
+SCHEDULE_URL = "https://whattrainisitnow.com/api/release/schedule/?version=beta"
 RELEASE_REF = re.compile(r"refs/heads/release([1-9][0-9]*)")
 DEFAULT_RETENTION = 2
+PROMOTION_WINDOW_DAYS = 6
 
 
 def git(*args: str) -> str:
@@ -32,14 +34,25 @@ def positive_int(value: str) -> int:
     return int(value)
 
 
-def current_release_major() -> int:
-    """Return the major version of the current Firefox release."""
+def beta_schedule() -> tuple[int, datetime]:
+    """Return the current beta's major version and its release time."""
     request = Request(SCHEDULE_URL, headers={"User-Agent": "fx-desktop-qa-automation"})
     with urlopen(request, timeout=30) as response:
-        version = json.load(response)["version"]
+        schedule = json.load(response)
+    version = schedule["version"]
     if not (match := re.fullmatch(r"([1-9][0-9]*)\.0", version)):
-        raise SystemExit(f"Unexpected release version from the schedule: {version}")
-    return int(match[1])
+        raise SystemExit(f"Unexpected beta version from the schedule: {version}")
+    released = datetime.fromisoformat(schedule["release"])
+    if released.tzinfo is None:
+        raise SystemExit(f"Release time has no time zone: {schedule['release']}")
+    return int(match[1]), released
+
+
+def days_until(released: datetime, now: datetime) -> int | None:
+    """Return calendar days (UTC) from now until released, or None if it's past."""
+    if released <= now:
+        return None
+    return (released.astimezone(timezone.utc).date() - now.date()).days
 
 
 def open_prs_on_main() -> str:
@@ -70,7 +83,7 @@ def main() -> None:
         "--released-major",
         type=positive_int,
         default=os.environ.get("RELEASED_MAJOR") or None,
-        help="Major version on main; defaults to the current Firefox release",
+        help="Major version to archive now, skipping the date check",
     )
     parser.add_argument(
         "--retention",
@@ -90,7 +103,30 @@ def main() -> None:
         default=os.environ.get("DRY_RUN", "true").lower() == "true",
     )
     args = parser.parse_args()
-    major = args.released_major or current_release_major()
+    if args.released_major:
+        major = args.released_major
+    else:
+        major, released = beta_schedule()
+        days = days_until(released, datetime.now(timezone.utc))
+
+        if days is None:
+            summarize(
+                f"Skipped: the Firefox {major} release ({released:%Y-%m-%d %H:%M %Z}) "
+                "already passed. No branches were changed."
+            )
+            return
+        if days > PROMOTION_WINDOW_DAYS:
+            summarize(
+                f"Skipped: the Firefox {major} release ({released:%Y-%m-%d %H:%M %Z}) "
+                f"isn't within the next {PROMOTION_WINDOW_DAYS} days. "
+                "No branches were changed."
+            )
+            return
+
+        summarize(
+            f"Firefox {major} ships in {days} day{'' if days == 1 else 's'}"
+            f" ({released:%Y-%m-%d})."
+        )
 
     git(
         "fetch",
