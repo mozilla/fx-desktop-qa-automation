@@ -1482,7 +1482,8 @@ preferences:
     splits:
       - functional2
   test_pages_can_be_translated_with_offer_disabled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097331
+    result: unstable
     splits:
       - functional2
   test_preferred_language_can_be_added:
@@ -1507,11 +1508,13 @@ preferences:
     splits:
       - functional2
   test_removed_never_translate_sites_can_be_translated:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097328
+    result: unstable
     splits:
       - functional2
   test_speed_up_translation_languages_work:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097326
+    result: unstable
     splits:
       - functional2
   test_spell_check_learn_more_link:
@@ -1708,7 +1711,8 @@ security_and_privacy:
     result: covered-in-tree
     splits: []
   test_data_clearance_from_private_window_can_be_canceled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097332
+    result: unstable
     splits:
       - functional2
   test_detected_blocked_trackers_found:
@@ -1852,7 +1856,8 @@ security_and_privacy:
     splits:
       - functional2
   test_sidebar_removed_on_end_private_session:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097336
+    result: unstable
     splits:
       - functional2
   test_social_media_trackers_displayed_subpanel:
@@ -2276,7 +2281,8 @@ tabs:
     splits:
       - functional2
   test_manage_split_view_footer_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097323
+    result: unstable
     splits:
       - functional2
   test_move_multi_selected_tabs:
@@ -2406,7 +2412,8 @@ tabs:
       - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097320
+    result: unstable
     splits:
       - smoke
       - exclude_nightly
