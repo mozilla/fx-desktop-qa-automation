@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 FIRST_URL = "cnn.com"
 SECOND_URL = "mozilla.org"
 DOMAIN_NAME = "facebook"
+DEFAULT_ENGINE = "Bing"
 SEARCH_ENGINE = "DuckDuckGo"
 
 
@@ -30,10 +31,10 @@ def test_new_search_box_no_url_navigation(driver: Firefox):
     page = GenericPage(driver)
     prefs = AboutPrefs(driver, category="search")
 
-    # Setup: add the search bar and use DuckDuckGo as default, so Google shows no captcha.
+    # Setup: add the search bar and use Bing as default, so Google shows no captcha.
     nav.add_search_bar_via_customizable_ui()
     prefs.open()
-    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
+    prefs.select_default_search_engine_by_key(DEFAULT_ENGINE)
 
     # Step 1: Enter a URL and press Enter; a SERP opens, not the site.
     tabs.open_and_switch_to_new_tab()
