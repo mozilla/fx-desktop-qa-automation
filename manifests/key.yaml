@@ -1680,6 +1680,10 @@ security_and_privacy:
       win: unstable
     splits:
       - functional2
+  test_correct_etb_tracker_are_blocked_in_firefox:
+    result: pass
+    splits:
+      - functional2
   test_cross_origin_iframe_permissions_are_not_prompted:
     result: pass
     splits:
