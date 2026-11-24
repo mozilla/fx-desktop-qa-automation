@@ -1,6 +1,6 @@
 import pytest
 from auto_fxui.browser_object import Navigation, TabBar
-from auto_fxui.page_object import GenericPage
+from auto_fxui.page_object import AboutPrefs, GenericPage
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -28,9 +28,12 @@ def test_new_search_box_no_url_navigation(driver: Firefox):
     nav = Navigation(driver)
     tabs = TabBar(driver)
     page = GenericPage(driver)
+    prefs = AboutPrefs(driver, category="search")
 
-    # Setup: add the search bar to the toolbar.
+    # Setup: add the search bar and use DuckDuckGo as default, so Google shows no captcha.
     nav.add_search_bar_via_customizable_ui()
+    prefs.open()
+    prefs.select_default_search_engine_by_key(SEARCH_ENGINE)
 
     # Step 1: Enter a URL and press Enter; a SERP opens, not the site.
     tabs.open_and_switch_to_new_tab()
