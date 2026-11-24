@@ -392,13 +392,7 @@ class Analysis:
         )
 
     def root_gaps(self) -> list[dict]:
-        """
-        Fixtures suite conftests need after migration that Firefox lacks.
-
-        Follows the STARfox fixtures Firefox would have to take on: each name
-        they declare must exist in the Firefox root too, even where tests
-        override it.
-        """
+        """Fixtures suite conftests need after migration that Firefox lacks."""
         defs = {
             f.id: f
             for m in self.modules + [m for ms in self.plugins.values() for m in ms]
@@ -422,6 +416,8 @@ class Analysis:
             d = defs.get(rid)
             if d is None or rid in suite_ids:
                 continue
+            # A fixture Firefox takes on needs every name it declares in Firefox's
+            # root too, even where tests override that name.
             for arg in d.args:
                 if arg != d.name and not self.firefox_provides(arg):
                     if root := self.root_fixture(arg):

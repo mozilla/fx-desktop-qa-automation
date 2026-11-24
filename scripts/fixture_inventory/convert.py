@@ -105,12 +105,7 @@ def _import_text(node: ast.ImportFrom | ast.Import) -> str:
 def _rewrite_imports(
     source: str, removable: set[str], rename=None
 ) -> tuple[str, list[str]]:
-    """
-    Rename shim modules and drop imported names listed in `removable`.
-
-    Only names the conversion made unused are removable, so imports that were
-    already unused (side effects, fixtures pytest registers by name) stay.
-    """
+    """Rename shim modules and drop imported names listed in `removable`."""
     tree = ast.parse(source)
     lines = source.splitlines()
     edits, changes = [], []
@@ -121,6 +116,8 @@ def _rewrite_imports(
         if isinstance(new, ast.ImportFrom) and rename and new.module in rename:
             changes.append(f"import from {new.module} now from {rename[new.module]}")
             new.module = rename[new.module]
+        # Only names the conversion made unused go, so imports kept for side
+        # effects or for fixtures pytest finds by name stay.
         kept = [
             a
             for a in new.names
@@ -140,12 +137,7 @@ def _rewrite_imports(
 
 
 def _tidy_blank_lines(source: str) -> str:
-    """
-    Two blank lines before each top-level definition, as ruff formats it.
-
-    Only lines between top-level statements change; lines inside a statement
-    (such as a multi-line string) are kept as they are.
-    """
+    """Two blank lines before each top-level definition, as ruff formats it."""
     lines = source.splitlines()
     body = ast.parse(source).body
     starts = {
@@ -153,6 +145,7 @@ def _tidy_blank_lines(source: str) -> str:
         for i, node in enumerate(body)
         if i and isinstance(node, DEFS)
     }
+    # Lines inside a statement, such as a multi-line string, are never changed.
     inside = {
         number
         for node in body
