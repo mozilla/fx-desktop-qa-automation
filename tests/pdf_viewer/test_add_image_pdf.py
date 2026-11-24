@@ -13,12 +13,6 @@ DATA_DIR = Path("data")
 
 
 @pytest.fixture()
-def hard_quit():
-    """Overwriting the hard quit fixture in parent conftest.py"""
-    return True
-
-
-@pytest.fixture()
 def test_case():
     return "2228202"
 
@@ -42,7 +36,7 @@ def image_path() -> Path:
 @pytest.mark.headed
 @pytest.mark.noxvfb
 def test_add_image_pdf(
-    driver: Firefox, sys_platform, pdf_viewer: GenericPdf, image_path: Path, hard_quit
+    driver: Firefox, sys_platform, pdf_viewer: GenericPdf, image_path: Path
 ):
     """
     C2228202: Verify that the user is able to add an image to a PDF file.
