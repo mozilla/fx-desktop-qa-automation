@@ -36,7 +36,6 @@ Runs never overlap; a new one waits.
 |---|---|---|
 | `since_date` | `2026-10-13` | Use the same date as the load |
 | `weights` | from `yield_config.toml` | e.g. `U=0.3,F=0.2,S=0.3,R=0.2`; positive, summing to 1 |
-| `severity_weight` | from `yield_config.toml` | Severity's share of a bug's impact, 0–1; priority gets the rest |
 
 The secrets are `GC_CREDENTIAL_STABILITY`, `BQ_PROJECT` and, for collect only,
 `TESTRAIL_BASE_URL`, `TESTRAIL_USERNAME` and `TESTRAIL_API_KEY`. Bugzilla and
@@ -113,10 +112,12 @@ Test Yield = 100 × (wU·U + wF·F + wS·S + wR·R)
 |---|---|---|
 | U | Unique bugs found | Bugs linked to the test, log-scaled |
 | F | Failure-detection rate | Detections ÷ executions |
-| S | Severity | Summed bug impact (severity and priority) |
+| S | Severity | Summed bug impact, from severity only; priority isn't used in triage |
 | R | Regressions caught | Release cycles with a regression found ÷ cycles run |
 
-Only defects count, not INVALID, WORKSFORME, INCOMPLETE or DUPLICATE ones. Each
+Only defects count, not INVALID, WORKSFORME, INCOMPLETE or DUPLICATE ones.
+Intermittent bugs don't count either: they mostly point at a flaky test rather than a
+product defect. They stay in `bugzilla_bugs`, flagged `is_intermittent`. Each
 component is scaled 0–1 across all tests. A component a test has no data for is left
 out, and the other weights are scaled up. In-tree tests, for example, have no
 executions, so no F.
@@ -124,9 +125,8 @@ executions, so no F.
 A TestRail case that a STARfox test automates is scored as that test. Its executions
 come from STARfox CI (`fx_qa_ci.test_results`), or from TestRail if CI has none.
 
-The defaults are in [`yield_config.toml`](yield_config.toml): the weights, severity's
-share, and the severity and priority scales. The workflow inputs override the first
-two for one run.
+The defaults are in [`yield_config.toml`](yield_config.toml): the weights and the
+severity scale. The `weights` workflow input overrides the weights for one run.
 
 ## Tables (`fx_qa_ci`)
 
