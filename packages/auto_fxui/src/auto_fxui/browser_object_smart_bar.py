@@ -761,6 +761,10 @@ class SmartBar(BasePage):
             )
         )
 
+    def focus_editor(self) -> bool:
+        """Put keyboard focus in the Smart Bar's text field; False if it isn't there."""
+        return self._focus_editor()
+
     def tab_to_button(self, name: str, max_stops: int = 15) -> BasePage:
         """Press Tab from the text field until button `name` has focus."""
         if not self._focus_editor():

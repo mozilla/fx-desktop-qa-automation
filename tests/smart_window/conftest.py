@@ -4,7 +4,12 @@ from pathlib import Path
 
 import pytest
 from auto_fxui.browser_object import SmartWindow, SmartWindowChat
-from auto_fxui.classes.recording import Recording
+from auto_fxui.classes.recording import (
+    Recording,
+    chat_reply,
+    search_results,
+    tool_call,
+)
 from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
 from pytest_httpserver import HTTPServer
 
@@ -12,6 +17,12 @@ from modules.fxa_token import LOGIN_COMMAND, get_access_token
 from modules.taskcluster import get_tc_secret
 
 TAB_PAGES = Path("data", "smart_window_pages")
+# Pages a built web search returns as its sources, with the titles it gives them.
+SEARCH_SOURCES = {
+    "abiogenesis_history.html": "A short history of origin-of-life research",
+    "abiogenesis_experiments.html": "The Miller-Urey experiment and what came after",
+    "abiogenesis_rna_world.html": "The RNA world hypothesis",
+}
 
 
 @pytest.fixture()
@@ -241,3 +252,35 @@ def tab_pages(tab_pages_server: HTTPServer):
     the port.
     """
     return lambda names: [tab_pages_server.url_for(f"/{name}") for name in names]
+
+
+@pytest.fixture()
+def web_search_sources(built_replies: Recording, tab_pages):
+    """
+    Return a function that builds a turn in which the assistant searches the
+    web for `prompt` and answers with `reply`, and returns the sources the
+    search found as dicts of title and url.
+
+    Firefox's web search keeps at most three results, so there are three.
+    """
+
+    def build(prompt: str, reply: str) -> list[dict]:
+        urls = tab_pages(list(SEARCH_SOURCES))
+        sources = [
+            {"title": title, "url": url}
+            for title, url in zip(SEARCH_SOURCES.values(), urls)
+        ]
+        built_replies.add(tool_call(prompt, "search_the_web", {"query": prompt}))
+        built_replies.add(
+            search_results(
+                prompt,
+                [
+                    {**source, "text": f"{source['title']}, an excerpt of the page."}
+                    for source in sources
+                ],
+            )
+        )
+        built_replies.add(chat_reply(prompt, reply, tool_results=1))
+        return sources
+
+    return build

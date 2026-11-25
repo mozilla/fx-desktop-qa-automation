@@ -2220,6 +2220,41 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4255868_web_sources_shown_after_reply:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255962_grouped_web_sources_expand:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255965_open_web_sources_in_new_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255966_web_sources_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255967_web_sources_high_contrast:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255968_web_sources_screen_reader:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4255969_web_sources_in_sidebar:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
     result: pass
     splits:

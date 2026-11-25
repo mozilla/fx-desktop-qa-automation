@@ -189,7 +189,11 @@ built_replies.add(
 - `SmartWindowChat.get_tool_results(name)` returns what Firefox sent back to the model for a
   tool.
 
-`chat_reply()` and `tool_call()` have been tried in Firefox; `search_results()` hasn't yet.
+All three have been tried in Firefox. A web search is three rounds: a `tool_call()` to
+`search_the_web` with a `query`, `search_results()` for that query (Firefox keeps at most three
+results, each with at least 25 characters of `text`), then the `chat_reply()` with
+`tool_results=1`. The `web_search_sources` fixture builds all three and returns the sources, which
+Firefox shows under the reply (see the `test_c42559*` web source tests).
 
 ## How it works
 

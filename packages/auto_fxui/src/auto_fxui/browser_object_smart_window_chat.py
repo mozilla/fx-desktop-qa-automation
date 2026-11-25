@@ -1,5 +1,8 @@
 import re
 
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+
 from .browser_object_smart_bar import SmartBar
 from .browser_object_smart_window import CHAT_DOCUMENT_JS
 from .page_base import BasePage
@@ -60,6 +63,84 @@ mm.loadFrameScript(
   false
 );
 """
+
+
+# A reply's web sources are chips in its chat-assistant-citations row. Those
+# that don't fit are grouped behind the row's "+n more" button, in a panel
+# holding copies of their chips.
+_SOURCES_JS = r"""
+function sourcesRow() {
+  const chat = content.document.querySelector("ai-chat-content");
+  const rows = chat && chat.shadowRoot
+    ? chat.shadowRoot.querySelectorAll("chat-assistant-citations") : [];
+  return rows.length ? rows[rows.length - 1] : null;
+}
+function moreButton() {
+  const row = sourcesRow();
+  return row && row.shadowRoot.querySelector("moz-button.citations-more");
+}
+function morePanel() {
+  const row = sourcesRow();
+  const panel = row && row.shadowRoot.querySelector("smartwindow-panel-list");
+  return panel && panel.shadowRoot;
+}
+function rowChips() {
+  const row = sourcesRow();
+  return row ? [...row.shadowRoot.querySelectorAll(".citations smartwindow-chip")]
+    .filter(chip => !chip.closest("smartwindow-panel-list")) : [];
+}
+function panelChips() {
+  const panel = morePanel();
+  return panel ? [...panel.querySelectorAll("smartwindow-chip")] : [];
+}
+// Grouped chips stay in the row but are hidden with visibility, which a plain
+// checkVisibility() doesn't count.
+function shows(el) {
+  return el.checkVisibility({ visibilityProperty: true, opacityProperty: true });
+}
+function chipLink(chip) {
+  return chip.shadowRoot && chip.shadowRoot.querySelector("a.chip");
+}
+// Read from the chip's markup: the frame script can't see its JS properties.
+function chipUrl(chip) {
+  const link = chipLink(chip);
+  return link ? link.getAttribute("href") : null;
+}
+function chipTitle(chip) {
+  const label = chip.shadowRoot && chip.shadowRoot.querySelector(".chip-label");
+  return label ? label.textContent.trim() : null;
+}
+function describe(chip) {
+  const link = chipLink(chip);
+  const icon = chip.shadowRoot && chip.shadowRoot.querySelector("img.chip-icon");
+  return {
+    title: chipTitle(chip),
+    url: chipUrl(chip),
+    grouped: !!(chip.parentElement && chip.parentElement.hasAttribute("data-overflow")),
+    visible: !!link && shows(link),
+    icon: !!icon && icon.complete && icon.naturalWidth > 0 && shows(icon),
+  };
+}
+function findChip(url, inPanel) {
+  return (inPanel ? panelChips() : rowChips()).find(chip => chipUrl(chip) === url);
+}
+// Mouse events synthesized in the chat page take the same path as a user's
+// click, so Firefox picks where to open the link from the button.
+function mouse(el, button) {
+  const r = el.getBoundingClientRect();
+  const x = r.left + r.width / 2, y = r.top + r.height / 2;
+  const send = (type, buttons) => content.synthesizeMouseEvent
+    ? content.synthesizeMouseEvent(type, x, y, { button, buttons, clickCount: 1 },
+        { isDOMEventSynthesized: true })
+    : content.windowUtils.sendMouseEvent(type, x, y, button, 1, 0);
+  const pressed = [1, 4, 2][button];
+  send("mousedown", pressed);
+  if (button === 2) send("contextmenu", pressed);
+  send("mouseup", 0);
+}
+"""
+
+MOUSE_BUTTONS = {"left": 0, "middle": 1, "right": 2}
 
 
 class SmartWindowChat(BasePage):
@@ -302,6 +383,181 @@ class SmartWindowChat(BasePage):
         if self.get_last_tool_ui_type() in TAB_ACTION_CONFIRMATIONS:
             self.confirm_action()
         return self
+
+    # ── Web sources ──────────────────────────────────────────────────────
+
+    def _sources_script(self, body: str, *args):
+        return self._chat_script(_SOURCES_JS + body, *args)
+
+    def get_sources(self) -> list[dict]:
+        """
+        Return the newest reply's web sources, in the row's order.
+
+        Returns
+        -------
+        list[dict]
+            Each with title, url, grouped (behind "+n more" rather than in
+            the row), visible, and icon (its icon has loaded and shows).
+        """
+        return self._sources_script("return rowChips().map(describe);") or []
+
+    def expect_sources(self, count: int) -> BasePage:
+        """Wait until the newest reply shows `count` web sources."""
+        self.expect(lambda _: len(self.get_sources()) == count)
+        return self
+
+    def sources_follow_last_reply(self) -> bool:
+        """Report whether the sources row comes after the newest reply's text."""
+        return self._sources_script("""
+            const row = sourcesRow();
+            const chat = content.document.querySelector("ai-chat-content");
+            const replies = [...chat.shadowRoot.querySelectorAll(
+              "ai-chat-message[data-message-role='assistant']")];
+            const reply = replies[replies.length - 1];
+            return !!row && !!reply &&
+              !!(reply.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING);
+        """)
+
+    def get_grouped_sources_label(self) -> str | None:
+        """Return the "+n more" button's text, or None while it's hidden."""
+        return self._sources_script("""
+            const more = moreButton();
+            if (!more || more.hasAttribute("data-overflow")) return null;
+            // Fluent fills the text in a moment after the button appears.
+            return more.textContent.trim();
+        """)
+
+    def open_grouped_sources(self) -> BasePage:
+        """Click "+n more" and wait for the panel of grouped sources."""
+        self._sources_script("mouse(moreButton(), 0);")
+        self.expect(lambda _: all(s["visible"] for s in self.get_grouped_sources()))
+        return self
+
+    def get_grouped_sources(self) -> list[dict]:
+        """Return the sources in the "+n more" panel, described as in get_sources()."""
+        return self._sources_script("return panelChips().map(describe);") or []
+
+    def click_source(
+        self, url: str, button: str = "left", grouped: bool = False
+    ) -> BasePage:
+        """
+        Click the source chip for `url` with `button` ("left", "middle" or
+        "right"). Set `grouped` for a chip in the "+n more" panel.
+        """
+        clicked = self._sources_script(
+            """
+            const chip = findChip(args[0], args[2]);
+            if (!chip) return false;
+            mouse(chipLink(chip), args[1]);
+            return true;
+            """,
+            url,
+            MOUSE_BUTTONS[button],
+            grouped,
+        )
+        if not clicked:
+            raise AssertionError(f"No source chip for {url} (grouped={grouped})")
+        return self
+
+    def get_focused_source(self) -> str | None:
+        """Return the URL of the source chip with keyboard focus, if one has it."""
+        return self._sources_script("""
+            let el = content.document.activeElement;
+            while (el && el.shadowRoot && el.shadowRoot.activeElement) {
+              el = el.shadowRoot.activeElement;
+            }
+            const host = el && el.getRootNode().host;
+            return el && el.matches("a.chip") && host.localName === "smartwindow-chip"
+              ? chipUrl(host) : null;
+        """)
+
+    def tab_to_source(self, max_stops: int = 15) -> str:
+        """
+        Press Shift+Tab from the Smart Bar until a source chip has focus, and
+        return its URL. The sources come before the Smart Bar in tab order.
+        """
+        smart_bar = SmartBar(self.driver)
+        if not smart_bar.focus_editor():
+            raise AssertionError("Smart Bar editor is not available to focus")
+        for _ in range(max_stops):
+            self.perform_key_combo_chrome(Keys.SHIFT, Keys.TAB)
+            try:
+                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                    lambda _: self.get_focused_source()
+                )
+            except TimeoutException:
+                continue
+            return self.get_focused_source()
+        raise AssertionError(f"Shift+Tab never reached a source in {max_stops} stops")
+
+    def get_source_accessibles(self, grouped: bool = False) -> list[dict]:
+        """
+        Return the role and name assistive technology gets for each source
+        link shown: the row's, or with `grouped` the "+n more" panel's. Starts
+        the accessibility service in the chat page if it isn't running.
+        """
+        return self._sources_script(
+            """
+            const svc = Cc["@mozilla.org/accessibilityService;1"]
+              .getService(Ci.nsIAccessibilityService);
+            const links = (args[0] ? panelChips() : rowChips())
+              .map(chipLink).filter(link => link && shows(link));
+            // The tree is built a moment after the service starts.
+            for (let i = 0; i < 50 && links.some(l => !svc.getAccessibleFor(l)); i++) {
+              await new Promise(r => content.setTimeout(r, 100));
+            }
+            return links.map(link => {
+              const acc = svc.getAccessibleFor(link);
+              return acc ? { role: svc.getStringRole(acc.role), name: acc.name } : null;
+            });
+            """,
+            grouped,
+        )
+
+    def get_grouped_sources_button_accessible(self) -> dict | None:
+        """Return the role and name assistive technology gets for "+n more"."""
+        return self._sources_script("""
+            const svc = Cc["@mozilla.org/accessibilityService;1"]
+              .getService(Ci.nsIAccessibilityService);
+            const more = moreButton();
+            const button = more && more.shadowRoot && more.shadowRoot.querySelector("button");
+            if (!button) return null;
+            for (let i = 0; i < 50 && !svc.getAccessibleFor(button); i++) {
+              await new Promise(r => content.setTimeout(r, 100));
+            }
+            const acc = svc.getAccessibleFor(button);
+            return acc ? { role: svc.getStringRole(acc.role), name: acc.name } : null;
+        """)
+
+    def is_forced_colors_active(self) -> bool:
+        """Report whether the chat page is drawn with forced (high contrast) colors."""
+        return self._chat_script(
+            'return content.matchMedia("(forced-colors: active)").matches;'
+        )
+
+    def get_source_colors(self, grouped: bool = False) -> list[dict]:
+        """
+        Return each shown source chip's label color and the color behind it,
+        the first opaque background up the tree.
+        """
+        return self._sources_script(
+            """
+            const opaque = c => c && c !== "transparent" && !/rgba\\(.*,\\s*0\\)$/.test(c);
+            function background(el) {
+              for (let n = el; n; n = n.parentElement || (n.getRootNode() && n.getRootNode().host)) {
+                const c = content.getComputedStyle(n).backgroundColor;
+                if (opaque(c)) return c;
+              }
+              return content.getComputedStyle(content.document.documentElement).backgroundColor;
+            }
+            return (args[0] ? panelChips() : rowChips())
+              .map(chip => chip.shadowRoot.querySelector(".chip-label"))
+              .filter(label => label && shows(label))
+              .map(label => ({ color: content.getComputedStyle(label).color,
+                               background: background(label) }));
+            """,
+            grouped,
+        )
 
     # ── URL tokens ───────────────────────────────────────────────────────
 
