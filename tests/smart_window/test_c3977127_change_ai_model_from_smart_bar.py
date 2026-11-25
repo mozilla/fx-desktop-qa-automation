@@ -1,7 +1,7 @@
 """
 C3977127 - Verify that the user can change the AI model from the Smart Bar
-The Smart Bar's model picker lists the three models; choosing Qwen closes the
-picker, and the next message goes to Qwen.
+The Smart Bar's model picker lists Gemini, Qwen and Mistral (and Auto, from
+Firefox 162); choosing Qwen closes the picker, and the next message goes to Qwen.
 """
 
 import pytest
@@ -38,8 +38,11 @@ def test_change_ai_model_from_smart_bar(
     assert smart_bar.get_selected_model() == models["Gemini"]
 
     smart_bar.open_model_menu()
+    assert {"Gemini", "Qwen", "Mistral"} <= models.keys(), f"Models offered: {models}"
     offered = smart_bar.get_model_menu_items()
-    assert len(offered) == 3, f"Expected 3 models in the picker: {offered}"
+    assert len(offered) == len(models), (
+        f"The picker lists {offered}, but Firefox offers {list(models)}"
+    )
 
     smart_bar.choose_model("Qwen")
 

@@ -628,11 +628,12 @@ class SmartBar(BasePage):
         return self
 
     def _read_models(self) -> dict[str, str]:
+        # The Auto model has no brand name, so it is listed as "Auto".
         return self._script(
             "const m = modelSelect();"
             "if (!m || !m.availableModels) return {};"
             "return Object.fromEntries(Object.values(m.availableModels)"
-            "  .map(v => [v.brandName, v.model]));"
+            "  .map(v => [v.brandName || (v.model === 'auto' ? 'Auto' : ''), v.model]));"
         )
 
     def get_selected_model(self) -> str:
