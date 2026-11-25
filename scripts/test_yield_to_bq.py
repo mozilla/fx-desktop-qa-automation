@@ -49,7 +49,7 @@ def checked_weights(parsed: dict[str, float], source: str) -> dict[str, float]:
     return parsed
 
 
-def checked_share(value: float, source: str) -> float:
+def checked_impact(value: float, source: str) -> float:
     """Return value if it is between 0 and 1, else exit."""
     if not 0 <= value <= 1:
         raise SystemExit(f"{source} must be between 0 and 1, not {value}")
@@ -57,9 +57,8 @@ def checked_share(value: float, source: str) -> float:
 
 
 def load_config(path: Path = CONFIG_FILE) -> dict:
-    """Read the weights and impact scales, applying the YIELD_* overrides."""
+    """Read the weights and severity scale, applying the YIELD_WEIGHTS override."""
     config = tomllib.loads(path.read_text(encoding="utf-8"))
-    impact = config["impact"]
     raw_weights = os.environ.get("YIELD_WEIGHTS")
     if raw_weights:
         weights = {
@@ -69,21 +68,9 @@ def load_config(path: Path = CONFIG_FILE) -> dict:
         weights = checked_weights(weights, "YIELD_WEIGHTS")
     else:
         weights = checked_weights(config["weights"], path.name)
-    raw_share = os.environ.get("YIELD_SEVERITY_WEIGHT")
-    severity_weight = (
-        checked_share(float(raw_share), "YIELD_SEVERITY_WEIGHT")
-        if raw_share
-        else checked_share(impact["severity_weight"], path.name)
-    )
-    for scale in ("severity", "priority"):
-        for level, value in impact[scale].items():
-            checked_share(value, f"{path.name} {scale} {level}")
-    return {
-        "weights": weights,
-        "severity_weight": severity_weight,
-        "severity": impact["severity"],
-        "priority": impact["priority"],
-    }
+    for level, value in config["severity"].items():
+        checked_impact(value, f"{path.name} severity {level}")
+    return {"weights": weights, "severity": config["severity"]}
 
 
 CONFIG = load_config()
@@ -106,11 +93,8 @@ def cycle_of(day: date, releases: list[tuple[date, int]]) -> int:
 
 
 def bug_impact(bug: dict) -> float:
-    """Weighted severity and priority on a 0-1 scale; unset counts as 0."""
-    share = CONFIG["severity_weight"]
-    return share * CONFIG["severity"].get(bug.get("severity"), 0.0) + (
-        1 - share
-    ) * CONFIG["priority"].get(bug.get("priority"), 0.0)
+    """Severity on a 0-1 scale; unset counts as 0. Priority isn't used in triage."""
+    return CONFIG["severity"].get(bug.get("severity"), 0.0)
 
 
 def automated_cases() -> dict[int, str]:
@@ -214,10 +198,13 @@ def score(
         TestRail case ID -> path of the STARfox test that automates it; the
         case and that test are scored as one test.
     """
+    # Intermittent failures mostly point at a flaky test, not a product defect.
     counted = {
         bug["bug_id"]: bug
         for bug in bugs
-        if bug.get("type") == "defect" and bug.get("resolution") not in NOT_A_BUG
+        if bug.get("type") == "defect"
+        and bug.get("resolution") not in NOT_A_BUG
+        and not bug.get("is_intermittent")
     }
     links = [
         link
@@ -399,8 +386,7 @@ def main() -> int:
     merge_automated_executions(executions, automated)
     rows = score(links, bugs, executions, cycles, used, automated)
     common = {
-        "weights": ",".join(f"{name}={value}" for name, value in used.items())
-        + f",severity={CONFIG['severity_weight']}",
+        "weights": ",".join(f"{name}={value}" for name, value in used.items()),
         "window_start": SINCE_DATE,
         "cycles": ",".join(map(str, cycles)),
         "computed_at": datetime.now(timezone.utc).isoformat(),
