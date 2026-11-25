@@ -2108,10 +2108,6 @@ smart_window:
     splits:
       - smart_window
       - functional2
-  test_c3313455_history_from_home_page:
-    result: pass
-    splits:
-      - functional2
   test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
@@ -2138,10 +2134,6 @@ smart_window:
     splits:
       - smart_window
       - functional2
-  test_c3322038_summarize_active_tab:
-    result: pass
-    splits:
-      - functional2
   test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
@@ -2163,11 +2155,6 @@ smart_window:
   test_c3374374_continue_conversation_on_home_page:
     result: pass
     splits:
-      - functional2
-  test_c3374375_continue_conversation_in_sidebar:
-    result: pass
-    splits:
-      - smart_window
       - functional2
   test_c3392590_smart_window_captcha_bypass:
     result: pass
@@ -2196,12 +2183,25 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4120443_history_from_home_page:
+    result: pass
+    splits:
+      - functional2
   test_c4120453_smart_window_restored_after_restart:
     result: pass
     splits:
       - smart_window
       - functional2
   test_c4120454_smart_window_auto_restored:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120487_summarize_active_tab:
+    result: pass
+    splits:
+      - functional2
+  test_c4120489_continue_conversation_in_sidebar:
     result: pass
     splits:
       - smart_window

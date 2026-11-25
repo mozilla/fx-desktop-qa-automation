@@ -18,7 +18,7 @@ tabs, rendering. Only the model's replies come from the recording.
 Run the existing chat tests. No token or setup is needed:
 
 ```bash
-pytest tests/smart_window/test_c3374375_continue_conversation_in_sidebar.py
+pytest tests/smart_window/test_c4120489_continue_conversation_in_sidebar.py
 pytest tests/smart_window/test_c4438277_group_related_tabs.py
 ```
 
@@ -56,7 +56,7 @@ Only tests that use the mock server read the flag. Every other test ignores it.
 
    @pytest.fixture()
    def test_case():
-       return "3374375"
+       return "4120489"
 
 
    def test_continue_conversation_in_sidebar(
