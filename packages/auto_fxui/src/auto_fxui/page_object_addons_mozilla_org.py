@@ -11,7 +11,7 @@ class AmoBase(BasePage):
     """
 
     @BasePage.context_chrome
-    def confirm_addon_install_popup(self):
+    def confirm_addon_install_popup(self) -> BasePage:
         """Confirms the addon install popup by clicking Add then OK"""
         # Wait for the Add button to be shown, a second install still has the old hidden one
         self.custom_wait(timeout=10).until(
