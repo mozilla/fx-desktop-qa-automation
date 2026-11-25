@@ -2123,8 +2123,7 @@ smart_window:
       - smart_window
       - functional2
   test_c3321894_smart_bar_suggests_chat:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094777
-    result: unstable
+    result: pass
     splits:
       - smart_window
       - functional2
@@ -2222,8 +2221,7 @@ smart_window:
       - smart_window
       - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092624
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_c4438277_group_related_tabs:

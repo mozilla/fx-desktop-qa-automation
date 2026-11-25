@@ -6,12 +6,13 @@ tells the model so and leaves the tabs alone.
 
 import pytest
 from auto_fxui.browser_object import SmartBar, SmartWindowChat, TabBar
-from auto_fxui.classes.recording import Recording, tool_call
+from auto_fxui.classes.recording import Recording, chat_reply, tool_call
 
 PROMPT = "Explode my lasagna tab"
 PAGES = ["lasagna.html", "flights.html"]
 LASAGNA_TOKEN = "§url_token: LOCALHOST_LASAGNA_HTML_1§"
 ACTION = "explode_tabs"
+REPLY = "I can't do that to a tab."
 
 
 @pytest.fixture()
@@ -39,6 +40,8 @@ def test_unsupported_tab_action_is_rejected(
             tool_results=1,
         )
     )
+    # Firefox sends the rejection back to the model, which then answers.
+    built_replies.add(chat_reply(PROMPT, REPLY, tool_results=2))
 
     # Instantiate objects
     tabs = TabBar(driver)
@@ -54,6 +57,7 @@ def test_unsupported_tab_action_is_rejected(
     assert len(results) == 1 and ACTION in str(results[0]), (
         f"Firefox didn't reject {ACTION}: {results}"
     )
+    assert chat.get_last_reply() == REPLY
     assert chat.get_tool_ui_types() == [], "Firefox showed a card for the action"
     assert tabs.get_tab_urls() == open_tabs
     assert tabs.get_tab_groups() == []
