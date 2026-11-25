@@ -69,7 +69,7 @@ class AmoLanguages(AmoBase):
         )
         return self
 
-    def click_dictionary_link(self, code: str):
+    def click_dictionary_link(self, code: str) -> BasePage:
         """
         Clicks the dictionary link of the language with the given AMO code
         """
