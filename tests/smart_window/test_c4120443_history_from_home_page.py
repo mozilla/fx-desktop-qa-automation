@@ -1,5 +1,5 @@
 """
-C3313455 - Reach the History page from the Smart Window Home page
+C4120443 - Reach the History page from the Smart Window Home page
 """
 
 import pytest
@@ -11,12 +11,12 @@ URL = "https://www.mozilla.org/"
 
 @pytest.fixture()
 def test_case():
-    return "3313455"
+    return "4120443"
 
 
 def test_history_from_home_page(driver: Firefox, active_smart_window: SmartWindow):
     """
-    C3313455 - Reach the History page from the Smart Window Home page
+    C4120443 - Reach the History page from the Smart Window Home page
     """
     # Give History something to show.
     driver.get(URL)
