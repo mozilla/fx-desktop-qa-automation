@@ -2245,6 +2245,17 @@ class AboutPrefs(BasePage):
             self.element_visible("smart-window-model-group")
         return self
 
+    def get_smart_window_memory_settings(self) -> dict[str, bool]:
+        """Return whether Smart Window learns from "chats" and from "browsing"."""
+        return {
+            "chats": self.get_element(
+                "smart-window-learn-from-chats-checkbox"
+            ).get_property("checked"),
+            "browsing": self.get_element(
+                "smart-window-learn-from-browsing-checkbox"
+            ).get_property("checked"),
+        }
+
     def get_smart_window_models(self) -> list[dict]:
         """Describe every AI model offered, in page order."""
         return [

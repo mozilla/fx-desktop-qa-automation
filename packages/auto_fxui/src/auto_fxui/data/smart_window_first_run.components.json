@@ -196,6 +196,54 @@
       "location": "Single-page onboarding (smartwindow-onboarding)"
     }
   },
+  "memories-select": {
+    "selectorData": "smartwindow-option-select#memories",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "onboarding",
+    "comment": {
+      "description": "Choose how Smart Window learns about you dropdown; its value attribute is both, browsing, chats or none",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "memories-select-button": {
+    "selectorData": "moz-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "memories-select",
+    "comment": {
+      "description": "Button that opens the memories dropdown and shows the selected option",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "memories-options": {
+    "selectorData": "button.option-item",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "memories-select",
+    "comment": {
+      "description": "Every option in the open memories dropdown; data-value is its choice",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "memories-option": {
+    "selectorData": "button.option-item[data-value='{choice}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "memories-select",
+    "comment": {
+      "description": "Option in the open memories dropdown, by choice (both, browsing, chats, none)",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
   "default-window-toggle": {
     "selectorData": "moz-toggle#default-window",
     "strategy": "css",
