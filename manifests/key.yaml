@@ -2229,6 +2229,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4513494_select_ai_model_during_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4516868_start_in_smart_window_from_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
 sync_and_fxa:
   test_existing_fxa:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1938362
