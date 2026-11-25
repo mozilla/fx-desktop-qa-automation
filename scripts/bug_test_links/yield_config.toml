@@ -1,5 +1,5 @@
-# Defaults for scripts/test_yield_to_bq.py. The score workflow's weights and
-# severity_weight inputs override them for one run.
+# Defaults for scripts/test_yield_to_bq.py. The score workflow's weights input
+# overrides them for one run.
 
 [weights]
 U = 0.275
@@ -7,7 +7,10 @@ F = 0.225
 S = 0.325
 R = 0.175
 
-[impact]
-severity_weight = 0.5
-severity = { S1 = 1.0, S2 = 0.7, S3 = 0.4, S4 = 0.2, "N/A" = 0.1 }
-priority = { P1 = 1.0, P2 = 0.8, P3 = 0.5, P4 = 0.25, P5 = 0.1 }
+# A bug's impact, 0-1, from its severity. Priority isn't used in triage.
+[severity]
+S1 = 1.0
+S2 = 0.7
+S3 = 0.4
+S4 = 0.2
+"N/A" = 0.1
