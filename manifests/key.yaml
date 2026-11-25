@@ -1393,8 +1393,7 @@ preferences:
     splits:
       - functional2
   test_dictionaries_can_be_downloaded:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094780
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_downloaded_languages_can_be_deleted:
@@ -1521,11 +1520,7 @@ preferences:
     splits:
       - functional2
   test_spell_check_recognises_existing_dictionaries:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094795
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
       - functional2
   test_support_get_help:

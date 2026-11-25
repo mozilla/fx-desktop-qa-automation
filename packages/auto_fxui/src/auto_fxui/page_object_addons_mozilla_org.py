@@ -13,20 +13,21 @@ class AmoBase(BasePage):
     @BasePage.context_chrome
     def confirm_addon_install_popup(self):
         """Confirms the addon install popup by clicking Add then OK"""
-        # Wait for the Add button and click it via JavaScript
+        # Wait for the Add button to be shown, a second install still has the old hidden one
         self.custom_wait(timeout=10).until(
             lambda d: d.execute_script(
-                "return document.querySelector(\"moz-button[label='Add'].popup-notification-primary-button\")"
+                "const b = document.querySelector(\"moz-button[label='Add'].popup-notification-primary-button\"); return b && b.getBoundingClientRect().width > 0"
             )
         )
+        # Click it via JavaScript
         self.driver.execute_script(
             "document.querySelector(\"moz-button[label='Add'].popup-notification-primary-button\").shadowRoot.querySelector('button#main-button').click()"
         )
 
-        # Wait for the OK button and click it via JavaScript
+        # Wait for the OK button to be shown, then click it via JavaScript
         self.custom_wait(timeout=10).until(
             lambda d: d.execute_script(
-                "return document.querySelector(\"moz-button[data-l10n-id='popup-notification-default-button2']\")"
+                "const b = document.querySelector(\"moz-button[data-l10n-id='popup-notification-default-button2']\"); return b && b.getBoundingClientRect().width > 0"
             )
         )
         self.driver.execute_script(
@@ -66,6 +67,21 @@ class AmoLanguages(AmoBase):
         self.custom_wait(timeout=20).until(
             lambda _: self.get_element("language-addons-title") is not None
         )
+        return self
+
+    def click_dictionary_link(self, code: str):
+        """
+        Clicks the dictionary link of the language with the given AMO code
+        """
+
+        def click_link(_):
+            self.click_on("language-addons-dictionary-link", labels=[code])
+            return True
+
+        # The table re-renders after it first appears, so click again if the link goes stale
+        self.custom_wait(
+            timeout=20, ignored_exceptions=[StaleElementReferenceException]
+        ).until(click_link)
         return self
 
     def find_language_row_and_navigate(self, language_label: str) -> BasePage:
