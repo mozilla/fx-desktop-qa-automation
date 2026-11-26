@@ -198,6 +198,10 @@ address_bar_and_search:
     splits:
       - functional1
       - nightly
+  test_search_box_widget_default_engine_switch:
+    result: pass
+    splits:
+      - functional2
   test_search_code_google_non_us:
     result: flaky
     splits:
