@@ -1,5 +1,5 @@
 """
-C3374375 - Verify that the user can continue the conversation in the Chat Sidebar
+C4120489 - Verify that the user can continue the conversation in the Chat Sidebar
 A follow-up message sent from the sidebar gets its own reply in the same
 conversation, below the first exchange.
 """
@@ -17,14 +17,14 @@ FOLLOW_UP = (
 
 @pytest.fixture()
 def test_case():
-    return "3374375"
+    return "4120489"
 
 
 def test_continue_conversation_in_sidebar(
     smart_window_chat: SmartWindowChat, mock_server: MockServer, driver
 ):
     """
-    C3374375 - Verify that the user can continue the conversation in the Chat Sidebar
+    C4120489 - Verify that the user can continue the conversation in the Chat Sidebar
     """
     SmartBar(driver).open_smart_bar()
     chat = smart_window_chat

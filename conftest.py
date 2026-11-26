@@ -8,7 +8,7 @@ from shutil import rmtree, unpack_archive
 from subprocess import check_output, run
 from typing import Callable
 
-# import psutil
+import psutil
 import pytest
 import requests
 from auto_fxui.classes.fxa_session import FxaSession
@@ -400,8 +400,6 @@ def pytest_configure(config):
 
 def pytest_sessionfinish(session):
     if not hasattr(session.config, "workerinput"):
-        import psutil
-
         reporter = session.config.pluginmanager.get_plugin("terminalreporter")
         # Kill all Firefox processes remaining
         for proc in psutil.process_iter(["name", "pid", "status"]):
@@ -593,17 +591,22 @@ def driver(
 
         yield driver
         if hard_quit:
-            if hasattr(driver, "service") and driver.service is not None:
-                logging.warning("Attempting to force close Firefox")
-                driver.service.stop()
+            logging.warning("Attempting to force close Firefox")
+            if driver.service and driver.service.process:
+                try:
+                    parent = psutil.Process(driver.service.process.pid)
+                    for child in parent.children(recursive=True):
+                        child.kill()
+                    parent.kill()
+                except psutil.NoSuchProcess:
+                    pass
+            driver = None  # сообщаем finally, что quit() уже не нужен
             return
-
     except (WebDriverException, TimeoutException) as e:
         logging.warning(f"DRIVER exception: {e}")
         raise
-
     finally:
-        if ("driver" in locals() or "driver" in globals()) and driver:
+        if driver:
             driver.quit()
 
 

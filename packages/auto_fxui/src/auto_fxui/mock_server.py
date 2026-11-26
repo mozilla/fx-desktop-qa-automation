@@ -124,6 +124,14 @@ class MockServer:
                 return " ".join(text.split())
         raise AssertionError(f"No chat reply was served for {prompt!r}")
 
+    def chat_models(self, prompt: str) -> list[str | None]:
+        """Return the model each chat request for `prompt` named (None if none), oldest first."""
+        return [
+            request.get("model")
+            for request, _ in self._chat_responses()
+            if request.get("last_user_message") == prompt
+        ]
+
     def tool_calls(self, name: str) -> list[dict]:
         """
         Return the arguments of each call to tool `name` in the chat replies

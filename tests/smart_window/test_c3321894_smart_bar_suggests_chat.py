@@ -5,10 +5,11 @@ the default search engine's suggestions for the same text.
 """
 
 import pytest
-from auto_fxui.browser_object import SmartBar, SmartWindow
-from auto_fxui.browser_object_smart_bar import (
+from auto_fxui.browser_object import (
     PROVIDER_AI_CHAT,
     PROVIDER_SEARCH_SUGGESTIONS,
+    SmartBar,
+    SmartWindow,
 )
 from selenium.webdriver import Firefox
 
@@ -27,12 +28,15 @@ def test_smart_bar_suggests_chat(driver: Firefox, active_smart_window: SmartWind
     # Instantiate objects
     smart_bar = SmartBar(driver)
 
+    # Stands in for the ML model, which can't download under automation.
+    smart_bar.stub_intent_model("chat")
     smart_bar.open_full_page_chat()
     smart_bar.set_smart_bar_text(QUERY)
     smart_bar.expect_results_from(PROVIDER_AI_CHAT, PROVIDER_SEARCH_SUGGESTIONS)
     results = smart_bar.get_results()
 
-    chat = [r["text"] for r in results if r["provider"] == PROVIDER_AI_CHAT]
+    # A chat intent also adds a Search row from the chat provider, so match the type.
+    chat = [r["text"] for r in results if r["chat"]]
     assert chat == [QUERY], f"Expected one chat suggestion for {QUERY!r}: {results}"
 
     # Search suggestions come live from the engine, so check they relate to the

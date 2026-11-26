@@ -18,7 +18,7 @@ tabs, rendering. Only the model's replies come from the recording.
 Run the existing chat tests. No token or setup is needed:
 
 ```bash
-pytest tests/smart_window/test_c3374375_continue_conversation_in_sidebar.py
+pytest tests/smart_window/test_c4120489_continue_conversation_in_sidebar.py
 pytest tests/smart_window/test_c4438277_group_related_tabs.py
 ```
 
@@ -56,7 +56,7 @@ Only tests that use the mock server read the flag. Every other test ignores it.
 
    @pytest.fixture()
    def test_case():
-       return "3374375"
+       return "4120489"
 
 
    def test_continue_conversation_in_sidebar(
@@ -74,8 +74,10 @@ Only tests that use the mock server read the flag. Every other test ignores it.
      stand-in FxA token, and the mock server loaded with this test's recording.
    - `chat.send(text)` sends from the Smart Bar and returns once the assistant has finished
      answering, tool calls included. Call it again for a follow-up.
+   - `chat.send_typed()` sends what's already in the Smart Bar instead, such as an @ mention.
    - `get_last_reply()` and `get_messages()` read what the chat shows;
      `mock_server.chat_reply_text(prompt)` is what the server sent.
+   - `mock_server.chat_models(prompt)` is the model each request for `prompt` went to.
    - Ask for plain sentences when you compare reply text, since the chat renders markdown.
 3. **Record it** (see below). Without a recording, replay fails and tells you the command.
 4. **Review the recording's diff**, then add the test to `manifests/key.yaml` and commit the
@@ -180,8 +182,10 @@ built_replies.add(
 - To name a tab in a tool call, use its URL token as the model writes it
   (`§url_token: LOCALHOST_LASAGNA_HTML_1§`). Build a `get_open_tabs` call first, so Firefox
   knows the token.
-- `manage_tabs` ends the turn: Firefox doesn't ask the model for a reply afterwards, so don't
-  build one.
+- A `manage_tabs` call Firefox carries out ends the turn: Firefox doesn't ask the model for a
+  reply afterwards, so don't build one. One it rejects (an unknown action, say) goes back to the
+  model, so build the model's answer as the next round (see
+  `test_c4433196_unsupported_tab_action_is_rejected.py`).
 - `SmartWindowChat.get_tool_results(name)` returns what Firefox sent back to the model for a
   tool.
 
@@ -240,7 +244,7 @@ built_replies.add(
 
 | Path | What |
 |---|---|
-| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `tool_calls` |
+| `modules/mock_server.py` | `MockServer`: replay, forwarding, `chat_reply_text`, `chat_models`, `tool_calls` |
 | `modules/classes/recording.py` | `Recording`, matching, builders |
 | `modules/browser_object_smart_window_chat.py` | `SmartWindowChat` BOM |
 | `modules/browser_object_smart_bar.py` | `SmartBar`: open the chat, `submit_chat` |

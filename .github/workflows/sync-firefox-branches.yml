@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       released_major:
-        description: Major version on main; defaults to the current Firefox release
+        description: Major version on main to archive now, skipping the release date check; empty promotes the beta if it ships within 6 days
         required: false
         type: string
       retention:

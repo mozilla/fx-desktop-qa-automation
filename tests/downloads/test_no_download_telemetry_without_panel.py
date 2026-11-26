@@ -37,6 +37,7 @@ def test_no_download_telemetry_without_panel(driver: Firefox):
 
     # Open test url and download a file
     page.open()
+    page.element_visible("sample-doc-download")
     page.click_on("sample-doc-download")
 
     # Open about:telemetry and go to the Events tab

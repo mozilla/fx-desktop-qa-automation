@@ -360,7 +360,7 @@ class PanelUi(BasePage):
         Save button from Add Bookmark in Address bar "
         """
         self.click_on("bookmark-current-tab")
-        self.click_on("save-bookmark-button")
+        self.js_click_on("save-bookmark-button")
         return self
 
     @BasePage.context_chrome
@@ -400,7 +400,7 @@ class PanelUi(BasePage):
         elif location == "Bookmarks Toolbar":
             self.click_on("bookmark-location")
             self.click_on("bookmarks-toolbar")
-        self.click_on("save-bookmark-button")
+        self.js_click_on("save-bookmark-button")
 
     @BasePage.context_chrome
     def get_bookmark_tags(self, tags: List[str]) -> List[str]:

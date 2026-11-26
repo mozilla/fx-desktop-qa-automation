@@ -1,5 +1,5 @@
 """
-C3322038 - Summarize the page for the active tab
+C4120487 - Summarize the page for the active tab
 """
 
 import pytest
@@ -15,26 +15,23 @@ SUMMARY = "The page introduces Mozilla and the Firefox browser."
 
 @pytest.fixture()
 def test_case():
-    return "3322038"
+    return "4120487"
 
 
 def test_summarize_active_tab(
-    driver: Firefox, smart_window_chat: SmartWindowChat, mock_server: MockServer
+    driver: Firefox,
+    smart_window_chat: SmartWindowChat,
+    built_replies: Recording,
+    mock_server: MockServer,
 ):
     """
-    C3322038 - Summarize the page for the active tab
+    C4120487 - Summarize the page for the active tab
     """
     # Summarizing reads the tab through the get_page_content tool, so the reply
     # comes in two rounds: the tool call, then the summary once Firefox has
     # answered it.
-    mock_server.reset(
-        Recording(
-            [
-                tool_call(PROMPT, "get_page_content", {}),
-                chat_reply(PROMPT, SUMMARY, tool_results=1),
-            ]
-        )
-    )
+    built_replies.add(tool_call(PROMPT, "get_page_content", {}))
+    built_replies.add(chat_reply(PROMPT, SUMMARY, tool_results=1))
 
     driver.get(URL)
     # The summary is of whatever tab is selected, so confirm the navigation

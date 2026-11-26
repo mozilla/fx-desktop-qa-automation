@@ -88,6 +88,25 @@ class SmartWindow(BasePage):
         self.expect_smart_window_active(True)
         return self
 
+    def open_first_run(self) -> BasePage:
+        """
+        Load first-run onboarding in the selected tab, as Firefox does once
+        Smart Window sign-in succeeds (test harness only, like
+        activate_smart_window). Needs an active Smart Window.
+        """
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.driver.execute_script(
+                f"""
+                const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+                gBrowser.loadURI(Services.io.newURI(AIWindow.firstrunURL), {{
+                  triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
+                }});
+                """
+            )
+        self.expect_selected_tab_url_contains("aiwindow/firstrun.html")
+        self.expect_first_run_view(True)
+        return self
+
     @BasePage.context_chrome
     def stub_fxa_token(self) -> BasePage:
         """
@@ -229,6 +248,22 @@ class SmartWindow(BasePage):
         self.open_window_switcher()
         self.click_on("switch-to-smart")
         return self
+
+    @BasePage.context_chrome
+    def get_windows(self) -> list[dict]:
+        """Return each browser window, newest first, with whether it's Smart and its tab URLs."""
+        return self.driver.execute_script(
+            f"""
+            const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+            const {{ BrowserWindowTracker }} = ChromeUtils.importESModule(
+              "resource:///modules/BrowserWindowTracker.sys.mjs"
+            );
+            return BrowserWindowTracker.orderedWindows.map(w => ({{
+              smart: AIWindow.isAIWindowActive(w),
+              urls: Array.from(w.gBrowser.tabs, t => t.linkedBrowser.currentURI.spec),
+            }}));
+            """
+        )
 
     # ── Tabs ─────────────────────────────────────────────────────────────
 

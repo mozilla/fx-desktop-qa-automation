@@ -17,7 +17,7 @@ def suite_id():
 @pytest.fixture()
 def prefs_list(add_to_prefs_list: dict):
     """List of prefs to send to main conftest.py driver fixture"""
-    prefs = []
+    prefs = [("dom.disable_beforeunload", True)]
     prefs.extend(add_to_prefs_list)
     return prefs
 

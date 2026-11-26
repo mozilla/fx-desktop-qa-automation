@@ -951,3 +951,8 @@ class GenericPdf(BasePage):
         self.press_until_focused("paste-after-page-button", labels=[str(page_number)])
         self.perform_key_combo(Keys.ENTER)
         return self
+
+    def mass_deselect_pages(self) -> BasePage:
+        """Click the mass deselect button to clear all selected pages."""
+        self.click_on("views-manager-deselect-button")
+        return self

@@ -73,7 +73,7 @@ def test_spell_check_recognises_existing_dictionaries(
     for code, _ in DICTIONARIES:
         amo_languages.open()
         amo_languages.wait_for_language_page_to_load()
-        amo_languages.click_on("language-addons-dictionary-link", labels=[code])
+        amo_languages.click_dictionary_link(code)
         amo_languages.element_visible("language-addons-subpage-header")
         amo_languages.click_on("language-addons-subpage-add-to-firefox")
         amo_languages.confirm_addon_install_popup()

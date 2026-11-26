@@ -124,5 +124,112 @@
       "description": "Make Smart Window the default, checked by default",
       "location": "AI_WINDOW_SET_DEFAULT screen"
     }
+  },
+  "onboarding": {
+    "selectorData": "smartwindow-onboarding",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "comment": {
+      "description": "Single-page onboarding, shown instead of the screens above when browser.smartwindow.firstrun.singlePageWithAutoModel is true",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "setup-screen": {
+    "selectorData": "section.setup",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "onboarding",
+    "comment": {
+      "description": "Setup section, shown after the welcome section auto-advances",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "model-select": {
+    "selectorData": "smartwindow-option-select#model",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "onboarding",
+    "comment": {
+      "description": "Model dropdown; its value attribute is the selected model choice id",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "model-select-button": {
+    "selectorData": "moz-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "model-select",
+    "comment": {
+      "description": "Button that opens the model dropdown",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "model-options": {
+    "selectorData": "button.option-item",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "model-select",
+    "comment": {
+      "description": "Every model in the open dropdown; data-value is the model choice id",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "model-option": {
+    "selectorData": "button.option-item[data-value='{choice_id}']",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "model-select",
+    "comment": {
+      "description": "Model in the open dropdown, by model choice id",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "default-window-toggle": {
+    "selectorData": "moz-toggle#default-window",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "onboarding",
+    "comment": {
+      "description": "Start in Smart Window toggle; its pressed property is true when on",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "default-window-toggle-button": {
+    "selectorData": "button.toggle-button",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "default-window-toggle",
+    "comment": {
+      "description": "Clickable part of the Start in Smart Window toggle",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
+  },
+  "save-button": {
+    "selectorData": "moz-button#save",
+    "strategy": "css",
+    "groups": [
+      "doNotCache"
+    ],
+    "shadowParent": "onboarding",
+    "comment": {
+      "description": "Let's go button",
+      "location": "Single-page onboarding (smartwindow-onboarding)"
+    }
   }
 }

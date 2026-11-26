@@ -6,9 +6,7 @@ from typing import Optional
 
 from pypom import Page
 from selenium.common.exceptions import (
-    NoAlertPresentException,
     StaleElementReferenceException,
-    TimeoutException,
     UnexpectedAlertPresentException,
     WebDriverException,
 )
@@ -155,10 +153,6 @@ class AboutLogins(BasePage):
 
     URL_TEMPLATE = "about:logins"
 
-    # Settle interval to let a native (non-DOM) prompt take keyboard focus before
-    # typing OS-level keystrokes; its readiness cannot be polled directly.
-    _NATIVE_PROMPT_SETTLE_S = 0.5
-
     def __init__(self, driver: Firefox, **kwargs):
         super().__init__(driver, **kwargs)
         self.ba = BrowserActions(self.driver)
@@ -267,57 +261,6 @@ class AboutLogins(BasePage):
             }
         )
 
-    def _primary_password_prompt_present(self) -> bool:
-        """Return True if a modal primary-password prompt is currently open."""
-        try:
-            self.driver.switch_to.alert
-            return True
-        except NoAlertPresentException:
-            return False
-
-    def _submit_export_primary_password(
-        self, primary_password: str, attempts: int = 5
-    ) -> BasePage:
-        """
-        Handle the modal 'Primary Password' prompt Firefox raises when exporting
-        with a primary password set.
-
-        Marionette cannot type into this prompt (it rejects Alert.send_keys), so
-        the password is entered with OS-level keystrokes. The prompt also appears
-        a moment after the export is confirmed, so wait for it before typing and
-        re-enter until it dismisses (guards against typing before it is ready).
-        """
-        try:
-            self.custom_wait(timeout=10).until(
-                lambda _: self._primary_password_prompt_present()
-            )
-        except TimeoutException:
-            logging.warning("No primary password prompt appeared during export.")
-            return self
-
-        for _ in range(attempts):
-            if not self._primary_password_prompt_present():
-                return self
-            # Brief settle so the native prompt has keyboard focus before typing;
-            # it is not in the DOM, so its readiness cannot be polled directly.
-            sleep(self._NATIVE_PROMPT_SETTLE_S)
-            self.gui.write(primary_password, interval=0.05)
-            self.gui.press("enter")
-            # Condition-based wait for the prompt to dismiss (instead of a fixed
-            # sleep); only retry if it is still present afterward.
-            try:
-                self.custom_wait(timeout=5).until(
-                    lambda _: not self._primary_password_prompt_present()
-                )
-                return self
-            except TimeoutException:
-                continue
-        logging.warning(
-            "Primary password export prompt was never dismissed after %d attempts.",
-            attempts,
-        )
-        return self
-
     def export_passwords_csv(
         self,
         downloads_folder: str,
@@ -349,9 +292,10 @@ class AboutLogins(BasePage):
             self.click_on("export-passwords-button")
             self.click_on("continue-export-button")
 
-            # A primary password (if set) must be re-entered before the save dialog.
+            # Export always asks for the primary password again, even straight after
+            # another prompt; it's the same dialog that enter_primary_password answers.
             if primary_password:
-                self._submit_export_primary_password(primary_password)
+                self.enter_primary_password(primary_password)
 
             self.wait_for_mock_file_picker()
         finally:

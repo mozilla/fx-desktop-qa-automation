@@ -47,7 +47,7 @@ def test_edit_bookmark_via_star_button_not_saving_realtime(driver: Firefox):
     nav.verify_bookmark_exists_in_bookmarks_toolbar(OLD_BOOKMARK_NAME)
 
     # Click on save button
-    panel.click_on("save-bookmark-button")
+    panel.js_click_on("save-bookmark-button")
 
     # The bookmark is correctly edited
     nav.verify_bookmark_exists_in_bookmarks_toolbar(BOOKMARK_NAME)

@@ -1,10 +1,12 @@
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
+    TimeoutException,
     WebDriverException,
 )
 from selenium.webdriver import ActionChains, Firefox
@@ -644,19 +646,34 @@ class AboutPrefs(BasePage):
 
     def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
         """Verify the Custom-mode provider menu offers exactly the given providers."""
+        displayed = []
 
         def _providers_displayed(_):
             options = self.get_element("doh-provider-select-inner").find_elements(
                 By.TAG_NAME, "option"
             )
-            displayed = [
+            displayed[:] = [
                 opt.text for opt in options if opt.get_attribute("value") != "custom"
             ]
             return len(displayed) == len(provider_names) and all(
                 any(name in text for text in displayed) for name in provider_names
             )
 
-        self.wait.until(_providers_displayed)
+        try:
+            self.custom_wait(timeout=10).until(_providers_displayed)
+        except TimeoutException:
+            # The menu doesn't update when the provider list loads later, so reload to rebuild it
+            logging.warning(f"DoH providers not loaded ({displayed}), reloading")
+            self.driver.refresh()
+            self.open()
+            self.open_doh_advanced()
+            self.select_doh_protection_level("custom")
+            try:
+                self.wait.until(_providers_displayed)
+            except TimeoutException:
+                raise AssertionError(
+                    f"Expected DoH providers {provider_names}, got {displayed}"
+                )
         return self
 
     def open_connection_advanced(self) -> BasePage:
@@ -2384,8 +2401,10 @@ class AboutAddons(BasePage):
         self.driver.execute_script("arguments[0].click();", theme_card)
 
         enable_btn = self.get_element("enable-theme")
-        # Force JS click here as well to prevent the next step from failing.
-        self.driver.execute_script("arguments[0].click();", enable_btn)
+        # The button reads "Disable" when the theme is already active, as Dark is on DevEdition
+        if enable_btn.get_attribute("innerText") != "Disable":
+            # Force JS click here as well to prevent the next step from failing.
+            self.driver.execute_script("arguments[0].click();", enable_btn)
 
         self.expect(
             EC.text_to_be_present_in_element_attribute(
