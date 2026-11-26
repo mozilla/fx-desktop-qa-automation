@@ -5,6 +5,7 @@ from auto_fxui.browser_object import Navigation, TabBar
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
 
+DEFAULT_ENGINE_DOMAIN = "google.com"
 SEARCH_TERM = "mozilla"
 
 
@@ -43,4 +44,7 @@ def test_new_search_box_suggestions_present(driver: Firefox):
     suggestion = nav.get_search_bar_text()
     assert suggestion != SEARCH_TERM, "No suggestion was picked."
     nav.type_in_search_bar(Keys.ENTER)
-    nav.url_contains(quote_plus(suggestion))
+    nav.url_contains(DEFAULT_ENGINE_DOMAIN)
+    # Per word: Google's captcha redirect re-encodes the query, so the joined form never matches
+    for word in suggestion.split():
+        nav.url_contains(quote_plus(word))
