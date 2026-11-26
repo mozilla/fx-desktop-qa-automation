@@ -545,7 +545,10 @@ class AboutOpentabs(BasePage):
 
     def expect_listed_tab_titles(self, titles: list[str]) -> BasePage:
         """Wait until exactly `titles` are listed, in any order."""
-        self.expect(lambda _: sorted(self.get_listed_tab_titles()) == sorted(titles))
+        # The list re-renders while it filters, so retry on a stale row
+        self.custom_wait(
+            timeout=self.timeout, ignored_exceptions=[StaleElementReferenceException]
+        ).until(lambda _: sorted(self.get_listed_tab_titles()) == sorted(titles))
         return self
 
     @BasePage.context_content
