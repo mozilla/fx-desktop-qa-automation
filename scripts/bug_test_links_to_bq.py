@@ -45,8 +45,11 @@ def collect(cutoff: datetime | None = None, stored: dict | None = None) -> dict:
     """Gather in-scope bugs that link to a test, their links and TestRail
     executions: all of them, or with a cutoff only what changed after it.
 
-    stored holds the IDs of bugs already loaded ("bugs"), of those with a TestRail
-    link ("testrail"), and loaded failure counts ("failures": ID -> (count, platforms)).
+    Parameters
+    ----------
+    stored
+        IDs of bugs already loaded ("bugs"), of those with a TestRail
+        link ("testrail"), and loaded failure counts ("failures": ID -> (count, platforms)).
     """
     stored = stored or {"bugs": set(), "testrail": set(), "failures": {}}
     testrail, executions = testrail_links(
