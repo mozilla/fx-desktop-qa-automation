@@ -1,7 +1,6 @@
 import pytest
-from selenium.webdriver import Firefox
 
-from modules.browser_object import Navigation
+from modules.browser_object import Navigation, TabBar
 from modules.page_object import AboutPrefs
 
 
@@ -10,17 +9,20 @@ def test_case():
     return "3897534"
 
 
-def test_search_box_widget_default_engine_switch(driver: Firefox):
-    about_prefs = AboutPrefs(driver, category="search")
+def test_search_box_widget_default_engine_switch(driver):
+    """
+    C3897534 - Verify that changing the default engine is reflected into the new search box widget
+    """
+    about_prefs = AboutPrefs(driver, category="search").open()
     nav = Navigation(driver)
+    tabs = TabBar(driver)
 
-    # 1. Open about:preferences#search and set the default search engine to DuckDuckGo
-    about_prefs.open()
-    about_prefs.set_default_search_engine("DuckDuckGo")
+    # 1. Select DuckDuckGo as the default search engine in about:preferences#search
+    about_prefs.search_engine_dropdown().select_option("DuckDuckGo")
 
-    # 2. Verify the default search engine dropdown updated to DuckDuckGo
-    assert "DuckDuckGo" in about_prefs.get_default_search_engine_label()
+    # 2. Verify the default search engine updated to DuckDuckGo
+    about_prefs.wait_for_default_search_engine("DuckDuckGo")
 
-    # 3. Open a new tab and verify the URL bar's search widget reflects DuckDuckGo
-    nav.open_new_tab_via_button()
-    assert "DuckDuckGo" in nav.get_urlbar_switcher_label()
+    # 3. Open a new tab and verify the URL bar search mode switcher reflects DuckDuckGo
+    tabs.new_tab_by_button()
+    nav.verify_search_mode_is_visible("DuckDuckGo")

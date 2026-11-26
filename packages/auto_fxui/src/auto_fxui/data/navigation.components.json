@@ -1515,14 +1515,5 @@
       "description": "Root element of a Taskbar Tab window",
       "location": "Root of the browser window, only present in Taskbar Tab windows"
     }
-  },
-  "new-tab-button": {
-  "selectorData": "tabs-newtab-button",
-  "strategy": "id",
-  "groups": ["doNotCache"],
-  "comment": {
-    "description": "New tab '+' button on the tab strip",
-    "location": "Tab bar"
-    }
   }
 }

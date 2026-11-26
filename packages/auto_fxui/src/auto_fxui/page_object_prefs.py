@@ -1,10 +1,12 @@
 import json
+import logging
 from time import sleep
 from typing import List, Literal
 
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
+    TimeoutException,
     WebDriverException,
 )
 from selenium.webdriver import ActionChains, Firefox
@@ -116,47 +118,6 @@ class AboutPrefs(BasePage):
                 )
             )
         return self
-
-    def set_default_search_engine(self, engine_name: str) -> None:
-        """Open the default search engine dropdown and select the given engine."""
-        self.click_on("default-engine-dropdown")
-        dropdown_host = self.get_element("default-engine-dropdown")
-        option = self.driver.execute_script(
-            """
-            const host = arguments[0];
-            const target = arguments[1];
-            const items = [
-                ...(host.shadowRoot ? host.shadowRoot.querySelectorAll('panel-item') : []),
-                ...document.querySelectorAll('panel-item')
-            ];
-            return items.find(el =>
-                (el.getAttribute('label') || el.textContent || '').includes(target)
-            );
-            """,
-            dropdown_host,
-            engine_name,
-        )
-        assert option is not None, (
-            f"Search engine '{engine_name}' not found in dropdown"
-        )
-        option.click()
-
-    def get_default_search_engine_label(self) -> str:
-        """Return the currently displayed label/value of the default search engine dropdown."""
-        dropdown_host = self.get_element("default-engine-dropdown")
-        return self.driver.execute_script(
-            """
-            const host = arguments[0];
-            const btn = host.shadowRoot?.querySelector('.select-wrapper button, button');
-            return [
-                host.getAttribute('value'),
-                host.getAttribute('label'),
-                btn?.getAttribute('aria-label'),
-                btn?.textContent
-            ].filter(Boolean).join(' ');
-            """,
-            dropdown_host,
-        )
 
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
@@ -685,19 +646,34 @@ class AboutPrefs(BasePage):
 
     def verify_doh_providers_displayed(self, provider_names: List[str]) -> BasePage:
         """Verify the Custom-mode provider menu offers exactly the given providers."""
+        displayed = []
 
         def _providers_displayed(_):
             options = self.get_element("doh-provider-select-inner").find_elements(
                 By.TAG_NAME, "option"
             )
-            displayed = [
+            displayed[:] = [
                 opt.text for opt in options if opt.get_attribute("value") != "custom"
             ]
             return len(displayed) == len(provider_names) and all(
                 any(name in text for text in displayed) for name in provider_names
             )
 
-        self.wait.until(_providers_displayed)
+        try:
+            self.custom_wait(timeout=10).until(_providers_displayed)
+        except TimeoutException:
+            # The menu doesn't update when the provider list loads later, so reload to rebuild it
+            logging.warning(f"DoH providers not loaded ({displayed}), reloading")
+            self.driver.refresh()
+            self.open()
+            self.open_doh_advanced()
+            self.select_doh_protection_level("custom")
+            try:
+                self.wait.until(_providers_displayed)
+            except TimeoutException:
+                raise AssertionError(
+                    f"Expected DoH providers {provider_names}, got {displayed}"
+                )
         return self
 
     def open_connection_advanced(self) -> BasePage:
