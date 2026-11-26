@@ -11,7 +11,7 @@ def test_case():
 
 def test_search_box_widget_default_engine_switch(driver):
     """
-    C3897534 - Verify that changing the default engine is reflected into the new search box widget
+    C3897534 - Verify that changing the default search engine is reflected into the new search box widget
     """
     about_prefs = AboutPrefs(driver, category="search").open()
     nav = Navigation(driver)
