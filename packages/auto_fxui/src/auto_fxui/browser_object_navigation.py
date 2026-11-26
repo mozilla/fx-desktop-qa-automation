@@ -1873,3 +1873,19 @@ class Navigation(BasePage):
         self.context_click("toolbar-blank-space")
         self.context_menu.click_and_hide_menu("context-menu-vertical-tabs")
         return self
+
+    @BasePage.context_chrome
+    def open_new_tab_via_button(self) -> None:
+        """Click the '+' new tab button in the browser chrome and switch to the new tab."""
+        self.click_on("new-tab-button")
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+    @BasePage.context_chrome
+    def get_urlbar_switcher_label(self) -> str:
+        """Return the aria-label or title of the URL bar's search mode switcher button."""
+        switcher_btn = self.get_element("searchmode-switcher-button")
+        return (
+            switcher_btn.get_attribute("aria-label")
+            or switcher_btn.get_attribute("title")
+            or ""
+        )

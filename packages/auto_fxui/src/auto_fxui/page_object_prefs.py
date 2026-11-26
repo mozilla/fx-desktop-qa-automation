@@ -117,6 +117,47 @@ class AboutPrefs(BasePage):
             )
         return self
 
+    def set_default_search_engine(self, engine_name: str) -> None:
+        """Open the default search engine dropdown and select the given engine."""
+        self.click_on("default-engine-dropdown")
+        dropdown_host = self.get_element("default-engine-dropdown")
+        option = self.driver.execute_script(
+            """
+            const host = arguments[0];
+            const target = arguments[1];
+            const items = [
+                ...(host.shadowRoot ? host.shadowRoot.querySelectorAll('panel-item') : []),
+                ...document.querySelectorAll('panel-item')
+            ];
+            return items.find(el =>
+                (el.getAttribute('label') || el.textContent || '').includes(target)
+            );
+            """,
+            dropdown_host,
+            engine_name,
+        )
+        assert option is not None, (
+            f"Search engine '{engine_name}' not found in dropdown"
+        )
+        option.click()
+
+    def get_default_search_engine_label(self) -> str:
+        """Return the currently displayed label/value of the default search engine dropdown."""
+        dropdown_host = self.get_element("default-engine-dropdown")
+        return self.driver.execute_script(
+            """
+            const host = arguments[0];
+            const btn = host.shadowRoot?.querySelector('.select-wrapper button, button');
+            return [
+                host.getAttribute('value'),
+                host.getAttribute('label'),
+                btn?.getAttribute('aria-label'),
+                btn?.textContent
+            ].filter(Boolean).join(' ');
+            """,
+            dropdown_host,
+        )
+
     def search_engine_dropdown(self) -> Dropdown:
         """Returns the Dropdown region for search engine prefs"""
         return Dropdown(self, root=self.get_element("search-engine-dropdown-root"))
