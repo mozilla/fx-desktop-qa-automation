@@ -45,6 +45,6 @@ def test_new_search_box_suggestions_present(driver: Firefox):
     assert suggestion != SEARCH_TERM, "No suggestion was picked."
     nav.type_in_search_bar(Keys.ENTER)
     nav.url_contains(DEFAULT_ENGINE_DOMAIN)
-    # Per word: Google's captcha redirect re-encodes the query, so the joined form never matches
+    # Google's captcha page re-encodes '+'
     for word in suggestion.split():
         nav.url_contains(quote_plus(word))
