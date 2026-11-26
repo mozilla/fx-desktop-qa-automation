@@ -8,6 +8,7 @@ from auto_fxui.page_object import AboutPrefs
 def test_case():
     return "3897534"
 
+
 def test_search_box_widget_default_engine_switch(driver):
     """
     C3897534 - Verify that changing the default search engine is reflected into the new search box widget
