@@ -19,11 +19,6 @@ def delete_files_regex_string():
 
 
 @pytest.fixture()
-def hard_quit():
-    return True
-
-
-@pytest.fixture()
 def file_name():
     return PDF_FILE_NAME
 
@@ -35,7 +30,6 @@ def test_pdf_data_can_be_cleared(
     sys_platform,
     delete_files,
     delete_files_regex_string,
-    hard_quit,
 ):
     """
     C1017495 :Check if data can be cleared

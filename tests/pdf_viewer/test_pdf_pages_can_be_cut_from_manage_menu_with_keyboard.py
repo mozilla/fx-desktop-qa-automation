@@ -18,11 +18,6 @@ def test_case():
 
 
 @pytest.fixture()
-def hard_quit():
-    return True
-
-
-@pytest.fixture()
 def add_to_prefs_list():
     return [
         # Page checkboxes and the Manage menu only exist with split/merge enabled

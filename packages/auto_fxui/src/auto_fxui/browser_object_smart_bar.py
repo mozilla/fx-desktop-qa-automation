@@ -114,6 +114,10 @@ SMART_BAR_BUTTONS = {
 }
 
 # UrlbarResult providers behind the Smart Bar's rows.
+INTENT_CLASSIFIER_MODULE = (
+    "moz-src:///browser/components/aiwindow/models/IntentClassifier.sys.mjs"
+)
+
 PROVIDER_AI_CHAT = "UrlbarProviderAiChat"
 PROVIDER_SEARCH_SUGGESTIONS = "UrlbarProviderSearchSuggestions"
 
@@ -386,15 +390,20 @@ class SmartBar(BasePage):
         Returns
         -------
         list[dict]
-            Each with provider, heuristic, text (the suggestion or title) and
-            label (the row's visible action, e.g. "Ask").
+            Each with provider, heuristic, chat (whether it's a chat
+            suggestion), text (the suggestion or title) and label (the row's
+            visible action, e.g. "Ask").
         """
         return self._script("""
             const view = resultsView();
             if (!view) return [];
+            const { UrlbarShared } = ChromeUtils.importESModule(
+              "chrome://browser/content/urlbar/UrlbarShared.mjs"
+            );
             return Array.from(view.querySelectorAll(".urlbarView-row"), row => ({
               provider: row.result?.providerName ?? null,
               heuristic: !!row.result?.heuristic,
+              chat: row.result?.type === UrlbarShared.RESULT_TYPE.AI_CHAT,
               text: row.result?.payload.suggestion ?? row.result?.payload.title ?? "",
               label: row.querySelector(".urlbarView-action")?.textContent.trim() ?? "",
             }));
@@ -443,6 +452,28 @@ class SmartBar(BasePage):
                 f"Smart Bar never reached {minimum} autocomplete row(s); "
                 f"last count {self.get_result_count()}"
             ) from None
+        return self
+
+    @BasePage.context_chrome
+    def stub_intent_model(self, label: str) -> BasePage:
+        """
+        Make the intent model label every query `label` ("chat" or "search").
+
+        Firefox can't download its ML models under automation, so the real
+        model never answers and the Smart Bar waits on it indefinitely.
+        """
+        self.driver.execute_script(
+            f"""
+            const {{ IntentClassifier }} = ChromeUtils.importESModule(
+              "{INTENT_CLASSIFIER_MODULE}"
+            );
+            const label = arguments[0];
+            IntentClassifier._createEngine = async () => ({{
+              run: async () => [{{ label, score: 1 }}],
+            }});
+            """,
+            label,
+        )
         return self
 
     # ── Go / Ask action menu ─────────────────────────────────────────────
@@ -628,11 +659,12 @@ class SmartBar(BasePage):
         return self
 
     def _read_models(self) -> dict[str, str]:
+        # The Auto model has no brand name, so it is listed as "Auto".
         return self._script(
             "const m = modelSelect();"
             "if (!m || !m.availableModels) return {};"
             "return Object.fromEntries(Object.values(m.availableModels)"
-            "  .map(v => [v.brandName, v.model]));"
+            "  .map(v => [v.brandName || (v.model === 'auto' ? 'Auto' : ''), v.model]));"
         )
 
     def get_selected_model(self) -> str:

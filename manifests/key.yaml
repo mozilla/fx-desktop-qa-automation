@@ -125,8 +125,7 @@ address_bar_and_search:
     splits:
       - functional1
   test_new_search_box_no_url_navigation:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094799
-    result: flaky
+    result: pass
     splits:
       - functional1
   test_new_search_box_opens_results_in_new_tab:
@@ -854,11 +853,7 @@ networking:
     splits:
       - functional1
   test_doh_providers_global_regions:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094806
-    result:
-      linux: pass
-      mac: pass
-      win: flaky
+    result: pass
     splits:
       - functional1
   test_doh_providers_ru_region:
@@ -1402,8 +1397,7 @@ preferences:
     splits:
       - functional2
   test_dictionaries_can_be_downloaded:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094780
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_downloaded_languages_can_be_deleted:
@@ -1490,7 +1484,8 @@ preferences:
     splits:
       - functional2
   test_pages_can_be_translated_with_offer_disabled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097331
+    result: unstable
     splits:
       - functional2
   test_preferred_language_can_be_added:
@@ -1515,11 +1510,13 @@ preferences:
     splits:
       - functional2
   test_removed_never_translate_sites_can_be_translated:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097328
+    result: unstable
     splits:
       - functional2
   test_speed_up_translation_languages_work:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097326
+    result: unstable
     splits:
       - functional2
   test_spell_check_learn_more_link:
@@ -1527,11 +1524,7 @@ preferences:
     splits:
       - functional2
   test_spell_check_recognises_existing_dictionaries:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094795
-    result:
-      linux: pass
-      mac: unstable
-      win: pass
+    result: pass
     splits:
       - functional2
   test_support_get_help:
@@ -1688,6 +1681,10 @@ security_and_privacy:
       win: unstable
     splits:
       - functional2
+  test_correct_etb_tracker_are_blocked_in_firefox:
+    result: pass
+    splits:
+      - functional2
   test_cross_origin_iframe_permissions_are_not_prompted:
     result: pass
     splits:
@@ -1716,7 +1713,8 @@ security_and_privacy:
     result: covered-in-tree
     splits: []
   test_data_clearance_from_private_window_can_be_canceled:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097332
+    result: unstable
     splits:
       - functional2
   test_detected_blocked_trackers_found:
@@ -1860,7 +1858,8 @@ security_and_privacy:
     splits:
       - functional2
   test_sidebar_removed_on_end_private_session:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097336
+    result: unstable
     splits:
       - functional2
   test_social_media_trackers_displayed_subpanel:
@@ -2108,10 +2107,6 @@ smart_window:
     splits:
       - smart_window
       - functional2
-  test_c3313455_history_from_home_page:
-    result: pass
-    splits:
-      - functional2
   test_c3313457_history_from_hamburger_menu:
     result: pass
     splits:
@@ -2123,8 +2118,7 @@ smart_window:
       - smart_window
       - functional2
   test_c3321894_smart_bar_suggests_chat:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094777
-    result: unstable
+    result: pass
     splits:
       - smart_window
       - functional2
@@ -2137,10 +2131,6 @@ smart_window:
     result: pass
     splits:
       - smart_window
-      - functional2
-  test_c3322038_summarize_active_tab:
-    result: pass
-    splits:
       - functional2
   test_c3349915_settings_page_keyboard_accessible:
     result: pass
@@ -2163,11 +2153,6 @@ smart_window:
   test_c3374374_continue_conversation_on_home_page:
     result: pass
     splits:
-      - functional2
-  test_c3374375_continue_conversation_in_sidebar:
-    result: pass
-    splits:
-      - smart_window
       - functional2
   test_c3392590_smart_window_captcha_bypass:
     result: pass
@@ -2196,12 +2181,25 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4120443_history_from_home_page:
+    result: pass
+    splits:
+      - functional2
   test_c4120453_smart_window_restored_after_restart:
     result: pass
     splits:
       - smart_window
       - functional2
   test_c4120454_smart_window_auto_restored:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4120487_summarize_active_tab:
+    result: pass
+    splits:
+      - functional2
+  test_c4120489_continue_conversation_in_sidebar:
     result: pass
     splits:
       - smart_window
@@ -2222,11 +2220,20 @@ smart_window:
       - smart_window
       - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2092624
-    result: unstable
+    result: pass
     splits:
       - functional2
   test_c4438277_group_related_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4513494_select_ai_model_during_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4516868_start_in_smart_window_from_onboarding:
     result: pass
     splits:
       - smart_window
@@ -2284,7 +2291,8 @@ tabs:
     splits:
       - functional2
   test_manage_split_view_footer_menu:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097323
+    result: unstable
     splits:
       - functional2
   test_move_multi_selected_tabs:
@@ -2403,11 +2411,7 @@ tabs:
     splits:
       - functional2
   test_tab_hover_different_content_type:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094771
-    result:
-      linux: pass
-      mac: pass
-      win: flaky
+    result: pass
     splits:
       - functional2
       - nightly
@@ -2418,7 +2422,8 @@ tabs:
       - nightly
 theme_and_toolbar:
   test_customize_themes_and_redirect:
-    result: pass
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2097320
+    result: unstable
     splits:
       - smoke
       - exclude_nightly

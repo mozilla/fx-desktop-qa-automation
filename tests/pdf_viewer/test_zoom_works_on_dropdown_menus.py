@@ -13,11 +13,6 @@ def test_case():
 
 
 @pytest.fixture()
-def hard_quit():
-    return True
-
-
-@pytest.fixture()
 def file_name():
     return PDF_FILE_NAME
 
