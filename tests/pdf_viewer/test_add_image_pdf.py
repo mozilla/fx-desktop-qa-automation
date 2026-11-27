@@ -49,7 +49,7 @@ def test_add_image_pdf(
     context_menu = ContextMenu(driver)
 
     # Add image
-    pdf_viewer.add_image(str(image_path), sys_platform)
+    pdf_viewer.add_image(str(image_path))
 
     # Verify image is added
     pdf_viewer.element_visible(ADDED_IMAGE_ELEMENT)
