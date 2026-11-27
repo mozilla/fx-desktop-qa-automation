@@ -1,0 +1,66 @@
+{
+  "context": "chrome",
+  "organize-tabs-button": {
+    "selectorData": "smartwindow-group-tabs-button",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The Organize Tabs button",
+      "location": "Tab strip of a Smart Window"
+    }
+  },
+  "panel": {
+    "selectorData": "smartwindow-group-tabs-panel",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The Organize Tabs panel",
+      "location": "Opens below the Organize Tabs button"
+    }
+  },
+  "suggestion-rows": {
+    "selectorData": "#smartwindow-group-tabs-panel .swgt-suggestion",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "One row per suggested group",
+      "location": "Suggested groups section of the panel"
+    }
+  },
+  "recent-rows": {
+    "selectorData": "#smartwindow-group-tabs-panel .swgt-recent-row",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "One row per group created from the panel",
+      "location": "Just created section of the panel"
+    }
+  },
+  "ungroup-button": {
+    "selectorData": "#smartwindow-group-tabs-panel .swgt-ungroup",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "Ungroup Tabs, which undoes the groups just created",
+      "location": "Just created section of the panel"
+    }
+  },
+  "flyout": {
+    "selectorData": "smartwindow-group-tabs-flyout",
+    "strategy": "id",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "The panel beside a suggested group, listing its tabs",
+      "location": "Opens on hovering a suggested group row"
+    }
+  },
+  "flyout-tabs": {
+    "selectorData": "#smartwindow-group-tabs-flyout .swgt-flyout-tab",
+    "strategy": "css",
+    "groups": ["doNotCache"],
+    "comment": {
+      "description": "One row per tab of the previewed group",
+      "location": "In the flyout"
+    }
+  }
+}

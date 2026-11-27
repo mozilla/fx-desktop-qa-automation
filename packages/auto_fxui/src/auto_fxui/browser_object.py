@@ -6,6 +6,7 @@ from .browser_object_forget_panel import *
 from .browser_object_glean import *
 from .browser_object_menu_bar import *
 from .browser_object_navigation import *
+from .browser_object_organize_tabs import *
 from .browser_object_panel_ui import *
 from .browser_object_print_preview import *
 from .browser_object_reader_view import *

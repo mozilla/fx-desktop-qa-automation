@@ -2214,6 +2214,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4228476_create_group_from_suggested_groups:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4228478_undo_last_created_tab_group:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4433196_unsupported_tab_action_is_rejected:
     result: pass
     splits:
