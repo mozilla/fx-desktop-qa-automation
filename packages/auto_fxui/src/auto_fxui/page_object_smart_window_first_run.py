@@ -166,6 +166,33 @@ class SmartWindowFirstRun(BasePage):
         )
         return self
 
+    def get_selected_memories(self) -> str:
+        """Return the memories choice shown: "both", "browsing", "chats" or "none"."""
+        self.expect_setup_screen()
+        return self.get_element("memories-select").get_attribute("value")
+
+    def get_memories_button_label_id(self) -> str:
+        """Return the l10n id of the label the memories dropdown button shows."""
+        self.expect_setup_screen()
+        return self.get_element("memories-select-button").get_attribute("data-l10n-id")
+
+    def select_memories(self, choice: str) -> BasePage:
+        """
+        Pick how Smart Window learns about the user on the single-page onboarding.
+
+        Parameters
+        ----------
+        choice : str
+            "both", "browsing", "chats" or "none".
+        """
+        self.expect_setup_screen()
+        self.click_on("memories-select-button")
+        self.element_visible("memories-option", labels=[choice])
+        self.click_on("memories-option", labels=[choice])
+        self.element_attribute_is("memories-select", "value", choice)
+        self.element_not_visible("memories-options")
+        return self
+
     def is_default_window_on(self) -> bool:
         """Report whether the single-page onboarding's Start in Smart Window toggle is on."""
         self.expect_setup_screen()

@@ -2695,6 +2695,24 @@
       "location": "about:preferences#personalizeSmartWindow"
     }
   },
+  "smart-window-learn-from-chats-checkbox": {
+    "selectorData": "learnFromChatActivity",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Learn from chats in Smart Window checkbox (moz-checkbox; checked property)",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
+  "smart-window-learn-from-browsing-checkbox": {
+    "selectorData": "learnFromBrowsingActivity",
+    "strategy": "id",
+    "groups": [],
+    "comment": {
+      "description": "Learn from browsing in Classic and Smart Windows checkbox (moz-checkbox; checked property)",
+      "location": "about:preferences#personalizeSmartWindow"
+    }
+  },
   "smart-window-custom-model-fields": {
     "selectorData": "[id^='customModel']",
     "strategy": "css",

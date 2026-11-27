@@ -2228,6 +2228,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4516864_learn_from_browsing_only_from_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4516867_dont_learn_from_activity_from_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4516868_start_in_smart_window_from_onboarding:
     result: pass
     splits:
