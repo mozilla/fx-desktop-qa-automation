@@ -50,6 +50,7 @@ def _end_process(process: subprocess.Popen) -> None:
             process.wait(timeout=10)
         except subprocess.TimeoutExpired:
             process.kill()
+            process.wait()
 
 
 def _stop_service(service: Service) -> None:
