@@ -61,6 +61,14 @@ mm.loadFrameScript(
 );
 """
 
+_CARD_JS = """
+function confirmationCard() {
+  const chat = content.document.querySelector("ai-chat-content");
+  return chat && chat.shadowRoot &&
+    chat.shadowRoot.querySelector("ai-website-confirmation");
+}
+"""
+
 
 class SmartWindowChat(BasePage):
     """
@@ -325,3 +333,95 @@ class SmartWindowChat(BasePage):
             match = URL_TOKEN_RE.search(item)
             resolved.append(urls.get(match.group(1), item) if match else item)
         return resolved
+
+    # ── Tab confirmation card ────────────────────────────────────────────
+
+    @staticmethod
+    def url_token(page: str) -> str:
+        """Return the URL token the model names a tab served from `page` by."""
+        return f"§url_token: LOCALHOST_{page.upper().replace('.', '_')}_1§"
+
+    def get_confirmation_tabs(self) -> list[dict]:
+        """Return the waiting card's tabs, each with its label and whether it is ticked."""
+        return (
+            self._chat_script(
+                _CARD_JS
+                + """
+                const card = confirmationCard();
+                if (!card || !card.shadowRoot) return [];
+                return [...card.shadowRoot.querySelectorAll("ai-website-select")]
+                  .map(row => ({
+                    label: row.shadowRoot.querySelector("moz-checkbox")
+                      .getAttribute("label"),
+                    checked: row.hasAttribute("checked"),
+                  }));
+            """
+            )
+            or []
+        )
+
+    def set_confirmation_tab_checked(self, label: str, checked: bool) -> BasePage:
+        """Tick or untick the card's tab whose label contains `label`, and wait for the card to show it."""
+
+        def _set(_) -> bool:
+            match = [t for t in self.get_confirmation_tabs() if label in t["label"]]
+            if not match:
+                return False
+            if match[0]["checked"] == checked:
+                return True
+            self._chat_script(
+                _CARD_JS
+                + """
+                const [label] = args;
+                const card = confirmationCard();
+                const row = [...card.shadowRoot.querySelectorAll("ai-website-select")]
+                  .find(r => r.shadowRoot.querySelector("moz-checkbox")
+                    .getAttribute("label").includes(label));
+                row.shadowRoot.querySelector("moz-checkbox")
+                  .shadowRoot.querySelector("input").click();
+                """,
+                label,
+            )
+            return False
+
+        self.wait.until(_set, message=f"Couldn't set {label!r} checked={checked}")
+        return self
+
+    def cancel_confirmation(self) -> BasePage:
+        """Click the card's close button, and wait for the card to be replaced."""
+        waiting = self.get_last_tool_ui_type()
+
+        def _cancelled(_) -> bool:
+            if self.get_last_tool_ui_type() != waiting:
+                return True
+            self._chat_script(
+                _CARD_JS
+                + """
+                const card = confirmationCard();
+                const button = card && card.shadowRoot &&
+                  card.shadowRoot.querySelector("moz-button.close-button");
+                if (button) button.click();
+                """
+            )
+            return False
+
+        self.wait.until(_cancelled, message=f"The {waiting} card was never cancelled")
+        return self
+
+    def get_cancelled_label(self) -> str | None:
+        """Return the text shown where a cancelled card was, or None if there is none."""
+        return self._chat_script("""
+            const chat = content.document.querySelector("ai-chat-content");
+            const label = chat && chat.shadowRoot && chat.shadowRoot.querySelector(
+              "[data-l10n-id='smart-window-cancelled-label']"
+            );
+            return label && label.textContent.trim() ? label.textContent.trim() : null;
+        """)
+
+    def expect_cancelled(self) -> BasePage:
+        """Wait until the chat shows its request-cancelled text."""
+        self.wait.until(
+            lambda _: self.get_cancelled_label(),
+            message="The chat never showed the cancelled text",
+        )
+        return self

@@ -591,6 +591,31 @@ class TabBar(BasePage):
         self.wait.until(_grouped, message=f"Not all of {urls} were grouped")
         return self
 
+    def expect_tabs_ungrouped(self, urls: list[str]) -> BasePage:
+        """Wait until none of the tabs showing `urls` is in a tab group."""
+
+        def _ungrouped(_) -> bool:
+            grouped = {url for group in self.get_tab_groups() for url in group["urls"]}
+            return not grouped & set(urls)
+
+        self.wait.until(_ungrouped, message=f"Some of {urls} are still grouped")
+        return self
+
+    @BasePage.context_chrome
+    def open_window_with_url(self, url: str) -> BasePage:
+        """Open a new browser window showing `url` and switch the driver to it."""
+        known = set(self.driver.window_handles)
+        self.driver.execute_script("OpenBrowserWindow();")
+        self.wait.until(
+            lambda _: len(self.driver.window_handles) > len(known),
+            message="The new window never opened",
+        )
+        new = (set(self.driver.window_handles) - known).pop()
+        self.driver.switch_to.window(new)
+        with self.driver.context(self.driver.CONTEXT_CONTENT):
+            self.driver.get(url)
+        return self
+
     def expect_tabs_closed(self, urls: list[str]) -> BasePage:
         """Wait until no tab shows any of `urls`."""
         self.wait.until(
@@ -604,6 +629,25 @@ class TabBar(BasePage):
         self.wait.until(
             lambda _: set(urls) <= set(self.get_tab_urls()),
             message=f"Not all of {urls} are open",
+        )
+        return self
+
+    @BasePage.context_chrome
+    def pin_tab(self, url: str) -> BasePage:
+        """Pin the tab showing `url`, and wait until it is pinned."""
+        self.driver.execute_script(
+            "const tab = gBrowser.tabs.find("
+            "  t => t.linkedBrowser.currentURI.spec === arguments[0]);"
+            "gBrowser.pinTab(tab);",
+            url,
+        )
+        self.wait.until(
+            lambda _: self.driver.execute_script(
+                "return gBrowser.tabs.some("
+                "  t => t.pinned && t.linkedBrowser.currentURI.spec === arguments[0]);",
+                url,
+            ),
+            message=f"The tab showing {url} was never pinned",
         )
         return self
 
