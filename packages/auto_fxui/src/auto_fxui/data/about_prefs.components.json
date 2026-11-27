@@ -2293,6 +2293,21 @@
     "groups": [],
     "shadowParent": "ai-controls-toggle-tile"
   },
+  "ai-controls-description": {
+    "selectorData": "aiControlsDescription",
+    "strategy": "id",
+    "groups": []
+  },
+  "ai-controls-learn-more-link": {
+    "selectorData": "#aiControlsDescription a[support-page='firefox-ai-controls']",
+    "strategy": "css",
+    "groups": []
+  },
+  "ai-controls-blocked-message": {
+    "selectorData": "aiBlockedMessage",
+    "strategy": "id",
+    "groups": []
+  },
   "ai-control-translations-select": {
     "selectorData": "aiControlTranslationsSelect",
     "strategy": "id",
