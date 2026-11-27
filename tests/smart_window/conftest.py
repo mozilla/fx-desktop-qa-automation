@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from auto_fxui.browser_object import SmartWindow, SmartWindowChat
 from auto_fxui.classes.recording import Recording
+from auto_fxui.locale_setup import switch_locale_and_region
 from auto_fxui.mock_server import MLPA_STAGE_URL, MockServer
 from pytest_httpserver import HTTPServer
 
@@ -170,6 +171,23 @@ def mock_server(mock_server_session: MockServer, opt_mock_mode: str, request):
             f"MLPA returned errors: {upstream_errors}. A 401 means MLPA "
             f"rejected the FxA token; sign in again with: {LOGIN_COMMAND}"
         )
+
+
+@pytest.fixture()
+def uk_user(driver, browser_name: str):
+    """
+    Make this Firefox a UK user: the en-GB language pack, and region GB that
+    detection can't change. Opt in with @pytest.mark.usefixtures("uk_user")
+    on a test that also overrides fxa_env to None.
+
+    Firefox restarts to apply the locale, which drops anything set on the
+    running session, so the fixture must run before active_smart_window and
+    stub_fxa_token (usefixtures runs it first). Nightly only: only Nightly
+    language packs are fetched.
+    """
+    if browser_name != "Nightly":
+        pytest.skip("The en-GB language pack is only fetched for Nightly")
+    switch_locale_and_region(driver, "en-GB", "GB")
 
 
 @pytest.fixture()

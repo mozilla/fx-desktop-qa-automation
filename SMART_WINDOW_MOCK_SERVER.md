@@ -204,6 +204,14 @@ built_replies.add(
   with purpose `chat`) match on prompt and tool round, searches on their query, and everything
   else is a background request (title generation, conversation starters...), matched on its
   purpose alone.
+- **Request bodies.** `mock_server.request_bodies(purpose="chat")` returns the full body of each
+  request Firefox sent, such as the system prompt's `Locale: en-GB` line. They live only in the
+  served list, never in recordings.
+- **UK user.** `@pytest.mark.usefixtures("uk_user")` installs the Nightly en-GB language pack,
+  pins `browser.search.region` to GB (region detection off) and restarts Firefox. The test must
+  override `fxa_env` to `None`. It skips on Beta and Release, and the restart drops anything
+  set up earlier, so it runs before `smart_window_chat`. `get_locale_state(driver)` reads the
+  app locale and `Region.home`. See `test_uk_user_setup.py`.
 - **Missing entries.** A missing chat or search entry fails the test. A missing background entry
   gets a 503 error; Firefox carries on and the test isn't failed.
 - **Firefox versions.** CI tests Firefox Beta, while recordings are often made with Nightly.

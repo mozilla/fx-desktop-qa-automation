@@ -91,7 +91,8 @@ class MockServer:
             self.mode = mode
             self.upstream = upstream
             self.token = token
-            # Every request and the response it got (None if unanswered).
+            # Every request, the response it got (None if unanswered) and its
+            # full body. Bodies stay here; recordings never get them.
             self.served = []
             self.unmatched = []
             self.upstream_errors = []
@@ -123,6 +124,22 @@ class MockServer:
             if request.get("last_user_message") == prompt and text:
                 return " ".join(text.split())
         raise AssertionError(f"No chat reply was served for {prompt!r}")
+
+    def request_bodies(self, purpose: str | None = None) -> list[dict]:
+        """
+        Return the full JSON body of each request Firefox sent, oldest first.
+        Pass `purpose` to keep only requests with that purpose header, such as
+        "chat". Bodies hold the system prompt and page content, so they are for
+        assertions only and are never recorded.
+        """
+        self.wait_until_idle()
+        with self._lock:
+            served = list(self.served)
+        return [
+            i["body"]
+            for i in served
+            if purpose is None or i["request"].get("purpose") == purpose
+        ]
 
     def chat_models(self, prompt: str) -> list[str | None]:
         """Return the model each chat request for `prompt` named (None if none), oldest first."""
@@ -165,19 +182,19 @@ class MockServer:
         with self._lock:
             mode = self.mode
         if mode == "replay":
-            return self._replay(summary)
+            return self._replay(summary, body)
         with self._lock:
             self._in_flight += 1
         try:
-            return self._forward(request, summary, record=mode == "record")
+            return self._forward(request, summary, body, record=mode == "record")
         except BaseException:
             self._done()
             raise
 
-    def _replay(self, summary: dict) -> Response:
+    def _replay(self, summary: dict, body: dict) -> Response:
         with self._lock:
             response = self.recording.match(summary)
-            self.served.append({"request": summary, "response": response})
+            self.served.append({"request": summary, "response": response, "body": body})
         if response is not None:
             return _to_response(response)
         if summary["path"] == SEARCH_PATH or is_chat_message(summary):
@@ -194,7 +211,9 @@ class MockServer:
         logging.info(f"Mock server is not answering {summary}")
         return Response(status=503)
 
-    def _forward(self, request: Request, summary: dict, record: bool) -> Response:
+    def _forward(
+        self, request: Request, summary: dict, body: dict, record: bool
+    ) -> Response:
         headers = {
             k: v for k, v in request.headers.items() if k.lower() not in DROPPED_HEADERS
         }
@@ -209,7 +228,7 @@ class MockServer:
             # Not recorded: a bad token or a server error is not a reply worth
             # replaying.
             with self._lock:
-                self.served.append({"request": summary, "response": None})
+                self.served.append({"request": summary, "response": None, "body": body})
                 self.upstream_errors.append((upstream.status_code, summary))
             self._done()
             return Response(
@@ -228,23 +247,23 @@ class MockServer:
                         "status": upstream.status_code,
                         "events": _parse_sse(raw),
                     }
-                    self._served(summary, response, record)
+                    self._served(summary, body, response, record)
                 finally:
                     self._done()
 
             return Response(relay(), content_type=content_type)
 
         response = {"status": upstream.status_code, "body": upstream.json()}
-        self._served(summary, response, record)
+        self._served(summary, body, response, record)
         self._done()
         return Response(
             upstream.content, status=upstream.status_code, content_type=content_type
         )
 
-    def _served(self, summary: dict, response: dict, record: bool):
+    def _served(self, summary: dict, body: dict, response: dict, record: bool):
         interaction = {"request": summary, "response": response}
         with self._lock:
-            self.served.append(interaction)
+            self.served.append({**interaction, "body": body})
             if record:
                 self.recording.add(interaction)
 
