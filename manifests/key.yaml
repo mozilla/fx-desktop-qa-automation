@@ -2209,7 +2209,42 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c4120780_cancel_closing_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c4220532_ai_model_can_create_tab_group:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433178_close_tab_without_confirmation:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433183_close_tab_with_no_match:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433184_close_pinned_tab_needs_confirmation:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433186_closing_all_tabs_needs_confirmation:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433191_only_checked_tab_closes:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4433195_classic_window_tabs_untouched:
     result: pass
     splits:
       - smart_window
@@ -2219,6 +2254,11 @@ smart_window:
     splits:
       - functional2
   test_c4438277_group_related_tabs:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4438278_undo_grouping_tabs:
     result: pass
     splits:
       - smart_window
