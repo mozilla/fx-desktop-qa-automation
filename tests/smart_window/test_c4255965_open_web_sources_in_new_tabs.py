@@ -32,11 +32,10 @@ def test_open_web_sources_in_new_tabs(
     SmartBar(driver).open_smart_bar()
     chat.send(PROMPT)
     chat.expect_sources(3)
-    shown = [s["url"] for s in chat.get_sources() if not s["grouped"]]
-    grouped = [s["url"] for s in chat.get_sources() if s["grouped"]]
-    assert shown and grouped, (
-        f"Expected shown and grouped sources: {chat.get_sources()}"
-    )
+    all_sources = chat.get_sources()
+    shown = [s["url"] for s in all_sources if not s["grouped"]]
+    grouped = [s["url"] for s in all_sources if s["grouped"]]
+    assert shown and grouped, f"Expected shown and grouped sources: {all_sources}"
     source = shown[0]
 
     chat.click_source(source)

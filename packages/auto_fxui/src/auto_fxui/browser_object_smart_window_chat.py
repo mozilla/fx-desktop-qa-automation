@@ -430,7 +430,12 @@ class SmartWindowChat(BasePage):
     def open_grouped_sources(self) -> BasePage:
         """Click "+n more" and wait for the panel of grouped sources."""
         self._sources_script("mouse(moreButton(), 0);")
-        self.expect(lambda _: all(s["visible"] for s in self.get_grouped_sources()))
+        self.expect(
+            lambda _: (
+                (panel := self.get_grouped_sources())
+                and all(s["visible"] for s in panel)
+            )
+        )
         return self
 
     def get_grouped_sources(self) -> list[dict]:
@@ -482,12 +487,11 @@ class SmartWindowChat(BasePage):
         for _ in range(max_stops):
             self.perform_key_combo_chrome(Keys.SHIFT, Keys.TAB)
             try:
-                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                return self.custom_wait(timeout=1, poll_frequency=0.1).until(
                     lambda _: self.get_focused_source()
                 )
             except TimeoutException:
                 continue
-            return self.get_focused_source()
         raise AssertionError(f"Shift+Tab never reached a source in {max_stops} stops")
 
     def get_source_accessibles(self, grouped: bool = False) -> list[dict]:

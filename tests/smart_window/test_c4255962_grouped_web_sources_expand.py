@@ -34,8 +34,9 @@ def test_grouped_web_sources_expand(
     chat.send(PROMPT)
     chat.expect_sources(len(sources))
 
-    grouped = [s for s in chat.get_sources() if s["grouped"]]
-    assert grouped, f"No sources were grouped: {chat.get_sources()}"
+    all_sources = chat.get_sources()
+    grouped = [s for s in all_sources if s["grouped"]]
+    assert grouped, f"No sources were grouped: {all_sources}"
     chat.expect(lambda _: chat.get_grouped_sources_label() == f"+{len(grouped)} more")
 
     chat.open_grouped_sources()

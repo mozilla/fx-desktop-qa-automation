@@ -33,13 +33,14 @@ def test_web_sources_screen_reader(
     chat.expect_sources(len(sources))
 
     focused = chat.tab_to_source()
-    shown = [s for s in chat.get_sources() if not s["grouped"]]
+    all_sources = chat.get_sources()
+    shown = [s for s in all_sources if not s["grouped"]]
     assert focused in [s["url"] for s in shown]
     assert chat.get_source_accessibles() == [
         {"role": "link", "name": s["title"]} for s in shown
     ]
 
-    grouped = [s for s in chat.get_sources() if s["grouped"]]
+    grouped = [s for s in all_sources if s["grouped"]]
     more = chat.get_grouped_sources_button_accessible()
     assert more == {"role": "pushbutton", "name": f"+{len(grouped)} more"}
 
