@@ -185,10 +185,12 @@ class FirefoxView(BasePage):
         return bool(
             self.driver.execute_script(
                 """
-                const panel = document.querySelector(arguments[0]).shadowRoot
-                  .querySelector("panel-list");
+                const panel = document.querySelector(arguments[0])?.shadowRoot
+                  ?.querySelector("panel-list");
                 if (!panel || !panel.matches(":popover-open")) return false;
-                panel.querySelector("panel-item[data-l10n-id$='context-delete']").click();
+                const item = panel.querySelector("panel-item[data-l10n-id$='context-delete']");
+                if (!item) return false;
+                item.click();
                 return true;
                 """,
                 view_tag,
