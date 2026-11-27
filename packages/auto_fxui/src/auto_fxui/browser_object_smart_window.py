@@ -108,6 +108,17 @@ class SmartWindow(BasePage):
         return self
 
     @BasePage.context_chrome
+    def stub_fxa_access(self) -> BasePage:
+        """Make Smart Window entry points treat the user as signed in."""
+        self.driver.execute_script(
+            f"""
+            const {{ AuthProvider }} = ChromeUtils.importESModule("{AUTH_PROVIDER_MODULE}");
+            AuthProvider.hasAccess = async () => true;
+            """
+        )
+        return self
+
+    @BasePage.context_chrome
     def stub_fxa_token(self) -> BasePage:
         """
         Make Firefox send Smart Window requests with a stand-in FxA token, so

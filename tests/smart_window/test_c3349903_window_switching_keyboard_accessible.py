@@ -1,13 +1,11 @@
 """
 C3349903 - Verify that the Window Switching Entry points are keyboard accessible
-Signed in, the Switch Windows button and the New Smart Window entry in the
-Hamburger menu can be reached and used with the keyboard alone.
+The Switch Windows button and the New Smart Window entry in the Hamburger menu
+can be reached and used with the keyboard alone.
 """
 
 import pytest
 from auto_fxui.browser_object import SmartWindow
-from auto_fxui.classes.fxa_session import FxaSession
-from auto_fxui.page_object import FxaHome
 from selenium.webdriver import Firefox
 
 NEW_SMART_WINDOW = "appMenu-new-ai-window-button"
@@ -19,17 +17,12 @@ def test_case():
 
 
 def test_window_switching_keyboard_accessible(
-    driver: Firefox, create_fxa: FxaSession, smart_window: SmartWindow
+    driver: Firefox, active_smart_window: SmartWindow
 ):
     """
     C3349903 - Verify that the Window Switching Entry points are keyboard accessible
     """
-    smart_window.open_smart_window_sign_in()
-    fxa = FxaHome(driver)
-    fxa.inject_session(create_fxa)
-    fxa.continue_with_cached_account()
-    smart_window.expect_signed_in()
-    smart_window.expect_smart_window_active(True)
+    smart_window = active_smart_window.stub_fxa_access()
 
     smart_window.choose_window_with_keyboard("classic")
     smart_window.expect_smart_window_active(False)
