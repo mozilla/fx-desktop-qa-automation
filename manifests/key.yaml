@@ -2381,11 +2381,7 @@ tabs:
     result: covered-in-tree
     splits: []
   test_split_view_context_menu_search_single_tab:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2094805
-    result:
-      linux: pass
-      mac: flaky
-      win: pass
+    result: pass
     splits:
       - functional2
       - nightly
