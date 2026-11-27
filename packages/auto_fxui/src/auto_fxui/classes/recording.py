@@ -39,6 +39,9 @@ def summarize_request(path: str, headers, body: dict) -> dict:
         "model": body.get("model"),
         "stream": bool(body.get("stream")),
     }
+    schema = (body.get("response_format") or {}).get("json_schema", {}).get("name")
+    if schema:
+        summary["schema"] = schema
     if is_chat_message(summary):
         messages = body.get("messages") or []
         user_messages = [m for m in messages if m.get("role") == "user"]
@@ -67,7 +70,8 @@ def match_key(request: dict) -> tuple:
     Return the fields a replayed request must share with a recorded one.
 
     The model is left out so a model swap on the server side does not
-    invalidate every recording.
+    invalidate every recording. A background request's `schema` is checked
+    separately, in Recording.match.
     """
     if request["path"] == SEARCH_PATH:
         return (request["path"], request.get("query"))
@@ -186,9 +190,18 @@ class Recording:
         in recorded order, then the last one repeats.
         """
         key = match_key(request)
-        candidates = [i for i in self.interactions if match_key(i["request"]) == key]
+        schema = request.get("schema")
+        candidates = [
+            i
+            for i in self.interactions
+            if match_key(i["request"]) == key
+            and i["request"].get("schema") in (None, schema)
+        ]
+        exact = [i for i in candidates if i["request"].get("schema") == schema]
+        candidates = exact or candidates
         if not candidates:
             return None
+        key = (key, schema)
         served = self._served.get(key, 0)
         self._served[key] = served + 1
         return candidates[min(served, len(candidates) - 1)]["response"]
@@ -260,6 +273,43 @@ def search_results(query: str, results: list[dict]) -> dict:
     return {
         "request": {"path": SEARCH_PATH, "query": query},
         "response": {"status": 200, "body": {"results": results}},
+    }
+
+
+def background_reply(
+    purpose: str, content: str | dict, schema: str | None = None
+) -> dict:
+    """
+    A non-streamed reply to a background request of `purpose`, such as
+    "memory-generation", "monitor", "aitab", "smart-form-fill" or
+    "title-generation".
+
+    `content` is the assistant message; a dict is sent as JSON, for features
+    that ask for structured output. Set `schema` to the response_format name
+    to answer one request of a purpose that sends several, such as
+    "SmartFormFillFieldClassification", "SmartFormFillRelevantTabs" and
+    "SmartFormFillFormValues". Without it the reply answers every request of
+    that purpose.
+    """
+    text = content if isinstance(content, str) else json.dumps(content)
+    request = {"path": CHAT_PATH, "purpose": purpose, "stream": False}
+    if schema:
+        request["schema"] = schema
+    return {
+        "request": request,
+        "response": {
+            "status": 200,
+            "body": {
+                "object": "chat.completion",
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {"role": "assistant", "content": text},
+                        "finish_reason": "stop",
+                    }
+                ],
+            },
+        },
     }
 
 
