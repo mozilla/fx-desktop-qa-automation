@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 import platform
@@ -468,6 +469,75 @@ def hard_quit():
 
 
 @pytest.fixture()
+def enterprise_policies() -> dict | None:
+    """
+    Enterprise policies to run Firefox with, as the dict under policies.json's "policies" key.
+
+    Override to return e.g. {"GenerativeAI": {"SmartWindow": False, "Locked": True}}.
+    """
+    return None
+
+
+# Marks a policies.json the suite wrote, so a run that crashed before cleanup can remove it.
+POLICIES_MARKER = "starfoxTestPolicies"
+
+
+def firefox_resources_dir(fx_executable: str) -> Path:
+    """Return the Firefox install folder that holds application.ini and distribution/."""
+    exe = Path(fx_executable)
+    if exe.parent.name == "MacOS":
+        return exe.parent.parent / "Resources"
+    return exe.parent
+
+
+def is_nightly_build(fx_executable: str) -> bool:
+    """Report whether the Firefox under test is a Nightly build (version like 163.0a1)."""
+    ini = firefox_resources_dir(fx_executable) / "application.ini"
+    for line in ini.read_text().splitlines():
+        if line.startswith("Version="):
+            return "a" in line.split("=", 1)[1]
+    return False
+
+
+@pytest.fixture()
+def installed_policies(enterprise_policies: dict | None, fx_executable, tmp_path):
+    """
+    Install enterprise_policies for the Firefox under test and return the
+    browser.policies.alternatePath value to set, or None.
+
+    Nightly reads policies from any path that pref names. Other builds only
+    read distribution/policies.json, so the file goes there when the folder is
+    writable (macOS app bundles aren't) and the test is skipped otherwise.
+    """
+    if not enterprise_policies:
+        yield None
+        return
+    contents = json.dumps({"policies": enterprise_policies, POLICIES_MARKER: True})
+    if is_nightly_build(fx_executable):
+        policies_file = tmp_path / "policies.json"
+        policies_file.write_text(contents)
+        yield str(policies_file)
+        return
+
+    policies_file = (
+        firefox_resources_dir(fx_executable) / "distribution" / "policies.json"
+    )
+    if policies_file.exists():
+        if POLICIES_MARKER not in json.loads(policies_file.read_text()):
+            pytest.fail(f"{policies_file} exists and wasn't written by a test")
+        policies_file.unlink()
+    try:
+        policies_file.parent.mkdir(exist_ok=True)
+        policies_file.write_text(contents)
+    except PermissionError:
+        pytest.skip(f"Can't install enterprise policies in {policies_file.parent}")
+    try:
+        yield None
+    finally:
+        policies_file.unlink(missing_ok=True)
+
+
+@pytest.fixture()
 def firefox_options():
     """Allow tests to configure capabilities before the browser session starts."""
     return Options()
@@ -477,6 +547,7 @@ def firefox_options():
 def driver(
     build_version,
     create_profiles,
+    installed_policies,
     env_prep,
     fx_executable,
     firefox_options,
@@ -503,6 +574,10 @@ def driver(
 
     Fixtures
     --------
+
+    installed_policies: str | None
+        Installs the test's enterprise_policies before Firefox starts; on Nightly
+        it's the policies.json path for browser.policies.alternatePath.
 
     fx_executable: str
         Location of the Firefox executable.
@@ -553,6 +628,8 @@ def driver(
         options.add_argument("--headless")
     if fxa_url:
         options.set_preference("identity.fxaccounts.autoconfig.uri", fxa_url)
+    if installed_policies:
+        options.set_preference("browser.policies.alternatePath", installed_policies)
     for opt, value in prefs_list:
         options.set_preference(opt, value)
     try:
