@@ -813,3 +813,43 @@ class SmartBar(BasePage):
         self.perform_key_combo_chrome(Keys.ENTER)
         self.expect_action_menu_open(False)
         return self
+
+    # ── Home page keyboard ───────────────────────────────────────────────
+
+    def get_home_prompt_labels(self) -> list[str]:
+        """Return the labels of the prompt buttons on the Home page, in order."""
+        return self._script(
+            "return deepAll('.sw-prompt-button').map(b => b.label || b.textContent.trim());"
+        )
+
+    def get_focused_home_prompt(self) -> int | None:
+        """Return the index of the Home page prompt button with keyboard focus, or None."""
+        index = self._script(
+            "const chain = focusChain();"
+            "return deepAll('.sw-prompt-button').findIndex(b => chain.includes(b));"
+        )
+        return None if index < 0 else index
+
+    def _tab_until(self, reached, description: str, max_stops: int = 25) -> BasePage:
+        """Press Tab from the text field until `reached()` is true."""
+        if not self._focus_editor():
+            raise AssertionError("Smart Bar editor is not available to focus")
+        for _ in range(max_stops):
+            if reached():
+                return self
+            self.perform_key_combo_chrome(Keys.TAB)
+            try:
+                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                    lambda _: reached()
+                )
+            except TimeoutException:
+                pass
+        if reached():
+            return self
+        raise AssertionError(f"Tab never reached {description} in {max_stops} stops")
+
+    def tab_to_home_prompt(self, index: int) -> BasePage:
+        """Press Tab from the text field until Home page prompt button `index` has focus."""
+        return self._tab_until(
+            lambda: self.get_focused_home_prompt() == index, f"prompt {index}"
+        )

@@ -1,7 +1,10 @@
 import re
 
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+
 from .browser_object_smart_bar import SmartBar
-from .browser_object_smart_window import CHAT_DOCUMENT_JS
+from .browser_object_smart_window import CHAT_DOCUMENT_JS, SmartWindow
 from .page_base import BasePage
 
 # MESSAGE_ROLE.USER and MESSAGE_ROLE.TOOL in the conversation model.
@@ -59,6 +62,41 @@ mm.loadFrameScript(
   "data:application/javascript;charset=utf-8," + encodeURIComponent(frameScript),
   false
 );
+"""
+
+
+# Each control the chat can focus, as the CSS selectors that must each match
+# something on its focus chain (the focused element and the shadow hosts
+# around it). The first group is in the chat window itself, the second in
+# the conversation page.
+CHAT_WINDOW_CONTROLS = {
+    "context": ["moz-button.context-icon-button"],
+    "memories": ["moz-button.memories-icon-button"],
+    "model": ["moz-button.input-model-select-button"],
+    "cta": ["input-cta", "#main-button"],
+    "cta-menu": ["input-cta", "#chevron-button"],
+    "editor": ["div.ProseMirror"],
+    "new-chat": ["moz-button.new-chat-icon-button"],
+    "history": ["moz-button.history-menu-button"],
+    "close": ["moz-button.close-sidebar-button"],
+}
+CHAT_PAGE_CONTROLS = {
+    "thumbs-up": ["moz-button.thumbs-up-button"],
+    "thumbs-down": ["moz-button.thumbs-down-button"],
+    "copy": ["moz-button.copy-button"],
+    "retry": ["moz-button.retry-button"],
+}
+
+_FOCUS_CHAIN_JS = """
+const chain = [];
+let el = START;
+while (el) {
+  chain.push(el);
+  el = el.shadowRoot && el.shadowRoot.activeElement;
+}
+for (const [name, selectors] of Object.entries(TABLE)) {
+  if (selectors.every(s => chain.some(e => e.matches && e.matches(s)))) return name;
+}
 """
 
 
@@ -325,3 +363,92 @@ class SmartWindowChat(BasePage):
             match = URL_TOKEN_RE.search(item)
             resolved.append(urls.get(match.group(1), item) if match else item)
         return resolved
+
+    # ── Keyboard ─────────────────────────────────────────────────────────
+
+    def get_focused_control(self) -> str | None:
+        """
+        Return which control in CHAT_WINDOW_CONTROLS or CHAT_PAGE_CONTROLS has
+        keyboard focus, or None if focus is elsewhere in the window.
+        """
+        found = self._ai_window_script(
+            "const doc = aiDoc();"
+            "const host = doc && doc.defaultView.docShell.chromeEventHandler;"
+            "if (!host || document.activeElement !== host) return null;"
+            + _FOCUS_CHAIN_JS.replace("START", "doc.activeElement").replace(
+                "TABLE", "arguments[0]"
+            )
+            + "return chain.some(e => e.id === 'aichat-browser') ? 'chat-page' : null;",
+            CHAT_WINDOW_CONTROLS,
+        )
+        if found != "chat-page":
+            return found
+        return self._chat_script(
+            _FOCUS_CHAIN_JS.replace("START", "content.document.activeElement").replace(
+                "TABLE", "args[0]"
+            )
+            + "return null;",
+            CHAT_PAGE_CONTROLS,
+        )
+
+    def _focus_signature(self) -> list:
+        """Return what has focus, in chrome and in the chat, so a change shows a Tab landed."""
+        return [
+            SmartWindow(self.driver).get_focused_id(),
+            self.get_focused_control(),
+        ]
+
+    def focus_smart_bar(self) -> BasePage:
+        """Put keyboard focus in the Smart Bar's text field."""
+        focused = self._ai_window_script(
+            "const host = aiWindow();"
+            "const editor = host && host.shadowRoot"
+            "  && host.shadowRoot.querySelector('moz-multiline-editor');"
+            "const field = editor && editor.shadowRoot"
+            "  && editor.shadowRoot.querySelector('div.ProseMirror');"
+            "if (!field) return false;"
+            "field.focus();"
+            "return true;"
+        )
+        if not focused:
+            raise AssertionError("The Smart Bar's text field isn't there to focus")
+        self.expect(lambda _: self.get_focused_control() == "editor")
+        return self
+
+    def tab_through(self, names: list[str], max_stops: int = 40) -> list[str]:
+        """
+        Press Tab from the Smart Bar's text field until every control in
+        `names` has had focus, and return the controls focused, in order.
+        """
+        self.focus_smart_bar()
+        seen = ["editor"]
+        for _ in range(max_stops):
+            if all(name in seen for name in names):
+                return seen
+            before = self._focus_signature()
+            self.perform_key_combo_chrome(Keys.TAB)
+            try:
+                self.custom_wait(timeout=1.5, poll_frequency=0.1).until(
+                    lambda _: self._focus_signature() != before
+                )
+            except TimeoutException:
+                pass
+            control = self.get_focused_control()
+            if control and control != seen[-1]:
+                seen.append(control)
+        missing = [name for name in names if name not in seen]
+        raise AssertionError(
+            f"Tab never reached {missing} in {max_stops} stops: {seen}"
+        )
+
+    def tab_to_control(self, name: str) -> BasePage:
+        """Press Tab from the Smart Bar's text field until control `name` has focus."""
+        self.tab_through([name])
+        self.expect(lambda _: self.get_focused_control() == name)
+        return self
+
+    def type_with_keyboard(self, text: str) -> BasePage:
+        """Type `text` into whatever has keyboard focus."""
+        with self.driver.context(self.driver.CONTEXT_CHROME):
+            self.actions.send_keys(text).perform()
+        return self
