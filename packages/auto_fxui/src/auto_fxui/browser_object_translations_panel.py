@@ -31,6 +31,15 @@ class TranslationsPanel(BasePage):
         )
         return self
 
+    @BasePage.context_chrome
+    def _pointer_click(self, reference: str) -> BasePage:
+        """
+        Click with a pointer action, for moz-buttons in the panel.
+        """
+        # Marionette's native click can't scroll a moz-button in a panel into view.
+        self.actions.move_to_element(self.get_element(reference)).click().perform()
+        return self
+
     def open_panel(self) -> BasePage:
         """
         Open the translations panel from the URL bar button.
@@ -50,7 +59,7 @@ class TranslationsPanel(BasePage):
         Args:
             timeout: Seconds to wait for the translation
         """
-        self.click_on("panel-translate-button")
+        self._pointer_click("panel-translate-button")
 
         # The language badge only shows up once the engine is done.
         self.custom_wait(timeout=timeout).until(
@@ -64,7 +73,7 @@ class TranslationsPanel(BasePage):
         """
         Open the settings wheel gear menu and check "Always translate <language>".
         """
-        self.click_on("settings-gear-button")
+        self._pointer_click("settings-gear-button")
         self.element_visible("always-translate-menuitem")
         self.click_on("always-translate-menuitem")
 
@@ -81,7 +90,7 @@ class TranslationsPanel(BasePage):
         """
         Open the settings wheel gear menu and check "Never translate <language>".
         """
-        self.click_on("settings-gear-button")
+        self._pointer_click("settings-gear-button")
         self.element_visible("never-translate-menuitem")
         self.click_on("never-translate-menuitem")
 
@@ -98,7 +107,7 @@ class TranslationsPanel(BasePage):
         """
         Open the settings wheel gear menu and check "Never translate this site".
         """
-        self.click_on("settings-gear-button")
+        self._pointer_click("settings-gear-button")
         self.element_visible("never-translate-site-menuitem")
         self.click_on("never-translate-site-menuitem")
 
