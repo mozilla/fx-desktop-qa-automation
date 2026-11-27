@@ -2157,6 +2157,11 @@ smart_window:
     result: pass
     splits:
       - functional2
+  test_c3917535_block_smart_window_by_policy:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3977124_search_with_different_engines:
     result: pass
     splits:

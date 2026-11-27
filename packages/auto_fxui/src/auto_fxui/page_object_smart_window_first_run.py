@@ -57,6 +57,13 @@ class SmartWindowFirstRun(BasePage):
             name,
         )
 
+    @BasePage.context_chrome
+    def is_pref_locked(self, name: str) -> bool:
+        """Return whether a Firefox pref is locked, e.g. by an enterprise policy."""
+        return self.driver.execute_script(
+            "return Services.prefs.prefIsLocked(arguments[0]);", name
+        )
+
     def is_single_page(self) -> bool:
         """Wait for the first run to render and report whether it is the single-page layout."""
         self.expect(
