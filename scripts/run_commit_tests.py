@@ -23,12 +23,19 @@ def uses_mock_server(test: str) -> bool:
     )
 
 
+# Tests that build their replies need no recording: through the built_replies
+# or web_search_sources fixtures, or by passing a Recording to mock_server.reset().
+BUILDS_REPLIES_RE = re.compile(
+    r"\b(built_replies|web_search_sources)\b|mock_server\.reset\(\s*Recording\("
+)
+
+
 def has_recording(test: str) -> bool:
-    """Tests that build their replies (the built_replies fixture) need none."""
+    """Return whether `test` has a recording or builds its replies."""
     path = Path(test)
     folder = Path("data", "recordings", path.parent.name)
     return (
-        re.search(r"\bbuilt_replies\b", path.read_text(encoding="utf-8"))
+        BUILDS_REPLIES_RE.search(path.read_text(encoding="utf-8"))
         or (folder / f"{path.stem}.json").exists()
         or (folder / path.stem).is_dir()
     )
