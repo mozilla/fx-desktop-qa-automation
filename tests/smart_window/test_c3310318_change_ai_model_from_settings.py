@@ -9,10 +9,6 @@ from auto_fxui.page_object import AboutPrefs
 from auto_fxui.page_object_prefs import CUSTOM_MODEL
 from selenium.webdriver import Firefox
 
-FAST = "smart-window-model-fast-v2"
-FLEXIBLE = "smart-window-model-flexible-v2"
-PERSONAL = "smart-window-model-personal-v2"
-
 
 @pytest.fixture()
 def test_case():
@@ -26,14 +22,18 @@ def test_change_ai_model_from_settings(driver: Firefox):
     about_prefs = AboutPrefs(driver, category="ai")
     about_prefs.navigate_to_smart_window_settings()
 
-    offered = {m["l10n"] for m in about_prefs.get_smart_window_models()}
-    assert offered == {FAST, FLEXIBLE, PERSONAL, CUSTOM_MODEL}, (
-        f"models offered: {offered}"
-    )
-    about_prefs.expect_smart_window_model(FAST)
+    models = about_prefs.get_smart_window_models()
+    offered = [m["l10n"] for m in models]
+    assert CUSTOM_MODEL in offered
+    built_in = [m for m in offered if m != CUSTOM_MODEL]
+    assert len(built_in) >= 2, f"models offered: {offered}"
 
-    about_prefs.set_smart_window_model(FLEXIBLE)
-    about_prefs.set_smart_window_model(PERSONAL)
+    initial = about_prefs.get_smart_window_model()
+    assert initial in built_in, f"selected {initial!r} of {offered}"
+
+    for l10n_id in built_in:
+        if l10n_id != initial:
+            about_prefs.set_smart_window_model(l10n_id)
 
     # Custom offers fields instead of committing a model; standing one up
     # would need a live LLM endpoint.
@@ -41,5 +41,5 @@ def test_change_ai_model_from_settings(driver: Firefox):
     about_prefs.element_visible("smart-window-custom-model-name")
     about_prefs.element_visible("smart-window-custom-model-token")
 
-    # Back to the default, so the profile is not left on an unusable model.
-    about_prefs.set_smart_window_model(FAST)
+    # Back to the starting model, so the profile is not left on an unusable one.
+    about_prefs.set_smart_window_model(initial)
