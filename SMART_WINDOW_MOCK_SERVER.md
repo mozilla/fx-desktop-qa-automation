@@ -158,7 +158,8 @@ The model only sees each tab's title and a URL token built from the host and pat
 ## Record or build?
 
 Instead of recording, a test can write the model's replies in code with the builders in
-`modules/classes/recording.py`: `chat_reply()`, `tool_call()` and `search_results()`.
+`modules/classes/recording.py`: `chat_reply()`, `tool_call()`, `search_results()` and
+`background_reply()`.
 
 - **Record** when the case says "the model does X". You test Firefox against real model
   behaviour.
@@ -191,6 +192,30 @@ built_replies.add(
 
 `chat_reply()` and `tool_call()` have been tried in Firefox; `search_results()` hasn't yet.
 
+### Background replies
+
+Features other than the chat (memories, monitors, the AI tab, Smart Form Fill, title generation)
+send non-streamed requests that carry a `purpose` header. `background_reply(purpose, content,
+schema=None)` builds the answer; `content` is text, or a dict sent as JSON for features that ask
+for structured output.
+
+| Feature | `purpose` |
+|---|---|
+| Memories | `memory-generation` |
+| Monitor | `monitor` |
+| AI tab | `aitab` |
+| Smart Form Fill | `smart-form-fill` |
+| Chat title | `title-generation` |
+| Conversation starters | `convo-starters-sidebar` |
+
+A reply with no `schema` answers every request of its purpose. Smart Form Fill sends three
+(`SmartFormFillFieldClassification`, `SmartFormFillRelevantTabs`, `SmartFormFillFormValues`), and
+monitors and memories send more than one too. Set `schema` to the name Firefox gives the
+response format to answer one of them; the mock server reads it from the request's
+`response_format`. A schema-specific reply wins over a plain one. Firefox doesn't fail on a
+background request nobody answered (it gets a 503), so a missing reply shows up as a feature
+that did nothing, not as a test error.
+
 ## How it works
 
 - **Prefs.** The suite's `prefs_list` (`tests/smart_window/conftest.py`) sets, for every Smart
@@ -203,7 +228,7 @@ built_replies.add(
 - **Matching.** Each request is reduced to a short summary. Chat messages (streamed requests
   with purpose `chat`) match on prompt and tool round, searches on their query, and everything
   else is a background request (title generation, conversation starters...), matched on its
-  purpose alone.
+  purpose, and on its `response_format` schema name where a recorded or built reply has one.
 - **Missing entries.** A missing chat or search entry fails the test. A missing background entry
   gets a 503 error; Firefox carries on and the test isn't failed.
 - **Firefox versions.** CI tests Firefox Beta, while recordings are often made with Nightly.
