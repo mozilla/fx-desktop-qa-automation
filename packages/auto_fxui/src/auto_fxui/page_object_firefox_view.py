@@ -162,6 +162,7 @@ class FirefoxView(BasePage):
                 for (const list of lists) {
                   for (const row of list.shadowRoot.querySelectorAll(rowTag)) {
                     const link = row.shadowRoot.querySelector("a.fxview-tab-row-main");
+                    if (!link) continue;
                     const found = key === "id"
                       ? link.getAttribute("data-conv-id")
                       : link.getAttribute("href");
@@ -186,7 +187,7 @@ class FirefoxView(BasePage):
                 """
                 const panel = document.querySelector(arguments[0]).shadowRoot
                   .querySelector("panel-list");
-                if (!panel.matches(":popover-open")) return false;
+                if (!panel || !panel.matches(":popover-open")) return false;
                 panel.querySelector("panel-item[data-l10n-id$='context-delete']").click();
                 return true;
                 """,
