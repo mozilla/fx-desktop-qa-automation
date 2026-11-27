@@ -2267,6 +2267,13 @@ class AboutPrefs(BasePage):
         selected = [m for m in self.get_smart_window_models() if m["checked"]]
         return selected[0]["l10n"] if len(selected) == 1 else None
 
+    def get_smart_window_model_choice(self) -> str:
+        """Return the model choice id stored in the backing pref."""
+        return self.driver.execute_script(
+            "return Services.prefs.getStringPref("
+            "'browser.smartwindow.firstrun.modelChoice', '');"
+        )
+
     def expect_smart_window_model(self, l10n_id: str) -> BasePage:
         """Wait until `l10n_id` is the selected AI model."""
         self.expect(lambda _: self.get_smart_window_model() == l10n_id)
@@ -2274,13 +2281,16 @@ class AboutPrefs(BasePage):
 
     def set_smart_window_model(self, l10n_id: str) -> BasePage:
         """
-        Select an AI model, e.g. "smart-window-model-fast-v2".
+        Select an AI model by l10n id, e.g. "smart-window-model-gemini".
 
         Clicks the radio's top-left, not its centre: the centre lands on the
         description text where a click does nothing.
         """
         option = self.get_element("smart-window-model-option", labels=[l10n_id])
         value = option.get_attribute("value")
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", option
+        )
         width, height = option.size["width"], option.size["height"]
         ActionChains(self.driver).move_to_element_with_offset(
             option, -(width // 2) + 12, -(height // 2) + 12

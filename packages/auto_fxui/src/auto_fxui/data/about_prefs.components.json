@@ -2651,7 +2651,7 @@
     }
   },
   "smart-window-model-section": {
-    "selectorData": "[data-l10n-id='smart-window-model-section']",
+    "selectorData": "[data-l10n-id^='smart-window-model-section']",
     "strategy": "css",
     "groups": [],
     "comment": {
@@ -2682,7 +2682,7 @@
     "strategy": "css",
     "groups": [],
     "comment": {
-      "description": "One AI model radio by l10n id, e.g. smart-window-model-fast-v2",
+      "description": "One AI model radio by l10n id, e.g. smart-window-model-gemini",
       "location": "about:preferences#personalizeSmartWindow"
     }
   },
