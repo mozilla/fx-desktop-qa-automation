@@ -1,6 +1,3 @@
-[dependency-groups]
-dev = [ "debugpy>=1.8.22",]
-
 [project]
 name = "qa-automation"
 version = "0.1.0"
@@ -193,9 +190,6 @@ dependencies = [
 target-version = "py313"
 exclude = [ "taskcluster",]
 
-[tool.uv.workspace]
-members = [ "packages/auto_fxui",]
-
 [tool.pytest.ini_options]
 generate_report_on_test = false
 addopts = "-vs --html=report.html"
@@ -214,10 +208,19 @@ markers = [
   "noxvfb: tests that should not run in xvfb sessions",
 ]
 
-[tool.uv.sources.auto-fxui]
-workspace = true
+[tool.uv.workspace]
+members = [
+    "packages/auto_fxui",
+]
+
+[tool.uv.sources]
+auto-fxui = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "debugpy>=1.8.22",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"modules/**/*.py" = [ "F401", "F403",]
-"packages/auto_fxui/src/auto_fxui/**/*.py" = [ "F403",]
-"modules/*.py" = [ "F403",]
+"packages/auto_fxui/src/auto_fxui/**/*.py" = ["F403"]
+"modules/**/*.py" = [ "F401","F403",]
