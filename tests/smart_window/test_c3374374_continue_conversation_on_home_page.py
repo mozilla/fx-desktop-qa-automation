@@ -5,7 +5,6 @@ C3374374 - Continue a conversation on the Home page
 import pytest
 from auto_fxui.browser_object import SmartBar, SmartWindowChat
 from auto_fxui.classes.recording import Recording, chat_reply
-from auto_fxui.mock_server import MockServer
 from selenium.webdriver import Firefox
 
 PROMPT = "In one plain sentence with no formatting, what is evolution?"
@@ -20,15 +19,15 @@ def test_case():
 
 
 def test_continue_conversation_on_home_page(
-    driver: Firefox, smart_window_chat: SmartWindowChat, mock_server: MockServer
+    driver: Firefox,
+    smart_window_chat: SmartWindowChat,
+    built_replies: Recording,
 ):
     """
     C3374374 - Continue a conversation on the Home page
     """
-    # Hand-built: only the reply text matters, so a recording would add nothing.
-    mock_server.reset(
-        Recording([chat_reply(PROMPT, REPLY), chat_reply(FOLLOW_UP, FOLLOW_UP_REPLY)])
-    )
+    built_replies.add(chat_reply(PROMPT, REPLY))
+    built_replies.add(chat_reply(FOLLOW_UP, FOLLOW_UP_REPLY))
 
     bar = SmartBar(driver)
     bar.open_full_page_chat()
