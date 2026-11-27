@@ -1137,8 +1137,8 @@ password_manager:
     splits: []
 pdf_viewer:
   test_add_image_pdf:
-    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1982852
-    result: unstable
+    comment: https://bugzilla.mozilla.org/show_bug.cgi?id=1983852
+    result: pass
     splits:
       - functional2
   test_download_pdf_data:

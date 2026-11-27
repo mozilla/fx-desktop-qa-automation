@@ -1,11 +1,14 @@
 import logging
+from pathlib import Path
 from time import sleep
+from uuid import uuid4
 
-from selenium.common import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
 
 from .page_base import BasePage
 
@@ -342,29 +345,128 @@ class GenericPdf(BasePage):
         self.get_element(option).click()
         return self
 
-    def add_image(self, image_path: str, sys_platform: str) -> BasePage:
-        """Add an image to a pdf file"""
-        self.get_element("toolbar-add-image").click()
-        self.get_element("toolbar-add-image-confirm").click()
+    def add_image(self, image_path: str) -> BasePage:
+        """Add an image to a PDF file using Selenium."""
 
-        sleep(1.5)
-        if sys_platform == "Darwin" or sys_platform == "Linux":
-            self.gui.press("/")
-            sleep(1.5)
-            self.gui.write(image_path.lstrip("/"))
-        else:
-            sleep(1.5)
-            self.gui.write(image_path)
-        sleep(1)
-        self.gui.press("enter")
-        sleep(1)
-        self.gui.press("enter")
-        sleep(1.5)
-        for _ in range(3):
-            self.gui.press("tab")
-        sleep(0.5)
-        self.gui.press("enter")
-        sleep(1)
+        image_file = Path(image_path).expanduser().resolve()
+
+        if not image_file.is_file():
+            raise FileNotFoundError(
+                f"Image file does not exist or is not a regular file: {image_file}"
+            )
+
+        input_id = f"pdfjs-image-upload-input-{uuid4().hex}"
+
+        self.get_element("toolbar-add-image").click()
+
+        self.driver.execute_script(
+            """
+            const prototype = HTMLInputElement.prototype;
+            const originalClick = prototype.click;
+            const inputId = arguments[0];
+
+            // PDF.js creates the image file input dynamically when the upload action is triggered.
+            const handler = function() {
+                if (
+                    this.type === "file"
+                    && (this.accept || "").includes("image/")
+                ) {
+                    // Keep the input in the DOM for PDF.js; its unique ID prevents conflicts between calls.
+                    this.id = inputId;
+                    document.body.appendChild(this);
+                    prototype.click = originalClick;
+                    return;
+                }
+
+                return originalClick.call(this);
+            };
+
+            window.__pdfjsImageInputClickHook = {
+                prototype,
+                originalClick,
+                handler
+            };
+
+            prototype.click = handler;
+        """,
+            input_id,
+        )
+
+        try:
+            self.get_element("toolbar-add-image-confirm").click()
+
+            file_input = WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.find_element(By.ID, input_id),
+                "Timed out waiting for the PDF.js image file input.",
+            )
+            file_input.send_keys(str(image_file))
+
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.execute_script(
+                    """
+                    const input = document.getElementById(arguments[0]);
+
+                    return input && input.files.length === 1;
+                """,
+                    input_id,
+                ),
+                "Timed out waiting for the image file to be selected.",
+            )
+
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.execute_script("""
+                    const dialog = document.getElementById(
+                        "newAltTextDialog"
+                    );
+
+                    return dialog && dialog.open;
+                """),
+                "Timed out waiting for the image alt text dialog.",
+            )
+
+            self.driver.find_element(By.ID, "newAltTextNotNow").click()
+
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.execute_script("""
+                    const dialog = document.getElementById(
+                        "newAltTextDialog"
+                    );
+
+                    return dialog && !dialog.open;
+                """),
+                "Timed out waiting for the image alt text dialog to close.",
+            )
+
+            editor_selector = '[data-l10n-id="pdfjs-editor-stamp-editor"]'
+
+            def editor_is_visible(driver):
+                for element in driver.find_elements(By.CSS_SELECTOR, editor_selector):
+                    try:
+                        if element.is_displayed():
+                            return True
+                    except StaleElementReferenceException:
+                        continue
+
+                return False
+
+            WebDriverWait(self.driver, 10).until(
+                editor_is_visible,
+                "Timed out waiting for the PDF.js image editor to become visible.",
+            )
+
+        finally:
+            self.driver.execute_script("""
+                const hook = window.__pdfjsImageInputClickHook;
+
+                if (hook) {
+                    if (hook.prototype.click === hook.handler) {
+                        hook.prototype.click = hook.originalClick;
+                    }
+
+                    delete window.__pdfjsImageInputClickHook;
+                }
+            """)
+
         return self
 
     def fill_element(self, element: str, data: str) -> BasePage:
