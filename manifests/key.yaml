@@ -2107,6 +2107,16 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3321369_delete_history_entry_from_firefox_view:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3321370_delete_older_chat_from_firefox_view:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3321887_go_button_dropdown_opens:
     result: pass
     splits:

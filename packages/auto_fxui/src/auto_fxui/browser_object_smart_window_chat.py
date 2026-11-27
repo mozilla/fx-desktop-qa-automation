@@ -1,7 +1,7 @@
 import re
 
 from .browser_object_smart_bar import SmartBar
-from .browser_object_smart_window import CHAT_DOCUMENT_JS
+from .browser_object_smart_window import AI_WINDOW_MODULE, CHAT_DOCUMENT_JS
 from .page_base import BasePage
 
 # MESSAGE_ROLE.USER and MESSAGE_ROLE.TOOL in the conversation model.
@@ -301,6 +301,45 @@ class SmartWindowChat(BasePage):
         )
         if self.get_last_tool_ui_type() in TAB_ACTION_CONFIRMATIONS:
             self.confirm_action()
+        return self
+
+    # ── Saved conversations ──────────────────────────────────────────────
+
+    @BasePage.context_chrome
+    def get_saved_conversation_ids(self) -> list[str]:
+        """Return the ids of the conversations in the chat store, newest first."""
+        return self.driver.execute_async_script(
+            f"""
+            const done = arguments[arguments.length - 1];
+            const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+            AIWindow.chatStore.chatHistoryView(1, 100, "desc")
+              .then(rows => done(rows.map(r => r.convId)));
+            """
+        )
+
+    def expect_saved_conversations(self, count: int) -> BasePage:
+        """Wait until the chat store holds `count` conversations."""
+        self.expect(lambda _: len(self.get_saved_conversation_ids()) == count)
+        return self
+
+    @BasePage.context_chrome
+    def set_conversation_age(self, conversation_id: str, days: int) -> BasePage:
+        """Make a saved conversation's last update `days` days ago."""
+        self.driver.execute_async_script(
+            f"""
+            const [id, days, done] = arguments;
+            const {{ AIWindow }} = ChromeUtils.importESModule("{AI_WINDOW_MODULE}");
+            const then = Date.now() - days * 86400000;
+            AIWindow.chatStore.connection
+              .execute(
+                "UPDATE conversation SET updated_date = :then WHERE conv_id = :id",
+                {{ then, id }}
+              )
+              .then(() => done(true));
+            """,
+            conversation_id,
+            days,
+        )
         return self
 
     # ── URL tokens ───────────────────────────────────────────────────────
