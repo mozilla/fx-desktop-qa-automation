@@ -1,9 +1,14 @@
 import json
 import logging
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
 
 from .page_base import BasePage
+
+# The single-page onboarding's controls, by id, in Tab order.
+ONBOARDING_CONTROLS = ("model", "memories", "default-window", "save")
 
 UTILS_MODULE = "moz-src:///browser/components/aiwindow/models/Utils.sys.mjs"
 
@@ -212,3 +217,80 @@ class SmartWindowFirstRun(BasePage):
         self.element_visible("set-default-screen")
         self.click_on("continue-button")
         return self
+
+    # ── Keyboard ─────────────────────────────────────────────────────────
+
+    def _read_onboarding(self, body: str, *args):
+        """Run `body` in the page with `root`, the single-page onboarding's shadow root."""
+        return self.driver.execute_script(
+            "const host = document.querySelector('smartwindow-onboarding');"
+            "const root = host && host.shadowRoot;" + body,
+            *args,
+        )
+
+    def get_focused_control(self) -> str | None:
+        """Return which of ONBOARDING_CONTROLS has keyboard focus, or None."""
+        focused = self._read_onboarding(
+            "const el = root && root.activeElement; return el ? el.id : null;"
+        )
+        return focused if focused in ONBOARDING_CONTROLS else None
+
+    def tab_to_control(self, name: str) -> BasePage:
+        """Press Tab until the single-page onboarding's control `name` has focus."""
+        self.expect_setup_screen()
+        # Tab also leaves the page and returns, so allow a full lap.
+        for _ in range(len(ONBOARDING_CONTROLS) * 2 + 1):
+            if self.get_focused_control() == name:
+                return self
+            self.actions.send_keys(Keys.TAB).perform()
+            try:
+                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                    lambda _: self.get_focused_control() == name
+                )
+            except TimeoutException:
+                pass
+        raise AssertionError(f"Tab never reached the {name} control")
+
+    def get_option_value(self, name: str) -> str:
+        """Return the value of the onboarding's `model` or `memories` dropdown."""
+        return self._read_onboarding(
+            "return root.querySelector('#' + arguments[0]).value;", name
+        )
+
+    def choose_other_option_with_keyboard(self, name: str) -> str:
+        """
+        Open the focused `model` or `memories` dropdown with Enter, arrow to an
+        option other than the current one, pick it with Enter and return its value.
+        """
+        before = self.get_option_value(name)
+        self.actions.send_keys(Keys.ENTER).perform()
+
+        def _focused_option() -> str | None:
+            return self._read_onboarding(
+                "const el = root.querySelector('#' + arguments[0]).shadowRoot.activeElement;"
+                "return el && el.matches('button.option-item') ? el.dataset.value : null;",
+                name,
+            )
+
+        self.expect(lambda _: _focused_option() is not None)
+        options = self._read_onboarding(
+            "return root.querySelector('#' + arguments[0]).shadowRoot"
+            ".querySelectorAll('button.option-item').length;",
+            name,
+        )
+        for _ in range(options):
+            if _focused_option() != before:
+                break
+            self.actions.send_keys(Keys.ARROW_DOWN).perform()
+            try:
+                self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                    lambda _: _focused_option() != before
+                )
+            except TimeoutException:
+                pass
+        chosen = _focused_option()
+        assert chosen and chosen != before, f"The arrow keys stayed on {before}"
+        self.actions.send_keys(Keys.ENTER).perform()
+        self.expect(lambda _: self.get_option_value(name) == chosen)
+        self.expect(lambda _: self.get_focused_control() == name)
+        return chosen

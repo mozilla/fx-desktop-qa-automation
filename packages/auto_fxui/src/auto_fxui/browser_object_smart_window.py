@@ -410,3 +410,134 @@ class SmartWindow(BasePage):
             hit.click();
             return true;
         """)
+
+    # ── Keyboard ─────────────────────────────────────────────────────────
+
+    @BasePage.context_chrome
+    def get_focused_id(self) -> str:
+        """Return the id of the chrome element with keyboard focus ("" if it has none)."""
+        return self.driver.execute_script(
+            "return document.activeElement ? document.activeElement.id : '';"
+        )
+
+    def _press(self, key: str) -> BasePage:
+        """Press `key` in chrome and give focus a moment to move."""
+        before = self.get_focused_id()
+        self.perform_key_combo_chrome(key)
+        try:
+            self.custom_wait(timeout=1, poll_frequency=0.1).until(
+                lambda _: self.get_focused_id() != before
+            )
+        except TimeoutException:
+            # Focus doesn't move at the end of a toolbar, or inside a text field.
+            pass
+        return self
+
+    def press_until_focused(
+        self, element_id: str, key: str = Keys.TAB, max_presses: int = 15
+    ) -> BasePage:
+        """Press `key` until the chrome element `element_id` has focus."""
+        for _ in range(max_presses):
+            if self.get_focused_id() == element_id:
+                return self
+            self._press(key)
+        if self.get_focused_id() == element_id:
+            return self
+        raise AssertionError(f"{key!r} never reached #{element_id} in {max_presses}")
+
+    @BasePage.context_chrome
+    def _toolbar_state(self, button_id: str) -> str:
+        """Return "found", "toolbar" (on a button in `button_id`'s toolbar) or "elsewhere"."""
+        return self.driver.execute_script(
+            "const target = document.getElementById(arguments[0]);"
+            "const active = document.activeElement;"
+            "if (active === target) return 'found';"
+            "const toolbar = target && target.closest('toolbar');"
+            "return active && active.localName === 'toolbarbutton' && toolbar"
+            "  && active.closest('toolbar') === toolbar ? 'toolbar' : 'elsewhere';",
+            button_id,
+        )
+
+    @BasePage.context_chrome
+    def _focus_in_page(self) -> bool:
+        return self.driver.execute_script(
+            "return document.activeElement.localName === 'browser';"
+        )
+
+    def focus_toolbar_button(self, button_id: str, max_stops: int = 15) -> BasePage:
+        """
+        Move keyboard focus to the toolbar button `button_id` the way a user
+        does: Tab to its toolbar, then the arrow keys along it.
+        """
+        # From a web page Tab would walk its links first, so leave it with Ctrl+L.
+        if self.get_focused_id() == "" or self._focus_in_page():
+            self.perform_key_combo_chrome(Keys.CONTROL, "l")
+        for _ in range(max_stops):
+            state = self._toolbar_state(button_id)
+            if state == "found":
+                return self
+            if state == "toolbar":
+                for arrow in (Keys.ARROW_RIGHT, Keys.ARROW_LEFT):
+                    for _ in range(12):
+                        self._press(arrow)
+                        if self._toolbar_state(button_id) == "found":
+                            return self
+            self._press(Keys.TAB)
+        raise AssertionError(f"Keyboard never reached #{button_id}")
+
+    @BasePage.context_chrome
+    def _is_window_switcher_open(self) -> bool:
+        return self.driver.execute_script(
+            "const v = document.getElementById('ai-window-toggle-view');"
+            "return !!v && v.getBoundingClientRect().height > 0;"
+        )
+
+    def open_window_switcher_with_keyboard(self) -> BasePage:
+        """Focus the Switch Windows button and open its panel with Space."""
+        self.focus_toolbar_button("ai-window-toggle")
+        # Space only: Enter on this button opens nothing.
+        # A press before the button is ready is dropped, so press again.
+        for _ in range(3):
+            self.perform_key_combo_chrome(Keys.SPACE)
+            try:
+                self.custom_wait(timeout=3).until(
+                    lambda _: self._is_window_switcher_open()
+                )
+                return self
+            except TimeoutException:
+                continue
+        raise AssertionError(
+            "Space on the Switch Windows button never opened its panel"
+        )
+
+    def choose_window_with_keyboard(self, entry: str) -> BasePage:
+        """
+        Pick "classic" or "smart" in the Switch Windows panel with the arrow
+        keys and Enter. Opens the panel first if it isn't open.
+        """
+        if not self._is_window_switcher_open():
+            self.open_window_switcher_with_keyboard()
+        target = {
+            "classic": "ai-window-switch-classic",
+            "smart": "ai-window-switch-ai",
+        }[entry]
+        self.press_until_focused(target, Keys.ARROW_DOWN, max_presses=4)
+        self.perform_key_combo_chrome(Keys.ENTER)
+        return self
+
+    def open_app_menu_with_keyboard(self) -> BasePage:
+        """Focus the hamburger button and open the menu with Enter."""
+        self.focus_toolbar_button("PanelUI-menu-button")
+        self.perform_key_combo_chrome(Keys.ENTER)
+        self.expect(lambda _: self._is_app_menu_open())
+        return self
+
+    @BasePage.context_chrome
+    def _is_app_menu_open(self) -> bool:
+        return self.driver.execute_script("return PanelUI.panel.state === 'open';")
+
+    def choose_app_menu_item_with_keyboard(self, item_id: str) -> BasePage:
+        """Arrow down the open hamburger menu to `item_id` and press Enter on it."""
+        self.press_until_focused(item_id, Keys.ARROW_DOWN, max_presses=30)
+        self.perform_key_combo_chrome(Keys.ENTER)
+        return self

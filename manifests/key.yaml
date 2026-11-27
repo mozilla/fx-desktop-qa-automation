@@ -2127,6 +2127,26 @@ smart_window:
     splits:
       - smart_window
       - functional2
+  test_c3349900_onboarding_entry_points_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3349903_window_switching_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3349906_home_page_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c3349912_chat_sidebar_keyboard_accessible:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
   test_c3349915_settings_page_keyboard_accessible:
     result: pass
     splits:
@@ -2229,6 +2249,11 @@ smart_window:
       - smart_window
       - functional2
   test_c4516868_start_in_smart_window_from_onboarding:
+    result: pass
+    splits:
+      - smart_window
+      - functional2
+  test_c4516872_onboarding_page_keyboard_accessible:
     result: pass
     splits:
       - smart_window
