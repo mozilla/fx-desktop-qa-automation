@@ -2104,6 +2104,18 @@ class AboutPrefs(BasePage):
             self.verify_ai_controls_core_elements_visible()
         return self
 
+    def get_ai_feature_states(self) -> dict[str, str]:
+        """Return the state of each AI feature shown on the page, by select id."""
+        return self.driver.execute_script(
+            """
+            return Object.fromEntries(
+              [...document.querySelectorAll("moz-select[id^='aiControl']")]
+                .filter(el => el.checkVisibility())
+                .map(el => [el.id, el.value])
+            );
+            """
+        )
+
     def get_ai_killswitch_state(self) -> bool:
         """
         Get the current state of the AI killswitch toggle.
