@@ -12,13 +12,8 @@ class OrganizeTabs(BasePage):
 
     @BasePage.context_chrome
     def stub_clusters(self, groups: list[list[str]]) -> BasePage:
-        """
-        Make clustering return one cluster per list of tab URLs in `groups`.
-
-        Firefox can't download the embedding model under automation, so this
-        replaces the one ML step. Candidate selection, naming and grouping stay
-        Firefox's own.
-        """
+        """Make clustering return one cluster per list of tab URLs in `groups`."""
+        # Firefox can't download the embedding model under automation, so this replaces the one ML step.
         error = self.driver.execute_script(
             f"""
             const {{ AutoTabGroupingSuggestions }} = ChromeUtils.importESModule(
