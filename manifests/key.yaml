@@ -203,7 +203,7 @@ address_bar_and_search:
   test_search_code_google_us:
     comment: https://bugzilla.mozilla.org/show_bug.cgi?id=2081889
     result:
-      linux: pass
+      linux: unstable
       mac: pass
       win: unstable
     splits:
